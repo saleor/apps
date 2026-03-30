@@ -254,7 +254,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     expect(result._unsafeUnwrap().statusCode).toBe(200);
   });
 
-  it("should return InvalidEventValidationError when multiple transactions are found", async () => {
+  it("should return InvalidEventValidationError when multiple completed transactions are found", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
@@ -271,6 +271,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
         transactions: [
           {
             pspReference: "psp-ref-123",
+            events: [{ type: "CHARGE_SUCCESS" as const }],
             createdBy: {
               __typename: "App" as const,
               id: mockedSaleorAppId,
@@ -278,6 +279,108 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
           },
           {
             pspReference: "psp-ref-456",
+            events: [{ type: "AUTHORIZATION_SUCCESS" as const }],
+            createdBy: {
+              __typename: "App" as const,
+              id: mockedSaleorAppId,
+            },
+          },
+        ],
+      },
+    };
+
+    const result = await useCase.execute({
+      appId: mockedSaleorAppId,
+      saleorApiUrl: mockedSaleorApiUrl,
+      event,
+      graphqlClient: mockedGraphqlClient,
+    });
+
+    // @ts-expect-error - we expect Failure response
+    expect(result._unsafeUnwrap().error).toBeInstanceOf(InvalidEventValidationError);
+    expect(result._unsafeUnwrap().statusCode).toBe(200);
+  });
+
+  it("should succeed when multiple transactions exist but only one is completed", async () => {
+    const mockFulfillmentResponse = createAtobaraiFulfillmentReportSuccessResponse({
+      results: [
+        {
+          np_transaction_id: mockedAtobaraiTransactionId,
+        },
+      ],
+    });
+
+    vi.spyOn(mockedAtobaraiApiClient, "reportFulfillment").mockResolvedValue(
+      ok(mockFulfillmentResponse),
+    );
+
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockResolvedValue(ok(mockedAppChannelConfig));
+    vi.spyOn(mockedOrderNoteService, "addOrderNote").mockResolvedValue(ok({ noteId: "note-123" }));
+
+    const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      atobaraiApiClientFactory,
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
+      orderNoteServiceFactory() {
+        return mockedOrderNoteService;
+      },
+    });
+
+    const event = {
+      ...mockedFulfillmentTrackingNumberUpdatedEvent,
+      order: {
+        ...mockedFulfillmentTrackingNumberUpdatedEvent.order,
+        transactions: [
+          {
+            pspReference: "ghost-psp-ref",
+            events: [{ type: "CHARGE_FAILURE" as const }],
+            createdBy: {
+              __typename: "App" as const,
+              id: mockedSaleorAppId,
+            },
+          },
+          {
+            pspReference: mockedAtobaraiTransactionId,
+            events: [{ type: "CHARGE_SUCCESS" as const }],
+            createdBy: {
+              __typename: "App" as const,
+              id: mockedSaleorAppId,
+            },
+          },
+        ],
+      },
+    };
+
+    const result = await useCase.execute({
+      appId: mockedSaleorAppId,
+      saleorApiUrl: mockedSaleorApiUrl,
+      event,
+      graphqlClient: mockedGraphqlClient,
+    });
+
+    expect(result._unsafeUnwrap()).toBeInstanceOf(
+      FulfillmentTrackingNumberUpdatedUseCaseResponse.Success,
+    );
+  });
+
+  it("should return InvalidEventValidationError when no completed transactions exist", async () => {
+    const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      atobaraiApiClientFactory,
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
+      orderNoteServiceFactory() {
+        return mockedOrderNoteService;
+      },
+    });
+
+    const event = {
+      ...mockedFulfillmentTrackingNumberUpdatedEvent,
+      order: {
+        ...mockedFulfillmentTrackingNumberUpdatedEvent.order,
+        transactions: [
+          {
+            pspReference: "ghost-psp-ref",
+            events: [{ type: "CHARGE_FAILURE" as const }],
             createdBy: {
               __typename: "App" as const,
               id: mockedSaleorAppId,
@@ -316,6 +419,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
         transactions: [
           {
             pspReference: "psp-ref-123",
+            events: [{ type: "CHARGE_SUCCESS" as const }],
             createdBy: {
               __typename: "User" as const,
             },
@@ -353,6 +457,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
         transactions: [
           {
             pspReference: "psp-ref-123",
+            events: [{ type: "CHARGE_SUCCESS" as const }],
             createdBy: {
               __typename: "App" as const,
               id: "different-app-id",

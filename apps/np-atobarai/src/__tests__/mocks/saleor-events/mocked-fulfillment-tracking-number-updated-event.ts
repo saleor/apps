@@ -19,6 +19,7 @@ export const mockedFulfillmentTrackingNumberUpdatedEvent = {
     transactions: [
       {
         pspReference: mockedAtobaraiTransactionId,
+        events: [{ type: "CHARGE_SUCCESS" as const }],
         createdBy: {
           __typename: "App",
           id: mockedSaleorAppId,

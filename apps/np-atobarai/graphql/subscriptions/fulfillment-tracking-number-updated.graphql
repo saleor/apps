@@ -11,6 +11,9 @@ fragment FulfillmentTrackingNumberUpdatedEvent on FulfillmentTrackingNumberUpdat
     }
     transactions {
       pspReference
+      events {
+        type
+      }
       createdBy {
         ... on App {
           __typename

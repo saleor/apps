@@ -78,16 +78,30 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       return err(new InvalidEventValidationError("Order transactions are missing"));
     }
 
-    if (event.order.transactions.length > 1) {
-      // App support only single transaction per order / checkout. This is a limitation of how we send goods to Atobarai. If there are multiple transactions, we would need to report goods prices minus prices from other transactions.
-      this.logger.warn("Multiple transactions found for the order", {
+    const completedTransactions = event.order.transactions.filter((t) =>
+      t.events.some((e) => e.type === "CHARGE_SUCCESS" || e.type === "AUTHORIZATION_SUCCESS"),
+    );
+
+    if (completedTransactions.length === 0) {
+      this.logger.warn("No completed transactions found for the order", {
         event: { orderId: event.order.id },
       });
 
-      return err(new InvalidEventValidationError("Multiple transactions found for the order"));
+      return err(new InvalidEventValidationError("No completed transactions found for the order"));
     }
 
-    const transaction = event.order.transactions[0];
+    if (completedTransactions.length > 1) {
+      // App supports only single transaction per order / checkout. This is a limitation of how we send goods to Atobarai.
+      this.logger.warn("Multiple completed transactions found for the order", {
+        event: { orderId: event.order.id },
+      });
+
+      return err(
+        new InvalidEventValidationError("Multiple completed transactions found for the order"),
+      );
+    }
+
+    const transaction = completedTransactions[0];
 
     if (transaction.createdBy?.__typename !== "App") {
       this.logger.warn("Transaction was not created by the app. Skipping.", {
