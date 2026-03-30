@@ -1,0 +1,27 @@
+.changeset/shy-months-accept.md
+  1405f2d425e9d7f2 5
+apps/np-atobarai/src/app/api/webhooks/saleor/fulfillment-tracking-number-updated/use-case.test.ts
+  1405f2d425e9d7f2 257-261,306-311,376-380,417-422
+apps/np-atobarai/src/app/api/webhooks/saleor/fulfillment-tracking-number-updated/use-case.ts
+  1405f2d425e9d7f2 94-100,110-114,188-199
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.22",
+  "base_commit_sha": "d53dfd85074f7429e5dd938fd584353f71313d2b",
+  "prompts": {
+    "1405f2d425e9d7f2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5aecfb9e-976e-412e-a8f7-a8d266f5ee72",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 63,
+      "total_deletions": 17,
+      "accepted_lines": 51,
+      "overriden_lines": 0
+    }
+  }
+}
