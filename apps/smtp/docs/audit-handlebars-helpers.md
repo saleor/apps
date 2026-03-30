@@ -5,10 +5,10 @@ Two scripts find which custom Handlebars helpers customers use in their template
 ## Step 1: Dump templates
 
 ```bash
-pnpm --filter saleor-app-smtp dump-templates > templates.jsonl
+pnpm --silent --filter saleor-app-smtp dump-templates > templates.jsonl
 ```
 
-Connects to every installed app instance via APL, reads their SMTP configs, and writes one JSON line per event template to stdout. Errors and progress go to stderr.
+Connects to every installed app instance via APL, reads their SMTP configs, and writes one JSON line per event template to stdout. Progress and errors go to stderr (visible in terminal, excluded from the file). Use `--silent` to suppress pnpm's own header from stdout.
 
 Requires the same env as the running app (`APL`, `SECRET_KEY`, DynamoDB/Upstash credentials, etc.).
 
@@ -48,10 +48,12 @@ All unique helpers: capitalize, eq, formatDate
 
 ## Detection rules
 
-| AST node type     | Counted as helper when                              |
-|-------------------|-----------------------------------------------------|
-| MustacheStatement | Has params, e.g. `{{eq a b}}`                      |
-| BlockStatement    | Path is not a built-in, e.g. `{{#is …}}…{{/is}}`   |
-| SubExpression     | Always a helper call, e.g. `(eq a b)`               |
+| AST node type     | Counted as helper when                                                   |
+|-------------------|--------------------------------------------------------------------------|
+| MustacheStatement | Has params or hash, e.g. `{{eq a b}}`, `{{formatDate format="YYYY"}}`   |
+| BlockStatement    | Path is not a built-in, e.g. `{{#is …}}…{{/is}}`                        |
+| SubExpression     | Always a helper call, e.g. `(eq a b)`                                    |
 
-Simple variable references like `{{order.number}}` are not counted.
+Simple variable references like `{{order.number}}` are not counted. No-arg helpers without hash (e.g. `{{now}}`) are ambiguous with variable lookups at the AST level and are not counted.
+
+Templates that fail to parse are reported in the PARSE ERRORS section — these may indicate invalid or potentially exploitable template content that warrants manual review.
