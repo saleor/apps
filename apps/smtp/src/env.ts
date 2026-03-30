@@ -58,6 +58,8 @@ export const env = createEnv({
       .transform((blockedDomains: string[] | undefined): string[] => {
         return [...(blockedDomains || []), ...defaultBlockedFallbackEmailDomains];
       }),
+    FALLBACK_EMAIL_REDIRECT_ENDPOINT: z.string().url().optional(),
+    FALLBACK_EMAIL_REDIRECT_TOKEN: z.string().min(1).optional(),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
@@ -94,6 +96,8 @@ export const env = createEnv({
     FALLBACK_SMTP_SENDER_NAME: process.env.FALLBACK_SMTP_SENDER_NAME,
     FALLBACK_SMTP_SENDER_DOMAIN: process.env.FALLBACK_SMTP_SENDER_DOMAIN,
     FALLBACK_BLOCKED_EMAIL_DOMAINS: process.env.FALLBACK_BLOCKED_EMAIL_DOMAINS,
+    FALLBACK_EMAIL_REDIRECT_ENDPOINT: process.env.FALLBACK_EMAIL_REDIRECT_ENDPOINT,
+    FALLBACK_EMAIL_REDIRECT_TOKEN: process.env.FALLBACK_EMAIL_REDIRECT_TOKEN,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });

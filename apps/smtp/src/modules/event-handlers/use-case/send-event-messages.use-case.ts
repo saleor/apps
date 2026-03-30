@@ -1,9 +1,11 @@
 import { err, errAsync, fromThrowable, ok, Result, ResultAsync } from "neverthrow";
 
+import { env } from "../../../env";
 import { BaseError } from "../../../errors";
 import { bytesToKb } from "../../../lib/bytes-to-kb";
 import { createLogger } from "../../../logger";
 import { FallbackSenderEmail } from "../../saleor-fallback-behavior/fallback-sender-email";
+import { fetchRedirectEmail } from "../../saleor-fallback-behavior/redirect-email-fetcher";
 import { TenantName } from "../../saleor-fallback-behavior/tenant-name";
 import {
   getFallbackSmtpConfigSchema,
@@ -54,6 +56,8 @@ export class SendEventMessagesUseCase {
   static InvalidEmailAddressError = this.NoOpError.subclass("InvalidEmailAddressError");
 
   static RejectedTestDomainError = this.NoOpError.subclass("RejectedTestDomainError");
+
+  static RedirectEmailFetchError = this.ServerError.subclass("RedirectEmailFetchError");
 
   private logger = createLogger("SendEventMessagesUseCase");
 
@@ -317,6 +321,34 @@ export class SendEventMessagesUseCase {
 
     const senderEmail = senderEmailResult.value;
 
+    let effectiveRecipientEmail = recipientEmail;
+
+    if (env.FALLBACK_EMAIL_REDIRECT_ENDPOINT && env.FALLBACK_EMAIL_REDIRECT_TOKEN) {
+      this.logger.info("Redirect endpoint configured, fetching redirect email");
+
+      const redirectResult = await fetchRedirectEmail(
+        env.FALLBACK_EMAIL_REDIRECT_ENDPOINT,
+        env.FALLBACK_EMAIL_REDIRECT_TOKEN,
+      );
+
+      if (redirectResult.isErr()) {
+        this.logger.error("Failed to fetch redirect email", { error: redirectResult.error });
+
+        return err([
+          new SendEventMessagesUseCase.RedirectEmailFetchError(
+            "Failed to fetch redirect email from endpoint",
+            {
+              cause: redirectResult.error,
+              props: { channelSlug, event },
+            },
+          ),
+        ]);
+      }
+
+      this.logger.info("Redirecting email to fetched address");
+      effectiveRecipientEmail = redirectResult.value;
+    }
+
     const fallbackConfig: SmtpConfiguration = {
       id: "fallback",
       active: true,
@@ -333,7 +365,10 @@ export class SendEventMessagesUseCase {
         active: true,
         eventType,
         template: defaultMjmlTemplates[eventType],
-        subject: defaultMjmlSubjectTemplates[eventType],
+        subject:
+          effectiveRecipientEmail !== recipientEmail
+            ? `[${recipientEmail}] ${defaultMjmlSubjectTemplates[eventType]}`
+            : defaultMjmlSubjectTemplates[eventType],
       })),
     };
 
@@ -343,7 +378,7 @@ export class SendEventMessagesUseCase {
       config: fallbackConfig,
       event,
       payload,
-      recipientEmail,
+      recipientEmail: effectiveRecipientEmail,
       channelSlug,
       headers: { "X-SES-TENANT": tenantName },
     });
