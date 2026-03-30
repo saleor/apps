@@ -14,7 +14,7 @@
     "start": "next start",
     "test": "vitest",
     "audit-helpers": "tsx ./scripts/audit-handlebars-helpers.ts",
-    "dump-templates": "tsx --require dotenv/config ./scripts/dump-templates.ts",
+    "dump-templates": "NODE_OPTIONS='--import ./scripts/require-shim.mjs' tsx --require dotenv/config ./scripts/dump-templates.ts",
     "test-email-build": "tsx ./scripts/build-email-previews.ts",
     "test:ci": "vitest run --coverage"
   },
