@@ -254,7 +254,11 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     expect(result._unsafeUnwrap().statusCode).toBe(200);
   });
 
-  it("should return InvalidEventValidationError when multiple completed transactions are found", async () => {
+  it("should return InvalidEventValidationError and add order note when multiple completed transactions are found", async () => {
+    const addOrderNoteSpy = vi
+      .spyOn(mockedOrderNoteService, "addOrderNote")
+      .mockResolvedValue(ok({ noteId: "note-123" }));
+
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
@@ -299,6 +303,12 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     // @ts-expect-error - we expect Failure response
     expect(result._unsafeUnwrap().error).toBeInstanceOf(InvalidEventValidationError);
     expect(result._unsafeUnwrap().statusCode).toBe(200);
+
+    expect(addOrderNoteSpy).toHaveBeenCalledWith({
+      orderId: mockedFulfillmentTrackingNumberUpdatedEvent.order.id,
+      message:
+        "NP Atobarai skipped fulfillment reporting: Multiple completed transactions found for the order",
+    });
   });
 
   it("should succeed when multiple transactions exist but only one is completed", async () => {
@@ -363,7 +373,11 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     );
   });
 
-  it("should return InvalidEventValidationError when no completed transactions exist", async () => {
+  it("should return InvalidEventValidationError and add order note when no completed transactions exist", async () => {
+    const addOrderNoteSpy = vi
+      .spyOn(mockedOrderNoteService, "addOrderNote")
+      .mockResolvedValue(ok({ noteId: "note-123" }));
+
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
@@ -400,6 +414,12 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     // @ts-expect-error - we expect Failure response
     expect(result._unsafeUnwrap().error).toBeInstanceOf(InvalidEventValidationError);
     expect(result._unsafeUnwrap().statusCode).toBe(200);
+
+    expect(addOrderNoteSpy).toHaveBeenCalledWith({
+      orderId: mockedFulfillmentTrackingNumberUpdatedEvent.order.id,
+      message:
+        "NP Atobarai skipped fulfillment reporting: No completed transactions found for the order",
+    });
   });
 
   it("should return InvalidEventValidationError when transaction was not created by an app", async () => {

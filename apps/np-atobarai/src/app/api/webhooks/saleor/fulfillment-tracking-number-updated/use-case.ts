@@ -22,6 +22,10 @@ import { BaseUseCase } from "../base-use-case";
 import { type AppIsNotConfiguredResponse, BrokenAppResponse } from "../saleor-webhook-responses";
 import { FulfillmentTrackingNumberUpdatedUseCaseResponse } from "./use-case-response";
 
+export type TransactionValidationCause =
+  | "NO_COMPLETED_TRANSACTIONS"
+  | "MULTIPLE_COMPLETED_TRANSACTIONS";
+
 type UseCaseExecuteResult = Promise<
   Result<
     FulfillmentTrackingNumberUpdatedUseCaseResponse,
@@ -87,7 +91,13 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
         event: { orderId: event.order.id },
       });
 
-      return err(new InvalidEventValidationError("No completed transactions found for the order"));
+      return err(
+        new InvalidEventValidationError("No completed transactions found for the order", {
+          props: {
+            validationCause: "NO_COMPLETED_TRANSACTIONS" as TransactionValidationCause,
+          },
+        }),
+      );
     }
 
     if (completedTransactions.length > 1) {
@@ -97,7 +107,11 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       });
 
       return err(
-        new InvalidEventValidationError("Multiple completed transactions found for the order"),
+        new InvalidEventValidationError("Multiple completed transactions found for the order", {
+          props: {
+            validationCause: "MULTIPLE_COMPLETED_TRANSACTIONS" as TransactionValidationCause,
+          },
+        }),
       );
     }
 
@@ -171,6 +185,18 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     const parsingResult = this.parseEvent({ event, appId });
 
     if (parsingResult.isErr()) {
+      const validationCause = (
+        parsingResult.error as { validationCause?: TransactionValidationCause }
+      ).validationCause;
+
+      if (event.order?.id && validationCause) {
+        await this.addOrderNote({
+          orderId: event.order.id,
+          graphqlClient,
+          message: `NP Atobarai skipped fulfillment reporting: ${parsingResult.error.message}`,
+        });
+      }
+
       return ok(
         new FulfillmentTrackingNumberUpdatedUseCaseResponse.Failure(
           new InvalidEventValidationError("Failed to parse Saleor event", {
