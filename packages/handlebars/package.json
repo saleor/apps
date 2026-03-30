@@ -18,12 +18,12 @@
     "@saleor/typescript-config-apps": "workspace:*",
     "@types/handlebars-helpers": "^0.5.6",
     "@vitest/coverage-v8": "catalog:",
-    "handlebars": "4.7.9",
+    "eslint": "catalog:",
+    "handlebars": "^4.7.9",
     "handlebars-helpers": "0.10.0",
     "typescript": "catalog:",
     "vite": "catalog:",
-    "vitest": "catalog:",
-    "eslint": "catalog:"
+    "vitest": "catalog:"
   },
   "peerDependencies": {
     "handlebars": ">=4.7.0",

@@ -24,10 +24,13 @@ export function registerAllowedHelpers(
   const allowedGroupNames = Object.keys(ALLOWED_HELPERS);
   const allowedHelperNames = new Set(Object.values(ALLOWED_HELPERS).flat());
 
+  // Save built-in helpers so we don't strip them
+  const builtInHelpers = new Set(Object.keys(handlebars.helpers));
+
   handlebarsHelpers(allowedGroupNames, { handlebars });
 
   for (const name of Object.keys(handlebars.helpers)) {
-    if (!allowedHelperNames.has(name)) {
+    if (!allowedHelperNames.has(name) && !builtInHelpers.has(name)) {
       handlebars.unregisterHelper(name);
     }
   }
