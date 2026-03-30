@@ -349,6 +349,16 @@ export class SendEventMessagesUseCase {
       effectiveRecipientEmail = redirectResult.value;
     }
 
+    const isRedirected = effectiveRecipientEmail !== recipientEmail;
+
+    const redirectBanner = `<mj-section background-color="#fef3c7" padding="12px 16px">
+  <mj-column>
+    <mj-text font-size="13px" line-height="1.5" color="#92400e" font-weight="600">
+      Preview only: This email was sent through Saleor's preview mail path and is delivered to organization owner's email address. To send emails to customers, provide configuration in Saleor SMTP app.
+    </mj-text>
+  </mj-column>
+</mj-section>`;
+
     const fallbackConfig: SmtpConfiguration = {
       id: "fallback",
       active: true,
@@ -364,11 +374,12 @@ export class SendEventMessagesUseCase {
       events: messageEventTypes.map((eventType) => ({
         active: true,
         eventType,
-        template: defaultMjmlTemplates[eventType],
-        subject:
-          effectiveRecipientEmail !== recipientEmail
-            ? `[${recipientEmail}] ${defaultMjmlSubjectTemplates[eventType]}`
-            : defaultMjmlSubjectTemplates[eventType],
+        template: isRedirected
+          ? defaultMjmlTemplates[eventType].replace("<mj-body>", `<mj-body>${redirectBanner}`)
+          : defaultMjmlTemplates[eventType],
+        subject: isRedirected
+          ? `[${recipientEmail}] ${defaultMjmlSubjectTemplates[eventType]}`
+          : defaultMjmlSubjectTemplates[eventType],
       })),
     };
 
