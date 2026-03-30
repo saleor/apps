@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.28.0
+
+### Minor Changes
+
+- 233f044: Added Saleor Pages indexing. Now user can select which page types are going to be synced with Algolia. Additionally some larger attributes can be marked not to be synced
+
 ## 1.27.0
 
 ### Minor Changes
