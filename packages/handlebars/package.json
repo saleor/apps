@@ -24,7 +24,8 @@
     "handlebars": "4.7.9",
     "typescript": "catalog:",
     "vite": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "eslint": "catalog:"
   },
   "peerDependencies": {
     "handlebars": ">=4.7.0"

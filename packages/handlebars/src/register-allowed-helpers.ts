@@ -14,8 +14,10 @@ import { ALLOWED_HELPERS } from "./allowed-helpers";
  */
 export function registerAllowedHelpers(handlebars: typeof Handlebars): void {
   for (const [group, helperNames] of Object.entries(ALLOWED_HELPERS)) {
-    // We need require for backwards-compatibility: it must be imported synchronously
-    // same as previous hanlebars-helpers usage
+    /*
+     * We need require for backwards-compatibility: it must be imported synchronously
+     * same as previous hanlebars-helpers usage
+     */
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const groupHelpers = require(`handlebars-helpers/lib/${group}`) as Record<
       string,

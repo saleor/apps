@@ -1,5 +1,5 @@
 import Handlebars from "handlebars";
-import { describe, it, expect, beforeEach } from "vitest";
+import { beforeEach,describe, expect, it } from "vitest";
 
 import { ALLOWED_HELPERS } from "./allowed-helpers";
 import { registerAllowedHelpers } from "./register-allowed-helpers";
