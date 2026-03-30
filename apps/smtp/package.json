@@ -51,7 +51,7 @@
     "dynamodb-toolbox": "catalog:",
     "graphql": "catalog:",
     "graphql-tag": "catalog:",
-    "handlebars": "^4.7.7",
+    "handlebars": "^4.7.9",
     "handlebars-helpers": "0.10.0",
     "html-to-text": "^9.0.3",
     "jsdom": "catalog:",
