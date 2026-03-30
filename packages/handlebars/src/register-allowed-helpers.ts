@@ -1,44 +1,33 @@
 import type Handlebars from "handlebars";
 
-import { ALLOWED_HELPERS, type HelperGroup } from "./allowed-helpers";
+import { ALLOWED_HELPERS } from "./allowed-helpers";
 
 /**
  * Registers only the explicitly allowed helpers from `handlebars-helpers`
  * onto the given Handlebars instance.
  *
- * Instead of loading all helpers via `handlebarsHelpers({ handlebars })`,
- * this function cherry-picks individual helpers from each group module,
- * so we have full control over what's available in user-authored templates.
+ * Each group listed in ALLOWED_HELPERS is loaded via `require()`,
+ * and only the helpers named in that group's array are registered.
+ * Groups not listed are never loaded.
  *
- * To remove a helper, delete its entry from `ALLOWED_HELPERS` in `allowed-helpers.ts`.
+ * To change what's available, edit `allowed-helpers.ts`.
  */
 export function registerAllowedHelpers(handlebars: typeof Handlebars): void {
-  const groupCache = new Map<HelperGroup, Record<string, Handlebars.HelperDelegate>>();
-
-  const getGroup = (group: HelperGroup): Record<string, Handlebars.HelperDelegate> => {
-    const cached = groupCache.get(group);
-
-    if (cached) {
-      return cached;
-    }
-
+  for (const [group, helperNames] of Object.entries(ALLOWED_HELPERS)) {
+    // We need require for backwards-compatibility: it must be imported synchronously
+    // same as previous hanlebars-helpers usage
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const helpers = require(`handlebars-helpers/lib/${group}`) as Record<
+    const groupHelpers = require(`handlebars-helpers/lib/${group}`) as Record<
       string,
       Handlebars.HelperDelegate
     >;
 
-    groupCache.set(group, helpers);
+    for (const name of helperNames) {
+      const helper = groupHelpers[name];
 
-    return helpers;
-  };
-
-  for (const [helperName, group] of Object.entries(ALLOWED_HELPERS)) {
-    const groupHelpers = getGroup(group);
-    const helper = groupHelpers[helperName];
-
-    if (typeof helper === "function") {
-      handlebars.registerHelper(helperName, helper);
+      if (typeof helper === "function") {
+        handlebars.registerHelper(name, helper);
+      }
     }
   }
 }

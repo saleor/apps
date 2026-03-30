@@ -1,247 +1,193 @@
 /**
  * Explicitly allowed Handlebars helpers from the `handlebars-helpers` package.
  *
- * Each entry maps a helper name to the group it belongs to.
- * To disallow a helper after security review, remove or comment out the line.
+ * Each key is a group name (matching `handlebars-helpers/lib/<group>`),
+ * and the value is the list of helper names to register from that group.
  *
- * Available groups in handlebars-helpers:
- * array, code, collection, comparison, date, fs, html, i18n,
- * inflection, logging, markdown, match, math, misc, number,
- * object, path, regex, string, url
+ * To disallow a helper, remove it from the array.
+ * To disallow an entire group, remove or comment out the entry.
+ * Groups not listed here are never loaded.
  */
-
-export type HelperGroup =
-  | "array"
-  | "code"
-  | "collection"
-  | "comparison"
-  | "date"
-  | "fs"
-  | "html"
-  | "i18n"
-  | "inflection"
-  | "logging"
-  | "markdown"
-  | "match"
-  | "math"
-  | "misc"
-  | "number"
-  | "object"
-  | "path"
-  | "regex"
-  | "string"
-  | "url";
-
-export const ALLOWED_HELPERS: Record<string, HelperGroup> = {
+export const ALLOWED_HELPERS: Record<string, string[]> = {
   // --- array ---
-  after: "array",
-  arrayify: "array",
-  before: "array",
-  eachIndex: "array",
-  filter: "array",
-  first: "array",
-  forEach: "array",
-  inArray: "array",
-  isArray: "array",
-  itemAt: "array",
-  join: "array",
-  equalsLength: "array",
-  last: "array",
-  length: "array",
-  map: "array",
-  pluck: "array",
-  reverse: "array",
-  some: "array",
-  sort: "array",
-  sortBy: "array",
-  withAfter: "array",
-  withBefore: "array",
-  withFirst: "array",
-  withGroup: "array",
-  withLast: "array",
-  withSort: "array",
-  unique: "array",
+  array: [
+    "after",
+    "arrayify",
+    "before",
+    "eachIndex",
+    "filter",
+    "first",
+    "forEach",
+    "inArray",
+    "isArray",
+    "itemAt",
+    "join",
+    "equalsLength",
+    "last",
+    "length",
+    "map",
+    "pluck",
+    "reverse",
+    "some",
+    "sort",
+    "sortBy",
+    "withAfter",
+    "withBefore",
+    "withFirst",
+    "withGroup",
+    "withLast",
+    "withSort",
+    "unique",
+  ],
 
-  // --- code ---
-  // embed: "code", - removed
-  gist: "code",
-  jsfiddle: "code",
+  // --- code (embed removed) ---
+  code: ["gist", "jsfiddle"],
 
   // --- collection ---
-  isEmpty: "collection",
-  iterate: "collection",
+  collection: ["isEmpty", "iterate"],
 
   // --- comparison ---
-  and: "comparison",
-  compare: "comparison",
-  contains: "comparison",
-  default: "comparison",
-  eq: "comparison",
-  gt: "comparison",
-  gte: "comparison",
-  has: "comparison",
-  isFalsey: "comparison",
-  isTruthy: "comparison",
-  ifEven: "comparison",
-  ifNth: "comparison",
-  ifOdd: "comparison",
-  is: "comparison",
-  isnt: "comparison",
-  lt: "comparison",
-  lte: "comparison",
-  neither: "comparison",
-  not: "comparison",
-  or: "comparison",
-  unlessEq: "comparison",
-  unlessGt: "comparison",
-  unlessLt: "comparison",
-  unlessGteq: "comparison",
-  unlessLteq: "comparison",
+  comparison: [
+    "and",
+    "compare",
+    "contains",
+    "default",
+    "eq",
+    "gt",
+    "gte",
+    "has",
+    "isFalsey",
+    "isTruthy",
+    "ifEven",
+    "ifNth",
+    "ifOdd",
+    "is",
+    "isnt",
+    "lt",
+    "lte",
+    "neither",
+    "not",
+    "or",
+    "unlessEq",
+    "unlessGt",
+    "unlessLt",
+    "unlessGteq",
+    "unlessLteq",
+  ],
 
   // --- date ---
-  year: "date",
-  moment: "date",
-  date: "date",
+  date: ["year", "moment", "date"],
 
-  // --- fs ---
-  // read: "fs",
-  // readdir: "fs",
+  // --- fs: removed entirely ---
 
   // --- html ---
-  attr: "html",
-  css: "html",
-  js: "html",
-  sanitize: "html",
-  ul: "html",
-  ol: "html",
-  thumbnailImage: "html",
+  html: ["attr", "css", "js", "sanitize", "ul", "ol", "thumbnailImage"],
 
   // --- i18n ---
-  i18n: "i18n",
+  i18n: ["i18n"],
 
   // --- inflection ---
-  inflect: "inflection",
-  ordinalize: "inflection",
+  inflection: ["inflect", "ordinalize"],
 
-  // --- logging ---
-  // removed
+  // --- logging: removed entirely ---
 
-  // --- markdown ---
-  // markdown: "markdown",
-  // md: "markdown",
+  // --- markdown: removed entirely ---
 
-  // --- match ---
-  // match: "match", - removed
-  // isMatch: "match",
-  // mm: "match",
+  // --- match: removed entirely ---
 
   // --- math ---
-  abs: "math",
-  add: "math",
-  avg: "math",
-  ceil: "math",
-  divide: "math",
-  floor: "math",
-  minus: "math",
-  modulo: "math",
-  multiply: "math",
-  plus: "math",
-  random: "math",
-  remainder: "math",
-  round: "math",
-  subtract: "math",
-  sum: "math",
-  times: "math",
+  math: [
+    "abs",
+    "add",
+    "avg",
+    "ceil",
+    "divide",
+    "floor",
+    "minus",
+    "modulo",
+    "multiply",
+    "plus",
+    "random",
+    "remainder",
+    "round",
+    "subtract",
+    "sum",
+    "times",
+  ],
 
   // --- misc ---
-  option: "misc",
-  noop: "misc",
-  withHash: "misc",
+  misc: ["option", "noop", "withHash"],
 
   // --- number ---
-  bytes: "number",
-  addCommas: "number",
-  phoneNumber: "number",
-  toAbbr: "number",
-  toExponential: "number",
-  toFixed: "number",
-  toFloat: "number",
-  toInt: "number",
-  toPrecision: "number",
+  number: [
+    "bytes",
+    "addCommas",
+    "phoneNumber",
+    "toAbbr",
+    "toExponential",
+    "toFixed",
+    "toFloat",
+    "toInt",
+    "toPrecision",
+  ],
 
-  // --- object ---
-  // extend: "object", removed
-  // forIn: "object",
-  // forOwn: "object",
-  // toPath: "object",
-  // get: "object",
-  // getObject: "object",
-  // hasOwn: "object",
-  // isObject: "object",
-  // JSONparse: "object",
-  // JSONstringify: "object",
-  // merge: "object",
-  // pick: "object",
+  // --- object: removed entirely ---
 
-  // --- path ---
-  absolute: "path",
-  dirname: "path",
-  relative: "path",
-  basename: "path",
-  stem: "path",
-  extname: "path",
-  // resolve: "path", removed
-  segments: "path",
+  // --- path (resolve removed) ---
+  path: ["absolute", "dirname", "relative", "basename", "stem", "extname", "segments"],
 
   // --- regex ---
-  toRegex: "regex",
-  test: "regex",
+  regex: ["toRegex", "test"],
 
   // --- string ---
-  append: "string",
-  camelcase: "string",
-  capitalize: "string",
-  capitalizeAll: "string",
-  center: "string",
-  chop: "string",
-  dashcase: "string",
-  dotcase: "string",
-  downcase: "string",
-  ellipsis: "string",
-  hyphenate: "string",
-  isString: "string",
-  lowercase: "string",
-  occurrences: "string",
-  pascalcase: "string",
-  pathcase: "string",
-  plusify: "string",
-  prepend: "string",
-  raw: "string",
-  remove: "string",
-  removeFirst: "string",
-  replace: "string",
-  replaceFirst: "string",
-  sentence: "string",
-  snakecase: "string",
-  split: "string",
-  startsWith: "string",
-  titleize: "string",
-  trim: "string",
-  trimLeft: "string",
-  trimRight: "string",
-  truncate: "string",
-  truncateWords: "string",
-  upcase: "string",
-  uppercase: "string",
+  string: [
+    "append",
+    "camelcase",
+    "capitalize",
+    "capitalizeAll",
+    "center",
+    "chop",
+    "dashcase",
+    "dotcase",
+    "downcase",
+    "ellipsis",
+    "hyphenate",
+    "isString",
+    "lowercase",
+    "occurrences",
+    "pascalcase",
+    "pathcase",
+    "plusify",
+    "prepend",
+    "raw",
+    "remove",
+    "removeFirst",
+    "replace",
+    "replaceFirst",
+    "sentence",
+    "snakecase",
+    "split",
+    "startsWith",
+    "titleize",
+    "trim",
+    "trimLeft",
+    "trimRight",
+    "truncate",
+    "truncateWords",
+    "upcase",
+    "uppercase",
+  ],
 
   // --- url ---
-  encodeURI: "url",
-  escape: "url",
-  decodeURI: "url",
-  url_encode: "url",
-  url_decode: "url",
-  urlResolve: "url",
-  urlParse: "url",
-  stripQuerystring: "url",
-  stripProtocol: "url",
+  url: [
+    "encodeURI",
+    "escape",
+    "decodeURI",
+    "url_encode",
+    "url_decode",
+    "urlResolve",
+    "urlParse",
+    "stripQuerystring",
+    "stripProtocol",
+  ],
 };
