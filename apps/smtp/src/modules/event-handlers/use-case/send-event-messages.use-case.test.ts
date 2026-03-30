@@ -1,7 +1,9 @@
 import { err, errAsync, ok, okAsync } from "neverthrow";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { env } from "../../../env";
 import { BaseError } from "../../../errors";
+import { fetchRedirectEmail } from "../../saleor-fallback-behavior/redirect-email-fetcher";
 import {
   getFallbackSmtpConfigSchema,
   type SmtpConfiguration,
@@ -24,6 +26,23 @@ vi.mock("../../smtp/configuration/smtp-config-schema", async (importOriginal) =>
   return {
     ...actual,
     getFallbackSmtpConfigSchema: vi.fn(() => null),
+  };
+});
+
+vi.mock("../../saleor-fallback-behavior/redirect-email-fetcher", () => ({
+  fetchRedirectEmail: vi.fn(),
+}));
+
+vi.mock("../../../env", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../../../env")>();
+
+  return {
+    ...actual,
+    env: {
+      ...actual.env,
+      FALLBACK_EMAIL_REDIRECT_ENDPOINT: undefined,
+      FALLBACK_EMAIL_REDIRECT_TOKEN: undefined,
+    },
   };
 });
 
@@ -473,6 +492,130 @@ describe("SendEventMessagesUseCase", () => {
             senderName: "Fallback Sender",
           }),
         );
+      });
+
+      describe("Email redirect via endpoint", () => {
+        const fallbackSmtpConfig = {
+          smtpHost: "fallback.smtp.host",
+          smtpPort: "587",
+          smtpUser: "fallback-user",
+          smtpPassword: "fallback-pass",
+          encryption: "TLS" as const,
+          senderName: "Fallback Sender",
+          senderDomain: "example.com",
+          blockedDomains: [],
+        };
+
+        beforeEach(() => {
+          configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
+            MockConfigService.returnFallbackEnabled,
+          );
+          vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue(fallbackSmtpConfig);
+
+          // Enable redirect env vars
+          vi.mocked(env).FALLBACK_EMAIL_REDIRECT_ENDPOINT = "https://redirect.example.com/api";
+          vi.mocked(env).FALLBACK_EMAIL_REDIRECT_TOKEN = "secret-token";
+        });
+
+        afterEach(() => {
+          vi.mocked(env).FALLBACK_EMAIL_REDIRECT_ENDPOINT = undefined;
+          vi.mocked(env).FALLBACK_EMAIL_REDIRECT_TOKEN = undefined;
+        });
+
+        it("Sends email to redirect address when endpoint returns owner_email", async () => {
+          vi.mocked(fetchRedirectEmail).mockResolvedValue(ok("owner@organization.com"));
+
+          await useCaseInstance.sendEventMessages({
+            event: EVENT_TYPE,
+            payload: {},
+            channelSlug: "channel-slug",
+            recipientEmail: "customer@test.com",
+            saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+          });
+
+          expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledWith(
+            expect.objectContaining({
+              recipientEmail: "owner@organization.com",
+            }),
+          );
+        });
+
+        it("Prefixes subject with original recipient email when redirecting", async () => {
+          vi.mocked(fetchRedirectEmail).mockResolvedValue(ok("owner@organization.com"));
+
+          await useCaseInstance.sendEventMessages({
+            event: EVENT_TYPE,
+            payload: {},
+            channelSlug: "channel-slug",
+            recipientEmail: "customer@test.com",
+            saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+          });
+
+          expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledWith(
+            expect.objectContaining({
+              subjectTemplate: expect.stringContaining("[customer@test.com]"),
+            }),
+          );
+        });
+
+        it("Injects preview banner into body template when redirecting", async () => {
+          vi.mocked(fetchRedirectEmail).mockResolvedValue(ok("owner@organization.com"));
+
+          await useCaseInstance.sendEventMessages({
+            event: EVENT_TYPE,
+            payload: {},
+            channelSlug: "channel-slug",
+            recipientEmail: "customer@test.com",
+            saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+          });
+
+          expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledWith(
+            expect.objectContaining({
+              bodyTemplate: expect.stringContaining(
+                "Preview only: This email was sent through Saleor's preview mail path",
+              ),
+            }),
+          );
+        });
+
+        it("Returns RedirectEmailFetchError when endpoint call fails", async () => {
+          vi.mocked(fetchRedirectEmail).mockResolvedValue(err(new BaseError("Network error")));
+
+          const result = await useCaseInstance.sendEventMessages({
+            event: EVENT_TYPE,
+            payload: {},
+            channelSlug: "channel-slug",
+            recipientEmail: "customer@test.com",
+            saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+          });
+
+          expect(result.isErr()).toBe(true);
+          expect(result._unsafeUnwrapErr()[0]).toBeInstanceOf(
+            SendEventMessagesUseCase.RedirectEmailFetchError,
+          );
+          expect(emailSender.mockSendEmailMethod).not.toHaveBeenCalled();
+        });
+
+        it("Does not redirect or inject banner when env vars are not set", async () => {
+          vi.mocked(env).FALLBACK_EMAIL_REDIRECT_ENDPOINT = undefined;
+          vi.mocked(env).FALLBACK_EMAIL_REDIRECT_TOKEN = undefined;
+
+          await useCaseInstance.sendEventMessages({
+            event: EVENT_TYPE,
+            payload: {},
+            channelSlug: "channel-slug",
+            recipientEmail: "customer@test.com",
+            saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+          });
+
+          expect(fetchRedirectEmail).not.toHaveBeenCalled();
+          expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledWith(
+            expect.objectContaining({
+              recipientEmail: "customer@test.com",
+              bodyTemplate: expect.not.stringContaining("Preview only"),
+            }),
+          );
+        });
       });
     });
 
