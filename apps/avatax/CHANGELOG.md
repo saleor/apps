@@ -1,5 +1,11 @@
 # saleor-app-avatax
 
+## 1.22.3
+
+### Patch Changes
+
+- e03c544: Gracefully handle "client logs" errors with dates - now they should be handled in case of incorrect date format
+
 ## 1.22.2
 
 ### Patch Changes

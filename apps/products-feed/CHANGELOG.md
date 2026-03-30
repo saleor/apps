@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 2.3.2
+
+### Patch Changes
+
+- 2d320ef: Updated handlebars to 4.7.9
+
 ## 2.3.1
 
 ### Patch Changes

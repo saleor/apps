@@ -1,5 +1,11 @@
 # saleor-app-smtp
 
+## 1.7.2
+
+### Patch Changes
+
+- 2d320ef: Updated handlebars to 4.7.9
+
 ## 1.7.1
 
 ### Patch Changes
