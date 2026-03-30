@@ -1,5 +1,5 @@
+import { registerAllowedHelpers } from "@saleor/handlebars";
 import Handlebars from "handlebars";
-import handlebars_helpers from "handlebars-helpers";
 import { err, ok, type Result } from "neverthrow";
 
 import { BaseError } from "../../../errors";
@@ -18,7 +18,7 @@ export interface ITemplateCompiler {
   >;
 }
 
-handlebars_helpers({ handlebars: Handlebars });
+registerAllowedHelpers(Handlebars);
 
 const resolveHandlebarsErrorCode = (message: string): TemplateErrorCode => {
   if (message.includes("Missing helper")) {
