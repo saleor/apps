@@ -1,0 +1,31 @@
+apps/smtp/package.json
+  7eadf1f67ff0c751 43
+apps/smtp/scripts/migration-logger.ts
+  7eadf1f67ff0c751 1-13
+apps/smtp/scripts/remove-digital-content-url-from-query.test.ts
+  7eadf1f67ff0c751 18-19,28-32,39-43,47-67,71-90,93
+apps/smtp/scripts/run-webhooks-migration.ts
+  7eadf1f67ff0c751 1-124
+apps/smtp/scripts/remove-digital-content-url-from-query.ts
+  7eadf1f67ff0c751 1-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.23",
+  "base_commit_sha": "5add37adf6fe17af14dc7764738a0ae3e3d500e2",
+  "prompts": {
+    "7eadf1f67ff0c751": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e4f08e91-5769-4146-98a9-8e16be9905ea",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 435,
+      "total_deletions": 174,
+      "accepted_lines": 323,
+      "overriden_lines": 0
+    }
+  }
+}
