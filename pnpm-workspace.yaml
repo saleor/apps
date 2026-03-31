@@ -4,6 +4,10 @@ minimumReleaseAge: 1440 # 24h
 
 trustPolicy: no-downgrade
 
+# TODO: Remove one once released
+trustPolicyExclude:
+  - "@saleor/app-sdk@1.7.2-dev.1"
+
 packages:
   - apps/*
   - packages/*
@@ -45,7 +49,7 @@ catalog:
   "@sentry/cli": 1.77.3
   "@sentry/nextjs": 9.8.0
   eslint: 9.23.0
-  "@saleor/app-sdk": 1.7.1
+  "@saleor/app-sdk": 1.7.2-dev.1
   urql: 4.0.4
   next: 15.2.8
   react: 18.2.0

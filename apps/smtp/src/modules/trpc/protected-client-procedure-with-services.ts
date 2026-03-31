@@ -1,5 +1,6 @@
 import { createSettingsManager } from "../../lib/metadata-manager";
 import { createLogger } from "../../logger";
+import { FallbackSmtpService } from "../fallback-smtp/fallback-smtp-service";
 import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
 import { SmtpMetadataManager } from "../smtp/configuration/smtp-metadata-manager";
@@ -35,10 +36,15 @@ export const protectedWithConfigurationServices = protectedClientProcedure.use(
       featureFlagService,
     });
 
+    const fallbackConfigRepo = new FallbackSmtpService({
+      saleorApiUrl: ctx.saleorApiUrl,
+    });
+
     const result = await next({
       ctx: {
         smtpConfigurationService,
         featureFlagService,
+        fallbackConfigRepo,
       },
     });
 

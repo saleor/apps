@@ -98,6 +98,7 @@ const ConfigurationPage: NextPage = () => {
               fallbackSettingsMutation.mutate({ useSaleorSmtpFallback: newValue });
             }}
             useSaleorSmtpFallback={fallbackSettingsQuery.data?.useSaleorSmtpFallback}
+            fallbackRedirectEmail={fallbackSettingsQuery.data?.fallbackRedirectEmail}
             loading={fallbackSettingsQuery.isLoading}
             saving={fallbackSettingsMutation.isLoading || fallbackSettingsQuery.isRefetching}
           />

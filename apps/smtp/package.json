@@ -13,6 +13,7 @@
     "lint:fix": "eslint --fix .",
     "start": "next start",
     "test": "vitest",
+    "setup-dynamodb": "tsx --env-file-if-exists=.env ./scripts/setup-dynamodb.ts",
     "test-email-build": "tsx ./scripts/build-email-previews.ts",
     "test:ci": "vitest run --coverage"
   },

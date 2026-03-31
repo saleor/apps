@@ -379,31 +379,43 @@ export const smtpConfigurationRouter = router({
       }
     }),
   getFallbackSmtpSettings: protectedWithConfigurationServices.query(async ({ ctx }) => {
-    return ctx.smtpConfigurationService.getConfigurationRoot().match(
-      (v) => ({
-        useSaleorSmtpFallback: v.useSaleorSmtpFallback,
+    return ctx.fallbackConfigRepo.getFallbackConfig().match(
+      (config) => ({
+        useSaleorSmtpFallback: config.fallbackEnabled,
+        fallbackRedirectEmail: config.fallbackRedirectEmail,
       }),
       (e) => throwTrpcErrorFromConfigurationServiceError(e),
     );
   }),
-  isFallbackSmtpConfigured: protectedWithConfigurationServices.query(async () => {
-    const fallbackConfig = getFallbackSmtpConfigSchema();
+  isFallbackSmtpConfigured: protectedWithConfigurationServices.query(async ({ ctx }) => {
+    const fallbackEnvConfig = getFallbackSmtpConfigSchema();
 
-    return { isConfigured: fallbackConfig !== null };
+    if (!fallbackEnvConfig) {
+      return { isConfigured: false };
+    }
+
+    const configResult = await ctx.fallbackConfigRepo.getFallbackConfig();
+
+    return { isConfigured: configResult.isOk() };
   }),
   updateFallbackSmtpSettings: protectedWithConfigurationServices
     .input(
       z.object({
         useSaleorSmtpFallback: z.boolean(),
+        fallbackRedirectEmail: z.string().email().nullable().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.smtpConfigurationService
-        .updateFallbackSmtpSettings({
-          useSaleorSmtpFallback: input.useSaleorSmtpFallback,
+      return ctx.fallbackConfigRepo
+        .setFallbackConfig({
+          fallbackEnabled: input.useSaleorSmtpFallback,
+          fallbackRedirectEmail: input.fallbackRedirectEmail ?? null,
         })
         .match(
-          (v) => v,
+          () => ({
+            useSaleorSmtpFallback: input.useSaleorSmtpFallback,
+            fallbackRedirectEmail: input.fallbackRedirectEmail ?? null,
+          }),
           (e) => throwTrpcErrorFromConfigurationServiceError(e),
         );
     }),

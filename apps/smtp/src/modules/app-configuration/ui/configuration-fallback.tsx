@@ -6,6 +6,7 @@ import { defaultPadding } from "../../../components/ui-defaults";
 
 export const ConfigurationFallback = (props: {
   useSaleorSmtpFallback: boolean | undefined;
+  fallbackRedirectEmail: string | null | undefined;
   loading: boolean;
   saving: boolean;
   onChange: (value: boolean) => void;
@@ -15,6 +16,38 @@ export const ConfigurationFallback = (props: {
       <BoxWithBorder>
         <Box padding={defaultPadding}>
           <SkeletonLayout.Section />
+        </Box>
+      </BoxWithBorder>
+    );
+  }
+
+  if (!props.useSaleorSmtpFallback) {
+    return (
+      <BoxWithBorder>
+        <Box padding={defaultPadding}>
+          <Text fontSize={4} fontWeight="bold">
+            Fallback SMTP is not enabled
+          </Text>
+          <Paragraph marginTop={2} color="default2">
+            Fallback SMTP is not enabled for this installation. Contact Saleor support to enable it.
+          </Paragraph>
+        </Box>
+      </BoxWithBorder>
+    );
+  }
+
+  if (props.fallbackRedirectEmail) {
+    return (
+      <BoxWithBorder>
+        <Box padding={defaultPadding}>
+          <Text fontSize={4} fontWeight="bold">
+            Fallback SMTP is enabled
+          </Text>
+          <Paragraph marginTop={2} color="default2">
+            Events not covered by custom configuration will be sent to{" "}
+            <Text fontWeight="bold">{props.fallbackRedirectEmail}</Text> using Saleor Cloud SMTP
+            server.
+          </Paragraph>
         </Box>
       </BoxWithBorder>
     );
