@@ -1,10 +1,11 @@
 import { err, errAsync, ok, okAsync } from "neverthrow";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { env } from "../../../env";
 import { BaseError } from "../../../errors";
+import { getRedirectEmailConfig } from "../../saleor-fallback-behavior/redirect-email-config";
 import { fetchRedirectEmail } from "../../saleor-fallback-behavior/redirect-email-fetcher";
 import {
+  type FallbackSmtpConfig,
   getFallbackSmtpConfigSchema,
   type SmtpConfiguration,
 } from "../../smtp/configuration/smtp-config-schema";
@@ -33,18 +34,9 @@ vi.mock("../../saleor-fallback-behavior/redirect-email-fetcher", () => ({
   fetchRedirectEmail: vi.fn(),
 }));
 
-vi.mock("../../../env", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../../../env")>();
-
-  return {
-    ...actual,
-    env: {
-      ...actual.env,
-      FALLBACK_EMAIL_REDIRECT_ENDPOINT: undefined,
-      FALLBACK_EMAIL_REDIRECT_TOKEN: undefined,
-    },
-  };
-});
+vi.mock("../../saleor-fallback-behavior/redirect-email-config", () => ({
+  getRedirectEmailConfig: vi.fn(() => null),
+}));
 
 const EVENT_TYPE = "ACCOUNT_DELETE" satisfies MessageEventTypes;
 
@@ -495,12 +487,12 @@ describe("SendEventMessagesUseCase", () => {
       });
 
       describe("Email redirect via endpoint", () => {
-        const fallbackSmtpConfig = {
+        const fallbackSmtpConfig: FallbackSmtpConfig = {
           smtpHost: "fallback.smtp.host",
           smtpPort: "587",
           smtpUser: "fallback-user",
           smtpPassword: "fallback-pass",
-          encryption: "TLS" as const,
+          encryption: "TLS",
           senderName: "Fallback Sender",
           senderDomain: "example.com",
           blockedDomains: [],
@@ -512,14 +504,10 @@ describe("SendEventMessagesUseCase", () => {
           );
           vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue(fallbackSmtpConfig);
 
-          // Enable redirect env vars
-          vi.mocked(env).FALLBACK_EMAIL_REDIRECT_ENDPOINT = "https://redirect.example.com/api";
-          vi.mocked(env).FALLBACK_EMAIL_REDIRECT_TOKEN = "secret-token";
-        });
-
-        afterEach(() => {
-          vi.mocked(env).FALLBACK_EMAIL_REDIRECT_ENDPOINT = undefined;
-          vi.mocked(env).FALLBACK_EMAIL_REDIRECT_TOKEN = undefined;
+          vi.mocked(getRedirectEmailConfig).mockReturnValue({
+            endpointUrl: "https://redirect.example.com/api",
+            token: "secret-token",
+          });
         });
 
         it("Sends email to redirect address when endpoint returns owner_email", async () => {
@@ -596,9 +584,8 @@ describe("SendEventMessagesUseCase", () => {
           expect(emailSender.mockSendEmailMethod).not.toHaveBeenCalled();
         });
 
-        it("Does not redirect or inject banner when env vars are not set", async () => {
-          vi.mocked(env).FALLBACK_EMAIL_REDIRECT_ENDPOINT = undefined;
-          vi.mocked(env).FALLBACK_EMAIL_REDIRECT_TOKEN = undefined;
+        it("Does not redirect or inject banner when redirect config is not set", async () => {
+          vi.mocked(getRedirectEmailConfig).mockReturnValue(null);
 
           await useCaseInstance.sendEventMessages({
             event: EVENT_TYPE,

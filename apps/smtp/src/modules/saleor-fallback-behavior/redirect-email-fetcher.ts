@@ -11,10 +11,13 @@ const redirectEmailResponseSchema = z.object({
   }),
 });
 
-export const fetchRedirectEmail = async (
-  endpointUrl: string,
-  token: string,
-): Promise<Result<string, InstanceType<typeof RedirectEmailFetchError>>> => {
+export const fetchRedirectEmail = async ({
+  endpointUrl,
+  token,
+}: {
+  endpointUrl: string;
+  token: string;
+}): Promise<Result<string, InstanceType<typeof RedirectEmailFetchError>>> => {
   let response: Response;
 
   try {

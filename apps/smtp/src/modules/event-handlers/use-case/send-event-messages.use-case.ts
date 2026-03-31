@@ -1,10 +1,10 @@
 import { err, errAsync, fromThrowable, ok, Result, ResultAsync } from "neverthrow";
 
-import { env } from "../../../env";
 import { BaseError } from "../../../errors";
 import { bytesToKb } from "../../../lib/bytes-to-kb";
 import { createLogger } from "../../../logger";
 import { FallbackSenderEmail } from "../../saleor-fallback-behavior/fallback-sender-email";
+import { getRedirectEmailConfig } from "../../saleor-fallback-behavior/redirect-email-config";
 import { fetchRedirectEmail } from "../../saleor-fallback-behavior/redirect-email-fetcher";
 import { TenantName } from "../../saleor-fallback-behavior/tenant-name";
 import {
@@ -322,14 +322,15 @@ export class SendEventMessagesUseCase {
     const senderEmail = senderEmailResult.value;
 
     let effectiveRecipientEmail = recipientEmail;
+    const redirectConfig = getRedirectEmailConfig();
 
-    if (env.FALLBACK_EMAIL_REDIRECT_ENDPOINT && env.FALLBACK_EMAIL_REDIRECT_TOKEN) {
+    if (redirectConfig) {
       this.logger.info("Redirect endpoint configured, fetching redirect email");
 
-      const redirectResult = await fetchRedirectEmail(
-        env.FALLBACK_EMAIL_REDIRECT_ENDPOINT,
-        env.FALLBACK_EMAIL_REDIRECT_TOKEN,
-      );
+      const redirectResult = await fetchRedirectEmail({
+        endpointUrl: redirectConfig.endpointUrl,
+        token: redirectConfig.token,
+      });
 
       if (redirectResult.isErr()) {
         this.logger.error("Failed to fetch redirect email", { error: redirectResult.error });

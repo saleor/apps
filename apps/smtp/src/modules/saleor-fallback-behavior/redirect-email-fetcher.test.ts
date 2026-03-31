@@ -18,7 +18,10 @@ describe("fetchRedirectEmail", () => {
       ),
     );
 
-    const result = await fetchRedirectEmail("https://example.com/api", "token123");
+    const result = await fetchRedirectEmail({
+      endpointUrl: "https://example.com/api",
+      token: "token123",
+    });
 
     expect(result._unsafeUnwrap()).toBe("owner@example.com");
   });
@@ -30,7 +33,7 @@ describe("fetchRedirectEmail", () => {
       }),
     );
 
-    await fetchRedirectEmail("https://example.com/api", "my-token");
+    await fetchRedirectEmail({ endpointUrl: "https://example.com/api", token: "my-token" });
 
     expect(fetchSpy).toHaveBeenCalledWith("https://example.com/api", {
       headers: { Authorization: "Token my-token" },
@@ -40,7 +43,10 @@ describe("fetchRedirectEmail", () => {
   it("returns error on network failure", async () => {
     vi.spyOn(global, "fetch").mockRejectedValueOnce(new Error("Network error"));
 
-    const result = await fetchRedirectEmail("https://example.com/api", "token123");
+    const result = await fetchRedirectEmail({
+      endpointUrl: "https://example.com/api",
+      token: "token123",
+    });
 
     expect(result.isErr()).toBe(true);
     expect(result._unsafeUnwrapErr().message).toContain("Network error");
@@ -49,7 +55,10 @@ describe("fetchRedirectEmail", () => {
   it("returns error on non-OK HTTP status", async () => {
     vi.spyOn(global, "fetch").mockResolvedValueOnce(new Response(null, { status: 403 }));
 
-    const result = await fetchRedirectEmail("https://example.com/api", "token123");
+    const result = await fetchRedirectEmail({
+      endpointUrl: "https://example.com/api",
+      token: "token123",
+    });
 
     expect(result.isErr()).toBe(true);
     expect(result._unsafeUnwrapErr().message).toContain("403");
@@ -58,7 +67,10 @@ describe("fetchRedirectEmail", () => {
   it("returns error when response body is not valid JSON", async () => {
     vi.spyOn(global, "fetch").mockResolvedValueOnce(new Response("not json", { status: 200 }));
 
-    const result = await fetchRedirectEmail("https://example.com/api", "token123");
+    const result = await fetchRedirectEmail({
+      endpointUrl: "https://example.com/api",
+      token: "token123",
+    });
 
     expect(result.isErr()).toBe(true);
   });
@@ -68,7 +80,10 @@ describe("fetchRedirectEmail", () => {
       new Response(JSON.stringify({ organization: {} }), { status: 200 }),
     );
 
-    const result = await fetchRedirectEmail("https://example.com/api", "token123");
+    const result = await fetchRedirectEmail({
+      endpointUrl: "https://example.com/api",
+      token: "token123",
+    });
 
     expect(result.isErr()).toBe(true);
     expect(result._unsafeUnwrapErr().message).toContain("schema");
@@ -81,7 +96,10 @@ describe("fetchRedirectEmail", () => {
       }),
     );
 
-    const result = await fetchRedirectEmail("https://example.com/api", "token123");
+    const result = await fetchRedirectEmail({
+      endpointUrl: "https://example.com/api",
+      token: "token123",
+    });
 
     expect(result.isErr()).toBe(true);
   });
