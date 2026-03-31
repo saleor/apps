@@ -1,0 +1,25 @@
+apps/np-atobarai/src/app/api/webhooks/saleor/fulfillment-tracking-number-updated/use-case.test.ts
+  44a71c3273c1807c 501-653
+apps/np-atobarai/src/app/api/webhooks/saleor/fulfillment-tracking-number-updated/use-case.ts
+  44a71c3273c1807c 103-114,130
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.23",
+  "base_commit_sha": "8e41fdfaef26822441ddd40adc0fba70d8e79247",
+  "prompts": {
+    "44a71c3273c1807c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6e2e2328-0fa6-43e8-8195-5468cb76ff1f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 168,
+      "total_deletions": 32,
+      "accepted_lines": 167,
+      "overriden_lines": 0
+    }
+  }
+}
