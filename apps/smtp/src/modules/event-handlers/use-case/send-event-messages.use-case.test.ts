@@ -300,6 +300,41 @@ describe("SendEventMessagesUseCase", () => {
         expect(emailSender.mockSendEmailMethod).not.toHaveBeenCalled();
       });
 
+      it("Does not block sending to blocked domains when redirectConfig is set (redirect overrides recipient)", async () => {
+        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
+          MockConfigService.returnFallbackEnabled,
+        );
+
+        vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
+          smtpHost: "fallback.smtp.host",
+          smtpPort: "587",
+          smtpUser: "fallback-user",
+          smtpPassword: "fallback-pass",
+          encryption: "TLS",
+          senderName: "Fallback Sender",
+          senderDomain: "example.com",
+          blockedDomains: ["example.com"],
+        });
+
+        vi.mocked(getRedirectEmailConfig).mockReturnValue({
+          endpointUrl: "https://redirect.example.com/api",
+          token: "secret-token",
+        });
+
+        vi.mocked(fetchRedirectEmail).mockResolvedValue(ok("owner@organization.com"));
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "user@example.com", // blocked domain, but redirect is active
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+        });
+
+        expect(result.isOk()).toBe(true);
+        expect(emailSender.mockSendEmailMethod).toHaveBeenCalledOnce();
+      });
+
       it("Email addresses without domain are rejected", async () => {
         configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
           MockConfigService.returnFallbackEnabled,

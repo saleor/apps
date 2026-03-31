@@ -283,8 +283,14 @@ export class SendEventMessagesUseCase {
       ]);
     }
 
-    // Block sending to test/invalid domains when using fallback SMTP
-    if (fallbackSmtpConfig.blockedDomains.includes(recipientDomain)) {
+    const redirectConfig = getRedirectEmailConfig();
+
+    /*
+     * Block sending to test/invalid domains when using fallback SMTP, but only
+     * when not redirecting — redirect sends to a fixed address so the original
+     * recipient domain is irrelevant.
+     */
+    if (!redirectConfig && fallbackSmtpConfig.blockedDomains.includes(recipientDomain)) {
       this.logger.info("Rejected sending email: test domain detected", {
         recipientDomain,
       });
@@ -322,7 +328,6 @@ export class SendEventMessagesUseCase {
     const senderEmail = senderEmailResult.value;
 
     let effectiveRecipientEmail = recipientEmail;
-    const redirectConfig = getRedirectEmailConfig();
 
     if (redirectConfig) {
       this.logger.info("Redirect endpoint configured, fetching redirect email");
