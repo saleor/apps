@@ -27,7 +27,7 @@
   },
   "config": {
     "saleor": {
-      "schemaVersion": "3.22"
+      "schemaVersion": "3.23"
     }
   },
   "devDependencies": {
