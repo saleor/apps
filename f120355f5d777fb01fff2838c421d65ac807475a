@@ -1,0 +1,29 @@
+apps/smtp/src/modules/webhook-management/api-operations.ts
+  a0b2fb89510f188d 89,91-94,97-100
+apps/smtp/src/modules/smtp/configuration/smtp-configuration.router.ts
+  a0b2fb89510f188d 357-359,361-362,364,366-375
+apps/smtp/src/modules/event-handlers/use-case/send-event-messages.use-case.ts
+  a0b2fb89510f188d 162,254-259,385
+apps/smtp/src/pages/api/trpc/[trpc].ts
+  a0b2fb89510f188d 18,23-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.23",
+  "base_commit_sha": "f120355f5d777fb01fff2838c421d65ac807475a",
+  "prompts": {
+    "a0b2fb89510f188d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "644c840c-fe45-4f08-9168-6c8bef4b29df",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 39,
+      "total_deletions": 27,
+      "accepted_lines": 39,
+      "overriden_lines": 0
+    }
+  }
+}
