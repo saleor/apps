@@ -354,29 +354,25 @@ export const smtpConfigurationRouter = router({
 
       logger.debug(input, "smtpConfigurationRouter.updateEventArray called");
 
-      try {
-        const configuration = await ctx.smtpConfigurationService.getConfiguration({
-          id: input.configurationId,
-        });
+      const configuration = await ctx.smtpConfigurationService.getConfiguration({
+        id: input.configurationId,
+      });
 
-        if (configuration.isErr()) {
-          throwTrpcErrorFromConfigurationServiceError(configuration.error);
+      if (configuration.isErr()) {
+        throwTrpcErrorFromConfigurationServiceError(configuration.error);
 
-          return;
-        }
-
-        await ctx.smtpConfigurationService
-          .updateConfiguration({
-            ...configuration.value,
-            events: input.events,
-          })
-          .match(
-            (v) => v,
-            (e) => throwTrpcErrorFromConfigurationServiceError(e),
-          );
-      } catch (e) {
-        return throwTrpcErrorFromConfigurationServiceError(e);
+        return;
       }
+
+      return await ctx.smtpConfigurationService
+        .updateConfiguration({
+          ...configuration.value,
+          events: input.events,
+        })
+        .match(
+          (v) => v,
+          (e) => throwTrpcErrorFromConfigurationServiceError(e),
+        );
     }),
   getFallbackSmtpSettings: protectedWithConfigurationServices.query(async ({ ctx }) => {
     return ctx.smtpConfigurationService.getConfigurationRoot().match(

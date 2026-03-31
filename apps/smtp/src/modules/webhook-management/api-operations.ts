@@ -86,13 +86,21 @@ export const createAppWebhook = ({
         throw new Error(response.error.message);
       }
 
-      const webhookCreateData = response.data?.webhookCreate?.webhook;
+      const webhookCreate = response.data?.webhookCreate;
 
-      if (!webhookCreateData) {
-        throw new Error("Webhook Creation did not return any data nor error.");
+      if (webhookCreate?.errors?.length) {
+        throw new Error(
+          `Webhook creation failed: ${webhookCreate.errors
+            .map((e) => `${e.field}: ${e.message}`)
+            .join(", ")}`,
+        );
       }
 
-      return webhookCreateData;
+      if (!webhookCreate?.webhook) {
+        throw new Error("Webhook creation did not return any data nor error.");
+      }
+
+      return webhookCreate.webhook;
     });
 
 export const deleteAppWebhook = ({ client, id }: { client: Client; id: string }) =>
