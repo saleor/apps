@@ -584,6 +584,23 @@ describe("SendEventMessagesUseCase", () => {
           expect(emailSender.mockSendEmailMethod).not.toHaveBeenCalled();
         });
 
+        it("Calls fetchRedirectEmail with full URL including saleorApiUrl hostname", async () => {
+          vi.mocked(fetchRedirectEmail).mockResolvedValue(ok("owner@organization.com"));
+
+          await useCaseInstance.sendEventMessages({
+            event: EVENT_TYPE,
+            payload: {},
+            channelSlug: "channel-slug",
+            recipientEmail: "customer@test.com",
+            saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+          });
+
+          expect(fetchRedirectEmail).toHaveBeenCalledWith({
+            endpointUrl: "https://redirect.example.com/api/demo.saleor.cloud/",
+            token: "secret-token",
+          });
+        });
+
         it("Does not redirect or inject banner when redirect config is not set", async () => {
           vi.mocked(getRedirectEmailConfig).mockReturnValue(null);
 

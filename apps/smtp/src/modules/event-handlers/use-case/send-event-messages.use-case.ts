@@ -327,8 +327,12 @@ export class SendEventMessagesUseCase {
     if (redirectConfig) {
       this.logger.info("Redirect endpoint configured, fetching redirect email");
 
+      const saleorHostname = new URL(saleorApiUrl).hostname;
+      const baseUrl = redirectConfig.endpointUrl.endsWith("/")
+        ? redirectConfig.endpointUrl
+        : `${redirectConfig.endpointUrl}/`;
       const redirectResult = await fetchRedirectEmail({
-        endpointUrl: redirectConfig.endpointUrl,
+        endpointUrl: `${baseUrl}${saleorHostname}/`,
         token: redirectConfig.token,
       });
 
