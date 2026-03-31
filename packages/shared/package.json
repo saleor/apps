@@ -19,7 +19,11 @@
     "./theme-synchronizer": "./src/theme-synchronizer.tsx",
     "./use-dashboard-notification": "./src/use-dashboard-notification.ts",
     "./encryptor": "./src/encryptor.ts",
-    "./boolean-env": "./src/boolean-env-schema.ts"
+    "./rotating-encryptor": "./src/rotating-encryptor.ts",
+    "./rotating-sdk-decrypt": "./src/rotating-sdk-decrypt.ts",
+    "./boolean-env": "./src/boolean-env-schema.ts",
+    "./rotating-decrypt-callback": "./src/rotating-decrypt-callback.ts",
+    "./fallback-secret-keys": "./src/fallback-secret-keys.ts"
   },
   "scripts": {
     "check-types": "tsc",
