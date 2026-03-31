@@ -326,7 +326,7 @@ importers:
         version: 1.77.3
       '@sentry/nextjs':
         specifier: 'catalog:'
-        version: 9.8.0(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(next@15.2.8(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 9.8.0(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(next@15.2.8(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@t3-oss/env-nextjs':
         specifier: 'catalog:'
         version: 0.11.1(typescript@5.8.2)(zod@3.21.4)
@@ -335,7 +335,7 @@ importers:
         version: 10.45.3(@trpc/server@10.45.3)
       '@trpc/next':
         specifier: 'catalog:'
-        version: 10.45.3(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.45.3(@trpc/server@10.45.3))(@trpc/react-query@10.45.3(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.45.3(@trpc/server@10.45.3))(@trpc/server@10.45.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.45.3)(next@15.2.8(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.45.3(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.45.3(@trpc/server@10.45.3))(@trpc/react-query@10.45.3(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.45.3(@trpc/server@10.45.3))(@trpc/server@10.45.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.45.3)(next@15.2.8(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 'catalog:'
         version: 10.45.3(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.45.3(@trpc/server@10.45.3))(@trpc/server@10.45.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -380,7 +380,7 @@ importers:
         version: 6.2.1
       next:
         specifier: 'catalog:'
-        version: 15.2.8(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.2.8(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 'catalog:'
         version: 18.2.0
@@ -1180,6 +1180,9 @@ importers:
       '@saleor/apps-ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@saleor/handlebars':
+        specifier: workspace:*
+        version: link:../../packages/handlebars
       '@saleor/macaw-ui':
         specifier: 'catalog:'
         version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1828,6 +1831,9 @@ importers:
       '@saleor/apps-ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@saleor/handlebars':
+        specifier: workspace:*
+        version: link:../../packages/handlebars
       '@saleor/macaw-ui':
         specifier: 'catalog:'
         version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1837,12 +1843,15 @@ importers:
       '@saleor/sentry-utils':
         specifier: workspace:*
         version: link:../../packages/sentry-utils
+      '@saleor/webhook-utils':
+        specifier: workspace:*
+        version: link:../../packages/webhook-utils
       '@sentry/cli':
         specifier: 'catalog:'
         version: 1.77.3
       '@sentry/nextjs':
         specifier: 'catalog:'
-        version: 9.8.0(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(next@15.2.8(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 9.8.0(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(next@15.2.8(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@t3-oss/env-nextjs':
         specifier: 'catalog:'
         version: 0.11.1(typescript@5.8.2)(zod@3.21.4)
@@ -1854,7 +1863,7 @@ importers:
         version: 10.45.3(@trpc/server@10.45.3)
       '@trpc/next':
         specifier: 'catalog:'
-        version: 10.45.3(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.45.3(@trpc/server@10.45.3))(@trpc/react-query@10.45.3(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.45.3(@trpc/server@10.45.3))(@trpc/server@10.45.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.45.3)(next@15.2.8(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.45.3(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.45.3(@trpc/server@10.45.3))(@trpc/react-query@10.45.3(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.45.3(@trpc/server@10.45.3))(@trpc/server@10.45.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.45.3)(next@15.2.8(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 'catalog:'
         version: 10.45.3(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.45.3(@trpc/server@10.45.3))(@trpc/server@10.45.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1905,7 +1914,7 @@ importers:
         version: 6.2.1
       next:
         specifier: 'catalog:'
-        version: 15.2.8(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.2.8(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       nodemailer:
         specifier: ^6.9.1
         version: 6.9.1
@@ -2494,6 +2503,39 @@ importers:
       typescript-eslint:
         specifier: 8.53.1
         version: 8.53.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
+
+  packages/handlebars:
+    devDependencies:
+      '@saleor/eslint-config-apps':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@saleor/typescript-config-apps':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/handlebars-helpers':
+        specifier: ^0.5.6
+        version: 0.5.6
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 3.1.1(vitest@3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0))
+      eslint:
+        specifier: 'catalog:'
+        version: 9.23.0(jiti@2.4.2)
+      handlebars:
+        specifier: 4.7.9
+        version: 4.7.9
+      handlebars-helpers:
+        specifier: 0.10.0
+        version: 0.10.0
+      typescript:
+        specifier: 'catalog:'
+        version: 5.8.2
+      vite:
+        specifier: 'catalog:'
+        version: 6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
+      vitest:
+        specifier: 'catalog:'
+        version: 3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
 
   packages/logger:
     dependencies:
@@ -14456,7 +14498,7 @@ snapshots:
       globals: 14.0.0
       ignore: 5.3.2
       import-fresh: 3.3.1
-      js-yaml: 4.1.0
+      js-yaml: 4.1.1
       minimatch: 3.1.2
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
@@ -17495,7 +17537,7 @@ snapshots:
 
   '@typescript-eslint/utils@8.29.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)':
     dependencies:
-      '@eslint-community/eslint-utils': 4.5.1(eslint@9.23.0(jiti@2.4.2))
+      '@eslint-community/eslint-utils': 4.9.1(eslint@9.23.0(jiti@2.4.2))
       '@typescript-eslint/scope-manager': 8.29.0
       '@typescript-eslint/types': 8.29.0
       '@typescript-eslint/typescript-estree': 8.29.0(typescript@5.8.2)
@@ -17523,7 +17565,7 @@ snapshots:
   '@typescript-eslint/visitor-keys@8.29.0':
     dependencies:
       '@typescript-eslint/types': 8.29.0
-      eslint-visitor-keys: 4.2.0
+      eslint-visitor-keys: 4.2.1
 
   '@typescript-eslint/visitor-keys@8.53.1':
     dependencies:
@@ -19654,7 +19696,7 @@ snapshots:
       '@nodelib/fs.walk': 1.2.8
       glob-parent: 5.1.2
       merge2: 1.4.1
-      micromatch: 4.0.5
+      micromatch: 4.0.8
 
   fast-glob@3.3.1:
     dependencies:
