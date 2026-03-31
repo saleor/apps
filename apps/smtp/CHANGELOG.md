@@ -1,5 +1,18 @@
 # saleor-app-smtp
 
+## 2.1.0
+
+### Minor Changes
+
+- 622d13c: Removed `digitalContentUrl` field from payload, field is removed in 3.23
+
+### Patch Changes
+
+- 622d13c: Updated GraphQL schema to 3.23
+- Updated dependencies [622d13c]
+  - @saleor/webhook-utils@0.2.10
+  - @saleor/handlebars@0.1.1
+
 ## 2.0.0
 
 ### Major Changes

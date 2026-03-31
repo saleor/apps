@@ -1,5 +1,11 @@
 # saleor-app-payment-np-atobarai
 
+## 1.4.3
+
+### Patch Changes
+
+- 622d13c: Updated GraphQL schema to 3.23
+
 ## 1.4.2
 
 ### Patch Changes
