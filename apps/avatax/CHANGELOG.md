@@ -1,5 +1,13 @@
 # saleor-app-avatax
 
+## 1.22.4
+
+### Patch Changes
+
+- 622d13c: Updated GraphQL schema to 3.23
+- Updated dependencies [622d13c]
+  - @saleor/webhook-utils@0.2.10
+
 ## 1.22.3
 
 ### Patch Changes
