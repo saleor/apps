@@ -1,5 +1,11 @@
 # saleor-app-payment-stripe
 
+## 2.6.2
+
+### Patch Changes
+
+- 622d13c: Updated GraphQL schema to 3.23
+
 ## 2.6.1
 
 ### Patch Changes

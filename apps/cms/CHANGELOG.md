@@ -1,5 +1,11 @@
 # saleor-app-cms
 
+## 2.15.2
+
+### Patch Changes
+
+- 622d13c: Updated GraphQL schema to 3.23
+
 ## 2.15.1
 
 ### Patch Changes

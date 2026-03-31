@@ -1,5 +1,11 @@
 # saleor-app-klaviyo
 
+## 1.15.2
+
+### Patch Changes
+
+- 622d13c: Updated GraphQL schema to 3.23
+
 ## 1.15.1
 
 ### Patch Changes

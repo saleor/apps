@@ -1,5 +1,14 @@
 # saleor-app-products-feed
 
+## 3.0.1
+
+### Patch Changes
+
+- 622d13c: Updated GraphQL schema to 3.23
+- Updated dependencies [622d13c]
+  - @saleor/webhook-utils@0.2.10
+  - @saleor/handlebars@0.1.1
+
 ## 3.0.0
 
 ### Major Changes
