@@ -14,8 +14,8 @@ import { type AuthData } from "@saleor/app-sdk/APL";
 import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 
 import { createSettingsManager } from "../src/lib/metadata-manager";
-import { SmtpMetadataManager } from "../src/modules/smtp/configuration/smtp-metadata-manager";
 import { type SmtpConfig } from "../src/modules/smtp/configuration/smtp-config-schema";
+import { SmtpMetadataManager } from "../src/modules/smtp/configuration/smtp-metadata-manager";
 
 async function fetchConfig(
   authData: AuthData,
@@ -42,7 +42,8 @@ async function main() {
   const allAuthData = await apl.getAll();
 
   if (!allAuthData.length) {
-    console.error("No installed instances found.");
+    console.error("ERROR No installed instances found.");
+
     return;
   }
 
@@ -89,6 +90,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error(err);
+  console.error(`ERROR ${err}`);
   process.exit(1);
 });
