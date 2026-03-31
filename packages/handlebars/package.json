@@ -1,11 +1,11 @@
 {
   "name": "@saleor/handlebars",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
-  "main": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts"
   },
+  "main": "./src/index.ts",
   "scripts": {
     "check-types": "tsc",
     "lint": "eslint .",
