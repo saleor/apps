@@ -105,6 +105,7 @@ function extractHelpers(template: string): ExtractResult {
   }
 
   visit(ast);
+
   return { helpers, parseError: null };
 }
 
@@ -222,8 +223,7 @@ async function main() {
   console.log(`Customers: ${helpersByCustomer.size}`);
   console.log(`Customers using custom helpers: ${customersWithHelpers}`);
   console.log(
-    `All unique helpers: ${
-      allUniqueHelpers.size > 0 ? [...allUniqueHelpers].sort().join(", ") : "(none)"
+    `All unique helpers: ${allUniqueHelpers.size > 0 ? [...allUniqueHelpers].sort().join(", ") : "(none)"
     }`,
   );
 }
