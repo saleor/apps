@@ -1,9 +1,11 @@
 import {
   EncryptedMetadataManager,
-  MetadataEntry,
-  SettingsManager,
+  type MetadataEntry,
+  type SettingsManager,
 } from "@saleor/app-sdk/settings-manager";
-import { Client, gql } from "urql";
+import { type Client, gql } from "urql";
+
+import { createRotatingDecryptCallback } from "./rotating-decrypt-callback";
 
 const UpdateAppMetadataMutation = gql`
   mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
@@ -104,7 +106,10 @@ async function updatePrivateMetadata(
 }
 
 export class EncryptedMetadataManagerFactory {
-  constructor(private encryptionKey: string) {
+  constructor(
+    private encryptionKey: string,
+    private fallbackKeys: string[] = [],
+  ) {
     if (!encryptionKey) {
       throw new Error("Encryption key is required");
     }
@@ -114,13 +119,16 @@ export class EncryptedMetadataManagerFactory {
     return new EncryptedMetadataManager({
       encryptionKey: this.encryptionKey,
       fetchMetadata: () => fetchAllPrivateMetadata(client),
-      mutateMetadata: (metadata) => updatePrivateMetadata(client, metadata, appId),
-      async deleteMetadata(keys) {
+      mutateMetadata: (metadata: MetadataEntry[]) => updatePrivateMetadata(client, metadata, appId),
+      async deleteMetadata(keys: string[]) {
         await client.mutation(DeletePrivateMetadataMutation, {
           id: appId,
           keys: keys,
         });
       },
+      ...(this.fallbackKeys.length > 0 && {
+        decryptionMethod: createRotatingDecryptCallback(this.encryptionKey, this.fallbackKeys),
+      }),
     });
   }
 }
