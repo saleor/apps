@@ -4,8 +4,10 @@ import { BaseError } from "../../../errors";
 import { bytesToKb } from "../../../lib/bytes-to-kb";
 import { createLogger } from "../../../logger";
 import { FallbackSenderEmail } from "../../saleor-fallback-behavior/fallback-sender-email";
+import { REDIRECT_BANNER } from "../../saleor-fallback-behavior/redirect-banner";
 import { getRedirectEmailConfig } from "../../saleor-fallback-behavior/redirect-email-config";
 import { fetchRedirectEmail } from "../../saleor-fallback-behavior/redirect-email-fetcher";
+import { buildRedirectEndpointUrl } from "../../saleor-fallback-behavior/redirect-endpoint-url";
 import { TenantName } from "../../saleor-fallback-behavior/tenant-name";
 import {
   getFallbackSmtpConfigSchema,
@@ -332,12 +334,11 @@ export class SendEventMessagesUseCase {
     if (redirectConfig) {
       this.logger.info("Redirect endpoint configured, fetching redirect email");
 
-      const saleorHostname = new URL(saleorApiUrl).hostname;
-      const baseUrl = redirectConfig.endpointUrl.endsWith("/")
-        ? redirectConfig.endpointUrl
-        : `${redirectConfig.endpointUrl}/`;
       const redirectResult = await fetchRedirectEmail({
-        endpointUrl: `${baseUrl}${saleorHostname}/`,
+        endpointUrl: buildRedirectEndpointUrl({
+          endpointUrl: redirectConfig.endpointUrl,
+          saleorApiUrl,
+        }),
         token: redirectConfig.token,
       });
 
@@ -361,14 +362,6 @@ export class SendEventMessagesUseCase {
 
     const isRedirected = effectiveRecipientEmail !== recipientEmail;
 
-    const redirectBanner = `<mj-section background-color="#fef3c7" padding="12px 16px">
-  <mj-column>
-    <mj-text font-size="13px" line-height="1.5" color="#92400e" font-weight="600">
-      Preview only: This email was sent through Saleor's preview mail path and is delivered to organization owner's email address. To send emails to customers, provide configuration in Saleor SMTP app.
-    </mj-text>
-  </mj-column>
-</mj-section>`;
-
     const fallbackConfig: SmtpConfiguration = {
       id: "fallback",
       active: true,
@@ -385,7 +378,7 @@ export class SendEventMessagesUseCase {
         active: true,
         eventType,
         template: isRedirected
-          ? defaultMjmlTemplates[eventType].replace("<mj-body>", `<mj-body>${redirectBanner}`)
+          ? defaultMjmlTemplates[eventType].replace("<mj-body>", `<mj-body>${REDIRECT_BANNER}`)
           : defaultMjmlTemplates[eventType],
         subject: isRedirected
           ? `[${recipientEmail}] ${defaultMjmlSubjectTemplates[eventType]}`
