@@ -9,7 +9,7 @@
     "check-types": "tsc",
     "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
     "dev": "NODE_OPTIONS='--inspect' next dev",
-    "dump-templates": "NODE_OPTIONS='--import ./scripts/require-shim.mjs' tsx --require dotenv/config ./scripts/dump-templates.ts",
+    "dump-templates": "NODE_ENV=development NODE_OPTIONS='--import ./scripts/require-shim.mjs' tsx --require dotenv/config ./scripts/dump-templates.ts",
     "generate": "graphql-codegen",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
