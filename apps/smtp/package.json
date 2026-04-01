@@ -1,13 +1,15 @@
 {
   "name": "saleor-app-smtp",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": true,
   "type": "module",
   "scripts": {
+    "audit-helpers": "tsx ./scripts/audit-handlebars-helpers.ts",
     "build": "next build",
     "check-types": "tsc",
     "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
     "dev": "NODE_OPTIONS='--inspect' next dev",
+    "dump-templates": "NODE_OPTIONS='--import ./scripts/require-shim.mjs' tsx --require dotenv/config ./scripts/dump-templates.ts",
     "generate": "graphql-codegen",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
@@ -15,8 +17,6 @@
     "migrate:dry-run": "pnpm tsx --env-file-if-exists=.env ./scripts/run-webhooks-migration.ts --dry-run",
     "start": "next start",
     "test": "vitest",
-    "audit-helpers": "tsx ./scripts/audit-handlebars-helpers.ts",
-    "dump-templates": "NODE_OPTIONS='--import ./scripts/require-shim.mjs' tsx --require dotenv/config ./scripts/dump-templates.ts",
     "test-email-build": "tsx ./scripts/build-email-previews.ts",
     "test:ci": "vitest run --coverage"
   },
