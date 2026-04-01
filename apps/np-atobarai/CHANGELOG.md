@@ -1,5 +1,11 @@
 # saleor-app-payment-np-atobarai
 
+## 1.4.4
+
+### Patch Changes
+
+- b33bd4e: Fixed fulfillment-tracking-number-updated handler and changed order of validation. Now app will quit if transactions don't include app's own transactions quietly. Previously app was reporting warning for multiple transactions, even if none of them was created by Atobarai
+
 ## 1.4.3
 
 ### Patch Changes
