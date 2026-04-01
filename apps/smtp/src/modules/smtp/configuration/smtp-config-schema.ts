@@ -69,8 +69,8 @@ export const getFallbackSmtpConfigSchema = (): FallbackSmtpConfig | null => {
       encryption: env.FALLBACK_SMTP_ENCRYPTION,
       senderName: env.FALLBACK_SMTP_SENDER_NAME,
       senderDomain: env.FALLBACK_SMTP_SENDER_DOMAIN,
-      redirectEndpoint: env.FALLBACK_EMAIL_REDIRECT_ENDPOINT,
-      redirectToken: env.FALLBACK_EMAIL_REDIRECT_TOKEN,
+      redirectEndpoint: env.FALLBACK_SMTP_EMAIL_REDIRECT_ENDPOINT,
+      redirectToken: env.FALLBACK_SMTP_EMAIL_REDIRECT_TOKEN,
     });
   } catch (_e) {
     return null;
