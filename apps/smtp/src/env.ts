@@ -1,22 +1,6 @@
 import { booleanEnv } from "@saleor/apps-shared/boolean-env";
 import { createEnv } from "@t3-oss/env-nextjs";
-import { z, type ZodTypeAny } from "zod";
-
-import { defaultBlockedFallbackEmailDomains } from "./const";
-
-function arrayFromString<T extends ZodTypeAny>(schema: T) {
-  return z.preprocess((obj) => {
-    if (Array.isArray(obj)) {
-      return obj;
-    }
-
-    if (typeof obj === "string") {
-      return obj.split(",");
-    }
-
-    throw new Error(`Unexpected type: ${typeof obj}`);
-  }, z.array(schema));
-}
+import { z } from "zod";
 
 export const env = createEnv({
   client: {
@@ -53,11 +37,8 @@ export const env = createEnv({
     FALLBACK_SMTP_ENCRYPTION: z.enum(["NONE", "TLS", "SSL"]).default("NONE"),
     FALLBACK_SMTP_SENDER_NAME: z.string().min(1).optional(),
     FALLBACK_SMTP_SENDER_DOMAIN: z.string().min(1).optional(),
-    FALLBACK_BLOCKED_EMAIL_DOMAINS: arrayFromString(z.string().min(1))
-      .optional()
-      .transform((blockedDomains: string[] | undefined): string[] => {
-        return [...(blockedDomains || []), ...defaultBlockedFallbackEmailDomains];
-      }),
+    FALLBACK_SMTP_EMAIL_REDIRECT_ENDPOINT: z.string().url().optional(),
+    FALLBACK_SMTP_EMAIL_REDIRECT_TOKEN: z.string().min(1).optional(),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
@@ -93,7 +74,8 @@ export const env = createEnv({
     FALLBACK_SMTP_ENCRYPTION: process.env.FALLBACK_SMTP_ENCRYPTION,
     FALLBACK_SMTP_SENDER_NAME: process.env.FALLBACK_SMTP_SENDER_NAME,
     FALLBACK_SMTP_SENDER_DOMAIN: process.env.FALLBACK_SMTP_SENDER_DOMAIN,
-    FALLBACK_BLOCKED_EMAIL_DOMAINS: process.env.FALLBACK_BLOCKED_EMAIL_DOMAINS,
+    FALLBACK_SMTP_EMAIL_REDIRECT_ENDPOINT: process.env.FALLBACK_SMTP_EMAIL_REDIRECT_ENDPOINT,
+    FALLBACK_SMTP_EMAIL_REDIRECT_TOKEN: process.env.FALLBACK_SMTP_EMAIL_REDIRECT_TOKEN,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });
