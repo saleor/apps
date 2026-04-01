@@ -1,4 +1,5 @@
-import { decrypt } from "@saleor/app-sdk/settings-manager";
+import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
+import { createRotatingSdkDecrypt } from "@saleor/apps-shared/rotating-sdk-decrypt";
 
 import { env } from "@/env";
 
@@ -22,12 +23,14 @@ export const getAppConfig = (metadata: MetadataItem[]) => {
     throw new Error("SECRET_KEY env variable is not set");
   }
 
+  const rotatingDecrypt = createRotatingSdkDecrypt(secretKey, collectFallbackSecretKeys(env));
+
   /**
    * The App Config contains two types of data: providers and channels.
    * We must recognize which one we are dealing with and parse it accordingly.
    */
   metadata?.forEach((item) => {
-    const decrypted = decrypt(item.value, secretKey);
+    const decrypted = rotatingDecrypt(item.value, secretKey);
     const parsed = JSON.parse(decrypted);
 
     const providerConnectionValidation = providerConnectionsSchema.safeParse(parsed);

@@ -1,4 +1,8 @@
 import { booleanEnv } from "@saleor/apps-shared/boolean-env";
+import {
+  fallbackSecretKeysRuntimeEnv,
+  fallbackSecretKeysServerSchema,
+} from "@saleor/apps-shared/fallback-secret-keys";
 import { BaseError } from "@saleor/errors";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
@@ -23,13 +27,14 @@ export const env = createEnv({
     SECRET_KEY: z.string(),
     VERCEL_ENV: z.string().optional(),
     VERCEL_GIT_COMMIT_SHA: z.string().optional(),
-    APP_NAME: z.string().default("NP Atobarai (NP後払い)"),
+    APP_NAME: z.string().default("NP Atobarai (NP 後払い)"),
     DYNAMODB_MAIN_TABLE_NAME: z.string().default("atobarai-main-table"),
     DYNAMODB_REQUEST_TIMEOUT_MS: z.coerce.number().default(5_000),
     DYNAMODB_CONNECTION_TIMEOUT_MS: z.coerce.number().default(2_000),
     AWS_REGION: z.string(),
     AWS_ACCESS_KEY_ID: z.string(),
     AWS_SECRET_ACCESS_KEY: z.string(),
+    ...fallbackSecretKeysServerSchema,
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
@@ -61,6 +66,7 @@ export const env = createEnv({
     AWS_REGION: process.env.AWS_REGION,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+    ...fallbackSecretKeysRuntimeEnv,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
   onValidationError(issues) {

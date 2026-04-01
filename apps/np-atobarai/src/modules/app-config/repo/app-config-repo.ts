@@ -1,4 +1,5 @@
-import { Encryptor } from "@saleor/apps-shared/encryptor";
+import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
+import { RotatingEncryptor } from "@saleor/apps-shared/rotating-encryptor";
 import { createDynamoConfigRepository } from "@saleor/dynamo-config-repository";
 
 import { env } from "@/lib/env";
@@ -10,7 +11,7 @@ import { createAtobaraiShippingCompanyCode } from "@/modules/atobarai/atobarai-s
 import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 import { dynamoMainTable } from "@/modules/dynamodb/dynamodb-main-table";
 
-const encryptor = new Encryptor(env.SECRET_KEY);
+const encryptor = new RotatingEncryptor(env.SECRET_KEY, collectFallbackSecretKeys(env));
 
 export const appConfigRepo = createDynamoConfigRepository<
   AppChannelConfig,

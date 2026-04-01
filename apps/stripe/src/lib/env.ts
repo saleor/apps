@@ -1,4 +1,8 @@
 import { booleanEnv } from "@saleor/apps-shared/boolean-env";
+import {
+  fallbackSecretKeysRuntimeEnv,
+  fallbackSecretKeysServerSchema,
+} from "@saleor/apps-shared/fallback-secret-keys";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 import { fromError } from "zod-validation-error";
@@ -10,6 +14,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
   },
   server: {
+    ...fallbackSecretKeysServerSchema,
     ALLOWED_DOMAIN_PATTERN: z.string().optional(),
     APL: z.enum(["saleor-cloud", "file", "dynamodb"]).default("file"),
     APP_API_BASE_URL: z.string().optional(),
@@ -40,6 +45,7 @@ export const env = createEnv({
   },
   // we use the manual destruction here to validate if env variable is set inside turbo.json
   runtimeEnv: {
+    ...fallbackSecretKeysRuntimeEnv,
     ALLOWED_DOMAIN_PATTERN: process.env.ALLOWED_DOMAIN_PATTERN,
     APL: process.env.APL,
     APP_API_BASE_URL: process.env.APP_API_BASE_URL,

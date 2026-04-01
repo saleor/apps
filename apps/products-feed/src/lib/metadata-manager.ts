@@ -1,4 +1,6 @@
 import { EncryptedMetadataManager, type MetadataEntry } from "@saleor/app-sdk/settings-manager";
+import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
+import { createRotatingDecryptCallback } from "@saleor/apps-shared/rotating-decrypt-callback";
 import { type Client } from "urql";
 
 import { env } from "@/env";
@@ -95,6 +97,8 @@ async function deleteMetadata(
 }
 
 export const createSettingsManager = (client: Client) => {
+  const fallbackKeys = collectFallbackSecretKeys(env);
+
   /*
    * EncryptedMetadataManager gives you interface to manipulate metadata and cache values in memory.
    * We recommend it for production, because all values are encrypted.
@@ -103,6 +107,9 @@ export const createSettingsManager = (client: Client) => {
   return new EncryptedMetadataManager({
     // Secret key should be randomly created for production and set as environment variable
     encryptionKey: env.SECRET_KEY,
+    ...(fallbackKeys.length > 0 && {
+      decryptionMethod: createRotatingDecryptCallback(env.SECRET_KEY, fallbackKeys),
+    }),
     fetchMetadata: () => fetchAllMetadata(client),
     mutateMetadata: (metadata) => mutateMetadata(client, metadata),
     deleteMetadata: (keys) => deleteMetadata(client, keys),

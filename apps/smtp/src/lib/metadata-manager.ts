@@ -1,4 +1,6 @@
 import { EncryptedMetadataManager, type MetadataEntry } from "@saleor/app-sdk/settings-manager";
+import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
+import { createRotatingDecryptCallback } from "@saleor/apps-shared/rotating-decrypt-callback";
 import { type Client, gql } from "urql";
 
 import {
@@ -104,9 +106,14 @@ export const createSettingsManager = (client: Client, appId: string) => {
    * We recommend it for production, because all values are encrypted.
    * If your use case require plain text values, you can use MetadataManager.
    */
+  const fallbackKeys = collectFallbackSecretKeys(env);
+
   return new EncryptedMetadataManager({
     // Secret key should be randomly created for production and set as environment variable
     encryptionKey: env.SECRET_KEY,
+    ...(fallbackKeys.length > 0 && {
+      decryptionMethod: createRotatingDecryptCallback(env.SECRET_KEY, fallbackKeys),
+    }),
     fetchMetadata: () => fetchAllMetadata(client),
     mutateMetadata: (metadata) => mutateMetadata(client, metadata, appId),
     deleteMetadata: (keys) => deleteMetadata(client, keys, appId),

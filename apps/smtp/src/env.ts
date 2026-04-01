@@ -1,4 +1,8 @@
 import { booleanEnv } from "@saleor/apps-shared/boolean-env";
+import {
+  fallbackSecretKeysRuntimeEnv,
+  fallbackSecretKeysServerSchema,
+} from "@saleor/apps-shared/fallback-secret-keys";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z, type ZodTypeAny } from "zod";
 
@@ -58,6 +62,7 @@ export const env = createEnv({
       .transform((blockedDomains: string[] | undefined): string[] => {
         return [...(blockedDomains || []), ...defaultBlockedFallbackEmailDomains];
       }),
+    ...fallbackSecretKeysServerSchema,
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
@@ -94,6 +99,7 @@ export const env = createEnv({
     FALLBACK_SMTP_SENDER_NAME: process.env.FALLBACK_SMTP_SENDER_NAME,
     FALLBACK_SMTP_SENDER_DOMAIN: process.env.FALLBACK_SMTP_SENDER_DOMAIN,
     FALLBACK_BLOCKED_EMAIL_DOMAINS: process.env.FALLBACK_BLOCKED_EMAIL_DOMAINS,
+    ...fallbackSecretKeysRuntimeEnv,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });
