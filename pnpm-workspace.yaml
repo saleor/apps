@@ -6,6 +6,8 @@ minimumReleaseAge: 30240 # in minutes
 minimumReleaseAgeExclude:
   - "@saleor/app-sdk"
   - "@saleor/macaw-ui"
+  # Security fix for CVE-2026-33938
+  - "handlebars@4.7.9"
 
 # Requires installing versions only with provenance (published via CI, not npm token)
 # Allows installing "downgraded" deps, if they are older than 30 days
