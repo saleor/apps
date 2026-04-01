@@ -475,6 +475,11 @@ describe("SendEventMessagesUseCase", () => {
           MockConfigService.returnFallbackEnabled,
         );
 
+        vi.mocked(getRedirectEmailConfig).mockReturnValue({
+          endpointUrl: "https://redirect.example.com/api",
+          token: "secret-token",
+        });
+
         const result = await useCaseInstance.sendEventMessages({
           event: EVENT_TYPE,
           payload: {},
@@ -487,6 +492,75 @@ describe("SendEventMessagesUseCase", () => {
         expect(emailSender.mockSendEmailMethod).toHaveBeenCalledOnce();
         // Fallback should not be checked when custom configs exist
         expect(configService.mockGetIsFallbackSmtpEnabledMethod).not.toHaveBeenCalled();
+        // Redirect should not be called when custom configs exist
+        expect(fetchRedirectEmail).not.toHaveBeenCalled();
+      });
+
+      it("Falls back to redirect when no config matches the channel and fallback is enabled", async () => {
+        configService.mockGetConfigurationsMethod.mockImplementation(
+          MockConfigService.returnEmptyConfigurationsList,
+        );
+        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
+          MockConfigService.returnFallbackEnabled,
+        );
+
+        vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
+          smtpHost: "fallback.smtp.host",
+          smtpPort: "587",
+          smtpUser: "fallback-user",
+          smtpPassword: "fallback-pass",
+          encryption: "TLS",
+          senderName: "Fallback Sender",
+          senderDomain: "example.com",
+          blockedDomains: [],
+        });
+
+        vi.mocked(getRedirectEmailConfig).mockReturnValue({
+          endpointUrl: "https://redirect.example.com/api",
+          token: "secret-token",
+        });
+
+        vi.mocked(fetchRedirectEmail).mockResolvedValue(ok("owner@organization.com"));
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "customer@test.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+        });
+
+        expect(result.isOk()).toBe(true);
+        expect(fetchRedirectEmail).toHaveBeenCalled();
+        expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledWith(
+          expect.objectContaining({
+            recipientEmail: "owner@organization.com",
+          }),
+        );
+      });
+
+      it("Does not send email when no config matches the channel and fallback is disabled", async () => {
+        configService.mockGetConfigurationsMethod.mockImplementation(
+          MockConfigService.returnEmptyConfigurationsList,
+        );
+        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
+          MockConfigService.returnFallbackDisabled,
+        );
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "customer@test.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+        });
+
+        expect(result.isErr()).toBe(true);
+        expect(result._unsafeUnwrapErr()[0]).toBeInstanceOf(
+          SendEventMessagesUseCase.FallbackNotConfiguredError,
+        );
+        expect(emailSender.mockSendEmailMethod).not.toHaveBeenCalled();
+        expect(fetchRedirectEmail).not.toHaveBeenCalled();
       });
 
       it("Uses default templates when sending via fallback", async () => {
