@@ -13,6 +13,8 @@
     "lint:fix": "eslint --fix .",
     "start": "next start",
     "test": "vitest",
+    "rotate-secret-key": "pnpm tsx --env-file-if-exists=.env ./scripts/rotate-secret-key.ts",
+    "rotate-secret-key:dry-run": "pnpm tsx --env-file-if-exists=.env ./scripts/rotate-secret-key.ts --dry-run",
     "test-email-build": "tsx ./scripts/build-email-previews.ts",
     "test:ci": "vitest run --coverage"
   },
