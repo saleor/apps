@@ -1,0 +1,20 @@
+import { decrypt } from "@saleor/app-sdk/settings-manager";
+
+import { tryDecryptWithFallback } from "./try-decrypt-with-fallback";
+
+/**
+ * Creates a decrypt callback compatible with SDK's EncryptedMetadataManager
+ * and any other code expecting `(value: string, key: string) => string`.
+ *
+ * The second argument (`secret`/`key`) is IGNORED — keys come from the closure.
+ * This is intentional: SDK's EncryptedMetadataManager and code like
+ * Segment's DynamoConfigMapper pass their own key as the second arg,
+ * but our wrapper uses the keys provided at construction time.
+ */
+export function createRotatingDecryptCallback(
+  primaryKey: string,
+  fallbackKeys: string[],
+): (value: string, secret: string) => string {
+  return (value: string, _secret: string): string =>
+    tryDecryptWithFallback({ value, primaryKey, fallbackKeys, decryptFn: decrypt });
+}

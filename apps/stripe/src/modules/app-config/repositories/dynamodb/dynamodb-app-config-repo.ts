@@ -1,6 +1,6 @@
 import { type IEncryptor } from "@saleor/apps-shared/encryptor";
 import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
-import { RotatingEncryptor } from "@saleor/apps-shared/rotating-encryptor";
+import { RotatingEncryptor } from "@saleor/apps-shared/key-rotation";
 import { DeleteItemCommand, GetItemCommand, Parser, PutItemCommand } from "dynamodb-toolbox";
 import { QueryCommand } from "dynamodb-toolbox/table/actions/query";
 import { err, ok, type Result } from "neverthrow";

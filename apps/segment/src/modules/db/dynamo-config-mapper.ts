@@ -1,5 +1,5 @@
 import { encrypt } from "@saleor/app-sdk/settings-manager";
-import { createRotatingSdkDecrypt } from "@saleor/apps-shared/rotating-sdk-decrypt";
+import { createRotatingDecryptCallback } from "@saleor/apps-shared/key-rotation";
 import { type FormattedItem, type PutItemInput } from "dynamodb-toolbox";
 
 import { AppConfig } from "../configuration/app-config";
@@ -14,7 +14,7 @@ export class DynamoConfigMapper {
   ) {}
 
   private getDecrypt() {
-    return createRotatingSdkDecrypt(this.deps.encryptionKey, this.deps.fallbackKeys ?? []);
+    return createRotatingDecryptCallback(this.deps.encryptionKey, this.deps.fallbackKeys ?? []);
   }
 
   dynamoEntityToAppConfig(args: { entity: FormattedItem<SegmentConfigEntityType> }): AppConfig {

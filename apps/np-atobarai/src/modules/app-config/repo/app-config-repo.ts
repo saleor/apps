@@ -1,5 +1,5 @@
 import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
-import { RotatingEncryptor } from "@saleor/apps-shared/rotating-encryptor";
+import { RotatingEncryptor } from "@saleor/apps-shared/key-rotation";
 import { createDynamoConfigRepository } from "@saleor/dynamo-config-repository";
 
 import { env } from "@/lib/env";

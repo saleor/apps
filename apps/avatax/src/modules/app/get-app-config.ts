@@ -1,5 +1,5 @@
 import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
-import { createRotatingSdkDecrypt } from "@saleor/apps-shared/rotating-sdk-decrypt";
+import { createRotatingDecryptCallback } from "@saleor/apps-shared/key-rotation";
 
 import { env } from "@/env";
 
@@ -23,7 +23,7 @@ export const getAppConfig = (metadata: MetadataItem[]) => {
     throw new Error("SECRET_KEY env variable is not set");
   }
 
-  const rotatingDecrypt = createRotatingSdkDecrypt(secretKey, collectFallbackSecretKeys(env));
+  const rotatingDecrypt = createRotatingDecryptCallback(secretKey, collectFallbackSecretKeys(env));
 
   /**
    * The App Config contains two types of data: providers and channels.

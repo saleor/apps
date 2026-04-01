@@ -5,7 +5,7 @@ import {
 } from "@saleor/app-sdk/settings-manager";
 import { type Client, gql } from "urql";
 
-import { createRotatingDecryptCallback } from "./rotating-decrypt-callback";
+import { createRotatingDecryptCallback } from "./key-rotation";
 
 const UpdateAppMetadataMutation = gql`
   mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
