@@ -7,7 +7,20 @@ minimumReleaseAgeExclude:
   - "@saleor/app-sdk"
   - "@saleor/macaw-ui"
 
+# Requires installing versions only with provenance (published via CI, not npm token)
+# Allows installing "downgraded" deps, if they are older than 30 days
+# This happens if package releases a patch for older major version,
+# that might be missing release workflow which was added in future versions
 trustPolicy: no-downgrade
+trustPolicyIgnoreAfter: 43200 # 30 days (in minutes)
+
+mergeGitBranchLockfilesBranchPattern:
+  - main
+
+# We only allow pinned dependencies
+saveExact: true
+savePrefix: ""
+cleanupUnusedCatalogs: true
 
 packages:
   - apps/*
