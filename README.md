@@ -85,6 +85,15 @@ pnpm dlx turbo login
 pnpm dlx turbo link
 ```
 
+### Installing new packages
+
+This has following requirements for improved supply chain security:
+
+- Packages must be older than 21 days
+- Added packages must use exact version (no `^` or `~`)
+- Packages versions cannot have a downgraded provenance security
+- All installs are using froze lockfile to prevent unintended changes in transitive dependencies, to update packages anyway, you must use: `pnpm install --no-frozen-lockfile`
+
 ## ADR
 
 This repository uses [architecture decision records](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) to document architectural decisions. You can find them in the `adr` directory.
