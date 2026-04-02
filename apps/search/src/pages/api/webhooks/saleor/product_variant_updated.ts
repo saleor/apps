@@ -11,6 +11,7 @@ import { loggerContext } from "../../../../lib/logger-context";
 import { type ProductVariantUpdated } from "../../../../lib/webhook-event-types";
 import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookProductVariantUpdated } from "../../../../webhooks/definitions/product-variant-updated";
+import { handleInvalidAppIdError } from "../../../../webhooks/handle-invalid-app-id-error";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
 export const config = {
@@ -74,6 +75,17 @@ export const handler: NextJsWebhookHandler<ProductVariantUpdated> = async (req, 
         await problemReporter.reportAuthError();
 
         return res.status(401).send("Algolia rejected due to invalid credentials");
+      }
+
+      const invalidAppIdResponse = await handleInvalidAppIdError({
+        error: e,
+        authData,
+        res,
+        logger,
+      });
+
+      if (invalidAppIdResponse) {
+        return;
       }
 
       logger.error(

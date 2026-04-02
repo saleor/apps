@@ -11,6 +11,7 @@ import { loggerContext } from "../../../../lib/logger-context";
 import { type CategoryUpdated } from "../../../../lib/webhook-event-types";
 import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookCategoryUpdated } from "../../../../webhooks/definitions/category-updated";
+import { handleInvalidAppIdError } from "../../../../webhooks/handle-invalid-app-id-error";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
 export const config = {
@@ -68,6 +69,17 @@ export const handler: NextJsWebhookHandler<CategoryUpdated> = async (req, res, c
         await problemReporter.reportAuthError();
 
         return res.status(401).send("Algolia rejected due to invalid credentials");
+      }
+
+      const invalidAppIdResponse = await handleInvalidAppIdError({
+        error: e,
+        authData,
+        res,
+        logger,
+      });
+
+      if (invalidAppIdResponse) {
+        return;
       }
 
       logger.error("Failed to execute category_updated webhook (algoliaClient.updateCategory)", {

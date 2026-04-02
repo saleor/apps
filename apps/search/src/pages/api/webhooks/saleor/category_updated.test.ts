@@ -1,6 +1,7 @@
 import { createMocks } from "node-mocks-http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { AlgoliaInvalidAppIdError } from "../../../../lib/algolia/algolia-errors";
 import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 import { handler } from "./category_updated";
@@ -19,11 +20,13 @@ vi.mock("../../../../lib/logger", () => ({
 
 const mockReportAuthError = vi.fn();
 const mockReportRecordTooLarge = vi.fn();
+const mockReportInvalidAppIdAndDeactivate = vi.fn();
 
 vi.mock("../../../../modules/app-problems", () => ({
   createSearchProblemReporter: vi.fn(() => ({
     reportAuthError: mockReportAuthError,
     reportRecordTooLarge: mockReportRecordTooLarge,
+    reportInvalidAppIdAndDeactivate: mockReportInvalidAppIdAndDeactivate,
   })),
 }));
 
@@ -48,6 +51,7 @@ describe("category_updated webhook handler", () => {
     vi.resetAllMocks();
     mockReportAuthError.mockResolvedValue(undefined);
     mockReportRecordTooLarge.mockResolvedValue(undefined);
+    mockReportInvalidAppIdAndDeactivate.mockResolvedValue(undefined);
   });
 
   it("Returns 200 when no category in payload", async () => {
@@ -190,5 +194,28 @@ describe("category_updated webhook handler", () => {
     expect(res._getStatusCode()).toBe(401);
     expect(mockReportAuthError).toHaveBeenCalled();
     expect(vi.mocked(createSearchProblemReporter)).toHaveBeenCalledWith(mockContext.authData);
+  });
+
+  it("Returns 401 and deactivates app when Algolia Application ID is invalid", async () => {
+    const { req, res } = createMocks();
+
+    const mockAlgoliaClient = {
+      updateCategory: vi
+        .fn()
+        .mockRejectedValue(
+          new AlgoliaInvalidAppIdError("Algolia Application ID does not exist or is unreachable"),
+        ),
+    };
+
+    vi.mocked(createWebhookContext).mockResolvedValue({
+      algoliaClient: mockAlgoliaClient,
+    } as any);
+
+    // @ts-expect-error - mocking request for testing
+    await handler(req, res, mockContext);
+
+    expect(res._getStatusCode()).toBe(401);
+    expect(res._getData()).toContain("Algolia Application ID does not exist");
+    expect(mockReportInvalidAppIdAndDeactivate).toHaveBeenCalledWith("app-id");
   });
 });

@@ -1,6 +1,7 @@
 import { AppProblemsReporter } from "@saleor/app-problems";
 import { type Client } from "urql";
 
+import { AppDeactivateDocument } from "../../../generated/graphql";
 import { type RecordTooLargeEntity } from "../../lib/algolia/algolia-error-parser";
 import { createLogger } from "../../lib/logger";
 
@@ -10,12 +11,15 @@ export const PROBLEM_KEYS = {
   algoliaAuthError: "algolia-auth-error",
   algoliaRecordTooLarge: "algolia-record-too-large",
   algoliaIndexSetupFailed: "algolia-index-setup-failed",
+  algoliaInvalidAppId: "algolia-invalid-app-id",
 } as const;
 
 export class SearchProblemReporter {
   private reporter: AppProblemsReporter;
+  private client: Client;
 
   constructor(client: Client) {
+    this.client = client;
     this.reporter = new AppProblemsReporter(client);
   }
 
@@ -74,6 +78,33 @@ export class SearchProblemReporter {
       logger.warn("Failed to report index setup failure problem - API not available", {
         error: e,
       });
+    }
+  }
+
+  async reportInvalidAppIdAndDeactivate(appId: string): Promise<void> {
+    try {
+      const result = await this.reporter.reportProblem({
+        key: PROBLEM_KEYS.algoliaInvalidAppId,
+        criticalThreshold: 1,
+        message:
+          "Algolia Application ID does not exist. The app has been deactivated. Please verify your Algolia Application ID in the Search App settings and reactivate the app.",
+      });
+
+      if (result.isErr()) {
+        logger.error("Failed to report invalid app ID problem", { error: result.error });
+      }
+    } catch (e) {
+      logger.warn("Failed to report invalid app ID problem - API not available", { error: e });
+    }
+
+    try {
+      const result = await this.client.mutation(AppDeactivateDocument, { id: appId }).toPromise();
+
+      if (result.error) {
+        logger.error("Failed to deactivate app", { error: result.error });
+      }
+    } catch (e) {
+      logger.warn("Failed to deactivate app - API not available", { error: e });
     }
   }
 

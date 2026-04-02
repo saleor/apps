@@ -8,6 +8,7 @@ import { loggerContext } from "../../../../lib/logger-context";
 import { type PageDeleted } from "../../../../lib/webhook-event-types";
 import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookPageDeleted } from "../../../../webhooks/definitions/page-deleted";
+import { handleInvalidAppIdError } from "../../../../webhooks/handle-invalid-app-id-error";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
 export const config = {
@@ -67,6 +68,17 @@ export const handler: NextJsWebhookHandler<PageDeleted> = async (req, res, conte
         await problemReporter.reportAuthError();
 
         return res.status(401).send("Algolia rejected due to invalid credentials");
+      }
+
+      const invalidAppIdResponse = await handleInvalidAppIdError({
+        error: e,
+        authData,
+        res,
+        logger,
+      });
+
+      if (invalidAppIdResponse) {
+        return;
       }
 
       logger.error("Failed to execute page_deleted webhook (algoliaClient.deletePage)", {
