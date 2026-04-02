@@ -1,5 +1,12 @@
 # saleor-app-products-feed
 
+## 3.0.2
+
+### Patch Changes
+
+- Updated dependencies [eedb36b]
+  - @saleor/handlebars@0.1.2
+
 ## 3.0.1
 
 ### Patch Changes
