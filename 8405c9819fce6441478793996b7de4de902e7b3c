@@ -1,0 +1,23 @@
+apps/smtp/src/modules/smtp/services/smtp-email-sender.ts
+  a20f7cac08d2e7b5 60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.3",
+  "base_commit_sha": "8405c9819fce6441478793996b7de4de902e7b3c",
+  "prompts": {
+    "a20f7cac08d2e7b5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3ac73a6f-486f-413b-bb0e-90f21e3c67bb",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski",
+      "messages": [],
+      "total_additions": 4,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
