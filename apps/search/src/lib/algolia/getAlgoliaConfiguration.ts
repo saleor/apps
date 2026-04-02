@@ -42,12 +42,13 @@ export const getAlgoliaConfiguration = async ({ authData }: GetAlgoliaConfigurat
       };
     }
   } catch (e) {
-    logger.error("Failed to fetch configuration from metadata");
+    logger.error("Failed to fetch configuration from metadata", { error: e });
 
     return {
       errors: [
         {
           message: "Failed to load configuration",
+          cause: e,
         },
       ],
     };
