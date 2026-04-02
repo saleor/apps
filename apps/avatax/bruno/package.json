@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "keywords": [],
-  "license": "ISC",
+  "license": "(BSD-3-Clause AND CC-BY-4.0)",
   "author": "",
   "main": "index.js",
   "scripts": {
