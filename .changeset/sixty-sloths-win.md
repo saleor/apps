@@ -1,4 +1,5 @@
 ---
+"@saleor/handlebars": patch
 "saleor-app-smtp": patch
 ---
 
