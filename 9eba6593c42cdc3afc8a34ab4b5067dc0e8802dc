@@ -1,0 +1,71 @@
+apps/search/src/pages/api/webhooks/saleor/product_variant_updated.ts
+  743e06aa62cc2abd 14,80-87,89-90
+apps/search/src/pages/api/webhooks/saleor/category_deleted.test.ts
+  743e06aa62cc2abd 4,22,27,51,138-160
+apps/search/src/pages/api/webhooks/saleor/product_updated.test.ts
+  743e06aa62cc2abd 4,23,29,55,200-223
+apps/search/src/pages/api/webhooks/saleor/category_updated.test.ts
+  743e06aa62cc2abd 4,23,29,54,198-220
+apps/search/src/pages/api/webhooks/saleor/product_variant_updated.test.ts
+  743e06aa62cc2abd 4,23,29,57,205-227
+apps/search/src/lib/algolia/algoliaSearchProvider.ts
+  743e06aa62cc2abd 2,26-35,38-41,109,124,176,187,232,298,309,321,338,349,361,372
+apps/search/src/pages/api/webhooks/saleor/product_updated.ts
+  743e06aa62cc2abd 14,83-90,92-93
+apps/search/src/webhooks/handle-invalid-app-id-error.test.ts
+  743e06aa62cc2abd 1-88
+apps/search/src/pages/api/webhooks/saleor/product_variant_deleted.ts
+  743e06aa62cc2abd 11,55-62,64-65
+apps/search/src/pages/api/webhooks/saleor/category_created.test.ts
+  743e06aa62cc2abd 4,23,29,54,198-220
+apps/search/src/webhooks/handle-invalid-app-id-error.ts
+  743e06aa62cc2abd 1-38
+apps/search/src/lib/algolia/algolia-errors.ts
+  743e06aa62cc2abd 1-5
+apps/search/src/pages/api/webhooks/saleor/product_deleted.ts
+  743e06aa62cc2abd 11,57-64,66-67
+apps/search/src/pages/api/webhooks/saleor/product_variant_back_in_stock.ts
+  743e06aa62cc2abd 11,59-66,68-69
+apps/search/src/pages/api/webhooks/saleor/category_deleted.ts
+  743e06aa62cc2abd 11,57-64,66-67
+apps/search/src/modules/app-problems/search-problem-reporter.ts
+  743e06aa62cc2abd 4,14,19,22,84-110
+apps/search/src/pages/api/webhooks/saleor/product_variant_out_of_stock.ts
+  743e06aa62cc2abd 11,59-66,68-69
+apps/search/src/pages/api/webhooks/saleor/page_updated.ts
+  743e06aa62cc2abd 14,90-97,99-100
+apps/search/src/pages/api/webhooks/saleor/category_updated.ts
+  743e06aa62cc2abd 14,74-81,83-84
+apps/search/src/pages/api/webhooks/saleor/product_variant_created.ts
+  743e06aa62cc2abd 14,82-89,91-92
+apps/search/src/pages/api/webhooks/saleor/category_created.ts
+  743e06aa62cc2abd 14,74-81,83-84
+apps/search/src/pages/api/webhooks/saleor/page_created.ts
+  743e06aa62cc2abd 14,90-97,99-100
+apps/search/src/pages/api/webhooks/saleor/product_created.ts
+  743e06aa62cc2abd 14,85-92,94-95
+apps/search/src/pages/api/webhooks/saleor/page_deleted.ts
+  743e06aa62cc2abd 11,73-80,82-83
+apps/search/graphql/mutations/AppDeactivate.graphql
+  743e06aa62cc2abd 1-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "9eba6593c42cdc3afc8a34ab4b5067dc0e8802dc",
+  "prompts": {
+    "743e06aa62cc2abd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3842cd47-129f-42a2-a9e8-fbe774f73db4",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski",
+      "messages": [],
+      "total_additions": 673,
+      "total_deletions": 174,
+      "accepted_lines": 492,
+      "overriden_lines": 16
+    }
+  }
+}
