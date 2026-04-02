@@ -3,4 +3,4 @@
 "saleor-app-smtp": patch
 ---
 
-Re-added `JSONParse` handlebars helper
+Re-added `JSONparse` handlebars helper
