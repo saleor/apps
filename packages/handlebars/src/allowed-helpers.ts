@@ -131,7 +131,8 @@ export const ALLOWED_HELPERS: Record<string, string[]> = {
     "toPrecision",
   ],
 
-  // --- object: removed entirely ---
+  // --- object (extend, merge removed – prototype pollution risk) ---
+  object: ["JSONparse"],
 
   // --- path (resolve removed) ---
   path: ["absolute", "dirname", "relative", "basename", "stem", "extname", "segments"],
