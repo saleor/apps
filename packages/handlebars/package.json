@@ -16,10 +16,10 @@
   "devDependencies": {
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
-    "@types/handlebars-helpers": "^0.5.6",
+    "@types/handlebars-helpers": "0.5.6",
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
-    "handlebars": "^4.7.9",
+    "handlebars": "4.7.9",
     "handlebars-helpers": "0.10.0",
     "typescript": "catalog:",
     "vite": "catalog:",
