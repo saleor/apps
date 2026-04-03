@@ -2,6 +2,7 @@ import { EncryptedMetadataManager, type MetadataEntry } from "@saleor/app-sdk/se
 import { type Client } from "urql";
 
 import { env } from "@/env";
+import { createLogger } from "@/logger";
 
 import {
   DeleteAppMetadataDocument,
@@ -10,12 +11,26 @@ import {
   UpdateAppMetadataDocument,
 } from "../../generated/graphql";
 
+const logger = createLogger("MetadataManager");
+
 export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]> {
   const { error, data } = await client
     .query<FetchAppDetailsQuery>(FetchAppDetailsDocument, {})
     .toPromise();
 
   if (error) {
+    const cause =
+      error.networkError?.cause instanceof Error
+        ? (error.networkError.cause as NodeJS.ErrnoException)
+        : undefined;
+
+    logger.error("[metadata-manager] Failed to fetch app metadata", {
+      errorMessage: error.message,
+      networkErrorMessage: error.networkError?.message,
+      causeCode: cause?.code,
+      causeMessage: cause?.message,
+    });
+
     return [];
   }
 
