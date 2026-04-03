@@ -1,10 +1,10 @@
-/* eslint-disable no-console */
 import { parseArgs } from "node:util";
 
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, PutCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { decrypt, encrypt } from "@saleor/app-sdk/settings-manager";
 import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
+import { SecretKeyRotationRunner } from "@saleor/apps-shared/key-rotation/secret-key-rotation-runner";
 
 import { env } from "@/env";
 
@@ -38,9 +38,6 @@ const createDocumentClient = () => {
   return DynamoDBDocumentClient.from(client);
 };
 
-/**
- * Scans all items from the DynamoDB table, handling pagination.
- */
 const scanAllItems = async (
   documentClient: DynamoDBDocumentClient,
   tableName: string,
@@ -66,139 +63,45 @@ const scanAllItems = async (
   return items;
 };
 
-/**
- * Checks if an item is a Segment config entity (has encrypted write key field).
- */
-const isSegmentConfigItem = (
-  item: Record<string, unknown>,
-): item is Record<string, unknown> & { encryptedSegmentWriteKey: string } => {
-  return typeof item.encryptedSegmentWriteKey === "string";
-};
+const documentClient = createDocumentClient();
+const tableName = env.DYNAMODB_MAIN_TABLE_NAME;
 
-/**
- * Tries to decrypt a value with the given key using SDK decrypt.
- * Returns the decrypted value if successful, null if decryption fails.
- */
-const trySdkDecrypt = (value: string, key: string): string | null => {
-  try {
-    return decrypt(value, key);
-  } catch {
-    return null;
-  }
-};
+const runner = new SecretKeyRotationRunner<Record<string, unknown>>({
+  secretKey: env.SECRET_KEY,
+  fallbackKeys: collectFallbackSecretKeys(env),
+  dryRun: dryRun ?? false,
+  logger,
+  decrypt,
+  encrypt,
+  getItems: async () => {
+    const allItems = await scanAllItems(documentClient, tableName);
 
-/**
- * Tries to decrypt a value using fallback keys with SDK decrypt.
- * Returns the decrypted value if successful, throws if all keys fail.
- */
-const decryptWithFallbackKeys = (fallbackKeys: string[], value: string): string => {
-  for (let i = 0; i < fallbackKeys.length; i++) {
-    const result = trySdkDecrypt(value, fallbackKeys[i]);
-
-    if (result !== null) {
-      return result;
-    }
-  }
-
-  throw new Error(
-    `Failed to decrypt with all ${fallbackKeys.length} fallback key(s). Value may be corrupted or keys are incorrect.`,
-  );
-};
-
-const rotateSecretKey = async () => {
-  const fallbackKeys = collectFallbackSecretKeys(env);
-
-  if (fallbackKeys.length === 0) {
-    logger.error(
-      "No fallback keys configured. Set FALLBACK_SECRET_KEY_1 (and optionally _2, _3) env vars with the old key(s).",
+    return allItems
+      .filter(
+        (item): item is Record<string, unknown> & { encryptedSegmentWriteKey: string } =>
+          typeof item.encryptedSegmentWriteKey === "string",
+      )
+      .map((item) => ({
+        id: `${String(item.PK)}/${String(item.SK)}`,
+        encryptedFields: [
+          { name: "encryptedSegmentWriteKey", encryptedValue: item.encryptedSegmentWriteKey },
+        ],
+        original: item,
+      }));
+  },
+  saveItem: async (rotated) => {
+    await documentClient.send(
+      new PutCommand({
+        TableName: tableName,
+        Item: { ...rotated.original, ...rotated.reEncryptedFields },
+      }),
     );
-    process.exit(1);
-  }
+  },
+});
 
-  logger.info(
-    `Starting secret key rotation${dryRun ? " (DRY RUN)" : ""}. Fallback keys configured: ${
-      fallbackKeys.length
-    }`,
-  );
-
-  const documentClient = createDocumentClient();
-  const tableName = env.DYNAMODB_MAIN_TABLE_NAME;
-
-  logger.info(`Scanning table: ${tableName}`);
-  const allItems = await scanAllItems(documentClient, tableName);
-
-  logger.info(`Found ${allItems.length} total items in table`);
-
-  const configItems = allItems.filter(isSegmentConfigItem);
-
-  logger.info(`Found ${configItems.length} Segment config items with encrypted write key field`);
-
-  let reEncrypted = 0;
-  let skipped = 0;
-  let failed = 0;
-
-  for (let i = 0; i < configItems.length; i++) {
-    const item = configItems[i];
-    const itemId = `${String(item.PK)}/${String(item.SK)}`;
-
-    try {
-      // Check if encryptedSegmentWriteKey is already encrypted with primary key
-      const decryptedWithPrimary = trySdkDecrypt(item.encryptedSegmentWriteKey, env.SECRET_KEY);
-
-      if (decryptedWithPrimary !== null) {
-        skipped++;
-        logger.info(
-          `[${i + 1}/${configItems.length}] Skipped (already using current key): ${itemId}`,
-        );
-        continue;
-      }
-
-      // Decrypt with fallback keys
-      const decryptedWriteKey = decryptWithFallbackKeys(
-        fallbackKeys,
-        item.encryptedSegmentWriteKey,
-      );
-
-      // Re-encrypt with primary key using SDK encrypt
-      const newEncryptedWriteKey = encrypt(decryptedWriteKey, env.SECRET_KEY);
-
-      if (!dryRun) {
-        await documentClient.send(
-          new PutCommand({
-            TableName: tableName,
-            Item: {
-              ...item,
-              encryptedSegmentWriteKey: newEncryptedWriteKey,
-            },
-          }),
-        );
-      }
-
-      reEncrypted++;
-      logger.info(
-        `[${i + 1}/${configItems.length}] Re-encrypted${dryRun ? " (dry run)" : ""}: ${itemId}`,
-      );
-    } catch (error) {
-      failed++;
-      logger.error(`[${i + 1}/${configItems.length}] Failed to process: ${itemId}`, {
-        error,
-      });
-    }
-  }
-
-  logger.info(
-    `\nMigration complete${
-      dryRun ? " (DRY RUN)" : ""
-    }. Re-encrypted: ${reEncrypted}, Skipped: ${skipped}, Failed: ${failed}`,
-  );
-
-  if (failed > 0) {
-    logger.error(`${failed} item(s) failed. Review errors above.`);
-    process.exit(1);
-  }
-};
-
-rotateSecretKey().catch((error) => {
+runner.run().then(({ failed }) => {
+  if (failed > 0) process.exit(1);
+}).catch((error) => {
   logger.error("Fatal error during secret key rotation", { error });
   process.exit(1);
 });

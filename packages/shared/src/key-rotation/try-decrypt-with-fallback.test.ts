@@ -7,10 +7,9 @@ const FALLBACK_1 = "fallback-1";
 const FALLBACK_2 = "fallback-2";
 
 /**
- * Toy decrypt: value must equal key to "decrypt", otherwise throws.
- * This lets us test the rotation logic without pulling in real crypto.
+ * Decrypt succeeds in tests if value is the same as key used for "encryption"
  */
-const toyDecrypt = (value: string, key: string): string => {
+const mockDecrypt = (value: string, key: string): string => {
   if (value === key) return `decrypted-${key}`;
   throw new Error("wrong key");
 };
@@ -21,7 +20,7 @@ describe("tryDecryptWithFallback", () => {
       value: PRIMARY,
       primaryKey: PRIMARY,
       fallbackKeys: [],
-      decryptFn: toyDecrypt,
+      decryptFn: mockDecrypt,
     });
 
     expect(result).toBe("decrypted-primary");
@@ -32,7 +31,7 @@ describe("tryDecryptWithFallback", () => {
       value: FALLBACK_1,
       primaryKey: PRIMARY,
       fallbackKeys: [FALLBACK_1],
-      decryptFn: toyDecrypt,
+      decryptFn: mockDecrypt,
     });
 
     expect(result).toBe("decrypted-fallback-1");
@@ -43,41 +42,37 @@ describe("tryDecryptWithFallback", () => {
       value: FALLBACK_2,
       primaryKey: PRIMARY,
       fallbackKeys: [FALLBACK_1, FALLBACK_2],
-      decryptFn: toyDecrypt,
+      decryptFn: mockDecrypt,
     });
 
     expect(result).toBe("decrypted-fallback-2");
   });
 
   it("logs warning when fallback key is used", () => {
-    const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => { });
 
     tryDecryptWithFallback({
       value: FALLBACK_1,
       primaryKey: PRIMARY,
       fallbackKeys: [FALLBACK_1],
-      decryptFn: toyDecrypt,
+      decryptFn: mockDecrypt,
     });
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining("fallback key at index 0"),
-    );
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("fallback key at index 0"));
     consoleSpy.mockRestore();
   });
 
   it("logs correct index for second fallback", () => {
-    const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => { });
 
     tryDecryptWithFallback({
       value: FALLBACK_2,
       primaryKey: PRIMARY,
       fallbackKeys: [FALLBACK_1, FALLBACK_2],
-      decryptFn: toyDecrypt,
+      decryptFn: mockDecrypt,
     });
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining("fallback key at index 1"),
-    );
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("fallback key at index 1"));
     consoleSpy.mockRestore();
   });
 
@@ -87,11 +82,9 @@ describe("tryDecryptWithFallback", () => {
         value: "unknown",
         primaryKey: PRIMARY,
         fallbackKeys: [FALLBACK_1],
-        decryptFn: toyDecrypt,
+        decryptFn: mockDecrypt,
       }),
-    ).toThrow(
-      "[tryDecryptWithFallback] Failed to decrypt with primary key and 1 fallback key(s).",
-    );
+    ).toThrow("[tryDecryptWithFallback] Failed to decrypt with primary key and 1 fallback key(s).");
   });
 
   it("throws when no fallback keys provided and primary fails", () => {
@@ -100,21 +93,19 @@ describe("tryDecryptWithFallback", () => {
         value: "unknown",
         primaryKey: PRIMARY,
         fallbackKeys: [],
-        decryptFn: toyDecrypt,
+        decryptFn: mockDecrypt,
       }),
-    ).toThrow(
-      "[tryDecryptWithFallback] Failed to decrypt with primary key and 0 fallback key(s).",
-    );
+    ).toThrow("[tryDecryptWithFallback] Failed to decrypt with primary key and 0 fallback key(s).");
   });
 
   it("does not log warning when primary key succeeds", () => {
-    const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => { });
 
     tryDecryptWithFallback({
       value: PRIMARY,
       primaryKey: PRIMARY,
       fallbackKeys: [FALLBACK_1],
-      decryptFn: toyDecrypt,
+      decryptFn: mockDecrypt,
     });
 
     expect(consoleSpy).not.toHaveBeenCalled();

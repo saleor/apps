@@ -20,6 +20,9 @@
     "./use-dashboard-notification": "./src/use-dashboard-notification.ts",
     "./encryptor": "./src/encryptor.ts",
     "./key-rotation": "./src/key-rotation/index.ts",
+    "./key-rotation/secret-key-rotation-runner": "./src/key-rotation/secret-key-rotation-runner.ts",
+    "./key-rotation/fetch-metadata-rotation-items": "./src/key-rotation/fetch-metadata-rotation-items.ts",
+    "./key-rotation/save-metadata-rotation-item": "./src/key-rotation/save-metadata-rotation-item.ts",
     "./boolean-env": "./src/boolean-env-schema.ts",
     "./fallback-secret-keys": "./src/fallback-secret-keys.ts"
   },

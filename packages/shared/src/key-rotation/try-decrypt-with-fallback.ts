@@ -1,18 +1,23 @@
 /**
  * Core key-rotation logic: try the primary key, then each fallback in order.
  */
-export function tryDecryptWithFallback(opts: {
+export function tryDecryptWithFallback({
+  value,
+  primaryKey,
+  fallbackKeys,
+  decryptFn,
+}: {
   value: string;
   primaryKey: string;
   fallbackKeys: string[];
   decryptFn: (value: string, key: string) => string;
 }): string {
   try {
-    return opts.decryptFn(opts.value, opts.primaryKey);
+    return decryptFn(value, primaryKey);
   } catch {
-    for (let i = 0; i < opts.fallbackKeys.length; i++) {
+    for (let i = 0; i < fallbackKeys.length; i++) {
       try {
-        const result = opts.decryptFn(opts.value, opts.fallbackKeys[i]);
+        const result = decryptFn(value, fallbackKeys[i]);
 
         // eslint-disable-next-line no-console
         console.warn(
@@ -26,7 +31,7 @@ export function tryDecryptWithFallback(opts: {
       }
     }
     throw new Error(
-      `[tryDecryptWithFallback] Failed to decrypt with primary key and ${opts.fallbackKeys.length} fallback key(s).`,
+      `[tryDecryptWithFallback] Failed to decrypt with primary key and ${fallbackKeys.length} fallback key(s).`,
     );
   }
 }
