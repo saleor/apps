@@ -23,13 +23,13 @@ export class SearchProblemReporter {
     this.reporter = new AppProblemsReporter(client);
   }
 
-  async reportAuthError(): Promise<void> {
+  async reportAuthErrorAndDeactivate(appId: string): Promise<void> {
     try {
       const result = await this.reporter.reportProblem({
         key: PROBLEM_KEYS.algoliaAuthError,
         criticalThreshold: 1,
         message:
-          "Algolia API key is invalid or expired. Product indexing will fail until valid credentials are configured. Please update your Algolia credentials in the Search App settings.",
+          "Algolia API key is invalid or expired. Product indexing will fail until valid credentials are configured. Please update your Algolia credentials in the Search App settings. App was disabled.",
       });
 
       if (result.isErr()) {
@@ -38,6 +38,8 @@ export class SearchProblemReporter {
     } catch (e) {
       logger.warn("Failed to report auth error problem - API not available", { error: e });
     }
+
+    await this.deactivateApp(appId);
   }
 
   async reportRecordTooLarge(entity: RecordTooLargeEntity): Promise<void> {
@@ -97,6 +99,10 @@ export class SearchProblemReporter {
       logger.warn("Failed to report invalid app ID problem - API not available", { error: e });
     }
 
+    await this.deactivateApp(appId);
+  }
+
+  private async deactivateApp(appId: string): Promise<void> {
     try {
       const result = await this.client.mutation(AppDeactivateDocument, { id: appId }).toPromise();
 

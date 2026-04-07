@@ -72,7 +72,7 @@ export const handler: NextJsWebhookHandler<ProductVariantUpdated> = async (req, 
       }
 
       if (AlgoliaErrorParser.isAuthError(e)) {
-        await problemReporter.reportAuthError();
+        await problemReporter.reportAuthErrorAndDeactivate(authData.appId);
 
         return res.status(401).send("Algolia rejected due to invalid credentials");
       }

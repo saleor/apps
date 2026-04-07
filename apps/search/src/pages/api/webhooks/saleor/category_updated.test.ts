@@ -24,7 +24,7 @@ const mockReportInvalidAppIdAndDeactivate = vi.fn();
 
 vi.mock("../../../../modules/app-problems", () => ({
   createSearchProblemReporter: vi.fn(() => ({
-    reportAuthError: mockReportAuthError,
+    reportAuthErrorAndDeactivate: mockReportAuthError,
     reportRecordTooLarge: mockReportRecordTooLarge,
     reportInvalidAppIdAndDeactivate: mockReportInvalidAppIdAndDeactivate,
   })),
@@ -192,7 +192,7 @@ describe("category_updated webhook handler", () => {
     await handler(req, res, mockContext);
 
     expect(res._getStatusCode()).toBe(401);
-    expect(mockReportAuthError).toHaveBeenCalled();
+    expect(mockReportAuthError).toHaveBeenCalledWith("app-id");
     expect(vi.mocked(createSearchProblemReporter)).toHaveBeenCalledWith(mockContext.authData);
   });
 

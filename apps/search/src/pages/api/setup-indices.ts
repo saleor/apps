@@ -92,7 +92,7 @@ export const setupIndicesHandlerFactory =
       const problemReporter = new SearchProblemReporter(client);
 
       if (AlgoliaErrorParser.isAuthError(e)) {
-        await problemReporter.reportAuthError();
+        await problemReporter.reportAuthErrorAndDeactivate(authData.appId);
       } else {
         await problemReporter.reportIndexSetupFailed();
       }

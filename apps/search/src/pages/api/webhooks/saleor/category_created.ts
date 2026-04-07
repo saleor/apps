@@ -66,7 +66,7 @@ export const handler: NextJsWebhookHandler<CategoryCreated> = async (req, res, c
       }
 
       if (AlgoliaErrorParser.isAuthError(e)) {
-        await problemReporter.reportAuthError();
+        await problemReporter.reportAuthErrorAndDeactivate(authData.appId);
 
         return res.status(401).send("Algolia rejected due to invalid credentials");
       }
