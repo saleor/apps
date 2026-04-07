@@ -1,0 +1,25 @@
+apps/segment/src/lib/trace-effect.ts
+  902209349ec668cc 1-23
+apps/segment/src/modules/segment/segment.client.ts
+  902209349ec668cc 3-4,8,56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "cd60a18241e35c760f40e4714b8b83d25288c4f8",
+  "prompts": {
+    "902209349ec668cc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d50d06bf-ae4a-48f4-9b90-fa95ec2a85db",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski",
+      "messages": [],
+      "total_additions": 28,
+      "total_deletions": 1,
+      "accepted_lines": 28,
+      "overriden_lines": 0
+    }
+  }
+}
