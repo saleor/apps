@@ -1,0 +1,27 @@
+apps/search/src/modules/app-problems/search-problem-reporter.ts
+  743e06aa62cc2abd 26,32,41-42,102,105
+apps/search/src/pages/api/webhooks/saleor/product_updated.ts
+  743e06aa62cc2abd 78
+apps/search/src/modules/app-problems/search-problem-reporter.test.ts
+  743e06aa62cc2abd 27-28,30-32,38-39,49-50,54,59-60,64-79,86,93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "f59c545874e65e55d8d087e65c53c126c557766a",
+  "prompts": {
+    "743e06aa62cc2abd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3842cd47-129f-42a2-a9e8-fbe774f73db4",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski",
+      "messages": [],
+      "total_additions": 64,
+      "total_deletions": 33,
+      "accepted_lines": 51,
+      "overriden_lines": 0
+    }
+  }
+}
