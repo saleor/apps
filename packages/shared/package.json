@@ -55,6 +55,7 @@
   },
   "peerDependencies": {
     "@saleor/app-sdk": "catalog:",
+    "@saleor/apps-logger": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "next": "catalog:",
     "react": "catalog:",

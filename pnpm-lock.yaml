@@ -2715,6 +2715,9 @@ importers:
 
   packages/shared:
     dependencies:
+      '@saleor/apps-logger':
+        specifier: workspace:*
+        version: link:../logger
       '@urql/exchange-auth':
         specifier: 2.1.4
         version: 2.1.4(graphql@16.11.0)
