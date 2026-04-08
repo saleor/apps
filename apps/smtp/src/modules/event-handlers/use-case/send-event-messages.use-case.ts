@@ -162,7 +162,7 @@ export class SendEventMessagesUseCase {
     });
 
     if (preparedEmailResult.isErr()) {
-      this.logger.warn("Failed to compile email template");
+      this.logger.warn("Failed to compile email template", { error: preparedEmailResult.error });
 
       return errAsync(
         new SendEventMessagesUseCase.EmailCompilationError("Failed to compile error", {
@@ -252,6 +252,12 @@ export class SendEventMessagesUseCase {
           },
         ),
       ]);
+    }
+
+    if (fallbackEnabledResult.isErr()) {
+      this.logger.warn("Failed to check if fallback SMTP is enabled", {
+        error: fallbackEnabledResult.error,
+      });
     }
 
     if (fallbackEnabledResult.isErr() || !fallbackEnabledResult.value) {
@@ -393,7 +399,9 @@ export class SendEventMessagesUseCase {
     });
 
     if (availableSmtpConfigurations.isErr()) {
-      this.logger.warn("Failed to fetch configuration");
+      this.logger.warn("Failed to fetch configuration", {
+        error: availableSmtpConfigurations.error,
+      });
 
       return err([
         new SendEventMessagesUseCase.FailedToFetchConfigurationError(

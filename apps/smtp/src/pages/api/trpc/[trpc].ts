@@ -15,11 +15,15 @@ export default wrapWithLoggerContext(
       router: appRouter,
       createContext: createTrpcContext,
       onError: ({ path, error }) => {
+        const cause = error.cause;
         const errorDetails = {
           error: {
             code: error.code,
             message: error.message,
-            cause: error.cause,
+            cause:
+              cause instanceof Error
+                ? { name: cause.name, message: cause.message, cause: cause.cause }
+                : cause,
           },
         };
 
