@@ -3,9 +3,8 @@ import {
   type MetadataEntry,
   type SettingsManager,
 } from "@saleor/app-sdk/settings-manager";
+import { type Logger } from "@saleor/apps-logger";
 import { type Client, gql } from "urql";
-
-import { type Logger } from "./types";
 
 const UpdateAppMetadataMutation = gql`
   mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
