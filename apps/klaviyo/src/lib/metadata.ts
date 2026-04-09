@@ -1,11 +1,10 @@
-import { type Client } from "urql";
-
 import { type SettingsManager } from "@saleor/app-sdk/settings-manager";
+import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
 import { EncryptedMetadataManagerFactory } from "@saleor/apps-shared/metadata-manager";
+import { type Client } from "urql";
 
 import { env } from "../env";
 import { createLogger } from "../logger";
-import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
 
 const logger = createLogger("MetadataManager");
 

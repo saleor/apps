@@ -5,8 +5,8 @@ import { fetchMetadataRotationItems } from "@saleor/apps-shared/key-rotation/fet
 import { saveMetadataRotationItem } from "@saleor/apps-shared/key-rotation/save-metadata-rotation-item";
 import { SecretKeyRotationRunner } from "@saleor/apps-shared/key-rotation/secret-key-rotation-runner";
 
-import { env } from "../src/env";
 import { saleorApp } from "../saleor-app";
+import { env } from "../src/env";
 
 const runner = new SecretKeyRotationRunner({
   secretKey: env.SECRET_KEY,
