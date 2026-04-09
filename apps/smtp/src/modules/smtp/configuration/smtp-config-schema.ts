@@ -52,7 +52,8 @@ export const fallbackSmtpConfigSchema = z.object({
   encryption: z.enum(smtpEncryptionTypes).default("NONE"),
   senderName: z.string().min(1),
   senderDomain: z.string().min(1),
-  blockedDomains: z.array(z.string()),
+  redirectEndpoint: z.string().url(),
+  redirectToken: z.string().min(1),
 });
 
 export type FallbackSmtpConfig = z.infer<typeof fallbackSmtpConfigSchema>;
@@ -68,7 +69,8 @@ export const getFallbackSmtpConfigSchema = (): FallbackSmtpConfig | null => {
       encryption: env.FALLBACK_SMTP_ENCRYPTION,
       senderName: env.FALLBACK_SMTP_SENDER_NAME,
       senderDomain: env.FALLBACK_SMTP_SENDER_DOMAIN,
-      blockedDomains: env.FALLBACK_BLOCKED_EMAIL_DOMAINS,
+      redirectEndpoint: env.FALLBACK_SMTP_EMAIL_REDIRECT_ENDPOINT,
+      redirectToken: env.FALLBACK_SMTP_EMAIL_REDIRECT_TOKEN,
     });
   } catch (_e) {
     return null;

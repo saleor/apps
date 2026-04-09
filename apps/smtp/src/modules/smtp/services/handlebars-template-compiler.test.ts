@@ -100,17 +100,14 @@ describe("HandlebarsTemplateCompiler", () => {
       expect(error.errorCode).toBe("HANDLEBARS_MISSING_HELPER");
     });
 
-    it("rejects object helpers: JSONparse (arbitrary object construction)", () => {
+    it("allows object helper: JSONparse", () => {
       const result = compiler.compile(
-        '{{JSONparse \'{"__proto__":{"admin":true}}\'}}',
+        '{{#with (JSONparse \'{"name":"test"}\')}}{{name}}{{/with}}',
         {},
       );
 
-      expect(result.isErr()).toBe(true);
-
-      const error = result._unsafeUnwrapErr();
-
-      expect(error.errorCode).toBe("HANDLEBARS_MISSING_HELPER");
+      expect(result.isOk()).toBe(true);
+      expect(result._unsafeUnwrap().template).toBe("test");
     });
 
     it("rejects object helpers: extend (prototype pollution)", () => {

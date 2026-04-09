@@ -4,6 +4,9 @@ import { EncryptedMetadataManagerFactory } from "@saleor/apps-shared/metadata-ma
 import { type Client } from "urql";
 
 import { env } from "../env";
+import { createLogger } from "./logger";
+
+const logger = createLogger("MetadataManager");
 
 export const createSettingsManager = (
   client: Pick<Client, "query" | "mutation">,
@@ -12,6 +15,7 @@ export const createSettingsManager = (
   const metadataManagerFactory = new EncryptedMetadataManagerFactory(
     env.SECRET_KEY,
     collectFallbackSecretKeys(env),
+    logger,
   );
 
   return metadataManagerFactory.create(client, appId);

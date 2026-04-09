@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-cms",
-  "version": "2.15.1",
+  "version": "2.15.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -80,7 +80,7 @@
     "@graphql-typed-document-node/core": "catalog:",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
-    "@types/qs": "^6.9.7",
+    "@types/qs": "6.9.7",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "@vitest/coverage-v8": "catalog:",

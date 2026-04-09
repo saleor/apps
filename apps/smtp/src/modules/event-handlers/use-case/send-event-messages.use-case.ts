@@ -4,6 +4,9 @@ import { BaseError } from "../../../errors";
 import { bytesToKb } from "../../../lib/bytes-to-kb";
 import { createLogger } from "../../../logger";
 import { FallbackSenderEmail } from "../../saleor-fallback-behavior/fallback-sender-email";
+import { REDIRECT_BANNER } from "../../saleor-fallback-behavior/redirect-banner";
+import { fetchRedirectEmail } from "../../saleor-fallback-behavior/redirect-email-fetcher";
+import { buildRedirectEndpointUrl } from "../../saleor-fallback-behavior/redirect-endpoint-url";
 import { TenantName } from "../../saleor-fallback-behavior/tenant-name";
 import {
   getFallbackSmtpConfigSchema,
@@ -53,7 +56,7 @@ export class SendEventMessagesUseCase {
 
   static InvalidEmailAddressError = this.NoOpError.subclass("InvalidEmailAddressError");
 
-  static RejectedTestDomainError = this.NoOpError.subclass("RejectedTestDomainError");
+  static RedirectEmailFetchError = this.ServerError.subclass("RedirectEmailFetchError");
 
   private logger = createLogger("SendEventMessagesUseCase");
 
@@ -279,22 +282,6 @@ export class SendEventMessagesUseCase {
       ]);
     }
 
-    // Block sending to test/invalid domains when using fallback SMTP
-    if (fallbackSmtpConfig.blockedDomains.includes(recipientDomain)) {
-      this.logger.info("Rejected sending email: test domain detected", {
-        recipientDomain,
-      });
-
-      return err([
-        new SendEventMessagesUseCase.RejectedTestDomainError(
-          "This recipient domain is blocked for fallback SMTP",
-          {
-            props: { channelSlug, event, recipientEmail },
-          },
-        ),
-      ]);
-    }
-
     const senderEmailResult = fromThrowable(
       () => new FallbackSenderEmail(saleorApiUrl, fallbackSmtpConfig.senderDomain).getEmail(),
       (error) =>
@@ -317,6 +304,33 @@ export class SendEventMessagesUseCase {
 
     const senderEmail = senderEmailResult.value;
 
+    this.logger.info("Fetching redirect email from endpoint");
+
+    const redirectResult = await fetchRedirectEmail({
+      endpointUrl: buildRedirectEndpointUrl({
+        endpointUrl: fallbackSmtpConfig.redirectEndpoint,
+        saleorApiUrl,
+      }),
+      token: fallbackSmtpConfig.redirectToken,
+    });
+
+    if (redirectResult.isErr()) {
+      this.logger.error("Failed to fetch redirect email", { error: redirectResult.error });
+
+      return err([
+        new SendEventMessagesUseCase.RedirectEmailFetchError(
+          "Failed to fetch redirect email from endpoint",
+          {
+            cause: redirectResult.error,
+            props: { channelSlug, event },
+          },
+        ),
+      ]);
+    }
+
+    this.logger.info("Redirecting email to fetched address");
+    const effectiveRecipientEmail = redirectResult.value;
+
     const fallbackConfig: SmtpConfiguration = {
       id: "fallback",
       active: true,
@@ -332,8 +346,11 @@ export class SendEventMessagesUseCase {
       events: messageEventTypes.map((eventType) => ({
         active: true,
         eventType,
-        template: defaultMjmlTemplates[eventType],
-        subject: defaultMjmlSubjectTemplates[eventType],
+        template: defaultMjmlTemplates[eventType].replace(
+          "<mj-body>",
+          `<mj-body>${REDIRECT_BANNER}`,
+        ),
+        subject: `[${recipientEmail}] ${defaultMjmlSubjectTemplates[eventType]}`,
       })),
     };
 
@@ -343,7 +360,7 @@ export class SendEventMessagesUseCase {
       config: fallbackConfig,
       event,
       payload,
-      recipientEmail,
+      recipientEmail: effectiveRecipientEmail,
       channelSlug,
       headers: { "X-SES-TENANT": tenantName },
     });

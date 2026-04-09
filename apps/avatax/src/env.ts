@@ -29,7 +29,7 @@ export const env = createEnv({
     DYNAMODB_MAIN_TABLE_NAME: z.string(),
     E2E_USER_NAME: z.string().optional(),
     E2E_USER_PASSWORD: z.string().optional(),
-    E2E_SALEOR_VERSION: z.enum(["320", "321", "latest"]).optional(),
+    E2E_SALEOR_VERSION: z.enum(["320", "321", "322", "323", "latest"]).optional(),
     FILE_APL_PATH: z.string().optional(),
     MANIFEST_APP_ID: z.string().default("saleor.app.avatax"),
     OTEL_ENABLED: booleanEnv.defaultFalse,

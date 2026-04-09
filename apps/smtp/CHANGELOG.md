@@ -1,5 +1,32 @@
 # saleor-app-smtp
 
+## 2.2.1
+
+### Patch Changes
+
+- eedb36b: Re-added `JSONparse` handlebars helper
+- Updated dependencies [eedb36b]
+  - @saleor/handlebars@0.1.2
+
+## 2.2.0
+
+### Minor Changes
+
+- 6b6449d: Added support for redirecting fallback emails to a different address. When `FALLBACK_SMTP_EMAIL_REDIRECT_ENDPOINT` and `FALLBACK_SMTP_EMAIL_REDIRECT_TOKEN` env vars are configured, emails sent via the fallback SMTP path are redirected to the address returned by the endpoint instead of the original recipient. The original recipient email is prepended to the subject line (e.g. `[original@example.com] Your order is confirmed!`). A preview banner is also injected at the top of the email body stating that the email was delivered to the organization owner's address and not to the customer.
+
+## 2.1.0
+
+### Minor Changes
+
+- 622d13c: Removed `digitalContentUrl` field from payload, field is removed in 3.23
+
+### Patch Changes
+
+- 622d13c: Updated GraphQL schema to 3.23
+- Updated dependencies [622d13c]
+  - @saleor/webhook-utils@0.2.10
+  - @saleor/handlebars@0.1.1
+
 ## 2.0.0
 
 ### Major Changes

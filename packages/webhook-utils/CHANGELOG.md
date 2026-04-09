@@ -1,5 +1,11 @@
 # @saleor/webhook-utils
 
+## 0.2.10
+
+### Patch Changes
+
+- 622d13c: Updated GraphQL schema to 3.23
+
 ## 0.2.9
 
 ### Patch Changes
