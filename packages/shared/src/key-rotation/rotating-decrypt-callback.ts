@@ -1,4 +1,5 @@
 import { decrypt } from "@saleor/app-sdk/settings-manager";
+import { type Logger } from "@saleor/apps-logger";
 
 import { tryDecryptWithFallback } from "./try-decrypt-with-fallback";
 
@@ -14,7 +15,8 @@ import { tryDecryptWithFallback } from "./try-decrypt-with-fallback";
 export function createRotatingDecryptCallback(
   primaryKey: string,
   fallbackKeys: string[],
+  logger: Logger,
 ): (value: string, secret: string) => string {
   return (value: string, _secret: string): string =>
-    tryDecryptWithFallback({ value, primaryKey, fallbackKeys, decryptFn: decrypt });
+    tryDecryptWithFallback({ value, primaryKey, fallbackKeys, decryptFn: decrypt, logger });
 }

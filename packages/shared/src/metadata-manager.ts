@@ -169,7 +169,11 @@ export class EncryptedMetadataManagerFactory {
         });
       },
       ...(this.fallbackKeys.length > 0 && {
-        decryptionMethod: createRotatingDecryptCallback(this.encryptionKey, this.fallbackKeys),
+        decryptionMethod: createRotatingDecryptCallback(
+          this.encryptionKey,
+          this.fallbackKeys,
+          this.logger,
+        ),
       }),
     });
   }
