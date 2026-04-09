@@ -146,7 +146,7 @@ export class EncryptedMetadataManagerFactory {
     private fallbackKeys: string[] = [],
     private logger: Logger,
   ) {
-    if (!encryptionKey) {
+    if (!encryptionKey && process.env.NODE_ENV !== "development") {
       throw new Error("Encryption key is required");
     }
   }
