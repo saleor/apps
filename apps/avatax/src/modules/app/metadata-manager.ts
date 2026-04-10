@@ -24,6 +24,18 @@ export async function fetchAllMetadata(client: Pick<Client, "query">): Promise<M
     .toPromise();
 
   if (error) {
+    const cause =
+      error.networkError?.cause instanceof Error
+        ? (error.networkError.cause as NodeJS.ErrnoException)
+        : undefined;
+
+    logger.error("Failed to fetch app metadata", {
+      errorMessage: error.message,
+      networkErrorMessage: error.networkError?.message,
+      causeCode: cause?.code,
+      causeMessage: cause?.message,
+    });
+
     return [];
   }
 

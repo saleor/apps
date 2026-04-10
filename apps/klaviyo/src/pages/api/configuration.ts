@@ -2,7 +2,7 @@ import {
   createProtectedHandler,
   type NextJsProtectedApiHandler,
 } from "@saleor/app-sdk/handlers/next";
-import { type EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
+import { type SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
@@ -29,7 +29,7 @@ interface PostRequestBody {
   }[];
 }
 
-const getAppSettings = async (settingsManager: EncryptedMetadataManager) => [
+const getAppSettings = async (settingsManager: SettingsManager) => [
   {
     key: "CUSTOMER_CREATED_METRIC",
     value: (await settingsManager.get("CUSTOMER_CREATED_METRIC")) ?? "CUSTOMER_CREATED_METRIC",
