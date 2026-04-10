@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-search",
-  "version": "1.28.0",
+  "version": "1.28.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -49,8 +49,8 @@
     "@trpc/server": "catalog:",
     "@vercel/otel": "catalog:",
     "algoliasearch": "4.23.3",
-    "clsx": "^1.2.1",
-    "debug": "^4.3.4",
+    "clsx": "1.2.1",
+    "debug": "4.3.4",
     "dotenv": "catalog:",
     "dynamodb-toolbox": "catalog:",
     "graphql": "catalog:",
@@ -58,7 +58,7 @@
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-helmet": "^6.1.0",
+    "react-helmet": "6.1.0",
     "react-hook-form": "catalog:",
     "urql": "catalog:",
     "zod": "catalog:"

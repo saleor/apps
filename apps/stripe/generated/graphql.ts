@@ -96,19 +96,46 @@ export type CardPaymentMethodDetailsInput = {
   readonly name: Scalars['String']['input'];
 };
 
+export type GiftCardPaymentMethodDetailsInput = {
+  /**
+   * Brand of the gift card used for the transaction. Max length is 40 characters.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly brand?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Last characters of the gift card used for the transaction. Max length is 4 characters.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly lastChars?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Name of the payment method used for the transaction. Max length is 256 characters.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly name: Scalars['String']['input'];
+};
+
 export type OtherPaymentMethodDetailsInput = {
   /** Name of the payment method used for the transaction. */
   readonly name: Scalars['String']['input'];
 };
 
 /**
- * Details of the payment method used for the transaction. One of `card` or `other` is required.
+ * Details of the payment method used for the transaction. One of `card`, `other`, or `giftCard` is required.
  *
  * Added in Saleor 3.22.
  */
 export type PaymentMethodDetailsInput = {
   /** Details of the card payment method used for the transaction. */
   readonly card?: InputMaybe<CardPaymentMethodDetailsInput>;
+  /**
+   * Details of the gift card payment method used for the transaction.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly giftCard?: InputMaybe<GiftCardPaymentMethodDetailsInput>;
   /** Details of the non-card payment method used for this transaction. */
   readonly other?: InputMaybe<OtherPaymentMethodDetailsInput>;
 };

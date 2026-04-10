@@ -1,5 +1,13 @@
 # saleor-app-segment
 
+## 2.3.2
+
+### Patch Changes
+
+- 622d13c: Updated GraphQL schema to 3.23
+- Updated dependencies [622d13c]
+  - @saleor/webhook-utils@0.2.10
+
 ## 2.3.1
 
 ### Patch Changes

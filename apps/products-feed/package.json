@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-products-feed",
-  "version": "2.3.2",
+  "version": "3.0.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "catalog:",
-    "@aws-sdk/client-s3": "^3.332.0",
+    "@aws-sdk/client-s3": "3.332.0",
     "@aws-sdk/lib-dynamodb": "catalog:",
     "@aws-sdk/s3-request-presigner": "3.332.0",
     "@aws-sdk/util-dynamodb": "catalog:",
@@ -51,10 +51,10 @@
     "@vitejs/plugin-react": "catalog:",
     "dotenv": "catalog:",
     "dynamodb-toolbox": "catalog:",
-    "fast-xml-parser": "^4.0.15",
+    "fast-xml-parser": "4.0.15",
     "graphql": "catalog:",
     "graphql-tag": "catalog:",
-    "handlebars": "^4.7.9",
+    "handlebars": "4.7.9",
     "handlebars-helpers": "0.10.0",
     "jsdom": "catalog:",
     "neverthrow": "catalog:",
@@ -81,7 +81,7 @@
     "@saleor/typescript-config-apps": "workspace:*",
     "@testing-library/dom": "10.4.0",
     "@testing-library/react": "16.2.0",
-    "@types/handlebars-helpers": "^0.5.6",
+    "@types/handlebars-helpers": "0.5.6",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "@vitest/coverage-v8": "catalog:",

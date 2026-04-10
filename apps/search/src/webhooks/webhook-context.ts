@@ -26,12 +26,17 @@ export const createWebhookContext = async ({ authData }: { authData: AuthData })
 
   if (!settings || errors) {
     let errorMessage = "Error fetching settings";
+    let cause: unknown;
 
-    if (errors && errors.length > 0 && errors[0].message) {
-      errorMessage = errors[0].message;
+    if (errors && errors.length > 0) {
+      if (errors[0].message) {
+        errorMessage = errors[0].message;
+      }
+
+      cause = "cause" in errors[0] ? errors[0].cause : undefined;
     }
 
-    throw new Error(errorMessage);
+    throw new Error(errorMessage, { cause });
   }
 
   if (!settings.appConfig) {

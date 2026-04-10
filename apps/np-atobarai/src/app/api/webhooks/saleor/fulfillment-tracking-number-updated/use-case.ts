@@ -100,6 +100,18 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       );
     }
 
+    const ownedCompletedTransactions = completedTransactions.filter(
+      (t) => t.createdBy?.__typename === "App" && t.createdBy.id === appId,
+    );
+
+    if (ownedCompletedTransactions.length === 0) {
+      this.logger.info("No completed transactions owned by this app. Skipping.", {
+        event: { orderId: event.order.id },
+      });
+
+      return err(new InvalidEventValidationError("Transaction was not created by the app"));
+    }
+
     if (completedTransactions.length > 1) {
       // App supports only single transaction per order / checkout. This is a limitation of how we send goods to Atobarai.
       this.logger.warn("Multiple completed transactions found for the order", {
@@ -115,36 +127,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       );
     }
 
-    const transaction = completedTransactions[0];
-
-    if (transaction.createdBy?.__typename !== "App") {
-      this.logger.warn("Transaction was not created by the app. Skipping.", {
-        event: {
-          orderId: event.order.id,
-          transactionPspReference: transaction.pspReference,
-          createdBy: transaction.createdBy?.__typename,
-        },
-      });
-
-      return err(new InvalidEventValidationError("Transaction was not created by the app"));
-    }
-
-    if (transaction.createdBy.id !== appId) {
-      this.logger.warn("Transaction was not created by the current app installation. Skipping.", {
-        event: {
-          orderId: event.order.id,
-          transactionPspReference: transaction.pspReference,
-          appId,
-          transactionCreatedById: transaction.createdBy.id,
-        },
-      });
-
-      return err(
-        new InvalidEventValidationError(
-          "Transaction was not created by the current app installation",
-        ),
-      );
-    }
+    const transaction = ownedCompletedTransactions[0];
 
     return ok({
       orderId: event.order.id,

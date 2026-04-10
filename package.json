@@ -27,11 +27,11 @@
   },
   "config": {
     "saleor": {
-      "schemaVersion": "3.22"
+      "schemaVersion": "3.23"
     }
   },
   "devDependencies": {
-    "@changesets/cli": "^2.30.0",
+    "@changesets/cli": "2.30.0",
     "@cspell/cspell-types": "8.17.5",
     "@saleor/app-sdk": "catalog:",
     "cspell": "8.17.5",
