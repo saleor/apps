@@ -7,28 +7,25 @@ import { AppConfig } from "../configuration/app-config";
 import { type SegmentConfigEntityType, SegmentMainTable } from "./segment-main-table";
 
 export class DynamoConfigMapper {
+  private readonly decrypt: (value: string, secret: string) => string;
+
   constructor(
     private deps: {
       encryptionKey: string;
       fallbackKeys?: string[];
       logger: Logger;
     },
-  ) {}
-
-  private getDecrypt() {
-    return createRotatingDecryptCallback(
-      this.deps.encryptionKey,
-      this.deps.fallbackKeys ?? [],
-      this.deps.logger,
+  ) {
+    this.decrypt = createRotatingDecryptCallback(
+      deps.encryptionKey,
+      deps.fallbackKeys ?? [],
+      deps.logger,
     );
   }
 
   dynamoEntityToAppConfig(args: { entity: FormattedItem<SegmentConfigEntityType> }): AppConfig {
     return new AppConfig({
-      segmentWriteKey: this.getDecrypt()(
-        args.entity.encryptedSegmentWriteKey,
-        this.deps.encryptionKey,
-      ),
+      segmentWriteKey: this.decrypt(args.entity.encryptedSegmentWriteKey, this.deps.encryptionKey),
     });
   }
 

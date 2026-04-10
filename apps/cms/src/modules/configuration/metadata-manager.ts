@@ -15,7 +15,7 @@ export const createSettingsManager = (
   const metadataManagerFactory = new EncryptedMetadataManagerFactory(
     env.SECRET_KEY,
     collectFallbackSecretKeys(env),
-    logger
+    logger,
   );
 
   return metadataManagerFactory.create(client, appId);
