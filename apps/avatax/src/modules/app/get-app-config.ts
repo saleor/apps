@@ -2,6 +2,7 @@ import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-k
 import { createRotatingDecryptCallback } from "@saleor/apps-shared/key-rotation";
 
 import { env } from "@/env";
+import { createLogger } from "@/logger";
 
 import { type MetadataItem } from "../../lib/metadata-item";
 import { type ChannelsConfig, channelsSchema } from "../channel-configuration/channel-config";
@@ -23,7 +24,12 @@ export const getAppConfig = (metadata: MetadataItem[]) => {
     throw new Error("SECRET_KEY env variable is not set");
   }
 
-  const rotatingDecrypt = createRotatingDecryptCallback(secretKey, collectFallbackSecretKeys(env));
+  const logger = createLogger("getAppConfig");
+  const rotatingDecrypt = createRotatingDecryptCallback(
+    secretKey,
+    collectFallbackSecretKeys(env),
+    logger,
+  );
 
   /**
    * The App Config contains two types of data: providers and channels.

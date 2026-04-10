@@ -52,7 +52,11 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
         stripeConfig: DynamoDbStripeConfig.entity,
         channelConfigMapping: DynamoDbChannelConfigMapping.entity,
       },
-      encryptor: new RotatingEncryptor(env.SECRET_KEY, collectFallbackSecretKeys(env)),
+      encryptor: new RotatingEncryptor({
+        primarySecret: env.SECRET_KEY,
+        fallbackSecrets: collectFallbackSecretKeys(env),
+        logger: createLogger("RotatingEncryptor"),
+      }),
     },
   ) {
     this.channelConfigMappingEntity = config.entities.channelConfigMapping;

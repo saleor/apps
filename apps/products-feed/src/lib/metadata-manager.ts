@@ -123,7 +123,7 @@ export const createSettingsManager = (client: Client) => {
     // Secret key should be randomly created for production and set as environment variable
     encryptionKey: env.SECRET_KEY,
     ...(fallbackKeys.length > 0 && {
-      decryptionMethod: createRotatingDecryptCallback(env.SECRET_KEY, fallbackKeys),
+      decryptionMethod: createRotatingDecryptCallback(env.SECRET_KEY, fallbackKeys, logger),
     }),
     fetchMetadata: () => fetchAllMetadata(client),
     mutateMetadata: (metadata) => mutateMetadata(client, metadata),

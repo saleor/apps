@@ -1,4 +1,5 @@
 import { type APL } from "@saleor/app-sdk/APL";
+import { type Logger } from "@saleor/apps-logger";
 import { gql } from "urql";
 
 import { createGraphQLClient } from "../create-graphql-client";
@@ -23,6 +24,7 @@ export interface MetadataItemContext {
 
 export async function fetchMetadataRotationItems(
   apl: Pick<APL, "getAll">,
+  logger: Logger,
 ): Promise<RotationItem<MetadataItemContext>[]> {
   const installations = await apl.getAll();
   const items: RotationItem<MetadataItemContext>[] = [];
@@ -35,8 +37,7 @@ export async function fetchMetadataRotationItems(
       .toPromise();
 
     if (error || !data?.app) {
-      // eslint-disable-next-line no-console
-      console.error(
+      logger.error(
         `Failed to fetch metadata for ${saleorApiUrl}: ${error?.message ?? "No app data"}`,
       );
       continue;

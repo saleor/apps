@@ -1,10 +1,19 @@
 import { encrypt } from "@saleor/app-sdk/settings-manager";
+import { type Logger } from "@saleor/apps-logger";
 import { type FormattedItem } from "dynamodb-toolbox";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { AppConfig } from "../configuration/app-config";
 import { DynamoConfigMapper } from "./dynamo-config-mapper";
 import { type SegmentConfigEntityType } from "./segment-main-table";
+
+const createMockLogger = () =>
+  ({
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+  }) as unknown as Logger;
 
 describe("DynamoConfigMapper", () => {
   const encryptionKey = "encryptionKey";
@@ -12,6 +21,7 @@ describe("DynamoConfigMapper", () => {
   it("should map DynamoDB entity to AppConfig", () => {
     const mapper = new DynamoConfigMapper({
       encryptionKey,
+      logger: createMockLogger(),
     });
 
     const entity: FormattedItem<SegmentConfigEntityType> = {
@@ -36,6 +46,7 @@ describe("DynamoConfigMapper", () => {
   it("should map AppConfig to DynamoDB PutItemInput", () => {
     const mapper = new DynamoConfigMapper({
       encryptionKey,
+      logger: createMockLogger(),
     });
 
     const config = new AppConfig({

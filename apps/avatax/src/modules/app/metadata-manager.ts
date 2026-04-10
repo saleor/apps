@@ -108,7 +108,7 @@ export const createSettingsManager = (
     // Secret key should be randomly created for production and set as environment variable
     encryptionKey: env.SECRET_KEY,
     ...(fallbackKeys.length > 0 && {
-      decryptionMethod: createRotatingDecryptCallback(env.SECRET_KEY, fallbackKeys),
+      decryptionMethod: createRotatingDecryptCallback(env.SECRET_KEY, fallbackKeys, logger),
     }),
     fetchMetadata: async () => {
       const cachedMetadata = cache.getRawMetadata();

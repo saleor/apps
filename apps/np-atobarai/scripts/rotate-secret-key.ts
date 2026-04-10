@@ -103,8 +103,6 @@ runner
     if (failed > 0) process.exit(1);
   })
   .catch((error) => {
-    // pass entire error for debugging
-    // eslint-disable-next-line @saleor/saleor-app/logger-leak
-    logger.error("Fatal error during secret key rotation", { error });
+    logger.error("Fatal error during secret key rotation", { error: error });
     process.exit(1);
   });

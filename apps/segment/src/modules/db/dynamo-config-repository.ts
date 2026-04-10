@@ -20,6 +20,7 @@ export class DynamoConfigRepository implements ConfigRepository {
   private mapper = new DynamoConfigMapper({
     encryptionKey: env.SECRET_KEY,
     fallbackKeys: collectFallbackSecretKeys(env),
+    logger: this.logger,
   });
   private configEntity = SegmentMainTableEntityFactory.createConfigEntity(segmentMainTable);
 
