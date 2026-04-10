@@ -1,7 +1,11 @@
 import { Analytics, type TrackParams } from "@segment/analytics-node";
 
+import { createTraceEffect } from "@/lib/trace-effect";
+
 import packageJson from "../../../package.json";
 import { type TrackingBaseEvent } from "../tracking-events/tracking-events";
+
+const traceSegmentFlush = createTraceEffect({ name: "Segment flush" });
 
 export type EventToTrack = Pick<TrackParams, "properties" | "event"> &
   Pick<TrackingBaseEvent, "user" | "issuedAt">;
@@ -49,6 +53,6 @@ export class SegmentClient implements ISegmentClient {
 
   flush() {
     // https://segment.com/docs/connections/sources/catalog/libraries/server/node/#graceful-shutdown
-    return this.client.closeAndFlush({ timeout: 1000 });
+    return traceSegmentFlush(() => this.client.closeAndFlush({ timeout: 1000 }));
   }
 }
