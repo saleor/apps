@@ -38,11 +38,7 @@ const createDocumentClient = () => {
   return DynamoDBDocumentClient.from(client);
 };
 
-const scanAllItems = async (
-  documentClient: DynamoDBDocumentClient,
-  tableName: string,
-): Promise<Record<string, unknown>[]> => {
-  const items: Record<string, unknown>[] = [];
+async function* scanItems(documentClient: DynamoDBDocumentClient, tableName: string) {
   let lastEvaluatedKey: Record<string, unknown> | undefined;
 
   do {
@@ -54,14 +50,12 @@ const scanAllItems = async (
     );
 
     if (result.Items) {
-      items.push(...(result.Items as Record<string, unknown>[]));
+      yield* result.Items as Record<string, unknown>[];
     }
 
     lastEvaluatedKey = result.LastEvaluatedKey as Record<string, unknown> | undefined;
   } while (lastEvaluatedKey);
-
-  return items;
-};
+}
 
 const documentClient = createDocumentClient();
 const tableName = env.DYNAMODB_MAIN_TABLE_NAME;
@@ -73,19 +67,16 @@ const runner = new SecretKeyRotationRunner<Record<string, unknown>>({
   logger,
   decrypt: (value, key) => new Encryptor(key).decrypt(value),
   encrypt: (plaintext, key) => new Encryptor(key).encrypt(plaintext),
-  getItems: async () => {
-    const allItems = await scanAllItems(documentClient, tableName);
-
-    return allItems
-      .filter(
-        (item): item is Record<string, unknown> & { spCode: string } =>
-          typeof item.spCode === "string",
-      )
-      .map((item) => ({
-        id: `${String(item.PK)}/${String(item.SK)}`,
-        encryptedFields: [{ name: "spCode", encryptedValue: item.spCode }],
-        original: item,
-      }));
+  getItems: async function* () {
+    for await (const item of scanItems(documentClient, tableName)) {
+      if (typeof item.spCode === "string") {
+        yield {
+          id: `${String(item.PK)}/${String(item.SK)}`,
+          encryptedFields: [{ name: "spCode", encryptedValue: item.spCode }],
+          original: item,
+        };
+      }
+    }
   },
   saveItem: async (rotated) => {
     await documentClient.send(

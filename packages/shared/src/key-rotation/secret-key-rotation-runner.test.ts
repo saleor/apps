@@ -25,9 +25,13 @@ const createLogger = () => ({
   error: vi.fn(),
 });
 
+async function* fromArray<T>(items: T[]): AsyncGenerator<T> {
+  yield* items;
+}
+
 const createRunner = <T>(
   overrides: Partial<ConstructorParameters<typeof SecretKeyRotationRunner<T>>[0]> & {
-    getItems: () => Promise<RotationItem<T>[]>;
+    getItems: () => AsyncIterable<RotationItem<T>>;
   },
 ) => {
   const logger = createLogger();
@@ -51,13 +55,16 @@ describe("SecretKeyRotationRunner", () => {
     const saveItem = vi.fn().mockResolvedValue(undefined);
 
     const { runner } = createRunner({
-      getItems: async () => [
-        {
-          id: "item-1",
-          encryptedFields: [{ name: "secret", encryptedValue: toyEncrypt("my-value", FALLBACK_1) }],
-          original: { some: "data" },
-        },
-      ],
+      getItems: () =>
+        fromArray([
+          {
+            id: "item-1",
+            encryptedFields: [
+              { name: "secret", encryptedValue: toyEncrypt("my-value", FALLBACK_1) },
+            ],
+            original: { some: "data" },
+          },
+        ]),
       saveItem,
     });
 
@@ -75,15 +82,16 @@ describe("SecretKeyRotationRunner", () => {
     const saveItem = vi.fn();
 
     const { runner } = createRunner({
-      getItems: async () => [
-        {
-          id: "item-1",
-          encryptedFields: [
-            { name: "secret", encryptedValue: toyEncrypt("my-value", PRIMARY_KEY) },
-          ],
-          original: {},
-        },
-      ],
+      getItems: () =>
+        fromArray([
+          {
+            id: "item-1",
+            encryptedFields: [
+              { name: "secret", encryptedValue: toyEncrypt("my-value", PRIMARY_KEY) },
+            ],
+            original: {},
+          },
+        ]),
       saveItem,
     });
 
@@ -97,18 +105,19 @@ describe("SecretKeyRotationRunner", () => {
     const saveItem = vi.fn().mockResolvedValue(undefined);
 
     const { runner } = createRunner({
-      getItems: async () => [
-        {
-          id: "already-current",
-          encryptedFields: [{ name: "a", encryptedValue: toyEncrypt("val-a", PRIMARY_KEY) }],
-          original: {},
-        },
-        {
-          id: "needs-rotation",
-          encryptedFields: [{ name: "b", encryptedValue: toyEncrypt("val-b", FALLBACK_1) }],
-          original: {},
-        },
-      ],
+      getItems: () =>
+        fromArray([
+          {
+            id: "already-current",
+            encryptedFields: [{ name: "a", encryptedValue: toyEncrypt("val-a", PRIMARY_KEY) }],
+            original: {},
+          },
+          {
+            id: "needs-rotation",
+            encryptedFields: [{ name: "b", encryptedValue: toyEncrypt("val-b", FALLBACK_1) }],
+            original: {},
+          },
+        ]),
       saveItem,
     });
 
@@ -123,18 +132,19 @@ describe("SecretKeyRotationRunner", () => {
     const saveItem = vi.fn().mockResolvedValue(undefined);
 
     const { runner } = createRunner({
-      getItems: async () => [
-        {
-          id: "item-bad",
-          encryptedFields: [{ name: "broken", encryptedValue: "unknown-key:data" }],
-          original: {},
-        },
-        {
-          id: "item-good",
-          encryptedFields: [{ name: "ok", encryptedValue: toyEncrypt("val", FALLBACK_1) }],
-          original: {},
-        },
-      ],
+      getItems: () =>
+        fromArray([
+          {
+            id: "item-bad",
+            encryptedFields: [{ name: "broken", encryptedValue: "unknown-key:data" }],
+            original: {},
+          },
+          {
+            id: "item-good",
+            encryptedFields: [{ name: "ok", encryptedValue: toyEncrypt("val", FALLBACK_1) }],
+            original: {},
+          },
+        ]),
       saveItem,
     });
 
@@ -150,13 +160,14 @@ describe("SecretKeyRotationRunner", () => {
 
     const { runner } = createRunner({
       dryRun: true,
-      getItems: async () => [
-        {
-          id: "item-1",
-          encryptedFields: [{ name: "s", encryptedValue: toyEncrypt("val", FALLBACK_1) }],
-          original: {},
-        },
-      ],
+      getItems: () =>
+        fromArray([
+          {
+            id: "item-1",
+            encryptedFields: [{ name: "s", encryptedValue: toyEncrypt("val", FALLBACK_1) }],
+            original: {},
+          },
+        ]),
       saveItem,
     });
 
@@ -169,7 +180,7 @@ describe("SecretKeyRotationRunner", () => {
   it("throws when no fallback keys are configured", async () => {
     const { runner } = createRunner({
       fallbackKeys: [],
-      getItems: async () => [],
+      getItems: () => fromArray([]),
     });
 
     await expect(runner.run()).rejects.toThrow("No fallback keys configured");
@@ -179,16 +190,17 @@ describe("SecretKeyRotationRunner", () => {
     const saveItem = vi.fn().mockResolvedValue(undefined);
 
     const { runner } = createRunner({
-      getItems: async () => [
-        {
-          id: "multi-field",
-          encryptedFields: [
-            { name: "already-ok", encryptedValue: toyEncrypt("v1", PRIMARY_KEY) },
-            { name: "needs-rotate", encryptedValue: toyEncrypt("v2", FALLBACK_2) },
-          ],
-          original: {},
-        },
-      ],
+      getItems: () =>
+        fromArray([
+          {
+            id: "multi-field",
+            encryptedFields: [
+              { name: "already-ok", encryptedValue: toyEncrypt("v1", PRIMARY_KEY) },
+              { name: "needs-rotate", encryptedValue: toyEncrypt("v2", FALLBACK_2) },
+            ],
+            original: {},
+          },
+        ]),
       saveItem,
     });
 
@@ -206,16 +218,17 @@ describe("SecretKeyRotationRunner", () => {
     const saveItem = vi.fn().mockRejectedValue(new Error("save failed"));
 
     const { runner } = createRunner({
-      getItems: async () => [
-        {
-          id: "item-1",
-          encryptedFields: [
-            { name: "a", encryptedValue: toyEncrypt("v1", FALLBACK_1) },
-            { name: "b", encryptedValue: toyEncrypt("v2", FALLBACK_1) },
-          ],
-          original: {},
-        },
-      ],
+      getItems: () =>
+        fromArray([
+          {
+            id: "item-1",
+            encryptedFields: [
+              { name: "a", encryptedValue: toyEncrypt("v1", FALLBACK_1) },
+              { name: "b", encryptedValue: toyEncrypt("v2", FALLBACK_1) },
+            ],
+            original: {},
+          },
+        ]),
       saveItem,
     });
 
@@ -226,7 +239,7 @@ describe("SecretKeyRotationRunner", () => {
 
   it("returns zeros for empty items list", async () => {
     const { runner } = createRunner({
-      getItems: async () => [],
+      getItems: () => fromArray([]),
     });
 
     const result = await runner.run();
@@ -253,7 +266,7 @@ describe("SecretKeyRotationRunner", () => {
 
     const { runner } = createRunner({
       concurrency: 3,
-      getItems: async () => items,
+      getItems: () => fromArray(items),
       saveItem,
     });
 
@@ -269,13 +282,16 @@ describe("SecretKeyRotationRunner", () => {
     const saveItem = vi.fn().mockResolvedValue(undefined);
 
     const { runner } = createRunner({
-      getItems: async () => [
-        {
-          id: "item-1",
-          encryptedFields: [{ name: "secret", encryptedValue: toyEncrypt("my-value", FALLBACK_2) }],
-          original: {},
-        },
-      ],
+      getItems: () =>
+        fromArray([
+          {
+            id: "item-1",
+            encryptedFields: [
+              { name: "secret", encryptedValue: toyEncrypt("my-value", FALLBACK_2) },
+            ],
+            original: {},
+          },
+        ]),
       saveItem,
     });
 

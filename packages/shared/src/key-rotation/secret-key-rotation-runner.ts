@@ -1,3 +1,5 @@
+import { type Logger } from "@saleor/apps-logger";
+
 export interface EncryptedField {
   name: string;
   encryptedValue: string;
@@ -15,19 +17,14 @@ export interface RotatedItem<T = unknown> {
   original: T;
 }
 
-interface Logger {
-  info: (message: string, meta?: Record<string, unknown>) => void;
-  error: (message: string, meta?: Record<string, unknown>) => void;
-}
-
 interface SecretKeyRotationRunnerConfig<T = unknown> {
   secretKey: string;
   fallbackKeys: string[];
   dryRun: boolean;
-  logger: Logger;
+  logger: Pick<Logger, "info" | "error">;
   /** Max concurrent saveItem calls. Defaults to 5. */
   concurrency?: number;
-  getItems: () => Promise<RotationItem<T>[]>;
+  getItems: () => AsyncIterable<RotationItem<T>>;
   decrypt: (encryptedValue: string, key: string) => string;
   encrypt: (plaintext: string, key: string) => string;
   saveItem: (item: RotatedItem<T>) => Promise<void>;
@@ -43,10 +40,9 @@ export class SecretKeyRotationRunner<T = unknown> {
   private processItem = (
     item: RotationItem<T>,
     index: number,
-    total: number,
   ): { reEncryptedFields: Record<string, string>; skipped: number; failed: number } => {
     const { secretKey, fallbackKeys, logger, decrypt, encrypt } = this.config;
-    const progress = `[${index + 1}/${total}]`;
+    const progress = `[${index + 1}]`;
 
     const reEncryptedFields: Record<string, string> = {};
     let skipped = 0;
@@ -85,8 +81,66 @@ export class SecretKeyRotationRunner<T = unknown> {
     return { reEncryptedFields, skipped, failed };
   };
 
+  private processBatch = async (
+    batch: RotationItem<T>[],
+    startIndex: number,
+  ): Promise<{ rotated: number; skipped: number; failed: number }> => {
+    const { dryRun, logger, saveItem } = this.config;
+
+    const results = await Promise.allSettled(
+      batch.map(async (item, batchIndex) => {
+        const globalIndex = startIndex + batchIndex;
+
+        const {
+          reEncryptedFields,
+          skipped: itemSkipped,
+          failed: itemFailed,
+        } = this.processItem(item, globalIndex);
+
+        const fieldsToSave = Object.keys(reEncryptedFields).length;
+
+        if (!dryRun && fieldsToSave > 0) {
+          await saveItem({ id: item.id, reEncryptedFields, original: item.original });
+        }
+
+        if (fieldsToSave > 0) {
+          logger.info(
+            `[${globalIndex + 1}] Re-encrypted ${fieldsToSave} field(s)${
+              dryRun ? " (dry run)" : ""
+            }: ${item.id}`,
+          );
+        }
+
+        return { rotated: fieldsToSave, skipped: itemSkipped, failed: itemFailed };
+      }),
+    );
+
+    let rotated = 0;
+    let skipped = 0;
+    let failed = 0;
+
+    for (let i = 0; i < results.length; i++) {
+      const result = results[i];
+
+      if (result.status === "fulfilled") {
+        rotated += result.value.rotated;
+        skipped += result.value.skipped;
+        failed += result.value.failed;
+      } else {
+        const item = batch[i];
+
+        failed += item.encryptedFields.length;
+        logger.error(`Failed to process item: ${item.id}`, {
+          error: result.reason as Record<string, unknown>,
+        });
+      }
+    }
+
+    return { rotated, skipped, failed };
+  };
+
   public run = async (): Promise<{ rotated: number; skipped: number; failed: number }> => {
-    const { fallbackKeys, dryRun, logger, getItems, saveItem, concurrency = 5 } = this.config;
+    const { fallbackKeys, logger, getItems, concurrency = 5 } = this.config;
 
     if (fallbackKeys.length === 0) {
       throw new Error(
@@ -95,65 +149,44 @@ export class SecretKeyRotationRunner<T = unknown> {
     }
 
     logger.info(
-      `Starting secret key rotation${dryRun ? " (DRY RUN)" : ""}. Fallback keys: ${fallbackKeys.length}, concurrency: ${concurrency}`,
+      `Starting secret key rotation${this.config.dryRun ? " (DRY RUN)" : ""}. Fallback keys: ${
+        fallbackKeys.length
+      }, concurrency: ${concurrency}`,
     );
-
-    const items = await getItems();
-
-    logger.info(`Found ${items.length} item(s) to process`);
 
     let rotated = 0;
     let skipped = 0;
     let failed = 0;
+    let processed = 0;
+    let batch: RotationItem<T>[] = [];
 
-    for (let batchStart = 0; batchStart < items.length; batchStart += concurrency) {
-      const batch = items.slice(batchStart, batchStart + concurrency);
+    for await (const item of getItems()) {
+      batch.push(item);
 
-      const results = await Promise.allSettled(
-        batch.map(async (item, batchIndex) => {
-          const globalIndex = batchStart + batchIndex;
-          const progress = `[${globalIndex + 1}/${items.length}]`;
+      if (batch.length >= concurrency) {
+        const result = await this.processBatch(batch, processed);
 
-          const { reEncryptedFields, skipped: itemSkipped, failed: itemFailed } =
-            this.processItem(item, globalIndex, items.length);
-
-          const fieldsToSave = Object.keys(reEncryptedFields).length;
-
-          if (!dryRun && fieldsToSave > 0) {
-            await saveItem({ id: item.id, reEncryptedFields, original: item.original });
-          }
-
-          if (fieldsToSave > 0) {
-            logger.info(
-              `${progress} Re-encrypted ${fieldsToSave} field(s)${dryRun ? " (dry run)" : ""}: ${item.id}`,
-            );
-          }
-
-          return { rotated: fieldsToSave, skipped: itemSkipped, failed: itemFailed };
-        }),
-      );
-
-      for (let i = 0; i < results.length; i++) {
-        const result = results[i];
-
-        if (result.status === "fulfilled") {
-          rotated += result.value.rotated;
-          skipped += result.value.skipped;
-          failed += result.value.failed;
-        } else {
-          const item = batch[i];
-
-          failed += item.encryptedFields.length;
-          logger.error(
-            `[${batchStart + i + 1}/${items.length}] Failed to process item: ${item.id}`,
-            { error: result.reason as Record<string, unknown> },
-          );
-        }
+        processed += batch.length;
+        rotated += result.rotated;
+        skipped += result.skipped;
+        failed += result.failed;
+        batch = [];
       }
     }
 
+    if (batch.length > 0) {
+      const result = await this.processBatch(batch, processed);
+
+      processed += batch.length;
+      rotated += result.rotated;
+      skipped += result.skipped;
+      failed += result.failed;
+    }
+
     logger.info(
-      `Rotation complete${dryRun ? " (DRY RUN)" : ""}. Rotated: ${rotated}, Skipped: ${skipped}, Failed: ${failed}`,
+      `Rotation complete${
+        this.config.dryRun ? " (DRY RUN)" : ""
+      }. Processed: ${processed}, Rotated: ${rotated}, Skipped: ${skipped}, Failed: ${failed}`,
     );
 
     if (failed > 0) {

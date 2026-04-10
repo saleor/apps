@@ -22,12 +22,11 @@ export interface MetadataItemContext {
   appId: string;
 }
 
-export async function fetchMetadataRotationItems(
+export async function* fetchMetadataRotationItems(
   apl: Pick<APL, "getAll">,
   logger: Logger,
-): Promise<RotationItem<MetadataItemContext>[]> {
+): AsyncGenerator<RotationItem<MetadataItemContext>> {
   const installations = await apl.getAll();
-  const items: RotationItem<MetadataItemContext>[] = [];
 
   for (const { token, saleorApiUrl } of installations) {
     const client = createGraphQLClient({ saleorApiUrl, token });
@@ -46,15 +45,13 @@ export async function fetchMetadataRotationItems(
     const appId = data.app.id as string;
     const metadata = data.app.privateMetadata as Array<{ key: string; value: string }>;
 
-    items.push({
+    yield {
       id: saleorApiUrl,
       encryptedFields: metadata.map((entry) => ({
         name: entry.key,
         encryptedValue: entry.value,
       })),
       original: { client, appId },
-    });
+    };
   }
-
-  return items;
 }
