@@ -27,7 +27,7 @@ export const env = createEnv({
     SECRET_KEY: z.string(),
     VERCEL_ENV: z.string().optional(),
     VERCEL_GIT_COMMIT_SHA: z.string().optional(),
-    APP_NAME: z.string().default("NP Atobarai (NP 後払い)"),
+    APP_NAME: z.string().default("NP Atobarai (NP後払い)"),
     DYNAMODB_MAIN_TABLE_NAME: z.string().default("atobarai-main-table"),
     DYNAMODB_REQUEST_TIMEOUT_MS: z.coerce.number().default(5_000),
     DYNAMODB_CONNECTION_TIMEOUT_MS: z.coerce.number().default(2_000),
