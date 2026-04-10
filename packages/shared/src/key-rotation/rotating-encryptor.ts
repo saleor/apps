@@ -30,12 +30,29 @@ export class RotatingEncryptor implements IEncryptor {
   }
 
   decrypt(text: string): string {
-    return tryDecryptWithFallback({
+    const result = tryDecryptWithFallback({
       value: text,
       primaryKey: this.primarySecret,
       fallbackKeys: this.fallbackSecrets,
       decryptFn: (value, key) => new Encryptor(key).decrypt(value),
-      logger: this.logger,
     });
+
+    if (result.status === "fallback") {
+      this.logger.warn(
+        `Decrypted using fallback key at index ${result.fallbackIndex}. ` +
+          `Consider running migration to re-encrypt with current key.`,
+      );
+    }
+
+    if (result.status === "failed") {
+      const error = new Error(
+        `Failed to decrypt with primary key and ${this.fallbackSecrets.length} fallback key(s).`,
+      );
+
+      this.logger.error(error.message);
+      throw error;
+    }
+
+    return result.plaintext;
   }
 }

@@ -1,5 +1,7 @@
 import { type Logger } from "@saleor/apps-logger";
 
+import { tryDecryptWithFallback } from "./try-decrypt-with-fallback";
+
 export interface EncryptedField {
   name: string;
   encryptedValue: string;
@@ -41,7 +43,7 @@ export class SecretKeyRotationRunner<T = unknown> {
     item: RotationItem<T>,
     index: number,
   ): { reEncryptedFields: Record<string, string>; skipped: number; failed: number } => {
-    const { secretKey, fallbackKeys, logger, decrypt, encrypt } = this.config;
+    const { secretKey, fallbackKeys, logger, encrypt, decrypt } = this.config;
     const progress = `[${index + 1}]`;
 
     const reEncryptedFields: Record<string, string> = {};
@@ -49,33 +51,28 @@ export class SecretKeyRotationRunner<T = unknown> {
     let failed = 0;
 
     for (const field of item.encryptedFields) {
-      try {
-        decrypt(field.encryptedValue, secretKey);
-        skipped++;
-        logger.info(`${progress} [${field.name}] Already current, skipping`);
-        continue;
-      } catch {
-        // Not encrypted with primary key, try fallbacks
-      }
+      const result = tryDecryptWithFallback({
+        value: field.encryptedValue,
+        primaryKey: secretKey,
+        fallbackKeys,
+        decryptFn: decrypt,
+      });
 
-      let plaintext: string | null = null;
-
-      for (const fallbackKey of fallbackKeys) {
-        try {
-          plaintext = decrypt(field.encryptedValue, fallbackKey);
+      switch (result.status) {
+        case "primary":
+          skipped++;
+          logger.info(`${progress} [${field.name}] Already current, skipping`);
           break;
-        } catch {
-          // continue to next fallback key
-        }
-      }
 
-      if (plaintext === null) {
-        failed++;
-        logger.error(`${progress} [${field.name}] Failed to decrypt with any key`);
-        continue;
-      }
+        case "fallback":
+          reEncryptedFields[field.name] = encrypt(result.plaintext, secretKey);
+          break;
 
-      reEncryptedFields[field.name] = encrypt(plaintext, secretKey);
+        case "failed":
+          failed++;
+          logger.error(`${progress} [${field.name}] Failed to decrypt with any key`);
+          break;
+      }
     }
 
     return { reEncryptedFields, skipped, failed };
@@ -87,7 +84,7 @@ export class SecretKeyRotationRunner<T = unknown> {
   ): Promise<{ rotated: number; skipped: number; failed: number }> => {
     const { dryRun, logger, saveItem } = this.config;
 
-    const results = await Promise.allSettled(
+    const results = await Promise.all(
       batch.map(async (item, batchIndex) => {
         const globalIndex = startIndex + batchIndex;
 
@@ -99,8 +96,16 @@ export class SecretKeyRotationRunner<T = unknown> {
 
         const fieldsToSave = Object.keys(reEncryptedFields).length;
 
-        if (!dryRun && fieldsToSave > 0) {
-          await saveItem({ id: item.id, reEncryptedFields, original: item.original });
+        try {
+          if (!dryRun && fieldsToSave > 0) {
+            await saveItem({ id: item.id, reEncryptedFields, original: item.original });
+          }
+        } catch (error) {
+          logger.error(`Failed to save item: ${item.id}`, {
+            error: error as Record<string, unknown>,
+          });
+
+          return { rotated: 0, skipped: itemSkipped, failed: itemFailed + fieldsToSave };
         }
 
         if (fieldsToSave > 0) {
@@ -119,21 +124,10 @@ export class SecretKeyRotationRunner<T = unknown> {
     let skipped = 0;
     let failed = 0;
 
-    for (let i = 0; i < results.length; i++) {
-      const result = results[i];
-
-      if (result.status === "fulfilled") {
-        rotated += result.value.rotated;
-        skipped += result.value.skipped;
-        failed += result.value.failed;
-      } else {
-        const item = batch[i];
-
-        failed += item.encryptedFields.length;
-        logger.error(`Failed to process item: ${item.id}`, {
-          error: result.reason as Record<string, unknown>,
-        });
-      }
+    for (const result of results) {
+      rotated += result.rotated;
+      skipped += result.skipped;
+      failed += result.failed;
     }
 
     return { rotated, skipped, failed };

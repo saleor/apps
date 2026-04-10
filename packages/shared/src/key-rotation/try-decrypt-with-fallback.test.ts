@@ -1,5 +1,4 @@
-import { type Logger } from "@saleor/apps-logger";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { tryDecryptWithFallback } from "./try-decrypt-with-fallback";
 
@@ -15,124 +14,102 @@ const mockDecrypt = (value: string, key: string): string => {
   throw new Error("wrong key");
 };
 
-const createMockLogger = () =>
-  ({
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-    debug: vi.fn(),
-  }) as unknown as Logger;
-
 describe("tryDecryptWithFallback", () => {
-  it("decrypts with primary key", () => {
-    const logger = createMockLogger();
-
+  it("returns primary status when primary key succeeds", () => {
     const result = tryDecryptWithFallback({
       value: PRIMARY,
       primaryKey: PRIMARY,
       fallbackKeys: [],
       decryptFn: mockDecrypt,
-      logger,
     });
 
-    expect(result).toBe("decrypted-primary");
+    expect(result).toStrictEqual({ status: "primary", plaintext: "decrypted-primary" });
   });
 
-  it("decrypts with first fallback when primary fails", () => {
-    const logger = createMockLogger();
-
+  it("returns fallback status with index 0 when first fallback succeeds", () => {
     const result = tryDecryptWithFallback({
       value: FALLBACK_1,
       primaryKey: PRIMARY,
       fallbackKeys: [FALLBACK_1],
       decryptFn: mockDecrypt,
-      logger,
     });
 
-    expect(result).toBe("decrypted-fallback-1");
+    expect(result).toStrictEqual({
+      status: "fallback",
+      plaintext: "decrypted-fallback-1",
+      fallbackIndex: 0,
+    });
   });
 
-  it("decrypts with second fallback when primary and first fail", () => {
-    const logger = createMockLogger();
-
+  it("returns fallback status with correct index when second fallback succeeds", () => {
     const result = tryDecryptWithFallback({
       value: FALLBACK_2,
       primaryKey: PRIMARY,
       fallbackKeys: [FALLBACK_1, FALLBACK_2],
       decryptFn: mockDecrypt,
-      logger,
     });
 
-    expect(result).toBe("decrypted-fallback-2");
+    expect(result).toStrictEqual({
+      status: "fallback",
+      plaintext: "decrypted-fallback-2",
+      fallbackIndex: 1,
+    });
   });
 
-  it("logs warning when fallback key is used", () => {
-    const logger = createMockLogger();
-
-    tryDecryptWithFallback({
-      value: FALLBACK_1,
+  it("returns failed when no key can decrypt", () => {
+    const result = tryDecryptWithFallback({
+      value: "unknown",
       primaryKey: PRIMARY,
       fallbackKeys: [FALLBACK_1],
       decryptFn: mockDecrypt,
-      logger,
     });
 
-    expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining("fallback key at index 0"));
+    expect(result).toStrictEqual({ status: "failed" });
   });
 
-  it("logs correct index for second fallback", () => {
-    const logger = createMockLogger();
-
-    tryDecryptWithFallback({
-      value: FALLBACK_2,
+  it("returns failed when no fallback keys provided and primary fails", () => {
+    const result = tryDecryptWithFallback({
+      value: "unknown",
       primaryKey: PRIMARY,
-      fallbackKeys: [FALLBACK_1, FALLBACK_2],
+      fallbackKeys: [],
       decryptFn: mockDecrypt,
-      logger,
     });
 
-    expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining("fallback key at index 1"));
+    expect(result).toStrictEqual({ status: "failed" });
   });
 
-  it("throws when no key can decrypt", () => {
-    const logger = createMockLogger();
+  it("rejects decrypted value that fails validation", () => {
+    const alwaysDecrypts = (_value: string, _key: string) => "garbage\uFFFDdata";
 
-    expect(() =>
-      tryDecryptWithFallback({
-        value: "unknown",
-        primaryKey: PRIMARY,
-        fallbackKeys: [FALLBACK_1],
-        decryptFn: mockDecrypt,
-        logger,
-      }),
-    ).toThrow("[tryDecryptWithFallback] Failed to decrypt with primary key and 1 fallback key(s).");
-  });
-
-  it("throws when no fallback keys provided and primary fails", () => {
-    const logger = createMockLogger();
-
-    expect(() =>
-      tryDecryptWithFallback({
-        value: "unknown",
-        primaryKey: PRIMARY,
-        fallbackKeys: [],
-        decryptFn: mockDecrypt,
-        logger,
-      }),
-    ).toThrow("[tryDecryptWithFallback] Failed to decrypt with primary key and 0 fallback key(s).");
-  });
-
-  it("does not log warning when primary key succeeds", () => {
-    const logger = createMockLogger();
-
-    tryDecryptWithFallback({
-      value: PRIMARY,
+    const result = tryDecryptWithFallback({
+      value: "anything",
       primaryKey: PRIMARY,
       fallbackKeys: [FALLBACK_1],
-      decryptFn: mockDecrypt,
-      logger,
+      decryptFn: alwaysDecrypts,
     });
 
-    expect(logger.warn).not.toHaveBeenCalled();
+    expect(result).toStrictEqual({ status: "failed" });
+  });
+
+  it("accepts custom validateDecrypted callback", () => {
+    const alwaysDecrypts = (_value: string, _key: string) => "not-json";
+
+    const result = tryDecryptWithFallback({
+      value: "anything",
+      primaryKey: PRIMARY,
+      fallbackKeys: [],
+      decryptFn: alwaysDecrypts,
+      validateDecrypted: (text) => {
+        try {
+          JSON.parse(text);
+
+          return true;
+        } catch {
+          return false;
+        }
+      },
+    });
+
+    expect(result).toStrictEqual({ status: "failed" });
   });
 });

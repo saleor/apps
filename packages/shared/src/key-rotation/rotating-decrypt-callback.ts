@@ -17,6 +17,30 @@ export function createRotatingDecryptCallback(
   fallbackKeys: string[],
   logger: Logger,
 ): (value: string, secret: string) => string {
-  return (value: string, _secret: string): string =>
-    tryDecryptWithFallback({ value, primaryKey, fallbackKeys, decryptFn: decrypt, logger });
+  return (value: string, _secret: string): string => {
+    const result = tryDecryptWithFallback({
+      value,
+      primaryKey,
+      fallbackKeys,
+      decryptFn: decrypt,
+    });
+
+    if (result.status === "fallback") {
+      logger.warn(
+        `Decrypted using fallback key at index ${result.fallbackIndex}. ` +
+          `Consider running migration to re-encrypt with current key.`,
+      );
+    }
+
+    if (result.status === "failed") {
+      const error = new Error(
+        `Failed to decrypt with primary key and ${fallbackKeys.length} fallback key(s).`,
+      );
+
+      logger.error(error.message);
+      throw error;
+    }
+
+    return result.plaintext;
+  };
 }
