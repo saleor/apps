@@ -1,6 +1,6 @@
 import { EncryptedMetadataManager, type MetadataEntry } from "@saleor/app-sdk/settings-manager";
 import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
-import { createRotatingDecryptCallback } from "@saleor/apps-shared/key-rotation";
+import { createRotatingDecryptCallback } from "@saleor/apps-shared/key-rotation/rotating-decrypt-callback";
 import { type Client } from "urql";
 
 import { env } from "@/env";

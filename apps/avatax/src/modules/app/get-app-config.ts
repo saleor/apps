@@ -1,5 +1,5 @@
 import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
-import { createRotatingDecryptCallback } from "@saleor/apps-shared/key-rotation";
+import { createRotatingDecryptCallback } from "@saleor/apps-shared/key-rotation/rotating-decrypt-callback";
 
 import { env } from "@/env";
 import { createLogger } from "@/logger";

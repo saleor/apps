@@ -6,7 +6,7 @@ import {
 import { type Logger } from "@saleor/apps-logger";
 import { type Client, gql } from "urql";
 
-import { createRotatingDecryptCallback } from "./key-rotation";
+import { createRotatingDecryptCallback } from "./key-rotation/rotating-decrypt-callback";
 
 const UpdateAppMetadataMutation = gql`
   mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {

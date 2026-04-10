@@ -1,6 +1,6 @@
 import { encrypt } from "@saleor/app-sdk/settings-manager";
 import { type Logger } from "@saleor/apps-logger";
-import { createRotatingDecryptCallback } from "@saleor/apps-shared/key-rotation";
+import { createRotatingDecryptCallback } from "@saleor/apps-shared/key-rotation/rotating-decrypt-callback";
 import { type FormattedItem, type PutItemInput } from "dynamodb-toolbox";
 
 import { AppConfig } from "../configuration/app-config";
