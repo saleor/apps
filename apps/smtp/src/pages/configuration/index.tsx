@@ -20,8 +20,11 @@ const ConfigurationPage: NextPage = () => {
 
   const saleorCloudFallbackAvailable = fallbackConfigData?.isConfigured ?? false;
 
-  const { data: dataSmtp, isLoading: isLoadingSmtp } =
-    trpcClient.smtpConfiguration.getConfigurations.useQuery();
+  const {
+    data: dataSmtp,
+    isLoading: isLoadingSmtp,
+    isError: isErrorSmtp,
+  } = trpcClient.smtpConfiguration.getConfigurations.useQuery();
 
   const fallbackSettingsQuery = trpcClient.smtpConfiguration.getFallbackSmtpSettings.useQuery();
   const fallbackSettingsMutation =
@@ -81,6 +84,7 @@ const ConfigurationPage: NextPage = () => {
         <MessagingProvidersBox
           configurations={data || []}
           isLoading={isLoading}
+          isError={isErrorSmtp}
           saleorCloudFallbackAvailable={saleorCloudFallbackAvailable}
         />
       </SectionWithDescription>
