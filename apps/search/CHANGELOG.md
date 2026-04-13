@@ -1,5 +1,19 @@
 # saleor-app-search
 
+## 1.29.0
+
+### Minor Changes
+
+- 30bb035: When application config is removed on Algolia side, app was still running and reporting issues. Now if Algolia reports that ID no longer exists, Search App will report a Problem and disable itself.
+
+  Additionally, when app Admin API key is not working, app will disable itself.
+
+### Patch Changes
+
+- ff4174e: Added more logs when fetching data from Saleor on failure to improve debugging.
+- Updated dependencies [ff4174e]
+  - @saleor/apps-shared@1.14.4
+
 ## 1.28.1
 
 ### Patch Changes

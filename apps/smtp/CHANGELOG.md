@@ -1,5 +1,18 @@
 # saleor-app-smtp
 
+## 2.3.0
+
+### Minor Changes
+
+- dab3a19: Dropped support for TLS 1.1 and 1.2
+
+### Patch Changes
+
+- ff4174e: Added more logs when fetching data from Saleor on failure to improve debugging.
+- eda2bac: App will now log template changes for audit logs
+- Updated dependencies [ff4174e]
+  - @saleor/apps-shared@1.14.4
+
 ## 2.2.1
 
 ### Patch Changes

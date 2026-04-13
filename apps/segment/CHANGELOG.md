@@ -1,5 +1,13 @@
 # saleor-app-segment
 
+## 2.3.3
+
+### Patch Changes
+
+- d91c5c1: Flushing Segment events are now wrapped with OTEL span
+- Updated dependencies [ff4174e]
+  - @saleor/apps-shared@1.14.4
+
 ## 2.3.2
 
 ### Patch Changes

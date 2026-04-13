@@ -1,5 +1,13 @@
 # saleor-app-products-feed
 
+## 3.0.3
+
+### Patch Changes
+
+- ff4174e: Added more logs when fetching data from Saleor on failure to improve debugging.
+- Updated dependencies [ff4174e]
+  - @saleor/apps-shared@1.14.4
+
 ## 3.0.2
 
 ### Patch Changes
