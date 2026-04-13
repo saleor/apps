@@ -5,6 +5,7 @@ import { DynamoDBDocumentClient, PutCommand, ScanCommand } from "@aws-sdk/lib-dy
 import { Encryptor } from "@saleor/apps-shared/encryptor";
 import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
 import { SecretKeyRotationRunner } from "@saleor/apps-shared/key-rotation/secret-key-rotation-runner";
+import * as Sentry from "@sentry/nextjs";
 
 import { env } from "@/lib/env";
 
@@ -22,6 +23,15 @@ const {
 });
 
 const logger = createMigrationScriptLogger("RotateSecretKey");
+
+Sentry.init({
+  dsn: env.NEXT_PUBLIC_SENTRY_DSN,
+  environment: env.ENV,
+  includeLocalVariables: true,
+  skipOpenTelemetrySetup: true,
+  ignoreErrors: [],
+  integrations: [],
+});
 
 const createDocumentClient = () => {
   const client = new DynamoDBClient({
@@ -96,7 +106,9 @@ runner
   .then(({ failed }) => {
     if (failed > 0) process.exit(1);
   })
-  .catch((error) => {
+  .catch(async (error) => {
     logger.error("Fatal error during secret key rotation", { error: error });
+    Sentry.captureException(error);
+    await Sentry.flush(5000);
     process.exit(1);
   });

@@ -3,12 +3,22 @@ import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-k
 import { fetchMetadataRotationItems } from "@saleor/apps-shared/key-rotation/fetch-metadata-rotation-items";
 import { saveMetadataRotationItem } from "@saleor/apps-shared/key-rotation/save-metadata-rotation-item";
 import { SecretKeyRotationRunner } from "@saleor/apps-shared/key-rotation/secret-key-rotation-runner";
+import * as Sentry from "@sentry/nextjs";
 
 import { env } from "../src/env";
 import { createLogger } from "../src/logger";
 import { saleorApp } from "../src/saleor-app";
 
 const logger = createLogger("rotate-secret-key");
+
+Sentry.init({
+  dsn: env.NEXT_PUBLIC_SENTRY_DSN,
+  environment: env.ENV,
+  includeLocalVariables: true,
+  skipOpenTelemetrySetup: true,
+  ignoreErrors: [],
+  integrations: [],
+});
 
 const runner = new SecretKeyRotationRunner({
   secretKey: env.SECRET_KEY,
@@ -26,7 +36,9 @@ runner
   .then(({ failed }) => {
     if (failed > 0) process.exit(1);
   })
-  .catch((error) => {
+  .catch(async (error) => {
     logger.error("Secret key rotation failed", { error: error });
+    Sentry.captureException(error);
+    await Sentry.flush(5000);
     process.exit(1);
   });
