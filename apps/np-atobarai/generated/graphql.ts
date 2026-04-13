@@ -26700,6 +26700,12 @@ export type Shop = ObjectWithMetadata & {
   /** Returns translated shop fields for the given language code. */
   readonly translation?: Maybe<ShopTranslation>;
   /**
+   * When enabled, stock availability is filtered by shipping zones and the destination address (legacy behavior). When disabled, stock availability is determined only by the direct warehouse-channel link, ignoring shipping zones.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly useLegacyShippingZoneStockAvailability: Scalars['Boolean']['output'];
+  /**
    * Use legacy update webhook emission. When enabled, update webhooks (e.g. `customerUpdated`,`productVariantUpdated`) are sent even when only metadata changes. When disabled, update webhooks are not sent for metadata-only changes; only metadata-specific webhooks (e.g., `customerMetadataUpdated`, `productVariantMetadataUpdated`) are sent.
    *
    * Added in Saleor 3.22.
@@ -26905,6 +26911,12 @@ export type ShopSettingsInput = {
   readonly reserveStockDurationAuthenticatedUser?: InputMaybe<Scalars['Int']['input']>;
   /** This field is used as a default value for `ProductVariant.trackInventory`. */
   readonly trackInventoryByDefault?: InputMaybe<Scalars['Boolean']['input']>;
+  /**
+   * When enabled, stock availability is filtered by shipping zones and the destination address (legacy behavior). When disabled, stock availability is determined only by the direct warehouse-channel link, ignoring shipping zones.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly useLegacyShippingZoneStockAvailability?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Use legacy update webhook emission. When enabled, update webhooks (e.g. `customerUpdated`,`productVariantUpdated`) are sent even when only metadata changes. When disabled, update webhooks are not sent for metadata-only changes; only metadata-specific webhooks (e.g., `customerMetadataUpdated`, `productVariantMetadataUpdated`) are sent.
    *
