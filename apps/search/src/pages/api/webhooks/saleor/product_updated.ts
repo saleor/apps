@@ -11,6 +11,7 @@ import { loggerContext } from "../../../../lib/logger-context";
 import { type ProductUpdated } from "../../../../lib/webhook-event-types";
 import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookProductUpdated } from "../../../../webhooks/definitions/product-updated";
+import { handleInvalidAppIdError } from "../../../../webhooks/handle-invalid-app-id-error";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
 export const config = {
@@ -74,9 +75,20 @@ export const handler: NextJsWebhookHandler<ProductUpdated> = async (req, res, co
       }
 
       if (AlgoliaErrorParser.isAuthError(e)) {
-        await problemReporter.reportAuthError();
+        await problemReporter.reportAuthErrorAndDeactivate(authData.appId);
 
         return res.status(401).send("Algolia rejected due to invalid credentials");
+      }
+
+      const invalidAppIdResponse = await handleInvalidAppIdError({
+        error: e,
+        authData,
+        res,
+        logger,
+      });
+
+      if (invalidAppIdResponse) {
+        return;
       }
 
       logger.error("Failed to execute product_updated webhook (algoliaClient.updateProduct)", {

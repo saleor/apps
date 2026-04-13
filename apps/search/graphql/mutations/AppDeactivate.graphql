@@ -1,0 +1,12 @@
+mutation AppDeactivate($id: ID!) {
+  appDeactivate(id: $id) {
+    errors {
+      field
+      message
+    }
+    app {
+      id
+      isActive
+    }
+  }
+}

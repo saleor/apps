@@ -24,13 +24,19 @@ vi.mock("../../lib/logger", () => ({
 const mockReportProblem = vi.fn();
 const mockClearProblems = vi.fn();
 
+const mockMutation = vi.fn();
+
 describe("SearchProblemReporter", () => {
-  const mockClient = {} as never;
+  const mockClient = {
+    mutation: mockMutation,
+  } as never;
 
   beforeEach(() => {
     vi.clearAllMocks();
     mockReportProblem.mockReset();
     mockClearProblems.mockReset();
+    mockMutation.mockReset();
+    mockMutation.mockReturnValue({ toPromise: () => Promise.resolve({ data: {} }) });
     vi.mocked(AppProblemsReporter).mockImplementation(
       () =>
         ({
@@ -40,32 +46,51 @@ describe("SearchProblemReporter", () => {
     );
   });
 
-  describe("reportAuthError", () => {
-    it("calls reportProblem with correct key and message", async () => {
+  describe("reportAuthErrorAndDeactivate", () => {
+    it("calls reportProblem with correct key and message including disabled notice", async () => {
       mockReportProblem.mockResolvedValue(ok(undefined));
       const reporter = new SearchProblemReporter(mockClient);
 
-      await reporter.reportAuthError();
+      await reporter.reportAuthErrorAndDeactivate("app-id");
 
       expect(mockReportProblem).toHaveBeenCalledWith({
         key: "algolia-auth-error",
         criticalThreshold: 1,
-        message: expect.stringContaining("invalid or expired"),
+        message:
+          "Algolia API key is invalid or expired. Product indexing will fail until valid credentials are configured. Please update your Algolia credentials in the Search App settings. The app deactivation will be attempted.",
       });
+    });
+
+    it("calls appDeactivate mutation with the app ID", async () => {
+      mockReportProblem.mockResolvedValue(ok(undefined));
+      const reporter = new SearchProblemReporter(mockClient);
+
+      await reporter.reportAuthErrorAndDeactivate("app-id");
+
+      expect(mockMutation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          definitions: expect.arrayContaining([
+            expect.objectContaining({
+              name: expect.objectContaining({ value: "AppDeactivate" }),
+            }),
+          ]),
+        }),
+        { id: "app-id" },
+      );
     });
 
     it("does not throw when reportProblem returns error result", async () => {
       mockReportProblem.mockResolvedValue(err(new Error("network error")));
       const reporter = new SearchProblemReporter(mockClient);
 
-      await expect(reporter.reportAuthError()).resolves.toBeUndefined();
+      await expect(reporter.reportAuthErrorAndDeactivate("app-id")).resolves.toBeUndefined();
     });
 
     it("does not throw when reportProblem throws (e.g. older Saleor API)", async () => {
       mockReportProblem.mockRejectedValue(new Error("API not available"));
       const reporter = new SearchProblemReporter(mockClient);
 
-      await expect(reporter.reportAuthError()).resolves.toBeUndefined();
+      await expect(reporter.reportAuthErrorAndDeactivate("app-id")).resolves.toBeUndefined();
     });
   });
 
