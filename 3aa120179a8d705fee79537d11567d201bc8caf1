@@ -1,0 +1,25 @@
+apps/search/src/modules/app-problems/search-problem-reporter.test.ts
+  743e06aa62cc2abd 60
+apps/search/src/modules/app-problems/search-problem-reporter.ts
+  743e06aa62cc2abd 112-120,122
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "3aa120179a8d705fee79537d11567d201bc8caf1",
+  "prompts": {
+    "743e06aa62cc2abd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3842cd47-129f-42a2-a9e8-fbe774f73db4",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski",
+      "messages": [],
+      "total_additions": 211,
+      "total_deletions": 2,
+      "accepted_lines": 11,
+      "overriden_lines": 0
+    }
+  }
+}
