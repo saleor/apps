@@ -108,6 +108,18 @@ export class SearchProblemReporter {
 
       if (result.error) {
         logger.error("Failed to deactivate app", { error: result.error });
+
+        return;
+      }
+
+      const errors = result.data?.appDeactivate?.errors;
+
+      if (errors && errors.length > 0) {
+        logger.error("Failed to deactivate app", {
+          errorMessages: errors.map((e) => e.message),
+        });
+
+        return;
       }
     } catch (e) {
       logger.warn("Failed to deactivate app - API not available", { error: e });

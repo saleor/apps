@@ -57,7 +57,7 @@ describe("SearchProblemReporter", () => {
         key: "algolia-auth-error",
         criticalThreshold: 1,
         message:
-          "Algolia API key is invalid or expired. Product indexing will fail until valid credentials are configured. Please update your Algolia credentials in the Search App settings. App was disabled.",
+          "Algolia API key is invalid or expired. Product indexing will fail until valid credentials are configured. Please update your Algolia credentials in the Search App settings. The app deactivation will be attempted.",
       });
     });
 
