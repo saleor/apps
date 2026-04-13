@@ -1,5 +1,13 @@
 # saleor-app-smtp
 
+## 2.2.1
+
+### Patch Changes
+
+- eedb36b: Re-added `JSONparse` handlebars helper
+- Updated dependencies [eedb36b]
+  - @saleor/handlebars@0.1.2
+
 ## 2.2.0
 
 ### Minor Changes

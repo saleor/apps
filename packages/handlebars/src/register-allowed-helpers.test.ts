@@ -46,13 +46,24 @@ describe("registerAllowedHelpers", () => {
   });
 
   describe("removed groups are not loaded", () => {
-    it.each(["fs", "logging", "markdown", "match", "object"])(
+    it.each(["fs", "logging", "markdown", "match"])(
       "does not include removed group: %s",
       (group) => {
         expect(
           ALLOWED_HELPERS[group],
           `Group "${group}" should not be in ALLOWED_HELPERS`,
         ).toBeUndefined();
+      },
+    );
+  });
+
+  describe("dangerous object helpers are not registered", () => {
+    it.each(["extend", "merge"])(
+      "does not register dangerous object helper: %s",
+      (name) => {
+        registerAllowedHelpers(hbs, handlebarsHelpers);
+
+        expect(hbs.helpers[name], `Helper "${name}" should NOT be registered`).toBeUndefined();
       },
     );
   });
