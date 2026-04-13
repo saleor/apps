@@ -1,13 +1,13 @@
 import { parseArgs } from "node:util";
 
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, PutCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
+import { PutCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { decrypt, encrypt } from "@saleor/app-sdk/settings-manager";
 import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
 import { SecretKeyRotationRunner } from "@saleor/apps-shared/key-rotation/secret-key-rotation-runner";
 import * as Sentry from "@sentry/nextjs";
 
 import { env } from "@/env";
+import { createDynamoDBClient, createDynamoDBDocumentClient } from "@/lib/dynamodb-client";
 
 import { createMigrationScriptLogger } from "./migration-logger";
 
@@ -33,22 +33,11 @@ Sentry.init({
   integrations: [],
 });
 
-const createDocumentClient = () => {
-  const client = new DynamoDBClient({
-    credentials:
-      env.AWS_ACCESS_KEY_ID && env.AWS_SECRET_ACCESS_KEY
-        ? {
-            accessKeyId: env.AWS_ACCESS_KEY_ID,
-            secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
-          }
-        : undefined,
-    region: env.AWS_REGION,
-  });
+const documentClient = createDynamoDBDocumentClient(
+  createDynamoDBClient({ requestTimeout: 30_000, connectionTimeout: 10_000 }),
+);
 
-  return DynamoDBDocumentClient.from(client);
-};
-
-async function* scanItems(documentClient: DynamoDBDocumentClient, tableName: string) {
+async function* scanItems(tableName: string) {
   let lastEvaluatedKey: Record<string, unknown> | undefined;
 
   do {
@@ -67,7 +56,6 @@ async function* scanItems(documentClient: DynamoDBDocumentClient, tableName: str
   } while (lastEvaluatedKey);
 }
 
-const documentClient = createDocumentClient();
 const tableName = env.DYNAMODB_MAIN_TABLE_NAME;
 
 const runner = new SecretKeyRotationRunner<Record<string, unknown>>({
@@ -78,7 +66,7 @@ const runner = new SecretKeyRotationRunner<Record<string, unknown>>({
   decrypt,
   encrypt,
   getItems: async function* () {
-    for await (const item of scanItems(documentClient, tableName)) {
+    for await (const item of scanItems(tableName)) {
       if (typeof item.encryptedSegmentWriteKey === "string") {
         yield {
           id: `${String(item.PK)}/${String(item.SK)}`,
