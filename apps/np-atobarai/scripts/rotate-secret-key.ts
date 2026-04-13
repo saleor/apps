@@ -1,9 +1,8 @@
 import { parseArgs } from "node:util";
 
-import { PutCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { Encryptor } from "@saleor/apps-shared/encryptor";
 import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
-import { SecretKeyRotationRunner } from "@saleor/apps-shared/key-rotation/secret-key-rotation-runner";
+import { createDynamoDBSecretKeyRotationRunner } from "@saleor/apps-shared/key-rotation/dynamodb-secret-key-rotation-runner";
 import * as Sentry from "@sentry/nextjs";
 
 import { env } from "@/lib/env";
@@ -40,53 +39,16 @@ const documentClient = createDynamoDBDocumentClient(
   createDynamoDBClient({ requestTimeout: 30_000, connectionTimeout: 10_000 }),
 );
 
-async function* scanItems(tableName: string) {
-  let lastEvaluatedKey: Record<string, unknown> | undefined;
-
-  do {
-    const result = await documentClient.send(
-      new ScanCommand({
-        TableName: tableName,
-        ExclusiveStartKey: lastEvaluatedKey,
-      }),
-    );
-
-    if (result.Items) {
-      yield* result.Items as Record<string, unknown>[];
-    }
-
-    lastEvaluatedKey = result.LastEvaluatedKey as Record<string, unknown> | undefined;
-  } while (lastEvaluatedKey);
-}
-
-const tableName = env.DYNAMODB_MAIN_TABLE_NAME;
-
-const runner = new SecretKeyRotationRunner<Record<string, unknown>>({
+const runner = createDynamoDBSecretKeyRotationRunner({
   secretKey: env.SECRET_KEY,
   fallbackKeys: collectFallbackSecretKeys(env),
   dryRun: dryRun ?? false,
   logger,
+  documentClient,
+  tableName: env.DYNAMODB_MAIN_TABLE_NAME,
+  encryptedFieldNames: ["spCode"],
   decrypt: (value, key) => new Encryptor(key).decrypt(value),
   encrypt: (plaintext, key) => new Encryptor(key).encrypt(plaintext),
-  getItems: async function* () {
-    for await (const item of scanItems(tableName)) {
-      if (typeof item.spCode === "string") {
-        yield {
-          id: `${String(item.PK)}/${String(item.SK)}`,
-          encryptedFields: [{ name: "spCode", encryptedValue: item.spCode }],
-          original: item,
-        };
-      }
-    }
-  },
-  saveItem: async (rotated) => {
-    await documentClient.send(
-      new PutCommand({
-        TableName: tableName,
-        Item: { ...rotated.original, ...rotated.reEncryptedFields },
-      }),
-    );
-  },
 });
 
 runner
