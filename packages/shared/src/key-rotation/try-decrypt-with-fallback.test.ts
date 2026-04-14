@@ -57,11 +57,16 @@ describe("tryDecryptWithFallback", () => {
   });
 
   it("returns failed when no key can decrypt", () => {
+    // always throw an error when decrypting, each key will fail
+    const failingDecrypt = () => {
+      throw new Error("decryption failed");
+    };
+
     const result = tryDecryptWithFallback({
       value: "unknown",
       primaryKey: PRIMARY,
       fallbackKeys: [FALLBACK_1],
-      decryptFn: mockDecrypt,
+      decryptFn: failingDecrypt,
     });
 
     expect(result).toStrictEqual({ status: "failed" });
