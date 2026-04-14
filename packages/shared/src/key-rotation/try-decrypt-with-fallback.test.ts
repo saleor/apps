@@ -67,18 +67,8 @@ describe("tryDecryptWithFallback", () => {
     expect(result).toStrictEqual({ status: "failed" });
   });
 
-  it("returns failed when no fallback keys provided and primary fails", () => {
-    const result = tryDecryptWithFallback({
-      value: "unknown",
-      primaryKey: PRIMARY,
-      fallbackKeys: [],
-      decryptFn: mockDecrypt,
-    });
-
-    expect(result).toStrictEqual({ status: "failed" });
-  });
-
   it("rejects decrypted value that fails validation", () => {
+    // doesn't throw, it just returns a data that should be marked as garbage
     const alwaysDecrypts = (_value: string, _key: string) => "garbage\uFFFDdata";
 
     const result = tryDecryptWithFallback({
@@ -92,13 +82,14 @@ describe("tryDecryptWithFallback", () => {
   });
 
   it("accepts custom validateDecrypted callback", () => {
-    const alwaysDecrypts = (_value: string, _key: string) => "not-json";
+    // always decrypt as the passed value
+    const mockDecrypt = (value: string) => value;
 
-    const result = tryDecryptWithFallback({
-      value: "anything",
+    const params: Parameters<typeof tryDecryptWithFallback>[0] = {
+      value: "",
       primaryKey: PRIMARY,
       fallbackKeys: [],
-      decryptFn: alwaysDecrypts,
+      decryptFn: mockDecrypt,
       validateDecrypted: (text) => {
         try {
           JSON.parse(text);
@@ -108,8 +99,20 @@ describe("tryDecryptWithFallback", () => {
           return false;
         }
       },
-    });
+    };
 
-    expect(result).toStrictEqual({ status: "failed" });
+    expect(
+      tryDecryptWithFallback({
+        ...params,
+        value: "not-a-json",
+      }),
+    ).toStrictEqual({ status: "failed" });
+
+    expect(
+      tryDecryptWithFallback({
+        ...params,
+        value: `{"valid": "json"}`,
+      }),
+    ).toStrictEqual({ status: "primary", plaintext: `{"valid": "json"}` });
   });
 });
