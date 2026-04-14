@@ -7,6 +7,7 @@ import * as Sentry from "@sentry/nextjs";
 import { saleorApp } from "saleor-app";
 
 import { env } from "@/env";
+import { ALL_ENCRYPTED_METADATA_KEYS } from "@/lib/encrypted-metadata-keys";
 
 import { createMigrationScriptLogger } from "./migration-logger";
 
@@ -28,7 +29,7 @@ const runner = new SecretKeyRotationRunner({
   logger,
   decrypt,
   encrypt,
-  getItems: () => fetchMetadataRotationItems(saleorApp.apl, logger),
+  getItems: () => fetchMetadataRotationItems(saleorApp.apl, logger, ALL_ENCRYPTED_METADATA_KEYS),
   saveItem: saveMetadataRotationItem,
 });
 

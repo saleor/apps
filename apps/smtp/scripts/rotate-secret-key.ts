@@ -6,6 +6,7 @@ import { SecretKeyRotationRunner } from "@saleor/apps-shared/key-rotation/secret
 import * as Sentry from "@sentry/nextjs";
 
 import { env } from "../src/env";
+import { ALL_ENCRYPTED_METADATA_KEYS } from "../src/lib/encrypted-metadata-keys";
 import { createLogger } from "../src/logger";
 import { saleorApp } from "../src/saleor-app";
 
@@ -27,7 +28,7 @@ const runner = new SecretKeyRotationRunner({
   logger,
   decrypt,
   encrypt,
-  getItems: () => fetchMetadataRotationItems(saleorApp.apl, logger),
+  getItems: () => fetchMetadataRotationItems(saleorApp.apl, logger, ALL_ENCRYPTED_METADATA_KEYS),
   saveItem: saveMetadataRotationItem,
 });
 
