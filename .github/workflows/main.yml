@@ -9,6 +9,24 @@ on:
       - main
 
 jobs:
+  audit:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PNPM
+        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        with:
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+      - name: Audit production dependencies
+        continue-on-error: true
+        run: pnpm audit --prod --audit-level moderate
+      - name: Audit dev dependencies
+        continue-on-error: true
+        run: pnpm audit --dev --audit-level high
+
   lint:
     runs-on: ubuntu-22.04
     env:
