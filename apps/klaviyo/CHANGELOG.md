@@ -1,5 +1,13 @@
 # saleor-app-klaviyo
 
+## 1.15.3
+
+### Patch Changes
+
+- ff4174e: Added more logs when fetching data from Saleor on failure to improve debugging.
+- Updated dependencies [ff4174e]
+  - @saleor/apps-shared@1.14.4
+
 ## 1.15.2
 
 ### Patch Changes
