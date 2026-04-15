@@ -3,6 +3,7 @@ import { type Logger } from "@saleor/apps-logger";
 import { gql } from "urql";
 
 import { createGraphQLClient } from "../create-graphql-client";
+import { matchesAnyEncryptedMetadataKey } from "./metadata-key-matcher";
 import type { RotationItem } from "./secret-key-rotation-runner";
 
 const FetchAppDetailsQuery = gql`
@@ -28,7 +29,6 @@ export async function* fetchMetadataRotationItems(
   encryptedFieldNames: readonly string[],
 ): AsyncGenerator<RotationItem<MetadataItemContext>> {
   const installations = await apl.getAll();
-  const encryptedFieldSet = new Set(encryptedFieldNames);
 
   for (const { token, saleorApiUrl } of installations) {
     const client = createGraphQLClient({ saleorApiUrl, token });
@@ -50,7 +50,7 @@ export async function* fetchMetadataRotationItems(
     yield {
       id: saleorApiUrl,
       encryptedFields: metadata
-        .filter((entry) => encryptedFieldSet.has(entry.key))
+        .filter((entry) => matchesAnyEncryptedMetadataKey(entry.key, encryptedFieldNames))
         .map((entry) => ({
           name: entry.key,
           encryptedValue: entry.value,
