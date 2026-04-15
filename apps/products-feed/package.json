@@ -47,6 +47,7 @@
     "@trpc/next": "catalog:",
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
+    "@vercel/oidc-aws-credentials-provider": "catalog:",
     "@vercel/otel": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "dotenv": "catalog:",

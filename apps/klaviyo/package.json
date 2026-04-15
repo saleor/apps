@@ -34,6 +34,7 @@
     "@sentry/cli": "catalog:",
     "@sentry/nextjs": "catalog:",
     "@t3-oss/env-nextjs": "catalog:",
+    "@vercel/oidc-aws-credentials-provider": "catalog:",
     "@vercel/otel": "catalog:",
     "dotenv": "catalog:",
     "dynamodb-toolbox": "catalog:",

@@ -80,6 +80,7 @@ catalog:
   "@aws-sdk/lib-dynamodb": 3.1004.0
   "@aws-sdk/client-dynamodb": 3.1004.0
   "@aws-sdk/util-dynamodb": 3.996.2
+  "@vercel/oidc-aws-credentials-provider": 3.0.7
   "@vitest/coverage-v8": 3.1.1
   "@t3-oss/env-nextjs": 0.11.1
   react-hook-form: 7.43.9

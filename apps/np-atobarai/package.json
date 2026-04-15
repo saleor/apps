@@ -57,6 +57,7 @@
     "@trpc/next": "catalog:",
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
+    "@vercel/oidc-aws-credentials-provider": "catalog:",
     "@vercel/otel": "catalog:",
     "dynamodb-toolbox": "catalog:",
     "jp-zipcode-lookup": "0.3.5",

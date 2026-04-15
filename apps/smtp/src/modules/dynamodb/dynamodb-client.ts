@@ -1,5 +1,6 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { awsCredentialsProvider } from "@vercel/oidc-aws-credentials-provider";
 
 interface DynamoDBClientOptions {
   /**
@@ -18,12 +19,21 @@ interface DynamoDBClientOptions {
    */
   maxAttempts?: number;
   region: string;
-  accessKeyId: string;
-  secretAccessKey: string;
+  accessKeyId?: string;
+  secretAccessKey?: string;
+  roleArn?: string;
 }
 
 export const createDynamoDBClient = (opts: DynamoDBClientOptions) => {
-  const { accessKeyId, secretAccessKey, region } = opts;
+  const { accessKeyId, secretAccessKey, region, roleArn } = opts;
+
+  let credentials: DynamoDBClientConfig["credentials"];
+
+  if (roleArn) {
+    credentials = awsCredentialsProvider({ roleArn });
+  } else if (accessKeyId && secretAccessKey) {
+    credentials = { accessKeyId, secretAccessKey };
+  }
 
   const client = new DynamoDBClient({
     requestHandler: {
@@ -31,20 +41,7 @@ export const createDynamoDBClient = (opts: DynamoDBClientOptions) => {
       connectionTimeout: opts.connectionTimeout,
     },
     maxAttempts: opts.maxAttempts,
-    /**
-     * We need to explicitly pass credentials to the client. If not set, SDK will take env variables.
-     * Some time ago Vercel started to implicitly inject AWS_SESSION_TOKEN which took precedence over AWS_SECRET_ACCESS_KEY,
-     * but it was not *our* token, but Vercel's.
-     *
-     * We should eventually move to OIDC
-     */
-    credentials:
-      accessKeyId && secretAccessKey
-        ? {
-            accessKeyId,
-            secretAccessKey,
-          }
-        : undefined,
+    credentials,
     region,
   });
 
