@@ -6,8 +6,10 @@ import { SecretKeyRotationRunner } from "./secret-key-rotation-runner";
 async function* scanDynamoDBItems(
   documentClient: DynamoDBDocumentClient,
   tableName: string,
+  logger: Pick<Logger, "info">,
 ): AsyncGenerator<Record<string, unknown>> {
   let lastEvaluatedKey: Record<string, unknown> | undefined;
+  let pageCount = 0;
 
   do {
     const result = await documentClient.send(
@@ -15,6 +17,13 @@ async function* scanDynamoDBItems(
         TableName: tableName,
         ExclusiveStartKey: lastEvaluatedKey,
       }),
+    );
+
+    pageCount++;
+    logger.info(
+      `Scanned page ${pageCount}: ${result.Items?.length ?? 0} items. LastEvaluatedKey: ${
+        result.LastEvaluatedKey ? JSON.stringify(result.LastEvaluatedKey) : "none (scan complete)"
+      }`,
     );
 
     if (result.Items) {
@@ -40,12 +49,13 @@ interface DynamoDBSecretKeyRotationRunnerConfig {
 export const createDynamoDBSecretKeyRotationRunner = (
   config: DynamoDBSecretKeyRotationRunnerConfig,
 ) => {
-  const { documentClient, tableName, encryptedFieldNames, ...runnerConfig } = config;
+  const { documentClient, tableName, encryptedFieldNames, logger, ...runnerConfig } = config;
 
   return new SecretKeyRotationRunner<Record<string, unknown>>({
     ...runnerConfig,
+    logger,
     getItems: async function* () {
-      for await (const item of scanDynamoDBItems(documentClient, tableName)) {
+      for await (const item of scanDynamoDBItems(documentClient, tableName, logger)) {
         const encryptedFields = encryptedFieldNames
           .filter((name) => typeof item[name] === "string")
           .map((name) => ({ name, encryptedValue: item[name] as string }));
