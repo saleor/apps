@@ -61,7 +61,7 @@
     "zod": "catalog:"
   },
   "peerDependencies": {
-    "@aws-sdk/lib-dynamodb": "*",
+    "@aws-sdk/lib-dynamodb": "catalog:",
     "@saleor/app-sdk": "catalog:",
     "@saleor/apps-logger": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
