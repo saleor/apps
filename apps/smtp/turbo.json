@@ -16,6 +16,7 @@
         "SENTRY_PROJECT",
         "AWS_ACCESS_KEY_ID",
         "AWS_REGION",
+        "AWS_ROLE_ARN",
         "AWS_SECRET_ACCESS_KEY",
         "DYNAMODB_MAIN_TABLE_NAME",
         "FALLBACK_SMTP_HOST",

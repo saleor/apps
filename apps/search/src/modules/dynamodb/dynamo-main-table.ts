@@ -64,6 +64,7 @@ export function createDynamoMainTable(dynamoEnv: DynamoEnv): DynamoMainTable {
     region: dynamoEnv.AWS_REGION,
     accessKeyId: dynamoEnv.AWS_ACCESS_KEY_ID,
     secretAccessKey: dynamoEnv.AWS_SECRET_ACCESS_KEY,
+    roleArn: dynamoEnv.AWS_ROLE_ARN,
   });
   const documentClient = createDynamoDBDocumentClient(client);
 
