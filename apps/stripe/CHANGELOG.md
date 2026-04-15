@@ -1,5 +1,13 @@
 # saleor-app-payment-stripe
 
+## 2.6.3
+
+### Patch Changes
+
+- Updated dependencies [ff4174e]
+  - @saleor/apps-shared@1.14.4
+  - @saleor/apps-trpc@4.0.5
+
 ## 2.6.2
 
 ### Patch Changes

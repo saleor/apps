@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-search",
-  "version": "1.28.1",
+  "version": "1.29.0",
   "private": true,
   "type": "module",
   "scripts": {

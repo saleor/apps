@@ -1,5 +1,13 @@
 # saleor-app-payment-np-atobarai
 
+## 1.4.5
+
+### Patch Changes
+
+- Updated dependencies [ff4174e]
+  - @saleor/apps-shared@1.14.4
+  - @saleor/apps-trpc@4.0.5
+
 ## 1.4.4
 
 ### Patch Changes
