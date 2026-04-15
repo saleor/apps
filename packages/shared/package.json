@@ -41,6 +41,7 @@
     "semver": "catalog:"
   },
   "devDependencies": {
+    "@aws-sdk/lib-dynamodb": "catalog:",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
@@ -52,6 +53,7 @@
     "@types/semver": "catalog:",
     "@vitejs/plugin-react": "4.3.4",
     "@vitest/coverage-v8": "catalog:",
+    "aws-sdk-client-mock": "4.0.1",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

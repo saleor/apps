@@ -2,6 +2,16 @@ import { type Logger } from "@saleor/apps-logger";
 
 import { tryDecryptWithFallback } from "./try-decrypt-with-fallback";
 
+/**
+ * Thrown by `saveItem` implementations when the underlying storage reports that
+ * the item was changed by another writer after the runner read it. The runner
+ * treats this as a non-fatal skip: the item will be re-evaluated on the next
+ * rotation run.
+ */
+export class ItemConcurrentlyModifiedError extends Error {
+  readonly name = "ItemConcurrentlyModifiedError";
+}
+
 export interface EncryptedField {
   name: string;
   encryptedValue: string;
@@ -81,7 +91,12 @@ export class SecretKeyRotationRunner<T = unknown> {
   private processBatch = async (
     batch: RotationItem<T>[],
     startIndex: number,
-  ): Promise<{ rotated: number; skipped: number; failed: number }> => {
+  ): Promise<{
+    rotated: number;
+    skipped: number;
+    failed: number;
+    concurrentlyModified: number;
+  }> => {
     const { dryRun, logger, saveItem } = this.config;
 
     const results = await Promise.all(
@@ -101,11 +116,29 @@ export class SecretKeyRotationRunner<T = unknown> {
             await saveItem({ id: item.id, reEncryptedFields, original: item.original });
           }
         } catch (error) {
+          if (error instanceof ItemConcurrentlyModifiedError) {
+            logger.info(
+              `[${globalIndex + 1}] Item changed under rotation, leaving for next run: ${item.id}`,
+            );
+
+            return {
+              rotated: 0,
+              skipped: itemSkipped,
+              failed: itemFailed,
+              concurrentlyModified: fieldsToSave,
+            };
+          }
+
           logger.error(`Failed to save item: ${item.id}`, {
             error: error as Record<string, unknown>,
           });
 
-          return { rotated: 0, skipped: itemSkipped, failed: itemFailed + fieldsToSave };
+          return {
+            rotated: 0,
+            skipped: itemSkipped,
+            failed: itemFailed + fieldsToSave,
+            concurrentlyModified: 0,
+          };
         }
 
         if (fieldsToSave > 0) {
@@ -116,24 +149,36 @@ export class SecretKeyRotationRunner<T = unknown> {
           );
         }
 
-        return { rotated: fieldsToSave, skipped: itemSkipped, failed: itemFailed };
+        return {
+          rotated: fieldsToSave,
+          skipped: itemSkipped,
+          failed: itemFailed,
+          concurrentlyModified: 0,
+        };
       }),
     );
 
     let rotated = 0;
     let skipped = 0;
     let failed = 0;
+    let concurrentlyModified = 0;
 
     for (const result of results) {
       rotated += result.rotated;
       skipped += result.skipped;
       failed += result.failed;
+      concurrentlyModified += result.concurrentlyModified;
     }
 
-    return { rotated, skipped, failed };
+    return { rotated, skipped, failed, concurrentlyModified };
   };
 
-  public run = async (): Promise<{ rotated: number; skipped: number; failed: number }> => {
+  public run = async (): Promise<{
+    rotated: number;
+    skipped: number;
+    failed: number;
+    concurrentlyModified: number;
+  }> => {
     const { fallbackKeys, logger, getItems, concurrency = 5 } = this.config;
 
     if (fallbackKeys.length === 0) {
@@ -151,6 +196,7 @@ export class SecretKeyRotationRunner<T = unknown> {
     let rotated = 0;
     let skipped = 0;
     let failed = 0;
+    let concurrentlyModified = 0;
     let processed = 0;
     let batch: RotationItem<T>[] = [];
 
@@ -164,6 +210,7 @@ export class SecretKeyRotationRunner<T = unknown> {
         rotated += result.rotated;
         skipped += result.skipped;
         failed += result.failed;
+        concurrentlyModified += result.concurrentlyModified;
         batch = [];
       }
     }
@@ -175,18 +222,19 @@ export class SecretKeyRotationRunner<T = unknown> {
       rotated += result.rotated;
       skipped += result.skipped;
       failed += result.failed;
+      concurrentlyModified += result.concurrentlyModified;
     }
 
     logger.info(
       `Rotation complete${
         this.config.dryRun ? " (DRY RUN)" : ""
-      }. Processed: ${processed}, Rotated: ${rotated}, Skipped: ${skipped}, Failed: ${failed}`,
+      }. Processed: ${processed}, Rotated: ${rotated}, Skipped: ${skipped}, Failed: ${failed}, Concurrently modified: ${concurrentlyModified}`,
     );
 
     if (failed > 0) {
       logger.error(`${failed} field(s) failed. Review errors above.`);
     }
 
-    return { rotated, skipped, failed };
+    return { rotated, skipped, failed, concurrentlyModified };
   };
 }

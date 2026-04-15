@@ -1,6 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { type RotationItem, SecretKeyRotationRunner } from "./secret-key-rotation-runner";
+import {
+  ItemConcurrentlyModifiedError,
+  type RotationItem,
+  SecretKeyRotationRunner,
+} from "./secret-key-rotation-runner";
 
 const PRIMARY_KEY = "primary";
 const FALLBACK_1 = "fallback-1";
@@ -70,7 +74,7 @@ describe("SecretKeyRotationRunner", () => {
 
     const result = await runner.run();
 
-    expect(result).toStrictEqual({ rotated: 1, skipped: 0, failed: 0 });
+    expect(result).toStrictEqual({ rotated: 1, skipped: 0, failed: 0, concurrentlyModified: 0 });
     expect(saveItem).toHaveBeenCalledWith({
       id: "item-1",
       reEncryptedFields: { secret: toyEncrypt("my-value", PRIMARY_KEY) },
@@ -97,7 +101,7 @@ describe("SecretKeyRotationRunner", () => {
 
     const result = await runner.run();
 
-    expect(result).toStrictEqual({ rotated: 0, skipped: 1, failed: 0 });
+    expect(result).toStrictEqual({ rotated: 0, skipped: 1, failed: 0, concurrentlyModified: 0 });
     expect(saveItem).not.toHaveBeenCalled();
   });
 
@@ -123,7 +127,7 @@ describe("SecretKeyRotationRunner", () => {
 
     const result = await runner.run();
 
-    expect(result).toStrictEqual({ rotated: 1, skipped: 1, failed: 0 });
+    expect(result).toStrictEqual({ rotated: 1, skipped: 1, failed: 0, concurrentlyModified: 0 });
     expect(saveItem).toHaveBeenCalledTimes(1);
     expect(saveItem).toHaveBeenCalledWith(expect.objectContaining({ id: "needs-rotation" }));
   });
@@ -150,7 +154,7 @@ describe("SecretKeyRotationRunner", () => {
 
     const result = await runner.run();
 
-    expect(result).toStrictEqual({ rotated: 1, skipped: 0, failed: 1 });
+    expect(result).toStrictEqual({ rotated: 1, skipped: 0, failed: 1, concurrentlyModified: 0 });
     expect(saveItem).toHaveBeenCalledTimes(1);
     expect(saveItem).toHaveBeenCalledWith(expect.objectContaining({ id: "item-good" }));
   });
@@ -173,7 +177,7 @@ describe("SecretKeyRotationRunner", () => {
 
     const result = await runner.run();
 
-    expect(result).toStrictEqual({ rotated: 1, skipped: 0, failed: 0 });
+    expect(result).toStrictEqual({ rotated: 1, skipped: 0, failed: 0, concurrentlyModified: 0 });
     expect(saveItem).not.toHaveBeenCalled();
   });
 
@@ -206,12 +210,38 @@ describe("SecretKeyRotationRunner", () => {
 
     const result = await runner.run();
 
-    expect(result).toStrictEqual({ rotated: 1, skipped: 1, failed: 0 });
+    expect(result).toStrictEqual({ rotated: 1, skipped: 1, failed: 0, concurrentlyModified: 0 });
     expect(saveItem).toHaveBeenCalledWith(
       expect.objectContaining({
         reEncryptedFields: { "needs-rotate": toyEncrypt("v2", PRIMARY_KEY) },
       }),
     );
+  });
+
+  it("counts fields as concurrentlyModified when saveItem throws ItemConcurrentlyModifiedError", async () => {
+    const saveItem = vi
+      .fn()
+      .mockRejectedValue(new ItemConcurrentlyModifiedError("changed under us"));
+
+    const { runner, logger } = createRunner({
+      getItems: () =>
+        fromArray([
+          {
+            id: "item-1",
+            encryptedFields: [
+              { name: "a", encryptedValue: toyEncrypt("v1", FALLBACK_1) },
+              { name: "b", encryptedValue: toyEncrypt("v2", FALLBACK_1) },
+            ],
+            original: {},
+          },
+        ]),
+      saveItem,
+    });
+
+    const result = await runner.run();
+
+    expect(result).toStrictEqual({ rotated: 0, skipped: 0, failed: 0, concurrentlyModified: 2 });
+    expect(logger.error).not.toHaveBeenCalled();
   });
 
   it("counts all fields as failed when saveItem throws", async () => {
@@ -234,7 +264,7 @@ describe("SecretKeyRotationRunner", () => {
 
     const result = await runner.run();
 
-    expect(result).toStrictEqual({ rotated: 0, skipped: 0, failed: 2 });
+    expect(result).toStrictEqual({ rotated: 0, skipped: 0, failed: 2, concurrentlyModified: 0 });
   });
 
   it("returns zeros for empty items list", async () => {
@@ -244,7 +274,7 @@ describe("SecretKeyRotationRunner", () => {
 
     const result = await runner.run();
 
-    expect(result).toStrictEqual({ rotated: 0, skipped: 0, failed: 0 });
+    expect(result).toStrictEqual({ rotated: 0, skipped: 0, failed: 0, concurrentlyModified: 0 });
   });
 
   it("limits concurrency to the configured batch size", async () => {
@@ -272,7 +302,7 @@ describe("SecretKeyRotationRunner", () => {
 
     const result = await runner.run();
 
-    expect(result).toStrictEqual({ rotated: 7, skipped: 0, failed: 0 });
+    expect(result).toStrictEqual({ rotated: 7, skipped: 0, failed: 0, concurrentlyModified: 0 });
     expect(saveItem).toHaveBeenCalledTimes(7);
     expect(maxConcurrent).toBeLessThanOrEqual(3);
     expect(maxConcurrent).toBeGreaterThan(1);
@@ -297,7 +327,7 @@ describe("SecretKeyRotationRunner", () => {
 
     const result = await runner.run();
 
-    expect(result).toStrictEqual({ rotated: 1, skipped: 0, failed: 0 });
+    expect(result).toStrictEqual({ rotated: 1, skipped: 0, failed: 0, concurrentlyModified: 0 });
     expect(saveItem).toHaveBeenCalledWith(
       expect.objectContaining({
         reEncryptedFields: { secret: toyEncrypt("my-value", PRIMARY_KEY) },
