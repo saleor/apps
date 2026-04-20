@@ -30,7 +30,7 @@ jobs:
       ACCESS_TOKEN: ${{ secrets.saleor-token }}
       SALEOR_VERSION: ${{ matrix.saleor }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - name: Setup Saleor CLI
         run: |
           jq --null-input \
@@ -59,12 +59,12 @@ jobs:
     env:
       SALEOR_VERSION: ${{ matrix.saleor }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - name: Setup PNPM
         uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
           run_install: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: ".nvmrc"
           cache: "pnpm"
@@ -107,12 +107,12 @@ jobs:
     env:
       SALEOR_VERSION: ${{ matrix.saleor }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - name: Setup PNPM
         uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
           run_install: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: ".nvmrc"
           cache: "pnpm"
@@ -133,7 +133,7 @@ jobs:
       - name: Run Stripe e2e tests
         run: pnpm --filter=saleor-app-payment-stripe test:e2e
       - name: Upload HTML report to GitHub Actions Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
           name: "playwright-report-${{ env.SALEOR_VERSION }}"
