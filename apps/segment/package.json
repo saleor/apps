@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-segment",
-  "version": "2.3.2",
+  "version": "2.3.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -50,6 +50,7 @@
     "@trpc/next": "catalog:",
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
+    "@vercel/oidc-aws-credentials-provider": "catalog:",
     "@vercel/otel": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "decimal.js-light": "catalog:",

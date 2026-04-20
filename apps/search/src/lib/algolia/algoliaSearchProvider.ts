@@ -1,4 +1,5 @@
 import Algoliasearch, { type SearchClient } from "algoliasearch";
+import { z } from "zod";
 
 import {
   type CategoryDataFragment,
@@ -12,6 +13,7 @@ import { createLogger } from "../logger";
 import { type SearchProvider } from "../searchProvider";
 import { createTraceEffect } from "../trace-effect";
 import { ALGOLIA_SLOW_THRESHOLD_MS } from "../trace-effect-thresholds";
+import { AlgoliaInvalidAppIdError } from "./algolia-errors";
 import {
   type AlgoliaObject,
   channelListingToAlgoliaIndexId,
@@ -20,6 +22,23 @@ import {
 } from "./algoliaUtils";
 import { categoryToAlgolia, categoryToAlgoliaIndexId } from "./categoryAlgoliaUtils";
 import { pageToAlgolia, pageToAlgoliaIndexId } from "./pageAlgoliaUtils";
+
+const algoliaRetryErrorShape = z.object({
+  name: z.literal("RetryError"),
+  message: z.string(),
+});
+
+function rethrowKnownErrors(error: unknown): never {
+  const parsed = algoliaRetryErrorShape.safeParse(error);
+
+  if (parsed.success && /Unreachable hosts/.test(parsed.data.message)) {
+    throw new AlgoliaInvalidAppIdError("Algolia Application ID does not exist or is unreachable", {
+      cause: error,
+    });
+  }
+
+  throw error;
+}
 
 export interface AlgoliaSearchProviderOptions {
   appId: string;
@@ -87,7 +106,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
         return this.#traceSaveObjects(
           () => index.saveObjects(objects, { timeout: env.NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS }),
           { indexName, objectsCount: objects.length },
-        );
+        ).catch(rethrowKnownErrors);
       }),
     );
   }
@@ -102,7 +121,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
         return this.#traceDeleteObjects(
           () => index.deleteObjects(objectIds, { timeout: env.NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS }),
           { indexName, objectIdsCount: objectIds.length },
-        );
+        ).catch(rethrowKnownErrors);
       }),
     );
   }
@@ -154,7 +173,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
           ],
         }),
       { indexName },
-    );
+    ).catch(rethrowKnownErrors);
   }
 
   async #updateCategoryIndexSettings() {
@@ -165,7 +184,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
           searchableAttributes: ["name", "slug", "ancestors"],
         }),
       { indexName: this.#categoryIndexName },
-    );
+    ).catch(rethrowKnownErrors);
   }
 
   async updatedBatchProducts(productsBatch: ProductWebhookPayloadFragment[]) {
@@ -210,7 +229,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
               { timeout: env.NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS },
             ),
           { indexName, productId: product.id },
-        );
+        ).catch(rethrowKnownErrors);
       }),
     );
   }
@@ -276,7 +295,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
     await this.#traceSaveObjects(
       () => index.saveObjects([algoliaObject], { timeout: env.NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS }),
       { indexName: this.#categoryIndexName, objectsCount: 1 },
-    );
+    ).catch(rethrowKnownErrors);
   }
 
   async deleteCategory(categoryId: string) {
@@ -287,7 +306,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
     await this.#traceDeleteObjects(
       () => index.deleteObjects([categoryId], { timeout: env.NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS }),
       { indexName: this.#categoryIndexName, objectIdsCount: 1 },
-    );
+    ).catch(rethrowKnownErrors);
   }
 
   async updatedBatchCategories(categoriesBatch: CategoryDataFragment[]) {
@@ -299,7 +318,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
     await this.#traceSaveObjects(
       () => index.saveObjects(algoliaObjects, { timeout: env.NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS }),
       { indexName: this.#categoryIndexName, objectsCount: algoliaObjects.length },
-    );
+    ).catch(rethrowKnownErrors);
   }
 
   async createPage(page: PageDataFragment) {
@@ -316,7 +335,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
     await this.#traceSaveObjects(
       () => index.saveObjects([algoliaObject], { timeout: env.NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS }),
       { indexName: this.#pageIndexName, objectsCount: 1 },
-    );
+    ).catch(rethrowKnownErrors);
   }
 
   async deletePage(pageId: string) {
@@ -327,7 +346,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
     await this.#traceDeleteObjects(
       () => index.deleteObjects([pageId], { timeout: env.NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS }),
       { indexName: this.#pageIndexName, objectIdsCount: 1 },
-    );
+    ).catch(rethrowKnownErrors);
   }
 
   async updatedBatchPages(pagesBatch: PageDataFragment[]) {
@@ -339,7 +358,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
     await this.#traceSaveObjects(
       () => index.saveObjects(algoliaObjects, { timeout: env.NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS }),
       { indexName: this.#pageIndexName, objectsCount: algoliaObjects.length },
-    );
+    ).catch(rethrowKnownErrors);
   }
 
   async #updatePageIndexSettings() {
@@ -350,7 +369,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
           searchableAttributes: ["title", "slug", "seoTitle", "contentPlaintext"],
         }),
       { indexName: this.#pageIndexName },
-    );
+    ).catch(rethrowKnownErrors);
   }
 }
 

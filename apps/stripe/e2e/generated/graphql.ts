@@ -313,6 +313,7 @@ export type AccountErrorCode =
   | 'DELETE_SUPERUSER_ACCOUNT'
   | 'DISABLED_AUTHENTICATION_METHOD'
   | 'DUPLICATED_INPUT_ITEM'
+  | 'FILE_SIZE_LIMIT_EXCEEDED'
   | 'GRAPHQL_ERROR'
   | 'INACTIVE'
   | 'INVALID'
@@ -5836,6 +5837,7 @@ export type CollectionError = {
 export type CollectionErrorCode =
   | 'CANNOT_MANAGE_PRODUCT_WITHOUT_VARIANT'
   | 'DUPLICATED_INPUT_ITEM'
+  | 'FILE_SIZE_LIMIT_EXCEEDED'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'NOT_FOUND'
@@ -21137,6 +21139,7 @@ export type ProductBulkCreateErrorCode =
   | 'ATTRIBUTE_VARIANTS_DISABLED'
   | 'BLANK'
   | 'DUPLICATED_INPUT_ITEM'
+  | 'FILE_SIZE_LIMIT_EXCEEDED'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'INVALID_PRICE'
@@ -21567,6 +21570,7 @@ export type ProductErrorCode =
   | 'ATTRIBUTE_VARIANTS_DISABLED'
   | 'CANNOT_MANAGE_PRODUCT_WITHOUT_VARIANT'
   | 'DUPLICATED_INPUT_ITEM'
+  | 'FILE_SIZE_LIMIT_EXCEEDED'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'INVALID_FILE_TYPE'
@@ -27402,6 +27406,12 @@ export type Shop = ObjectWithMetadata & {
   /** Returns translated shop fields for the given language code. */
   translation?: Maybe<ShopTranslation>;
   /**
+   * When enabled, stock availability is filtered by shipping zones and the destination address (legacy behavior). When disabled, stock availability is determined only by the direct warehouse-channel link, ignoring shipping zones.
+   *
+   * Added in Saleor 3.23.
+   */
+  useLegacyShippingZoneStockAvailability: Scalars['Boolean']['output'];
+  /**
    * Use legacy update webhook emission. When enabled, update webhooks (e.g. `customerUpdated`,`productVariantUpdated`) are sent even when only metadata changes. When disabled, update webhooks are not sent for metadata-only changes; only metadata-specific webhooks (e.g., `customerMetadataUpdated`, `productVariantMetadataUpdated`) are sent.
    *
    * Added in Saleor 3.22.
@@ -27612,6 +27622,12 @@ export type ShopSettingsInput = {
   reserveStockDurationAuthenticatedUser?: InputMaybe<Scalars['Int']['input']>;
   /** This field is used as a default value for `ProductVariant.trackInventory`. */
   trackInventoryByDefault?: InputMaybe<Scalars['Boolean']['input']>;
+  /**
+   * When enabled, stock availability is filtered by shipping zones and the destination address (legacy behavior). When disabled, stock availability is determined only by the direct warehouse-channel link, ignoring shipping zones.
+   *
+   * Added in Saleor 3.23.
+   */
+  useLegacyShippingZoneStockAvailability?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Use legacy update webhook emission. When enabled, update webhooks (e.g. `customerUpdated`,`productVariantUpdated`) are sent even when only metadata changes. When disabled, update webhooks are not sent for metadata-only changes; only metadata-specific webhooks (e.g., `customerMetadataUpdated`, `productVariantMetadataUpdated`) are sent.
    *

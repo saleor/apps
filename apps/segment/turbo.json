@@ -10,6 +10,7 @@
         "APP_IFRAME_BASE_URL",
         "AWS_ACCESS_KEY_ID",
         "AWS_REGION",
+        "AWS_ROLE_ARN",
         "AWS_SECRET_ACCESS_KEY",
         "DYNAMODB_MAIN_TABLE_NAME",
         "FILE_APL_PATH",

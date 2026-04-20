@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-search",
-  "version": "1.28.1",
+  "version": "1.29.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -37,6 +37,7 @@
     "@saleor/apps-otel": "workspace:*",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
+    "@saleor/errors": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "@saleor/react-hook-form-macaw": "workspace:*",
     "@saleor/sentry-utils": "workspace:*",
@@ -49,6 +50,7 @@
     "@trpc/next": "catalog:",
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
+    "@vercel/oidc-aws-credentials-provider": "catalog:",
     "@vercel/otel": "catalog:",
     "algoliasearch": "4.23.3",
     "clsx": "1.2.1",

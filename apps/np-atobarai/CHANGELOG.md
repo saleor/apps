@@ -1,5 +1,19 @@
 # saleor-app-payment-np-atobarai
 
+## 1.4.6
+
+### Patch Changes
+
+- 91f6d5f: Added support for OIDC between AWS and Vercel (using `@vercel/oidc-aws-credentials-provider`). Now, when `AWS_ARN` env variable is provided, it will take precedence over IAM secrets. This is more secure way to authenticate and is preferred. IAM secrets stay supported, e.g. for local DynamoDB setup.
+
+## 1.4.5
+
+### Patch Changes
+
+- Updated dependencies [ff4174e]
+  - @saleor/apps-shared@1.14.4
+  - @saleor/apps-trpc@4.0.5
+
 ## 1.4.4
 
 ### Patch Changes

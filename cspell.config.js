@@ -83,6 +83,7 @@ export default {
     "Neue",
     "Segoe",
     "Undiscounted",
+    "OIDC", "oidc"
   ],
   language: "en-US",
   useGitignore: true,

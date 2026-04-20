@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-products-feed",
-  "version": "3.0.2",
+  "version": "3.0.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -49,6 +49,7 @@
     "@trpc/next": "catalog:",
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
+    "@vercel/oidc-aws-credentials-provider": "catalog:",
     "@vercel/otel": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "dotenv": "catalog:",

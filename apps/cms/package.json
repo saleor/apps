@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-cms",
-  "version": "2.15.2",
+  "version": "2.15.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -48,6 +48,7 @@
     "@trpc/next": "catalog:",
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
+    "@vercel/oidc-aws-credentials-provider": "catalog:",
     "@vercel/otel": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "contentful-management": "10.46.4",

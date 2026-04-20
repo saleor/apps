@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-smtp",
-  "version": "2.2.1",
+  "version": "2.3.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,10 +13,10 @@
     "lint:fix": "eslint --fix .",
     "migrate": "pnpm tsx --env-file-if-exists=.env ./scripts/run-webhooks-migration.ts",
     "migrate:dry-run": "pnpm tsx --env-file-if-exists=.env ./scripts/run-webhooks-migration.ts --dry-run",
-    "start": "next start",
-    "test": "vitest",
     "rotate-secret-key": "pnpm tsx --env-file-if-exists=.env ./scripts/rotate-secret-key.ts",
     "rotate-secret-key:dry-run": "pnpm tsx --env-file-if-exists=.env ./scripts/rotate-secret-key.ts --dry-run",
+    "start": "next start",
+    "test": "vitest",
     "test-email-build": "tsx ./scripts/build-email-previews.ts",
     "test:ci": "vitest run --coverage"
   },
@@ -51,6 +51,7 @@
     "@trpc/next": "catalog:",
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
+    "@vercel/oidc-aws-credentials-provider": "catalog:",
     "@vercel/otel": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "dotenv": "catalog:",

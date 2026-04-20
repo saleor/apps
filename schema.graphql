@@ -6825,9 +6825,9 @@ type Product implements Node & ObjectWithMetadata & ObjectWithAttributes @doc(ca
   """
   isAvailable(
     """
-    Destination address used to find warehouses where stock availability for this product is checked. If address is empty, uses `Shop.companyAddress` or fallbacks to server's `settings.DEFAULT_COUNTRY` configuration.
+    Destination address used to find warehouses where stock availability for this product is checked. If address is empty, uses `Shop.companyAddress` or fallbacks to server's `settings.DEFAULT_COUNTRY` configuration. When `Shop.useLegacyShippingZoneStockAvailability` is disabled, this argument is ignored — stock availability is determined by the direct warehouse-channel link instead of shipping zones.
     """
-    address: AddressInput
+    address: AddressInput @deprecated
   ): Boolean
 
   """A type of tax. Assigned by enabled tax gateway"""
@@ -8767,9 +8767,9 @@ type ProductVariant implements Node & ObjectWithMetadata & ObjectWithAttributes 
   """
   stocks(
     """
-    Destination address used to find warehouses where stock availability for this product is checked. If address is empty, uses `Shop.companyAddress` or fallbacks to server's `settings.DEFAULT_COUNTRY` configuration.
+    Destination address used to find warehouses where stock availability for this product is checked. If address is empty, uses `Shop.companyAddress` or fallbacks to server's `settings.DEFAULT_COUNTRY` configuration. When `Shop.useLegacyShippingZoneStockAvailability` is disabled, this argument is ignored — stock availability is determined by the direct warehouse-channel link instead of shipping zones.
     """
-    address: AddressInput
+    address: AddressInput @deprecated
 
     """Two-letter ISO 3166-1 country code."""
     countryCode: CountryCode @deprecated(reason: "Use `address` argument instead.")
@@ -8780,9 +8780,9 @@ type ProductVariant implements Node & ObjectWithMetadata & ObjectWithAttributes 
   """
   quantityAvailable(
     """
-    Destination address used to find warehouses where stock availability for this product is checked. If address is empty, uses `Shop.companyAddress` or fallbacks to server's `settings.DEFAULT_COUNTRY` configuration.
+    Destination address used to find warehouses where stock availability for this product is checked. If address is empty, uses `Shop.companyAddress` or fallbacks to server's `settings.DEFAULT_COUNTRY` configuration. When `Shop.useLegacyShippingZoneStockAvailability` is disabled, this argument is ignored — stock availability is determined by the direct warehouse-channel link instead of shipping zones.
     """
-    address: AddressInput
+    address: AddressInput @deprecated
 
     """
     Two-letter ISO 3166-1 country code. When provided, the exact quantity from a warehouse operating in shipping zones that contain this country will be returned. Otherwise, it will return the maximum quantity from all shipping zones.
@@ -15067,6 +15067,13 @@ type Shop implements ObjectWithMetadata {
 
   """Charge taxes on shipping."""
   chargeTaxesOnShipping: Boolean! @deprecated(reason: "Use `ShippingMethodType.taxClass` to determine whether taxes are calculated for shipping methods; if a tax class is set, the taxes will be calculated, otherwise no tax rate will be applied.")
+
+  """
+  When enabled, stock availability is filtered by shipping zones and the destination address (legacy behavior). When disabled, stock availability is determined only by the direct warehouse-channel link, ignoring shipping zones.
+  
+  Added in Saleor 3.23.
+  """
+  useLegacyShippingZoneStockAvailability: Boolean!
 
   """
   Use legacy update webhook emission. When enabled, update webhooks (e.g. `customerUpdated`,`productVariantUpdated`) are sent even when only metadata changes. When disabled, update webhooks are not sent for metadata-only changes; only metadata-specific webhooks (e.g., `customerMetadataUpdated`, `productVariantMetadataUpdated`) are sent.
@@ -22993,6 +23000,13 @@ input ShopSettingsInput {
   """
   passwordLoginMode: PasswordLoginModeEnum
 
+  """
+  When enabled, stock availability is filtered by shipping zones and the destination address (legacy behavior). When disabled, stock availability is determined only by the direct warehouse-channel link, ignoring shipping zones.
+  
+  Added in Saleor 3.23.
+  """
+  useLegacyShippingZoneStockAvailability: Boolean
+
   """Include taxes in prices."""
   includeTaxesInPrices: Boolean @deprecated(reason: "Use `taxConfigurationUpdate` mutation to configure this setting per channel or country.")
 
@@ -23628,6 +23642,7 @@ enum ProductErrorCode @doc(category: "Products") {
   PREORDER_VARIANT_CANNOT_BE_DEACTIVATED
   INVALID_FILE_TYPE
   UNSUPPORTED_MIME_TYPE
+  FILE_SIZE_LIMIT_EXCEEDED
 }
 
 input ProductAttributeAssignInput @doc(category: "Products") {
@@ -23838,7 +23853,8 @@ enum CollectionErrorCode @doc(category: "Products") {
   NOT_FOUND
   REQUIRED
   UNIQUE
-  CANNOT_MANAGE_PRODUCT_WITHOUT_VARIANT
+  CANNOT_MANAGE_PRODUCT_WITHOUT_VARIANT @deprecated(reason: "Products without variants can now be assigned to collections. This error will never be returned.")
+  FILE_SIZE_LIMIT_EXCEEDED
 }
 
 """
@@ -24303,6 +24319,7 @@ enum ProductBulkCreateErrorCode @doc(category: "Products") {
   UNIQUE
   PRODUCT_NOT_ASSIGNED_TO_CHANNEL
   UNSUPPORTED_MEDIA_PROVIDER
+  FILE_SIZE_LIMIT_EXCEEDED
 }
 
 input ProductBulkCreateInput @doc(category: "Products") {
@@ -32440,6 +32457,7 @@ enum AccountErrorCode @doc(category: "Users") {
   LOGIN_ATTEMPT_DELAYED
   DISABLED_AUTHENTICATION_METHOD
   UNKNOWN_IP_ADDRESS
+  FILE_SIZE_LIMIT_EXCEEDED
 }
 
 """
