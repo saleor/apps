@@ -11,6 +11,16 @@ on:
 jobs:
   audit:
     runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: production
+            flag: --prod
+            level: moderate
+          - name: dev
+            flag: --dev
+            level: high
     steps:
       - uses: actions/checkout@v4
       - name: Setup PNPM
@@ -20,12 +30,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-      - name: Audit production dependencies
-        continue-on-error: true
-        run: pnpm audit --prod --audit-level moderate
-      - name: Audit dev dependencies
-        continue-on-error: true
-        run: pnpm audit --dev --audit-level high
+      - name: Audit ${{ matrix.name }} dependencies
+        run: pnpm audit ${{ matrix.flag }} --audit-level ${{ matrix.level }}
 
   lint:
     runs-on: ubuntu-22.04
