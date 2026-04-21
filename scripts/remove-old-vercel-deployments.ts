@@ -36,11 +36,13 @@ const { values } = parseArgs({
   options: {
     "max-age-days": { type: "string", default: "7" },
     app: { type: "string" },
+    "with-aliases": { type: "boolean", default: false },
   },
 });
 
 const maxAgeDays = Number(values["max-age-days"]);
 const singleApp = values.app;
+const withAliases = values["with-aliases"] ?? false;
 
 const teamSlug = process.env.VERCEL_TEAM_SLUG;
 
@@ -62,12 +64,52 @@ type Deployment = {
   url?: string;
   created: number;
   target?: string | null;
-  aliasAssigned?: number | null;
+  aliasAssigned?: number | boolean | null;
+  readySubstate?: string;
+  isRollbackCandidate?: boolean | null;
+  customEnvironment?: { slug?: string };
 };
 
 type DeploymentsResponse = {
   deployments?: Deployment[];
 };
+
+type Alias = {
+  alias: string;
+  deploymentId: string;
+  deletedAt?: number | null;
+};
+
+type AliasesResponse = {
+  aliases?: Alias[];
+  pagination?: { next?: number | null };
+};
+
+async function fetchAliasesByDeployment(): Promise<Map<string, string[]>> {
+  const map = new Map<string, string[]>();
+  let next: number | undefined;
+  let pages = 0;
+
+  while (true) {
+    const params = new URLSearchParams({ limit: "100" });
+    if (next !== undefined) params.set("until", String(next));
+    const res = await vercelApi<AliasesResponse>(`/v4/aliases?${params.toString()}`);
+    const page = res.aliases ?? [];
+    pages++;
+    for (const a of page) {
+      if (a.deletedAt) continue;
+      const existing = map.get(a.deploymentId);
+      if (existing) existing.push(a.alias);
+      else map.set(a.deploymentId, [a.alias]);
+    }
+    const n = res.pagination?.next;
+    if (typeof n !== "number" || n === next) break;
+    next = n;
+  }
+
+  console.error(`Fetched aliases: ${map.size} deployment(s) aliased across ${pages} page(s).`);
+  return map;
+}
 
 async function vercelApi<T>(path: string): Promise<T> {
   const { stdout } = await execFileP("vercel", ["api", path, "-S", teamSlug!]);
@@ -127,7 +169,7 @@ function chunk<T>(arr: T[], size: number): T[][] {
   return out;
 }
 
-function formatTimestamp(ms: number | null | undefined): string {
+function formatTimestamp(ms: number | boolean | null | undefined): string {
   if (typeof ms !== "number") return "-";
   return new Date(ms).toISOString().replace(/\.\d{3}Z$/, "Z");
 }
@@ -136,7 +178,11 @@ function pad(s: string, width: number): string {
   return s.length >= width ? s : s + " ".repeat(width - s.length);
 }
 
-function printProjectBlock(projectName: string, deployments: Deployment[]) {
+function printProjectBlock(
+  projectName: string,
+  deployments: Deployment[],
+  aliasMap: Map<string, string[]> | null,
+) {
   console.log(`\n# ${projectName} — ${deployments.length} deployment(s) older than ${maxAgeDays}d`);
   console.log(
     "#   " +
@@ -147,6 +193,12 @@ function printProjectBlock(projectName: string, deployments: Deployment[]) {
     pad("target", 10) +
     "  " +
     pad("aliasAssigned", 20) +
+    "  " +
+    pad("substate", 10) +
+    "  " +
+    pad("rb", 2) +
+    "  " +
+    pad("customEnv", 15) +
     "  url",
   );
   console.log(
@@ -158,9 +210,21 @@ function printProjectBlock(projectName: string, deployments: Deployment[]) {
     "-".repeat(10) +
     "  " +
     "-".repeat(20) +
+    "  " +
+    "-".repeat(10) +
+    "  " +
+    "-".repeat(2) +
+    "  " +
+    "-".repeat(15) +
     "  ---",
   );
   for (const d of deployments) {
+    const aliases = aliasMap?.get(d.uid) ?? [];
+    const aliasSuffix = aliasMap
+      ? aliases.length > 0
+        ? `   aliases: ${aliases.join(", ")}`
+        : "   aliases: -"
+      : "";
     console.log(
       "#   " +
       pad(d.uid, 36) +
@@ -171,7 +235,14 @@ function printProjectBlock(projectName: string, deployments: Deployment[]) {
       "  " +
       pad(formatTimestamp(d.aliasAssigned), 20) +
       "  " +
-      (d.url ?? "-"),
+      pad(d.readySubstate ?? "-", 10) +
+      "  " +
+      pad(d.isRollbackCandidate ? "Y" : "-", 2) +
+      "  " +
+      pad(d.customEnvironment?.slug ?? "-", 15) +
+      "  " +
+      (d.url ?? "-") +
+      aliasSuffix,
     );
   }
   console.log(
@@ -187,8 +258,10 @@ function printProjectBlock(projectName: string, deployments: Deployment[]) {
 async function main() {
   const projects = await readProjectNames();
   console.error(
-    `Scanning ${projects.length} project(s). Cutoff: ${new Date(cutoffMs).toISOString()}`,
+    `Scanning ${projects.length} project(s). Cutoff: ${new Date(cutoffMs).toISOString()}. with-aliases=${withAliases}`,
   );
+
+  const aliasMap = withAliases ? await fetchAliasesByDeployment() : null;
 
   let total = 0;
   const failures: string[] = [];
@@ -200,7 +273,7 @@ async function main() {
         console.error(`${project}: nothing to remove`);
         continue;
       }
-      printProjectBlock(project, deployments);
+      printProjectBlock(project, deployments, aliasMap);
       total += deployments.length;
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
