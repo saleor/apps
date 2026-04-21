@@ -1,0 +1,14 @@
+{
+  "name": "@saleor/apps-scripts",
+  "version": "0.0.0",
+  "private": true,
+  "license": "(BSD-3-Clause AND CC-BY-4.0)",
+  "type": "module",
+  "scripts": {
+    "remove-old-vercel-deployments": "node --experimental-strip-types --disable-warning=ExperimentalWarning remove-old-vercel-deployments.ts"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}
