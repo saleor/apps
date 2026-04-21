@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { ENCRYPTED_METADATA_KEYS } from "@/lib/encrypted-metadata-keys";
+
 import { type CrudSettingsManager } from "../../crud-settings/crud-settings.service";
 
 export const avataxTaxCodeMatchSchema = z.object({
@@ -19,7 +21,7 @@ const avataxTaxCodeMatchesSchema = z.array(
 export type AvataxTaxCodeMatches = z.infer<typeof avataxTaxCodeMatchesSchema>;
 
 export class AvataxTaxCodeMatchRepository {
-  static metadataKey = "avatax-tax-code-map";
+  static metadataKey = ENCRYPTED_METADATA_KEYS.AVATAX_TAX_CODE_MAP;
 
   constructor(private crudSettingsManager: CrudSettingsManager) {}
 

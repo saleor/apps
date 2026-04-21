@@ -1,4 +1,8 @@
 import { booleanEnv } from "@saleor/apps-shared/boolean-env";
+import {
+  fallbackSecretKeysRuntimeEnv,
+  fallbackSecretKeysServerSchema,
+} from "@saleor/apps-shared/fallback-secret-keys";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
@@ -27,6 +31,7 @@ export const env = createEnv({
     VERCEL_ENV: z.string().optional(),
     REPOSITORY_URL: z.string().optional(),
     NEXT_RUNTIME: z.string().optional(),
+    ...fallbackSecretKeysServerSchema,
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
@@ -56,6 +61,7 @@ export const env = createEnv({
     REPOSITORY_URL: process.env.REPOSITORY_URL,
     NEXT_RUNTIME: process.env.NEXT_RUNTIME,
     NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS: process.env.NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS,
+    ...fallbackSecretKeysRuntimeEnv,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });

@@ -1,4 +1,8 @@
 import { booleanEnv } from "@saleor/apps-shared/boolean-env";
+import {
+  fallbackSecretKeysRuntimeEnv,
+  fallbackSecretKeysServerSchema,
+} from "@saleor/apps-shared/fallback-secret-keys";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
@@ -56,6 +60,7 @@ export const env = createEnv({
     OTEL_METRICS_FLUSH_TIMEOUT_MILIS: z.coerce.number().default(5_000),
     DYNAMODB_REQUEST_TIMEOUT_MS: z.coerce.number().default(5_000),
     DYNAMODB_CONNECTION_TIMEOUT_MS: z.coerce.number().default(2_000),
+    ...fallbackSecretKeysServerSchema,
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
@@ -104,6 +109,7 @@ export const env = createEnv({
     OTEL_METRICS_FLUSH_TIMEOUT_MILIS: process.env.OTEL_METRICS_FLUSH_TIMEOUT_MILIS,
     DYNAMODB_REQUEST_TIMEOUT_MS: process.env.DYNAMODB_REQUEST_TIMEOUT_MS,
     DYNAMODB_CONNECTION_TIMEOUT_MS: process.env.DYNAMODB_CONNECTION_TIMEOUT_MS,
+    ...fallbackSecretKeysRuntimeEnv,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });

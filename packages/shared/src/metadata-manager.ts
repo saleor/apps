@@ -6,6 +6,8 @@ import {
 import { type Logger } from "@saleor/apps-logger";
 import { type Client, gql } from "urql";
 
+import { createRotatingDecryptCallback } from "./key-rotation/rotating-decrypt-callback";
+
 const UpdateAppMetadataMutation = gql`
   mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
     updatePrivateMetadata(id: $id, input: $input) {
@@ -141,9 +143,10 @@ async function updatePrivateMetadata({
 export class EncryptedMetadataManagerFactory {
   constructor(
     private encryptionKey: string,
+    private fallbackKeys: string[] = [],
     private logger: Logger,
   ) {
-    if (!encryptionKey) {
+    if (!encryptionKey && process.env.NODE_ENV !== "development") {
       throw new Error("Encryption key is required");
     }
   }
@@ -165,6 +168,13 @@ export class EncryptedMetadataManagerFactory {
           keys: keys,
         });
       },
+      ...(this.fallbackKeys.length > 0 && {
+        decryptionMethod: createRotatingDecryptCallback(
+          this.encryptionKey,
+          this.fallbackKeys,
+          this.logger,
+        ),
+      }),
     });
   }
 }

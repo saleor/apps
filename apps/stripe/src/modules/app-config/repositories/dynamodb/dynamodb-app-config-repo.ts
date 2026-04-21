@@ -1,4 +1,6 @@
-import { Encryptor } from "@saleor/apps-shared/encryptor";
+import { type IEncryptor } from "@saleor/apps-shared/encryptor";
+import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
+import { RotatingEncryptor } from "@saleor/apps-shared/key-rotation/rotating-encryptor";
 import { DeleteItemCommand, GetItemCommand, Parser, PutItemCommand } from "dynamodb-toolbox";
 import { QueryCommand } from "dynamodb-toolbox/table/actions/query";
 import { err, ok, type Result } from "neverthrow";
@@ -34,7 +36,7 @@ type ConstructorParams = {
     stripeConfig: DynamoDbStripeConfigEntity;
     channelConfigMapping: DynamoDbChannelConfigMappingEntity;
   };
-  encryptor: Encryptor;
+  encryptor: IEncryptor;
 };
 
 export class DynamodbAppConfigRepo implements AppConfigRepo {
@@ -42,7 +44,7 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
 
   stripeConfigEntity: DynamoDbStripeConfigEntity;
   channelConfigMappingEntity: DynamoDbChannelConfigMappingEntity;
-  encryptor: Encryptor;
+  encryptor: IEncryptor;
 
   constructor(
     config: ConstructorParams = {
@@ -50,7 +52,11 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
         stripeConfig: DynamoDbStripeConfig.entity,
         channelConfigMapping: DynamoDbChannelConfigMapping.entity,
       },
-      encryptor: new Encryptor(env.SECRET_KEY),
+      encryptor: new RotatingEncryptor({
+        primarySecret: env.SECRET_KEY,
+        fallbackSecrets: collectFallbackSecretKeys(env),
+        logger: createLogger("RotatingEncryptor"),
+      }),
     },
   ) {
     this.channelConfigMappingEntity = config.entities.channelConfigMapping;

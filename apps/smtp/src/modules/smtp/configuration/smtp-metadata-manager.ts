@@ -2,6 +2,7 @@ import { type SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { fromPromise, fromThrowable, ok, ResultAsync } from "neverthrow";
 
 import { BaseError } from "../../../errors";
+import { ENCRYPTED_METADATA_KEYS } from "../../../lib/encrypted-metadata-keys";
 import { racePromise } from "../../../lib/race-promise";
 import { createLogger } from "../../../logger";
 import { type SmtpConfig } from "./smtp-config-schema";
@@ -16,7 +17,7 @@ const PULL_CONFG_TIMEOUT = 3000;
 
 // todo test
 export class SmtpMetadataManager {
-  private metadataKey = "smtp-config";
+  private metadataKey = ENCRYPTED_METADATA_KEYS.SMTP_CONFIG;
   private logger = createLogger("SmtpMetadataManager");
 
   static SmtpMetadataManagerError = BaseError.subclass("SmtpMetadataManagerError");

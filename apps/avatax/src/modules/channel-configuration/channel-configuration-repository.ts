@@ -1,6 +1,7 @@
 import { type EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 
 import { metadataCache } from "@/lib/app-metadata-cache";
+import { ENCRYPTED_METADATA_KEYS } from "@/lib/encrypted-metadata-keys";
 import { createSettingsManager } from "@/modules/app/metadata-manager";
 import { TAX_PROVIDER_KEY } from "@/modules/provider-connections/public-provider-connections.service";
 
@@ -14,7 +15,7 @@ export class ChannelConfigurationRepository {
   constructor(settingsManager: EncryptedMetadataManager, saleorApiUrl: string) {
     this.crudSettingsManager = new CrudSettingsManager({
       saleorApiUrl,
-      metadataKey: "channel-configuration",
+      metadataKey: ENCRYPTED_METADATA_KEYS.CHANNEL_CONFIGURATION,
       metadataManager: settingsManager,
     });
   }

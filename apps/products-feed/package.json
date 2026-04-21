@@ -11,6 +11,8 @@
     "generate": "graphql-codegen",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
+    "rotate-secret-key": "pnpm tsx --env-file-if-exists=.env ./scripts/rotate-secret-key.ts",
+    "rotate-secret-key:dry-run": "pnpm tsx --env-file-if-exists=.env ./scripts/rotate-secret-key.ts --dry-run",
     "start": "next start",
     "test": "vitest",
     "test:ci": "vitest run --coverage"

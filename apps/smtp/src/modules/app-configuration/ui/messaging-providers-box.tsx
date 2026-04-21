@@ -60,12 +60,14 @@ export type ConfigurationListItem = {
 interface MessagingProvidersSectionProps {
   configurations: ConfigurationListItem[];
   isLoading: boolean;
+  isError: boolean;
   saleorCloudFallbackAvailable: boolean;
 }
 
 export const MessagingProvidersBox = ({
   configurations,
   isLoading: loading,
+  isError,
   saleorCloudFallbackAvailable,
 }: MessagingProvidersSectionProps) => {
   const { push } = useRouter();
@@ -74,6 +76,16 @@ export const MessagingProvidersBox = ({
     return (
       <BoxWithBorder padding={7}>
         <SkeletonLayout.Section />
+      </BoxWithBorder>
+    );
+  }
+
+  if (isError) {
+    return (
+      <BoxWithBorder padding={10} display="flex" flexDirection="column" alignItems="center">
+        <Text color="critical1">
+          Failed to load configurations. Please contact Saleor support if this issue persists.
+        </Text>
       </BoxWithBorder>
     );
   }

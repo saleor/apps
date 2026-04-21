@@ -19,7 +19,14 @@
     "./theme-synchronizer": "./src/theme-synchronizer.tsx",
     "./use-dashboard-notification": "./src/use-dashboard-notification.ts",
     "./encryptor": "./src/encryptor.ts",
-    "./boolean-env": "./src/boolean-env-schema.ts"
+    "./key-rotation/rotating-decrypt-callback": "./src/key-rotation/rotating-decrypt-callback.ts",
+    "./key-rotation/rotating-encryptor": "./src/key-rotation/rotating-encryptor.ts",
+    "./key-rotation/secret-key-rotation-runner": "./src/key-rotation/secret-key-rotation-runner.ts",
+    "./key-rotation/fetch-metadata-rotation-items": "./src/key-rotation/fetch-metadata-rotation-items.ts",
+    "./key-rotation/save-metadata-rotation-item": "./src/key-rotation/save-metadata-rotation-item.ts",
+    "./key-rotation/dynamodb-secret-key-rotation-runner": "./src/key-rotation/dynamodb-secret-key-rotation-runner.ts",
+    "./boolean-env": "./src/boolean-env-schema.ts",
+    "./fallback-secret-keys": "./src/fallback-secret-keys.ts"
   },
   "scripts": {
     "check-types": "tsc",
@@ -34,6 +41,7 @@
     "semver": "catalog:"
   },
   "devDependencies": {
+    "@aws-sdk/lib-dynamodb": "catalog:",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
@@ -45,6 +53,7 @@
     "@types/semver": "catalog:",
     "@vitejs/plugin-react": "4.3.4",
     "@vitest/coverage-v8": "catalog:",
+    "aws-sdk-client-mock": "4.0.1",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
@@ -54,6 +63,7 @@
     "zod": "catalog:"
   },
   "peerDependencies": {
+    "@aws-sdk/lib-dynamodb": "catalog:",
     "@saleor/app-sdk": "catalog:",
     "@saleor/apps-logger": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
