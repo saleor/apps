@@ -9,6 +9,31 @@ on:
       - main
 
 jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: production
+            flag: --prod
+            level: moderate
+          - name: dev
+            flag: --dev
+            level: high
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Setup PNPM
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+        with:
+          run_install: false
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+      - name: Audit ${{ matrix.name }} dependencies
+        run: pnpm audit ${{ matrix.flag }} --audit-level ${{ matrix.level }}
+
   lint:
     runs-on: ubuntu-22.04
     env:
