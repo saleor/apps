@@ -18,10 +18,8 @@ export const PermissionMissingWarning = ({ permission }: PermissionMissingWarnin
         Missing permission: {permission}
       </Text>
       <Text as="p" size={2} marginBottom={2}>
-        This feature requires the {permission} permission. Please grant this permission for the app in your Saleor Dashboard (Apps → Manage App).
-      </Text>
-      <Text as="p" size={2} color="default2">
-        If you cannot manage permissions in Dashboard, you may need to reinstall the app, but note that all app configurations will be lost after reinstalling.
+        This feature requires the {permission} permission. Please reinstall the app (all
+        configurations will be lost)
       </Text>
     </Box>
   );
