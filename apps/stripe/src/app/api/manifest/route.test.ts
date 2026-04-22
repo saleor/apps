@@ -1,3 +1,7 @@
+/*
+ * @vitest-environment node
+ * Enforce NOT using jsdom, because it stub native Node's Request, which breaks Node24 - it requires exact instances of AbortSignals
+ */
 import { testApiHandler } from "next-test-api-route-handler";
 import { describe, expect, it, vi } from "vitest";
 
