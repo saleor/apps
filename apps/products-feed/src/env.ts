@@ -1,8 +1,8 @@
 import { booleanEnv } from "@saleor/apps-shared/boolean-env";
 import {
-  fallbackSecretKeysRuntimeEnv,
-  fallbackSecretKeysServerSchema,
-} from "@saleor/apps-shared/fallback-secret-keys";
+  newSecretKeyRuntimeEnv,
+  newSecretKeyServerSchema,
+} from "@saleor/apps-shared/secret-key-resolution";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
@@ -34,7 +34,7 @@ export const env = createEnv({
     FEED_CACHE_MAX_AGE: z.coerce.number().default(300),
     MAX_PARALLEL_CALLS: z.coerce.number().default(5),
     VARIANTS_PER_PAGE: z.coerce.number().default(50),
-    ...fallbackSecretKeysServerSchema,
+    ...newSecretKeyServerSchema,
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
@@ -67,7 +67,7 @@ export const env = createEnv({
     FEED_CACHE_MAX_AGE: process.env.FEED_CACHE_MAX_AGE,
     MAX_PARALLEL_CALLS: process.env.MAX_PARALLEL_CALLS,
     VARIANTS_PER_PAGE: process.env.VARIANTS_PER_PAGE,
-    ...fallbackSecretKeysRuntimeEnv,
+    ...newSecretKeyRuntimeEnv,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });

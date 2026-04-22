@@ -1,8 +1,8 @@
 import { booleanEnv } from "@saleor/apps-shared/boolean-env";
 import {
-  fallbackSecretKeysRuntimeEnv,
-  fallbackSecretKeysServerSchema,
-} from "@saleor/apps-shared/fallback-secret-keys";
+  newSecretKeyRuntimeEnv,
+  newSecretKeyServerSchema,
+} from "@saleor/apps-shared/secret-key-resolution";
 import { BaseError } from "@saleor/errors";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
@@ -35,7 +35,7 @@ export const env = createEnv({
     AWS_ACCESS_KEY_ID: z.string().optional(),
     AWS_SECRET_ACCESS_KEY: z.string().optional(),
     AWS_ROLE_ARN: z.string().optional(),
-    ...fallbackSecretKeysServerSchema,
+    ...newSecretKeyServerSchema,
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
@@ -68,7 +68,7 @@ export const env = createEnv({
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     AWS_ROLE_ARN: process.env.AWS_ROLE_ARN,
-    ...fallbackSecretKeysRuntimeEnv,
+    ...newSecretKeyRuntimeEnv,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
   onValidationError(issues) {

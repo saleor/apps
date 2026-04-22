@@ -1,5 +1,8 @@
-import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
 import { createRotatingDecryptCallback } from "@saleor/apps-shared/key-rotation/rotating-decrypt-callback";
+import {
+  resolveDecryptFallbacks,
+  resolveEncryptKey,
+} from "@saleor/apps-shared/secret-key-resolution";
 
 import { env } from "@/env";
 import { createLogger } from "@/logger";
@@ -18,7 +21,7 @@ export const getAppConfig = (metadata: MetadataItem[]) => {
   let providerConnections = [] as ProviderConnections;
   let channelsConfig = {} as ChannelsConfig;
 
-  const secretKey = env.SECRET_KEY;
+  const secretKey = resolveEncryptKey(env);
 
   if (!secretKey) {
     throw new Error("SECRET_KEY env variable is not set");
@@ -27,7 +30,7 @@ export const getAppConfig = (metadata: MetadataItem[]) => {
   const logger = createLogger("getAppConfig");
   const rotatingDecrypt = createRotatingDecryptCallback(
     secretKey,
-    collectFallbackSecretKeys(env),
+    resolveDecryptFallbacks(env),
     logger,
   );
 

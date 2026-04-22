@@ -1,4 +1,7 @@
-import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
+import {
+  resolveDecryptFallbacks,
+  resolveEncryptKey,
+} from "@saleor/apps-shared/secret-key-resolution";
 import { GetItemCommand, PutItemCommand } from "dynamodb-toolbox";
 import { err, ok, type Result, ResultAsync } from "neverthrow";
 
@@ -18,8 +21,8 @@ import { type ConfigRepository } from "./types";
 export class DynamoConfigRepository implements ConfigRepository {
   private logger = createLogger("SegmentConfigRepository");
   private mapper = new DynamoConfigMapper({
-    encryptionKey: env.SECRET_KEY,
-    fallbackKeys: collectFallbackSecretKeys(env),
+    encryptionKey: resolveEncryptKey(env),
+    fallbackKeys: resolveDecryptFallbacks(env),
     logger: this.logger,
   });
   private configEntity = SegmentMainTableEntityFactory.createConfigEntity(segmentMainTable);

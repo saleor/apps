@@ -1,6 +1,9 @@
 import { type SettingsManager } from "@saleor/app-sdk/settings-manager";
-import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
 import { EncryptedMetadataManagerFactory } from "@saleor/apps-shared/metadata-manager";
+import {
+  resolveDecryptFallbacks,
+  resolveEncryptKey,
+} from "@saleor/apps-shared/secret-key-resolution";
 import { type Client } from "urql";
 
 import { env } from "../env";
@@ -13,8 +16,8 @@ export const createSettingsManager = (
   appId: string,
 ): SettingsManager => {
   const metadataManagerFactory = new EncryptedMetadataManagerFactory(
-    env.SECRET_KEY,
-    collectFallbackSecretKeys(env),
+    resolveEncryptKey(env),
+    resolveDecryptFallbacks(env),
     logger,
   );
 
