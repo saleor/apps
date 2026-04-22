@@ -1,10 +1,23 @@
 import { type DynamoDBDocumentClient, ScanCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { type Logger } from "@saleor/apps-logger";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 
 import {
   ItemConcurrentlyModifiedError,
   SecretKeyRotationRunner,
 } from "./secret-key-rotation-runner";
+
+/**
+ * All app DynamoDB tables in this monorepo scope PKs as `${saleorApiUrl}#${appId}`.
+ * saleorApiUrl is a URL containing no `#` character, so splitting on the first
+ * `#` recovers it cleanly.
+ */
+const extractSaleorApiUrlFromPK = (pk: unknown): string | undefined => {
+  if (typeof pk !== "string") return undefined;
+  const hashIndex = pk.indexOf("#");
+
+  return hashIndex === -1 ? undefined : pk.slice(0, hashIndex);
+};
 
 const PK_ALIAS = "#pk";
 const SK_ALIAS = "#sk";
@@ -107,10 +120,15 @@ export const createDynamoDBSecretKeyRotationRunner = (
           .map((name) => ({ name, encryptedValue: item[name] as string }));
 
         if (encryptedFields.length === encryptedFieldNames.length) {
+          const saleorApiUrl = extractSaleorApiUrlFromPK(item.PK);
+
           yield {
             id: `${String(item.PK)}/${String(item.SK)}`,
             encryptedFields,
             original: item,
+            logAttributes: saleorApiUrl
+              ? { [ObservabilityAttributes.SALEOR_API_URL]: saleorApiUrl }
+              : undefined,
           };
         }
       }

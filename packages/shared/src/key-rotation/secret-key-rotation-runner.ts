@@ -21,6 +21,11 @@ export interface RotationItem<T = unknown> {
   id: string;
   encryptedFields: EncryptedField[];
   original: T;
+  /**
+   * Extra structured attributes attached to every log line the runner emits for this item. 
+   * Example: `saleorApiUrl`
+   */
+  logAttributes?: Record<string, unknown>;
 }
 
 export interface RotatedItem<T = unknown> {
@@ -55,13 +60,14 @@ export class SecretKeyRotationRunner<T = unknown> {
   ): { reEncryptedFields: Record<string, string>; skipped: number; failed: number } => {
     const { secretKey, fallbackKeys, logger, encrypt, decrypt } = this.config;
     const progress = `[${index + 1}]`;
+    const itemAttrs = item.logAttributes;
 
     const reEncryptedFields: Record<string, string> = {};
     let skipped = 0;
     let failed = 0;
 
     if (item.encryptedFields.length === 0) {
-      logger.info(`${progress} No encrypted fields to rotate: ${item.id}`);
+      logger.info(`${progress} No encrypted fields to rotate: ${item.id}`, itemAttrs);
     }
 
     for (const field of item.encryptedFields) {
@@ -75,7 +81,7 @@ export class SecretKeyRotationRunner<T = unknown> {
       switch (result.status) {
         case "primary":
           skipped++;
-          logger.info(`${progress} [${field.name}] Already current, skipping`);
+          logger.info(`${progress} [${field.name}] Already current, skipping`, itemAttrs);
           break;
 
         case "fallback":
@@ -84,7 +90,7 @@ export class SecretKeyRotationRunner<T = unknown> {
 
         case "failed":
           failed++;
-          logger.error(`${progress} [${field.name}] Failed to decrypt with any key`);
+          logger.error(`${progress} [${field.name}] Failed to decrypt with any key`, itemAttrs);
           break;
       }
     }
@@ -106,6 +112,7 @@ export class SecretKeyRotationRunner<T = unknown> {
     const results = await Promise.all(
       batch.map(async (item, batchIndex) => {
         const globalIndex = startIndex + batchIndex;
+        const itemAttrs = item.logAttributes;
 
         const {
           reEncryptedFields,
@@ -123,6 +130,7 @@ export class SecretKeyRotationRunner<T = unknown> {
           if (error instanceof ItemConcurrentlyModifiedError) {
             logger.info(
               `[${globalIndex + 1}] Item changed under rotation, leaving for next run: ${item.id}`,
+              itemAttrs,
             );
 
             return {
@@ -134,6 +142,7 @@ export class SecretKeyRotationRunner<T = unknown> {
           }
 
           logger.error(`Failed to save item: ${item.id}`, {
+            ...itemAttrs,
             error: error as Record<string, unknown>,
           });
 
@@ -147,9 +156,9 @@ export class SecretKeyRotationRunner<T = unknown> {
 
         if (fieldsToSave > 0) {
           logger.info(
-            `[${globalIndex + 1}] Re-encrypted ${fieldsToSave} field(s)${
-              dryRun ? " (dry run)" : ""
+            `[${globalIndex + 1}] Re-encrypted ${fieldsToSave} field(s)${dryRun ? " (dry run)" : ""
             }: ${item.id}`,
+            itemAttrs,
           );
         }
 
@@ -192,8 +201,7 @@ export class SecretKeyRotationRunner<T = unknown> {
     }
 
     logger.info(
-      `Starting secret key rotation${this.config.dryRun ? " (DRY RUN)" : ""}. Fallback keys: ${
-        fallbackKeys.length
+      `Starting secret key rotation${this.config.dryRun ? " (DRY RUN)" : ""}. Fallback keys: ${fallbackKeys.length
       }, concurrency: ${concurrency}`,
     );
 
@@ -230,8 +238,7 @@ export class SecretKeyRotationRunner<T = unknown> {
     }
 
     logger.info(
-      `Rotation complete${
-        this.config.dryRun ? " (DRY RUN)" : ""
+      `Rotation complete${this.config.dryRun ? " (DRY RUN)" : ""
       }. Processed: ${processed}, Rotated: ${rotated}, Skipped: ${skipped}, Failed: ${failed}, Concurrently modified: ${concurrentlyModified}`,
     );
 

@@ -296,7 +296,37 @@ describe("SecretKeyRotationRunner", () => {
 
     expect(result).toStrictEqual({ rotated: 0, skipped: 0, failed: 0, concurrentlyModified: 0 });
     expect(saveItem).not.toHaveBeenCalled();
-    expect(logger.info).toHaveBeenCalledWith("[1] No encrypted fields to rotate: item-empty");
+    expect(logger.info).toHaveBeenCalledWith(
+      "[1] No encrypted fields to rotate: item-empty",
+      undefined,
+    );
+  });
+
+  it("attaches logAttributes to every item-scoped log line when provided", async () => {
+    const saveItem = vi.fn().mockResolvedValue(undefined);
+    const logAttributes = { saleorApiUrl: "https://shop.example.com/graphql/" };
+
+    const { runner, logger } = createRunner({
+      getItems: () =>
+        fromArray([
+          {
+            id: "item-1",
+            logAttributes,
+            encryptedFields: [
+              { name: "secret", encryptedValue: toyEncrypt("plain", FALLBACK_1) },
+            ],
+            original: {},
+          },
+        ]),
+      saveItem,
+    });
+
+    await runner.run();
+
+    expect(logger.info).toHaveBeenCalledWith(
+      "[1] Re-encrypted 1 field(s): item-1",
+      logAttributes,
+    );
   });
 
   it("limits concurrency to the configured batch size", async () => {
