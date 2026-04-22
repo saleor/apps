@@ -1,0 +1,27 @@
+apps/stripe/src/modules/ui/channel-configs/channel-config-mapping-section.tsx
+  44822ff11ebfda28 35,37-61
+apps/stripe/src/modules/trpc/protected-client-procedure.ts
+  44822ff11ebfda28 101,103
+.changeset/stripe-jwt-403.md
+  44822ff11ebfda28 1-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "921af75f8d9b8ed7a0ee4f691d6409b0d2fdfe7b",
+  "prompts": {
+    "44822ff11ebfda28": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "86314231-5d65-4d8e-aac1-95cb35f97c7f",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Lukasz Ostrowski",
+      "messages": [],
+      "total_additions": 255,
+      "total_deletions": 9,
+      "accepted_lines": 33,
+      "overriden_lines": 0
+    }
+  }
+}
