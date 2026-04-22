@@ -2,7 +2,9 @@ import { err, errAsync, ok, okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { BaseError } from "../../../errors";
+import { fetchRedirectEmail } from "../../saleor-fallback-behavior/redirect-email-fetcher";
 import {
+  type FallbackSmtpConfig,
   getFallbackSmtpConfigSchema,
   type SmtpConfiguration,
 } from "../../smtp/configuration/smtp-config-schema";
@@ -26,6 +28,10 @@ vi.mock("../../smtp/configuration/smtp-config-schema", async (importOriginal) =>
     getFallbackSmtpConfigSchema: vi.fn(() => null),
   };
 });
+
+vi.mock("../../saleor-fallback-behavior/redirect-email-fetcher", () => ({
+  fetchRedirectEmail: vi.fn(),
+}));
 
 const EVENT_TYPE = "ACCOUNT_DELETE" satisfies MessageEventTypes;
 
@@ -244,8 +250,11 @@ describe("SendEventMessagesUseCase", () => {
           encryption: "TLS",
           senderName: "Fallback Sender",
           senderDomain: "example.com",
-          blockedDomains: [],
+          redirectEndpoint: "https://redirect.example.com/api",
+          redirectToken: "secret-token",
         });
+
+        vi.mocked(fetchRedirectEmail).mockResolvedValue(ok("owner@organization.com"));
 
         const result = await useCaseInstance.sendEventMessages({
           event: EVENT_TYPE,
@@ -257,36 +266,6 @@ describe("SendEventMessagesUseCase", () => {
 
         expect(result.isOk()).toBe(true);
         expect(emailSender.mockSendEmailMethod).toHaveBeenCalledOnce();
-      });
-
-      it("Blocks sending email to default test domains with fallback SMTP", async () => {
-        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-          MockConfigService.returnFallbackEnabled,
-        );
-
-        vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
-          smtpHost: "fallback.smtp.host",
-          smtpPort: "587",
-          smtpUser: "fallback-user",
-          smtpPassword: "fallback-pass",
-          encryption: "TLS",
-          senderName: "Fallback Sender",
-          senderDomain: "example.com",
-          blockedDomains: ["example.com"],
-        });
-
-        const result = await useCaseInstance.sendEventMessages({
-          event: EVENT_TYPE,
-          payload: {},
-          channelSlug: "channel-slug",
-          recipientEmail: "user@example.com", // <--- This should be rejected
-          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
-        });
-
-        expect(result?._unsafeUnwrapErr()[0]).toBeInstanceOf(
-          SendEventMessagesUseCase.RejectedTestDomainError,
-        );
-        expect(emailSender.mockSendEmailMethod).not.toHaveBeenCalled();
       });
 
       it("Email addresses without domain are rejected", async () => {
@@ -302,7 +281,8 @@ describe("SendEventMessagesUseCase", () => {
           encryption: "TLS",
           senderName: "Fallback Sender",
           senderDomain: "example.com",
-          blockedDomains: ["example.com"],
+          redirectEndpoint: "https://redirect.example.com/api",
+          redirectToken: "secret-token",
         });
 
         const result = await useCaseInstance.sendEventMessages({
@@ -332,8 +312,11 @@ describe("SendEventMessagesUseCase", () => {
           encryption: "TLS",
           senderName: "Fallback Sender",
           senderDomain: "example.com",
-          blockedDomains: [],
+          redirectEndpoint: "https://redirect.example.com/api",
+          redirectToken: "secret-token",
         });
+
+        vi.mocked(fetchRedirectEmail).mockResolvedValue(ok("owner@organization.com"));
 
         await useCaseInstance.sendEventMessages({
           event: EVENT_TYPE,
@@ -404,7 +387,8 @@ describe("SendEventMessagesUseCase", () => {
           encryption: "TLS",
           senderName: "Fallback Sender",
           senderDomain: "example.com",
-          blockedDomains: [],
+          redirectEndpoint: "https://redirect.example.com/api",
+          redirectToken: "secret-token",
         });
 
         const result = await useCaseInstance.sendEventMessages({
@@ -441,6 +425,71 @@ describe("SendEventMessagesUseCase", () => {
         expect(emailSender.mockSendEmailMethod).toHaveBeenCalledOnce();
         // Fallback should not be checked when custom configs exist
         expect(configService.mockGetIsFallbackSmtpEnabledMethod).not.toHaveBeenCalled();
+        // Redirect should not be called when custom configs exist
+        expect(fetchRedirectEmail).not.toHaveBeenCalled();
+      });
+
+      it("Falls back to redirect when no config matches the channel and fallback is enabled", async () => {
+        configService.mockGetConfigurationsMethod.mockImplementation(
+          MockConfigService.returnEmptyConfigurationsList,
+        );
+        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
+          MockConfigService.returnFallbackEnabled,
+        );
+
+        vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
+          smtpHost: "fallback.smtp.host",
+          smtpPort: "587",
+          smtpUser: "fallback-user",
+          smtpPassword: "fallback-pass",
+          encryption: "TLS",
+          senderName: "Fallback Sender",
+          senderDomain: "example.com",
+          redirectEndpoint: "https://redirect.example.com/api",
+          redirectToken: "secret-token",
+        });
+
+        vi.mocked(fetchRedirectEmail).mockResolvedValue(ok("owner@organization.com"));
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "customer@test.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+        });
+
+        expect(result.isOk()).toBe(true);
+        expect(fetchRedirectEmail).toHaveBeenCalled();
+        expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledWith(
+          expect.objectContaining({
+            recipientEmail: "owner@organization.com",
+          }),
+        );
+      });
+
+      it("Does not send email when no config matches the channel and fallback is disabled", async () => {
+        configService.mockGetConfigurationsMethod.mockImplementation(
+          MockConfigService.returnEmptyConfigurationsList,
+        );
+        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
+          MockConfigService.returnFallbackDisabled,
+        );
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "customer@test.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+        });
+
+        expect(result.isErr()).toBe(true);
+        expect(result._unsafeUnwrapErr()[0]).toBeInstanceOf(
+          SendEventMessagesUseCase.FallbackNotConfiguredError,
+        );
+        expect(emailSender.mockSendEmailMethod).not.toHaveBeenCalled();
+        expect(fetchRedirectEmail).not.toHaveBeenCalled();
       });
 
       it("Uses default templates when sending via fallback", async () => {
@@ -456,8 +505,11 @@ describe("SendEventMessagesUseCase", () => {
           encryption: "TLS",
           senderName: "Fallback Sender",
           senderDomain: "example.com",
-          blockedDomains: [],
+          redirectEndpoint: "https://redirect.example.com/api",
+          redirectToken: "secret-token",
         });
+
+        vi.mocked(fetchRedirectEmail).mockResolvedValue(ok("owner@organization.com"));
 
         await useCaseInstance.sendEventMessages({
           event: EVENT_TYPE,
@@ -473,6 +525,118 @@ describe("SendEventMessagesUseCase", () => {
             senderName: "Fallback Sender",
           }),
         );
+      });
+
+      describe("Email redirect via endpoint", () => {
+        const fallbackSmtpConfig: FallbackSmtpConfig = {
+          smtpHost: "fallback.smtp.host",
+          smtpPort: "587",
+          smtpUser: "fallback-user",
+          smtpPassword: "fallback-pass",
+          encryption: "TLS",
+          senderName: "Fallback Sender",
+          senderDomain: "example.com",
+          redirectEndpoint: "https://redirect.example.com/api",
+          redirectToken: "secret-token",
+        };
+
+        beforeEach(() => {
+          configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
+            MockConfigService.returnFallbackEnabled,
+          );
+          vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue(fallbackSmtpConfig);
+        });
+
+        it("Sends email to redirect address when endpoint returns owner_email", async () => {
+          vi.mocked(fetchRedirectEmail).mockResolvedValue(ok("owner@organization.com"));
+
+          await useCaseInstance.sendEventMessages({
+            event: EVENT_TYPE,
+            payload: {},
+            channelSlug: "channel-slug",
+            recipientEmail: "customer@test.com",
+            saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+          });
+
+          expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledWith(
+            expect.objectContaining({
+              recipientEmail: "owner@organization.com",
+            }),
+          );
+        });
+
+        it("Prefixes subject with original recipient email when redirecting", async () => {
+          vi.mocked(fetchRedirectEmail).mockResolvedValue(ok("owner@organization.com"));
+
+          await useCaseInstance.sendEventMessages({
+            event: EVENT_TYPE,
+            payload: {},
+            channelSlug: "channel-slug",
+            recipientEmail: "customer@test.com",
+            saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+          });
+
+          expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledWith(
+            expect.objectContaining({
+              subjectTemplate: expect.stringContaining("[customer@test.com]"),
+            }),
+          );
+        });
+
+        it("Injects preview banner into body template when redirecting", async () => {
+          vi.mocked(fetchRedirectEmail).mockResolvedValue(ok("owner@organization.com"));
+
+          await useCaseInstance.sendEventMessages({
+            event: EVENT_TYPE,
+            payload: {},
+            channelSlug: "channel-slug",
+            recipientEmail: "customer@test.com",
+            saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+          });
+
+          expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledWith(
+            expect.objectContaining({
+              bodyTemplate: expect.stringContaining(
+                "Preview only: This email was sent through Saleor's preview mail path",
+              ),
+            }),
+          );
+        });
+
+        it("Returns RedirectEmailFetchError when endpoint call fails", async () => {
+          vi.mocked(fetchRedirectEmail).mockResolvedValue(err(new BaseError("Network error")));
+
+          const result = await useCaseInstance.sendEventMessages({
+            event: EVENT_TYPE,
+            payload: {},
+            channelSlug: "channel-slug",
+            recipientEmail: "customer@test.com",
+            saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+          });
+
+          expect(result.isErr()).toBe(true);
+          expect(result._unsafeUnwrapErr()[0]).toBeInstanceOf(
+            SendEventMessagesUseCase.RedirectEmailFetchError,
+          );
+          expect(emailSender.mockSendEmailMethod).not.toHaveBeenCalled();
+        });
+
+        it("Calls fetchRedirectEmail with full URL including saleorApiUrl hostname", async () => {
+          vi.mocked(fetchRedirectEmail).mockResolvedValue(ok("owner@organization.com"));
+
+          await useCaseInstance.sendEventMessages({
+            event: EVENT_TYPE,
+            payload: {},
+            channelSlug: "channel-slug",
+            recipientEmail: "customer@test.com",
+            saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+          });
+
+          expect(fetchRedirectEmail).toHaveBeenCalledWith({
+            endpointUrl: "https://redirect.example.com/api/demo.saleor.cloud/",
+            token: "secret-token",
+          });
+        });
       });
     });
 

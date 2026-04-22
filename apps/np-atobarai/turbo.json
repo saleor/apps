@@ -5,6 +5,7 @@
     "deploy": {
       "env": [
         "AWS_REGION",
+        "AWS_ROLE_ARN",
         "AWS_SECRET_ACCESS_KEY",
         "AWS_ACCESS_KEY_ID",
         "ALLOWED_DOMAIN_PATTERN",

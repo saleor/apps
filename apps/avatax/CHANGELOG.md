@@ -1,5 +1,33 @@
 # saleor-app-avatax
 
+## 1.22.6
+
+### Patch Changes
+
+- 91f6d5f: Added support for OIDC between AWS and Vercel (using `@vercel/oidc-aws-credentials-provider`). Now, when `AWS_ARN` env variable is provided, it will take precedence over IAM secrets. This is more secure way to authenticate and is preferred. IAM secrets stay supported, e.g. for local DynamoDB setup.
+
+## 1.22.5
+
+### Patch Changes
+
+- ff4174e: Added more logs when fetching data from Saleor on failure to improve debugging.
+- Updated dependencies [ff4174e]
+  - @saleor/apps-shared@1.14.4
+
+## 1.22.4
+
+### Patch Changes
+
+- 622d13c: Updated GraphQL schema to 3.23
+- Updated dependencies [622d13c]
+  - @saleor/webhook-utils@0.2.10
+
+## 1.22.3
+
+### Patch Changes
+
+- e03c544: Gracefully handle "client logs" errors with dates - now they should be handled in case of incorrect date format
+
 ## 1.22.2
 
 ### Patch Changes

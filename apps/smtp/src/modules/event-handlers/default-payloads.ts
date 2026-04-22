@@ -113,7 +113,6 @@ const exampleOrderPayload: OrderDetailsFragment = {
         url: "https://picsum.photos/seed/tshirt/150/150",
         alt: "Organic Cotton T-Shirt",
       },
-      digitalContentUrl: null,
       // Unit price: $40.00 gross (10% tax)
       unitPrice: {
         gross: {
@@ -227,7 +226,6 @@ const exampleOrderPayload: OrderDetailsFragment = {
         url: "https://picsum.photos/seed/mug/150/150",
         alt: "Anniversary Ceramic Mug",
       },
-      digitalContentUrl: null,
       // Unit price: $25.00 gross
       unitPrice: {
         gross: {
@@ -324,7 +322,6 @@ const exampleOrderPayload: OrderDetailsFragment = {
         url: "https://picsum.photos/seed/earbuds/150/150",
         alt: "Wireless Earbuds Pro",
       },
-      digitalContentUrl: null,
       // Discounted price: $96.00 gross (was $120.00, 20% off)
       unitPrice: {
         gross: {

@@ -1,4 +1,8 @@
 import { booleanEnv } from "@saleor/apps-shared/boolean-env";
+import {
+  fallbackSecretKeysRuntimeEnv,
+  fallbackSecretKeysServerSchema,
+} from "@saleor/apps-shared/fallback-secret-keys";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 import { fromError } from "zod-validation-error";
@@ -10,6 +14,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
   },
   server: {
+    ...fallbackSecretKeysServerSchema,
     ALLOWED_DOMAIN_PATTERN: z.string().optional(),
     APL: z.enum(["saleor-cloud", "file", "dynamodb"]).default("file"),
     APP_API_BASE_URL: z.string().optional(),
@@ -29,8 +34,9 @@ export const env = createEnv({
     DYNAMODB_REQUEST_TIMEOUT_MS: z.coerce.number().default(5_000),
     DYNAMODB_CONNECTION_TIMEOUT_MS: z.coerce.number().default(2_000),
     AWS_REGION: z.string(),
-    AWS_ACCESS_KEY_ID: z.string(),
-    AWS_SECRET_ACCESS_KEY: z.string(),
+    AWS_ACCESS_KEY_ID: z.string().optional(),
+    AWS_SECRET_ACCESS_KEY: z.string().optional(),
+    AWS_ROLE_ARN: z.string().optional(),
     APPSTORE_URL: z.string().optional(),
     APP_NAME: z.string().default("Stripe"),
   },
@@ -40,6 +46,7 @@ export const env = createEnv({
   },
   // we use the manual destruction here to validate if env variable is set inside turbo.json
   runtimeEnv: {
+    ...fallbackSecretKeysRuntimeEnv,
     ALLOWED_DOMAIN_PATTERN: process.env.ALLOWED_DOMAIN_PATTERN,
     APL: process.env.APL,
     APP_API_BASE_URL: process.env.APP_API_BASE_URL,
@@ -64,6 +71,7 @@ export const env = createEnv({
     AWS_REGION: process.env.AWS_REGION,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+    AWS_ROLE_ARN: process.env.AWS_ROLE_ARN,
     APPSTORE_URL: process.env.APPSTORE_URL,
     APP_NAME: process.env.APP_NAME,
   },

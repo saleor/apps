@@ -1,5 +1,37 @@
 # saleor-app-payment-np-atobarai
 
+## 1.4.6
+
+### Patch Changes
+
+- 91f6d5f: Added support for OIDC between AWS and Vercel (using `@vercel/oidc-aws-credentials-provider`). Now, when `AWS_ARN` env variable is provided, it will take precedence over IAM secrets. This is more secure way to authenticate and is preferred. IAM secrets stay supported, e.g. for local DynamoDB setup.
+
+## 1.4.5
+
+### Patch Changes
+
+- Updated dependencies [ff4174e]
+  - @saleor/apps-shared@1.14.4
+  - @saleor/apps-trpc@4.0.5
+
+## 1.4.4
+
+### Patch Changes
+
+- b33bd4e: Fixed fulfillment-tracking-number-updated handler and changed order of validation. Now app will quit if transactions don't include app's own transactions quietly. Previously app was reporting warning for multiple transactions, even if none of them was created by Atobarai
+
+## 1.4.3
+
+### Patch Changes
+
+- 622d13c: Updated GraphQL schema to 3.23
+
+## 1.4.2
+
+### Patch Changes
+
+- 77e64cb: Fixed fulfillment webhook failing for orders with "ghost" transactions. Previously, the app rejected any order with more than one Saleor transaction. Now it filters transactions by status, keeping only those with CHARGE_SUCCESS or AUTHORIZATION_SUCCESS events, and proceeds if exactly one completed transaction exists. Added order notes when fulfillment reporting is skipped due to missing or multiple completed transactions.
+
 ## 1.4.1
 
 ### Patch Changes

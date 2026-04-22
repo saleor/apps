@@ -1,19 +1,31 @@
-import { decrypt, encrypt } from "@saleor/app-sdk/settings-manager";
+import { encrypt } from "@saleor/app-sdk/settings-manager";
+import { type Logger } from "@saleor/apps-logger";
+import { createRotatingDecryptCallback } from "@saleor/apps-shared/key-rotation/rotating-decrypt-callback";
 import { type FormattedItem, type PutItemInput } from "dynamodb-toolbox";
 
 import { AppConfig } from "../configuration/app-config";
 import { type SegmentConfigEntityType, SegmentMainTable } from "./segment-main-table";
 
 export class DynamoConfigMapper {
+  private readonly decrypt: (value: string, secret: string) => string;
+
   constructor(
     private deps: {
       encryptionKey: string;
+      fallbackKeys?: string[];
+      logger: Logger;
     },
-  ) {}
+  ) {
+    this.decrypt = createRotatingDecryptCallback(
+      deps.encryptionKey,
+      deps.fallbackKeys ?? [],
+      deps.logger,
+    );
+  }
 
   dynamoEntityToAppConfig(args: { entity: FormattedItem<SegmentConfigEntityType> }): AppConfig {
     return new AppConfig({
-      segmentWriteKey: decrypt(args.entity.encryptedSegmentWriteKey, this.deps.encryptionKey),
+      segmentWriteKey: this.decrypt(args.entity.encryptedSegmentWriteKey, this.deps.encryptionKey),
     });
   }
 

@@ -11,6 +11,7 @@ on:
           - "3.20"
           - "3.21"
           - "3.22"
+          - "3.23"
       APP_IDENTIFIERS:
         type: string
         required: false
@@ -36,7 +37,7 @@ permissions:
 
 jobs:
   smoke-tests:
-    uses: saleor/saleor-dashboard/.github/workflows/app-smoke-tests.yml@main
+    uses: saleor/saleor-dashboard/.github/workflows/app-smoke-tests.yml@d89bfa2cc4a26844e4a206347ff07bd52e0a4982
     with:
       VERSION: ${{ inputs.VERSION }}
       APP_IDENTIFIERS: ${{ inputs.APP_IDENTIFIERS }}

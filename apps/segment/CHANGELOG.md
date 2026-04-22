@@ -1,5 +1,27 @@
 # saleor-app-segment
 
+## 2.3.4
+
+### Patch Changes
+
+- 91f6d5f: Added support for OIDC between AWS and Vercel (using `@vercel/oidc-aws-credentials-provider`). Now, when `AWS_ARN` env variable is provided, it will take precedence over IAM secrets. This is more secure way to authenticate and is preferred. IAM secrets stay supported, e.g. for local DynamoDB setup.
+
+## 2.3.3
+
+### Patch Changes
+
+- d91c5c1: Flushing Segment events are now wrapped with OTEL span
+- Updated dependencies [ff4174e]
+  - @saleor/apps-shared@1.14.4
+
+## 2.3.2
+
+### Patch Changes
+
+- 622d13c: Updated GraphQL schema to 3.23
+- Updated dependencies [622d13c]
+  - @saleor/webhook-utils@0.2.10
+
 ## 2.3.1
 
 ### Patch Changes

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "saleor-app-payment-np-atobarai",
-  "version": "1.4.1",
+  "version": "1.4.6",
   "private": true,
   "type": "module",
   "scripts": {
@@ -16,6 +16,8 @@
     "lint:fix": "eslint --fix .",
     "migrate": "pnpm tsx --env-file-if-exists=.env ./scripts/run-webhooks-migration.ts",
     "migrate:dry-run": "pnpm tsx --env-file-if-exists=.env ./scripts/run-webhooks-migration.ts --dry-run",
+    "rotate-secret-key": "pnpm tsx --env-file-if-exists=.env ./scripts/rotate-secret-key.ts",
+    "rotate-secret-key:dry-run": "pnpm tsx --env-file-if-exists=.env ./scripts/rotate-secret-key.ts --dry-run",
     "setup-dynamodb": "tsx ./scripts/setup-dynamodb.ts",
     "test": "pnpm run test:unit",
     "test:ci": "pnpm run test:unit --coverage",
@@ -57,6 +59,7 @@
     "@trpc/next": "catalog:",
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
+    "@vercel/oidc-aws-credentials-provider": "catalog:",
     "@vercel/otel": "catalog:",
     "dynamodb-toolbox": "catalog:",
     "jp-zipcode-lookup": "0.3.5",

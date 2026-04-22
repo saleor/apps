@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "saleor-app-payment-stripe",
-  "version": "2.6.1",
+  "version": "2.6.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -17,6 +17,8 @@
     "lint:fix": "eslint --fix .",
     "migrate": "pnpm tsx --env-file-if-exists=.env ./scripts/run-webhooks-migration.ts",
     "migrate:dry-run": "pnpm tsx --env-file-if-exists=.env ./scripts/run-webhooks-migration.ts --dry-run",
+    "rotate-secret-key": "pnpm tsx --env-file-if-exists=.env ./scripts/rotate-secret-key.ts",
+    "rotate-secret-key:dry-run": "pnpm tsx --env-file-if-exists=.env ./scripts/rotate-secret-key.ts --dry-run",
     "setup-dynamodb": "tsx --env-file-if-exists=.env ./scripts/setup-dynamodb.ts",
     "start": "next start",
     "test": "pnpm run test:unit",
@@ -61,6 +63,7 @@
     "@trpc/next": "catalog:",
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
+    "@vercel/oidc-aws-credentials-provider": "catalog:",
     "@vercel/otel": "catalog:",
     "currency-codes": "2.2.0",
     "currency.js": "2.0.4",

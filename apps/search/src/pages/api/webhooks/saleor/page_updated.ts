@@ -11,6 +11,7 @@ import { loggerContext } from "../../../../lib/logger-context";
 import { type PageUpdated } from "../../../../lib/webhook-event-types";
 import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookPageUpdated } from "../../../../webhooks/definitions/page-updated";
+import { handleInvalidAppIdError } from "../../../../webhooks/handle-invalid-app-id-error";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
 export const config = {
@@ -81,9 +82,20 @@ export const handler: NextJsWebhookHandler<PageUpdated> = async (req, res, conte
       }
 
       if (AlgoliaErrorParser.isAuthError(e)) {
-        await problemReporter.reportAuthError();
+        await problemReporter.reportAuthErrorAndDeactivate(authData.appId);
 
         return res.status(401).send("Algolia rejected due to invalid credentials");
+      }
+
+      const invalidAppIdResponse = await handleInvalidAppIdError({
+        error: e,
+        authData,
+        res,
+        logger,
+      });
+
+      if (invalidAppIdResponse) {
+        return;
       }
 
       logger.error("Failed to execute page_updated webhook (algoliaClient.updatePage)", {

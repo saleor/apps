@@ -22,6 +22,10 @@ import { BaseUseCase } from "../base-use-case";
 import { type AppIsNotConfiguredResponse, BrokenAppResponse } from "../saleor-webhook-responses";
 import { FulfillmentTrackingNumberUpdatedUseCaseResponse } from "./use-case-response";
 
+export type TransactionValidationCause =
+  | "NO_COMPLETED_TRANSACTIONS"
+  | "MULTIPLE_COMPLETED_TRANSACTIONS";
+
 type UseCaseExecuteResult = Promise<
   Result<
     FulfillmentTrackingNumberUpdatedUseCaseResponse,
@@ -78,45 +82,52 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       return err(new InvalidEventValidationError("Order transactions are missing"));
     }
 
-    if (event.order.transactions.length > 1) {
-      // App support only single transaction per order / checkout. This is a limitation of how we send goods to Atobarai. If there are multiple transactions, we would need to report goods prices minus prices from other transactions.
-      this.logger.warn("Multiple transactions found for the order", {
+    const completedTransactions = event.order.transactions.filter((t) =>
+      t.events.some((e) => e.type === "CHARGE_SUCCESS" || e.type === "AUTHORIZATION_SUCCESS"),
+    );
+
+    if (completedTransactions.length === 0) {
+      this.logger.warn("No completed transactions found for the order", {
         event: { orderId: event.order.id },
       });
 
-      return err(new InvalidEventValidationError("Multiple transactions found for the order"));
+      return err(
+        new InvalidEventValidationError("No completed transactions found for the order", {
+          props: {
+            validationCause: "NO_COMPLETED_TRANSACTIONS" as TransactionValidationCause,
+          },
+        }),
+      );
     }
 
-    const transaction = event.order.transactions[0];
+    const ownedCompletedTransactions = completedTransactions.filter(
+      (t) => t.createdBy?.__typename === "App" && t.createdBy.id === appId,
+    );
 
-    if (transaction.createdBy?.__typename !== "App") {
-      this.logger.warn("Transaction was not created by the app. Skipping.", {
-        event: {
-          orderId: event.order.id,
-          transactionPspReference: transaction.pspReference,
-          createdBy: transaction.createdBy?.__typename,
-        },
+    if (ownedCompletedTransactions.length === 0) {
+      this.logger.info("No completed transactions owned by this app. Skipping.", {
+        event: { orderId: event.order.id },
       });
 
       return err(new InvalidEventValidationError("Transaction was not created by the app"));
     }
 
-    if (transaction.createdBy.id !== appId) {
-      this.logger.warn("Transaction was not created by the current app installation. Skipping.", {
-        event: {
-          orderId: event.order.id,
-          transactionPspReference: transaction.pspReference,
-          appId,
-          transactionCreatedById: transaction.createdBy.id,
-        },
+    if (completedTransactions.length > 1) {
+      // App supports only single transaction per order / checkout. This is a limitation of how we send goods to Atobarai.
+      this.logger.warn("Multiple completed transactions found for the order", {
+        event: { orderId: event.order.id },
       });
 
       return err(
-        new InvalidEventValidationError(
-          "Transaction was not created by the current app installation",
-        ),
+        new InvalidEventValidationError("Multiple completed transactions found for the order", {
+          props: {
+            validationCause: "MULTIPLE_COMPLETED_TRANSACTIONS" as TransactionValidationCause,
+          },
+        }),
       );
     }
+
+    const transaction = ownedCompletedTransactions[0];
 
     return ok({
       orderId: event.order.id,
@@ -157,6 +168,18 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     const parsingResult = this.parseEvent({ event, appId });
 
     if (parsingResult.isErr()) {
+      const validationCause = (
+        parsingResult.error as { validationCause?: TransactionValidationCause }
+      ).validationCause;
+
+      if (event.order?.id && validationCause) {
+        await this.addOrderNote({
+          orderId: event.order.id,
+          graphqlClient,
+          message: `NP Atobarai skipped fulfillment reporting: ${parsingResult.error.message}`,
+        });
+      }
+
       return ok(
         new FulfillmentTrackingNumberUpdatedUseCaseResponse.Failure(
           new InvalidEventValidationError("Failed to parse Saleor event", {

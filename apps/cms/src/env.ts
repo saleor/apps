@@ -1,4 +1,8 @@
 import { booleanEnv } from "@saleor/apps-shared/boolean-env";
+import {
+  fallbackSecretKeysRuntimeEnv,
+  fallbackSecretKeysServerSchema,
+} from "@saleor/apps-shared/fallback-secret-keys";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
@@ -28,6 +32,7 @@ export const env = createEnv({
     NEXT_RUNTIME: z.string().optional(),
     STRAPI_BATCH_SIZE: z.coerce.number().default(50),
     STRAPI_MILIS_DELAY_BETWEEN_BATCHES: z.coerce.number().default(1_000),
+    ...fallbackSecretKeysServerSchema,
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
@@ -58,6 +63,7 @@ export const env = createEnv({
     NEXT_RUNTIME: process.env.NEXT_RUNTIME,
     STRAPI_BATCH_SIZE: process.env.STRAPI_BATCH_SIZE,
     STRAPI_MILIS_DELAY_BETWEEN_BATCHES: process.env.STRAPI_MILIS_DELAY_BETWEEN_BATCHES,
+    ...fallbackSecretKeysRuntimeEnv,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });

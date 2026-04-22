@@ -56,10 +56,6 @@ fragment OrderDetails on Order {
   }
   lines {
     id
-    digitalContentUrl {
-      id
-      url
-    }
     isShippingRequired
     metadata {
       key

@@ -181,6 +181,12 @@ export const smtpConfigurationRouter = router({
 
       logger.debug(input, "mjmlConfigurationRouter.renderTemplate called");
 
+      logger.info("Template preview requested", {
+        template: input.template,
+        subject: input.subject,
+        payload: input.payload,
+      });
+
       const safeParse = fromThrowable(JSON.parse);
 
       const payloadResult = safeParse(input.payload);
@@ -333,6 +339,13 @@ export const smtpConfigurationRouter = router({
 
       logger.debug(input, "smtpConfigurationRouter.updateEvent called");
 
+      logger.info("Template update requested", {
+        configurationId: input.id,
+        eventType: input.eventType,
+        template: input.template,
+        subject: input.subject,
+      });
+
       const { id: configurationId, eventType, ...eventConfiguration } = input;
 
       return await ctx.smtpConfigurationService
@@ -353,6 +366,15 @@ export const smtpConfigurationRouter = router({
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
 
       logger.debug(input, "smtpConfigurationRouter.updateEventArray called");
+
+      logger.info("Bulk template update requested", {
+        configurationId: input.configurationId,
+        events: input.events.map((e) => ({
+          eventType: e.eventType,
+          template: e.template,
+          subject: e.subject,
+        })),
+      });
 
       try {
         const configuration = await ctx.smtpConfigurationService.getConfiguration({

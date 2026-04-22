@@ -96,11 +96,11 @@ export const SmtpSection = ({ configuration }: SmtpSectionProps) => {
               </label>
               <label>
                 <input {...register("encryption")} type="radio" value="SSL" />
-                <Text paddingLeft={defaultPadding}>SSL</Text>
+                <Text paddingLeft={defaultPadding}>Implicit TLS (TLSv1.3+)</Text>
               </label>
               <label>
                 <input {...register("encryption")} type="radio" value="TLS" />
-                <Text paddingLeft={defaultPadding}>TLS</Text>
+                <Text paddingLeft={defaultPadding}>STARTTLS (TLSv1.3+)</Text>
               </label>
             </Box>
           </Box>

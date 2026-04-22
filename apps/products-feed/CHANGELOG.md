@@ -1,5 +1,68 @@
 # saleor-app-products-feed
 
+## 3.0.4
+
+### Patch Changes
+
+- 91f6d5f: Added support for OIDC between AWS and Vercel (using `@vercel/oidc-aws-credentials-provider`). Now, when `AWS_ARN` env variable is provided, it will take precedence over IAM secrets. This is more secure way to authenticate and is preferred. IAM secrets stay supported, e.g. for local DynamoDB setup.
+
+## 3.0.3
+
+### Patch Changes
+
+- ff4174e: Added more logs when fetching data from Saleor on failure to improve debugging.
+- Updated dependencies [ff4174e]
+  - @saleor/apps-shared@1.14.4
+
+## 3.0.2
+
+### Patch Changes
+
+- Updated dependencies [eedb36b]
+  - @saleor/handlebars@0.1.2
+
+## 3.0.1
+
+### Patch Changes
+
+- 622d13c: Updated GraphQL schema to 3.23
+- Updated dependencies [622d13c]
+  - @saleor/webhook-utils@0.2.10
+  - @saleor/handlebars@0.1.1
+
+## 3.0.0
+
+### Major Changes
+
+- 057e7e6: Due to security concerns, some Handlebars helpers have been removed.
+
+  Removed groups: `fs`, `logging`, `markdown`, `match`, `object`.
+  Removed individual helpers: `embed` (from `code`), `resolve` (from `path`).
+
+  Allowed helpers:
+
+  - **array**: `after`, `arrayify`, `before`, `eachIndex`, `filter`, `first`, `forEach`, `inArray`, `isArray`, `itemAt`, `join`, `equalsLength`, `last`, `length`, `map`, `pluck`, `reverse`, `some`, `sort`, `sortBy`, `withAfter`, `withBefore`, `withFirst`, `withGroup`, `withLast`, `withSort`, `unique`
+  - **code**: `gist`, `jsfiddle`
+  - **collection**: `isEmpty`, `iterate`
+  - **comparison**: `and`, `compare`, `contains`, `default`, `eq`, `gt`, `gte`, `has`, `isFalsey`, `isTruthy`, `ifEven`, `ifNth`, `ifOdd`, `is`, `isnt`, `lt`, `lte`, `neither`, `not`, `or`, `unlessEq`, `unlessGt`, `unlessLt`, `unlessGteq`, `unlessLteq`
+  - **date**: `year`, `moment`, `date`
+  - **html**: `attr`, `css`, `js`, `sanitize`, `ul`, `ol`, `thumbnailImage`
+  - **i18n**: `i18n`
+  - **inflection**: `inflect`, `ordinalize`
+  - **math**: `abs`, `add`, `avg`, `ceil`, `divide`, `floor`, `minus`, `modulo`, `multiply`, `plus`, `random`, `remainder`, `round`, `subtract`, `sum`, `times`
+  - **misc**: `option`, `noop`, `withHash`
+  - **number**: `bytes`, `addCommas`, `phoneNumber`, `toAbbr`, `toExponential`, `toFixed`, `toFloat`, `toInt`, `toPrecision`
+  - **path**: `absolute`, `dirname`, `relative`, `basename`, `stem`, `extname`, `segments`
+  - **regex**: `toRegex`, `test`
+  - **string**: `append`, `camelcase`, `capitalize`, `capitalizeAll`, `center`, `chop`, `dashcase`, `dotcase`, `downcase`, `ellipsis`, `hyphenate`, `isString`, `lowercase`, `occurrences`, `pascalcase`, `pathcase`, `plusify`, `prepend`, `raw`, `remove`, `removeFirst`, `replace`, `replaceFirst`, `sentence`, `snakecase`, `split`, `startsWith`, `titleize`, `trim`, `trimLeft`, `trimRight`, `truncate`, `truncateWords`, `upcase`, `uppercase`
+  - **url**: `encodeURI`, `escape`, `decodeURI`, `url_encode`, `url_decode`, `urlResolve`, `urlParse`, `stripQuerystring`, `stripProtocol`
+
+## 2.3.2
+
+### Patch Changes
+
+- 2d320ef: Updated handlebars to 4.7.9
+
 ## 2.3.1
 
 ### Patch Changes

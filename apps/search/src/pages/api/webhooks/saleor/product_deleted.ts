@@ -8,6 +8,7 @@ import { loggerContext } from "../../../../lib/logger-context";
 import { type ProductDeleted } from "../../../../lib/webhook-event-types";
 import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookProductDeleted } from "../../../../webhooks/definitions/product-deleted";
+import { handleInvalidAppIdError } from "../../../../webhooks/handle-invalid-app-id-error";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
 export const config = {
@@ -48,9 +49,20 @@ export const handler: NextJsWebhookHandler<ProductDeleted> = async (req, res, co
       if (AlgoliaErrorParser.isAuthError(e)) {
         const problemReporter = createSearchProblemReporter(authData);
 
-        await problemReporter.reportAuthError();
+        await problemReporter.reportAuthErrorAndDeactivate(authData.appId);
 
         return res.status(401).send("Algolia rejected due to invalid credentials");
+      }
+
+      const invalidAppIdResponse = await handleInvalidAppIdError({
+        error: e,
+        authData,
+        res,
+        logger,
+      });
+
+      if (invalidAppIdResponse) {
+        return;
       }
 
       logger.error("Failed to execute product_deleted webhook (algoliaClient.deleteProduct)", {

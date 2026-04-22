@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-search",
-  "version": "1.27.0",
+  "version": "1.29.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,6 +13,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "migrate": "pnpm tsx ./scripts/migrations/run-webhooks-migration.ts",
+    "rotate-secret-key": "pnpm tsx --env-file-if-exists=.env ./scripts/rotate-secret-key.ts",
+    "rotate-secret-key:dry-run": "pnpm tsx --env-file-if-exists=.env ./scripts/rotate-secret-key.ts --dry-run",
     "start": "next start",
     "test": "vitest",
     "test:ci": "vitest run --coverage"
@@ -35,6 +37,7 @@
     "@saleor/apps-otel": "workspace:*",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
+    "@saleor/errors": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "@saleor/react-hook-form-macaw": "workspace:*",
     "@saleor/sentry-utils": "workspace:*",
@@ -47,10 +50,11 @@
     "@trpc/next": "catalog:",
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
+    "@vercel/oidc-aws-credentials-provider": "catalog:",
     "@vercel/otel": "catalog:",
     "algoliasearch": "4.23.3",
-    "clsx": "^1.2.1",
-    "debug": "^4.3.4",
+    "clsx": "1.2.1",
+    "debug": "4.3.4",
     "dotenv": "catalog:",
     "dynamodb-toolbox": "catalog:",
     "graphql": "catalog:",
@@ -58,7 +62,7 @@
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-helmet": "^6.1.0",
+    "react-helmet": "6.1.0",
     "react-hook-form": "catalog:",
     "urql": "catalog:",
     "zod": "catalog:"
