@@ -57,7 +57,7 @@
     "@trpc/server": "catalog:",
     "@vercel/oidc-aws-credentials-provider": "catalog:",
     "@vercel/otel": "catalog:",
-    "avatax": "23.7.0",
+    "avatax": "26.3.2",
     "decimal.js-light": "catalog:",
     "dotenv": "catalog:",
     "dynamodb-toolbox": "catalog:",

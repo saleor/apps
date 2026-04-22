@@ -41,6 +41,7 @@ export default wrapWithLoggerContext(
              */
             "MANAGE_PRODUCTS",
             "MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES",
+            "MANAGE_PAGES",
           ],
           supportUrl: "https://github.com/saleor/apps/discussions",
           tokenTargetUrl: `${apiBaseURL}/api/register`,
