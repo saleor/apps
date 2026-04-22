@@ -1,8 +1,11 @@
 import { parseArgs } from "node:util";
 
 import { decrypt, encrypt } from "@saleor/app-sdk/settings-manager";
-import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
 import { createDynamoDBSecretKeyRotationRunner } from "@saleor/apps-shared/key-rotation/dynamodb-secret-key-rotation-runner";
+import {
+  resolveRotationSourceKeys,
+  resolveRotationTargetKey,
+} from "@saleor/apps-shared/secret-key-resolution";
 import * as Sentry from "@sentry/nextjs";
 
 import { env } from "@/env";
@@ -37,8 +40,8 @@ const documentClient = createDynamoDBDocumentClient(
 );
 
 const runner = createDynamoDBSecretKeyRotationRunner({
-  secretKey: env.SECRET_KEY,
-  fallbackKeys: collectFallbackSecretKeys(env),
+  secretKey: resolveRotationTargetKey(env),
+  fallbackKeys: resolveRotationSourceKeys(env),
   dryRun: dryRun ?? false,
   logger,
   documentClient,

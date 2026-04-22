@@ -1,8 +1,11 @@
 import { decrypt, encrypt } from "@saleor/app-sdk/settings-manager";
-import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
 import { fetchMetadataRotationItems } from "@saleor/apps-shared/key-rotation/fetch-metadata-rotation-items";
 import { saveMetadataRotationItem } from "@saleor/apps-shared/key-rotation/save-metadata-rotation-item";
 import { SecretKeyRotationRunner } from "@saleor/apps-shared/key-rotation/secret-key-rotation-runner";
+import {
+  resolveRotationSourceKeys,
+  resolveRotationTargetKey,
+} from "@saleor/apps-shared/secret-key-resolution";
 import * as Sentry from "@sentry/nextjs";
 
 import { env } from "../src/env";
@@ -22,8 +25,8 @@ Sentry.init({
 });
 
 const runner = new SecretKeyRotationRunner({
-  secretKey: env.SECRET_KEY,
-  fallbackKeys: collectFallbackSecretKeys(env),
+  secretKey: resolveRotationTargetKey(env),
+  fallbackKeys: resolveRotationSourceKeys(env),
   dryRun: process.argv.includes("--dry-run"),
   logger,
   decrypt,
