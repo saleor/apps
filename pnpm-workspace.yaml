@@ -96,7 +96,7 @@ catalog:
   graphql: 16.7.1
   graphql-tag: 2.12.6
   json-schema-to-typescript: 15.0.4
-  next-test-api-route-handler: 4.0.16
+  next-test-api-route-handler: 5.0.4
   decimal.js-light: 2.5.1
   dotenv: 16.3.1
   jsdom: 20.0.3
