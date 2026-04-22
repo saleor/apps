@@ -60,6 +60,10 @@ export class SecretKeyRotationRunner<T = unknown> {
     let skipped = 0;
     let failed = 0;
 
+    if (item.encryptedFields.length === 0) {
+      logger.info(`${progress} No encrypted fields to rotate: ${item.id}`);
+    }
+
     for (const field of item.encryptedFields) {
       const result = tryDecryptWithFallback({
         value: field.encryptedValue,

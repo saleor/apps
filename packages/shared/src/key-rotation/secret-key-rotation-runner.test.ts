@@ -277,6 +277,28 @@ describe("SecretKeyRotationRunner", () => {
     expect(result).toStrictEqual({ rotated: 0, skipped: 0, failed: 0, concurrentlyModified: 0 });
   });
 
+  it("logs items that have no encrypted fields to rotate", async () => {
+    const saveItem = vi.fn().mockResolvedValue(undefined);
+
+    const { runner, logger } = createRunner({
+      getItems: () =>
+        fromArray([
+          {
+            id: "item-empty",
+            encryptedFields: [],
+            original: {},
+          },
+        ]),
+      saveItem,
+    });
+
+    const result = await runner.run();
+
+    expect(result).toStrictEqual({ rotated: 0, skipped: 0, failed: 0, concurrentlyModified: 0 });
+    expect(saveItem).not.toHaveBeenCalled();
+    expect(logger.info).toHaveBeenCalledWith("[1] No encrypted fields to rotate: item-empty");
+  });
+
   it("limits concurrency to the configured batch size", async () => {
     let maxConcurrent = 0;
     let currentConcurrent = 0;
