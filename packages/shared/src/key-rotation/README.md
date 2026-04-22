@@ -32,8 +32,32 @@ After rotation completes, swap env vars so `SECRET_KEY` holds the new value and 
 
 2. **Add `NEW_SECRET_KEY` to the app deployment** with the value from step 1.
    Target: Preview.
-   On Vercel, use the **Sensitive** type. Note that the value cannot be read again
-3. **Add `pnpm rotate-secret-key` script** to build step (e.g.: `pnpm run deploy && pnpm run rotate-secret-key`)
+   On Vercel, use the **Encrypted** type, not **Sensitive**.
+3. **Update deployment build step**
+   Choose one of:
+
+   a. **Add `pnpm rotate-secret-key` script** to build step in Vercel - this doesn't require code change
+
+      Example in:
+      `turbo run deploy --filter=saleor-app-smtp `
+
+      add this to the end:
+      `&& pnpm run rotate-secret-key`
+
+      So it becomes:
+
+      ```bash
+      turbo run deploy --filter=saleor-app-smtp && pnpm run rotate-secret-key
+      ```
+
+      This will only work if Root Directory is set to the specific app folder (e.g. `apps/smtp`)
+
+   b. **Update scripts/deploy.ts** - each app has a deploy script, in order to run secret key rotation add a following line at the end:
+
+      ```ts
+      execSync("pnpm run rotate-secret-key", { stdio: "inherit" });
+      ```
+
 4. **Redeploy.** The app now encrypts new writes with `NEW_SECRET_KEY` and still decrypts legacy data via `SECRET_KEY` fallback. It will also run rotation script
    The script is idempotent and resumable: re-running it after a failure or partial completion is safe.
    The runner also detects concurrent writes in DynamoDB and leaves those rows for the next run instead of overwriting them.
@@ -43,7 +67,7 @@ After rotation completes, swap env vars so `SECRET_KEY` holds the new value and 
 7. **Swap env vars to finalise:**
    - Delete the old `SECRET_KEY`.
    - Re-add `SECRET_KEY` with the value of `NEW_SECRET_KEY` (the value you still have locally).
-     Use **Encrypted** type.
+     Use **Sensitive** type. Note after saving you won't be able to read the value again
    - Remove `NEW_SECRET_KEY`.
 8. **Redeploy.** Steady state restored. `NEW_SECRET_KEY` is unset again; reads and writes both use the
    new `SECRET_KEY`.
