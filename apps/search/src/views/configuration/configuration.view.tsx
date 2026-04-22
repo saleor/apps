@@ -12,14 +12,17 @@ import {
 import { IndicesSettings } from "../../components/IndicesSettings";
 import { MainInstructions } from "../../components/MainInstructions";
 import { PageTypesFilterForm } from "../../components/PageTypesFilterForm";
+import { PermissionMissingWarning } from "../../components/permission-missing-warning";
 import { WebhooksStatus } from "../../components/WebhooksStatus";
 import { WebhooksStatusInstructions } from "../../components/WebhooksStatusInstructions";
+import { useHasPermission } from "../../lib/use-has-permission";
 import { trpcClient } from "../../modules/trpc/trpc-client";
 
 const ALGOLIA_DASHBOARD_TOKENS_URL = "https://www.algolia.com/account/api-keys/all";
 
 export const ConfigurationView = () => {
   const { data: config, refetch: refetchConfig } = trpcClient.configuration.getConfig.useQuery();
+  const hasManagePages = useHasPermission("MANAGE_PAGES");
 
   const pageTypeIds = config?.pageTypesFilter?.pageTypeIds ?? [];
 
@@ -89,7 +92,13 @@ export const ConfigurationView = () => {
           </Box>
         }
       >
-        <PageTypesFilterForm onSaved={() => refetchConfig()} />
+        {hasManagePages ? (
+          <PageTypesFilterForm onSaved={() => refetchConfig()} />
+        ) : (
+          <Layout.AppSectionCard>
+            <PermissionMissingWarning permission="MANAGE_PAGES" />
+          </Layout.AppSectionCard>
+        )}
       </Layout.AppSection>
 
       <Layout.AppSection
@@ -107,7 +116,13 @@ export const ConfigurationView = () => {
           </Box>
         }
       >
-        <AlgoliaPageFieldsSelectionForm />
+        {hasManagePages ? (
+          <AlgoliaPageFieldsSelectionForm />
+        ) : (
+          <Layout.AppSectionCard>
+            <PermissionMissingWarning permission="MANAGE_PAGES" />
+          </Layout.AppSectionCard>
+        )}
       </Layout.AppSection>
 
       <Layout.AppSection
@@ -143,7 +158,13 @@ export const ConfigurationView = () => {
           </Box>
         }
       >
-        <ImportPagesToAlgolia pageTypeIds={pageTypeIds} />
+        {hasManagePages ? (
+          <ImportPagesToAlgolia pageTypeIds={pageTypeIds} />
+        ) : (
+          <Layout.AppSectionCard>
+            <PermissionMissingWarning permission="MANAGE_PAGES" />
+          </Layout.AppSectionCard>
+        )}
       </Layout.AppSection>
 
       <Layout.AppSection
