@@ -1,0 +1,34 @@
+query ProductList($channelSlug: String!) {
+  products(
+    first: 10
+    channel: $channelSlug
+    where: { isAvailable: true, isPublished: true, giftCard: false, isVisibleInListing: true }
+    sortBy: { field: PRICE, direction: DESC }
+  ) {
+    edges {
+      node {
+        id
+        name
+        thumbnail(size: 2048) {
+          url
+          alt
+        }
+        category {
+          name
+        }
+        defaultVariant {
+          id
+          name
+          pricing {
+            price {
+              gross {
+                amount
+                currency
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

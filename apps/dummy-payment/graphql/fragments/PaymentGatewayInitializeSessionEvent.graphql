@@ -1,0 +1,14 @@
+fragment PaymentGatewayInitializeSessionEvent on PaymentGatewayInitializeSession {
+  ...BasicWebhookMetadata
+  __typename
+  recipient {
+    ...PaymentGatewayRecipient
+  }
+  data
+  amount
+  issuingPrincipal {
+    ... on Node {
+      id
+    }
+  }
+}

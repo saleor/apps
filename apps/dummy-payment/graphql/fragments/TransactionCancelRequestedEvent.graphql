@@ -1,0 +1,13 @@
+fragment TransactionCancelRequestedEvent on TransactionCancelationRequested {
+  ...BasicWebhookMetadata
+  __typename
+  recipient {
+    ...PaymentGatewayRecipient
+  }
+  transaction {
+    ...SyncWebhookTransaction
+    authorizedAmount {
+      ...Money
+    }
+  }
+}

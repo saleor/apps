@@ -1,0 +1,44 @@
+fragment Transaction on TransactionItem {
+  id
+  pspReference
+  createdAt
+  message
+  name
+  authorizedAmount {
+    ...Money
+  }
+  authorizePendingAmount {
+    ...Money
+  }
+  refundedAmount {
+    ...Money
+  }
+  refundPendingAmount {
+    ...Money
+  }
+  canceledAmount {
+    ...Money
+  }
+  cancelPendingAmount {
+    ...Money
+  }
+  chargedAmount {
+    ...Money
+  }
+  chargePendingAmount {
+    ...Money
+  }
+  events {
+    id
+    createdAt
+    pspReference
+    message
+    amount {
+      ...Money
+    }
+    type
+  }
+  order {
+    id
+  }
+}
