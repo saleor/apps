@@ -32,10 +32,33 @@ export const ChannelConfigMappingSection = () => {
   const errors = allResults.map((r) => r.error).filter(Boolean);
   const anythingLoading = allResults.map((r) => r.isLoading).some(Boolean);
 
-  if (errors && errors.length > 0) {
-    // todo better ui
+  const sessionExpired = errors.some((e) => e?.data?.code === "FORBIDDEN");
 
-    return <Text>Error fetching config: {errors[0].message}</Text>;
+  if (sessionExpired) {
+    return (
+      <Layout.AppSectionCard>
+        <Text as="h2" size={5} marginBottom={4}>
+          Session expired
+        </Text>
+        <Text size={3} color="default2">
+          Your dashboard session is no longer valid. Please refresh the page or reopen the app from
+          Saleor Dashboard.
+        </Text>
+      </Layout.AppSectionCard>
+    );
+  }
+
+  if (errors.length > 0) {
+    return (
+      <Layout.AppSectionCard>
+        <Text as="h2" size={5} marginBottom={4}>
+          Error fetching configuration
+        </Text>
+        <Text size={3} color="default2">
+          {errors[0]?.message}
+        </Text>
+      </Layout.AppSectionCard>
+    );
   }
 
   const channelsExist = allChannels.data && allChannels.data.length > 0;
