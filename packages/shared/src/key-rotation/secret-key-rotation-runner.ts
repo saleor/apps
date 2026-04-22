@@ -183,7 +183,7 @@ export class SecretKeyRotationRunner<T = unknown> {
 
     if (fallbackKeys.length === 0) {
       throw new Error(
-        "No fallback keys configured. Set FALLBACK_SECRET_KEY_1 (and optionally _2, _3) env vars with the old key(s).",
+        "No fallback keys configured. Rotation needs at least one decrypt source key (e.g. the current SECRET_KEY).",
       );
     }
 

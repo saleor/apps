@@ -1,8 +1,8 @@
 import { booleanEnv } from "@saleor/apps-shared/boolean-env";
 import {
-  fallbackSecretKeysRuntimeEnv,
-  fallbackSecretKeysServerSchema,
-} from "@saleor/apps-shared/fallback-secret-keys";
+  newSecretKeyRuntimeEnv,
+  newSecretKeyServerSchema,
+} from "@saleor/apps-shared/secret-key-resolution";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
@@ -43,7 +43,7 @@ export const env = createEnv({
     FALLBACK_SMTP_SENDER_DOMAIN: z.string().min(1).optional(),
     FALLBACK_SMTP_EMAIL_REDIRECT_ENDPOINT: z.string().url().optional(),
     FALLBACK_SMTP_EMAIL_REDIRECT_TOKEN: z.string().min(1).optional(),
-    ...fallbackSecretKeysServerSchema,
+    ...newSecretKeyServerSchema,
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
@@ -81,7 +81,7 @@ export const env = createEnv({
     FALLBACK_SMTP_SENDER_DOMAIN: process.env.FALLBACK_SMTP_SENDER_DOMAIN,
     FALLBACK_SMTP_EMAIL_REDIRECT_ENDPOINT: process.env.FALLBACK_SMTP_EMAIL_REDIRECT_ENDPOINT,
     FALLBACK_SMTP_EMAIL_REDIRECT_TOKEN: process.env.FALLBACK_SMTP_EMAIL_REDIRECT_TOKEN,
-    ...fallbackSecretKeysRuntimeEnv,
+    ...newSecretKeyRuntimeEnv,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });

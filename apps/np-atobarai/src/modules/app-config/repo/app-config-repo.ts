@@ -1,5 +1,8 @@
-import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
 import { RotatingEncryptor } from "@saleor/apps-shared/key-rotation/rotating-encryptor";
+import {
+  resolveDecryptFallbacks,
+  resolveEncryptKey,
+} from "@saleor/apps-shared/secret-key-resolution";
 import { createDynamoConfigRepository } from "@saleor/dynamo-config-repository";
 
 import { env } from "@/lib/env";
@@ -13,8 +16,8 @@ import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-i
 import { dynamoMainTable } from "@/modules/dynamodb/dynamodb-main-table";
 
 const encryptor = new RotatingEncryptor({
-  primarySecret: env.SECRET_KEY,
-  fallbackSecrets: collectFallbackSecretKeys(env),
+  primarySecret: resolveEncryptKey(env),
+  fallbackSecrets: resolveDecryptFallbacks(env),
   logger: createLogger("RotatingEncryptor"),
 });
 

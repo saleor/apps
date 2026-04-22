@@ -1,6 +1,9 @@
 import { type IEncryptor } from "@saleor/apps-shared/encryptor";
-import { collectFallbackSecretKeys } from "@saleor/apps-shared/fallback-secret-keys";
 import { RotatingEncryptor } from "@saleor/apps-shared/key-rotation/rotating-encryptor";
+import {
+  resolveDecryptFallbacks,
+  resolveEncryptKey,
+} from "@saleor/apps-shared/secret-key-resolution";
 import { DeleteItemCommand, GetItemCommand, Parser, PutItemCommand } from "dynamodb-toolbox";
 import { QueryCommand } from "dynamodb-toolbox/table/actions/query";
 import { err, ok, type Result } from "neverthrow";
@@ -53,8 +56,8 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
         channelConfigMapping: DynamoDbChannelConfigMapping.entity,
       },
       encryptor: new RotatingEncryptor({
-        primarySecret: env.SECRET_KEY,
-        fallbackSecrets: collectFallbackSecretKeys(env),
+        primarySecret: resolveEncryptKey(env),
+        fallbackSecrets: resolveDecryptFallbacks(env),
         logger: createLogger("RotatingEncryptor"),
       }),
     },
