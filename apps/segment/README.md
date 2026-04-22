@@ -14,7 +14,7 @@
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org) v22+
+- [Node.js](https://nodejs.org) v24+
 - [PNPM](https://pnpm.io/) v10+
 - An account on [Twilio Segment](https://segment.com/) with configured [source](https://segment.com/docs/partners/sources/).
 

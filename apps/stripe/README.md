@@ -14,7 +14,7 @@
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org) v22+
+- [Node.js](https://nodejs.org) v24+
 - [PNPM](https://pnpm.io/) v10+
 
 ### Running app locally in development containers
