@@ -4,6 +4,8 @@ Shared infrastructure for rotating the `SECRET_KEY` that each Saleor app uses to
 
 ## How rotation works
 
+**Each app is deployed separately with different env variables, which means these steps will need to be run for each app separately**
+
 Rotation uses two env vars:
 
 | Var | Role during rotation |
@@ -28,36 +30,22 @@ After rotation completes, swap env vars so `SECRET_KEY` holds the new value and 
    openssl rand -hex 32
    ```
 
-2. **Add `NEW_SECRET_KEY` to the deployment** with the value from step 1.
-   Target: Production + Preview.
-   On Vercel, use the **Encrypted** type — **not** Sensitive. Sensitive values cannot be read again
-3. **Redeploy.** The app now encrypts new writes with `NEW_SECRET_KEY` and still decrypts legacy data via `SECRET_KEY` fallback.
-4. **Run the rotation script** for the app you are rotating. The script re-encrypts every stored
-   encrypted field (DynamoDB rows, Saleor app metadata, etc.) from `SECRET_KEY` to `NEW_SECRET_KEY`.
-
-   Dry run first:
-
-   ```bash
-   pnpm rotate-secret-key:dry-run
-   ```
-
-   Then real run:
-
-   ```bash
-   pnpm rotate-secret-key
-   ```
-
-   The script is idempotent and resumable — re-running it after a failure or partial completion is safe.
+2. **Add `NEW_SECRET_KEY` to the app deployment** with the value from step 1.
+   Target: Preview.
+   On Vercel, use the **Sensitive** type. Note that the value cannot be read again
+3. **Add `pnpm rotate-secret-key` script** to build step (e.g.: `pnpm run deploy && pnpm run rotate-secret-key`)
+4. **Redeploy.** The app now encrypts new writes with `NEW_SECRET_KEY` and still decrypts legacy data via `SECRET_KEY` fallback. It will also run rotation script
+   The script is idempotent and resumable: re-running it after a failure or partial completion is safe.
    The runner also detects concurrent writes in DynamoDB and leaves those rows for the next run instead of overwriting them.
-
 5. **Verify the rotation** by inspecting the script's summary output. `Rotated` should cover every row
    that was previously encrypted with the old key; `Failed` should be `0`.
-6. **Swap env vars to finalise:**
+6. **Repeat** steps 1-5 for production deployment
+7. **Swap env vars to finalise:**
    - Delete the old `SECRET_KEY`.
    - Re-add `SECRET_KEY` with the value of `NEW_SECRET_KEY` (the value you still have locally).
      Use **Encrypted** type.
    - Remove `NEW_SECRET_KEY`.
-7. **Redeploy.** Steady state restored. `NEW_SECRET_KEY` is unset again; reads and writes both use the
+8. **Redeploy.** Steady state restored. `NEW_SECRET_KEY` is unset again; reads and writes both use the
    new `SECRET_KEY`.
 
 ## Error: `NEW_SECRET_KEY must be set to run rotation`
