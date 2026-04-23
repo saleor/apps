@@ -9,7 +9,7 @@ type Params = {
   apl: APL;
   webhookPath: string;
   logger: Logger;
-  hooks: {
+  hooks?: {
     onEvent?: (ctx: WebhookContext<unknown>) => void;
     onAuthDataDeleted?: () => void;
     onAuthDataDeleteError?: (e: Error) => void;
@@ -22,7 +22,7 @@ type Params = {
  * 2. Implement into non-monorepo apps
  */
 export const createAppDeletedHandler = ({ apl, webhookPath, hooks = {}, logger }: Params) => {
-  const handler = new SaleorAsyncWebhook({
+  const webhook = new SaleorAsyncWebhook({
     apl,
     name: "APP_DELETED",
     query: AppDeletedDocument,
@@ -31,7 +31,9 @@ export const createAppDeletedHandler = ({ apl, webhookPath, hooks = {}, logger }
     webhookPath,
   });
 
-  return handler.createHandler(async (_req, res, ctx) => {
+  const handler = webhook.createHandler(async (_req, res, ctx) => {
+    // todo something failing here
+    console.log("asdf");
     logger.info("APP_DELETED event received. Auth Data will be removed");
 
     hooks.onEvent?.(ctx);
@@ -50,4 +52,9 @@ export const createAppDeletedHandler = ({ apl, webhookPath, hooks = {}, logger }
       return res.status(500).send("Failed to clean up auth data.");
     }
   });
+
+  return {
+    handler: handler.bind(webhook),
+    getWebhookManifest: webhook.getWebhookManifest.bind(webhook),
+  };
 };
