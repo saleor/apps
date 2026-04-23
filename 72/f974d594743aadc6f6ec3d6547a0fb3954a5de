@@ -1,0 +1,22 @@
+apps/cms/src/pages/api/manifest.ts
+  h_463c3d2f499c35 41
+apps/klaviyo/src/pages/api/manifest.ts
+  h_463c3d2f499c35 2,30
+apps/search/src/pages/api/manifest.ts
+  h_463c3d2f499c35 51
+apps/smtp/src/pages/api/manifest.ts
+  h_463c3d2f499c35 35
+apps/avatax/src/app/api/manifest/route.ts
+  h_463c3d2f499c35 53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.2",
+  "base_commit_sha": "72f974d594743aadc6f6ec3d6547a0fb3954a5de",
+  "prompts": {},
+  "humans": {
+    "h_463c3d2f499c35": {
+      "author": "Lukasz Ostrowski"
+    }
+  }
+}
