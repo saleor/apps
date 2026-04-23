@@ -1,0 +1,53 @@
+import { type APL } from "@saleor/app-sdk/APL";
+import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { type WebhookContext } from "@saleor/app-sdk/handlers/shared";
+import { type Logger } from "@saleor/apps-logger";
+
+import { AppDeletedDocument } from "../generated/graphql";
+
+type Params = {
+  apl: APL;
+  webhookPath: string;
+  logger: Logger;
+  hooks: {
+    onEvent?: (ctx: WebhookContext<unknown>) => void;
+    onAuthDataDeleted?: () => void;
+    onAuthDataDeleteError?: (e: Error) => void;
+  };
+};
+
+/**
+ * TODO:
+ * 1. Move to app-sdk
+ * 2. Implement into non-monorepo apps
+ */
+export const createAppDeletedHandler = ({ apl, webhookPath, hooks = {}, logger }: Params) => {
+  const handler = new SaleorAsyncWebhook({
+    apl,
+    name: "APP_DELETED",
+    query: AppDeletedDocument,
+    event: "APP_DELETED",
+    isActive: true,
+    webhookPath,
+  });
+
+  return handler.createHandler(async (_req, res, ctx) => {
+    logger.info("APP_DELETED event received. Auth Data will be removed");
+
+    hooks.onEvent?.(ctx);
+
+    try {
+      await apl.delete(ctx.authData.saleorApiUrl);
+
+      hooks.onAuthDataDeleted?.();
+
+      return res.status(200).end();
+    } catch (e) {
+      logger.error("Error deleting auth data on APP_DELETED", e);
+
+      hooks.onAuthDataDeleteError?.(e as Error);
+
+      return res.status(500).send("Failed to clean up auth data.");
+    }
+  });
+};
