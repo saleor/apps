@@ -32,7 +32,7 @@ After rotation completes, swap env vars so `SECRET_KEY` holds the new value and 
 
 2. **Add `NEW_SECRET_KEY` to the app deployment** with the value from step 1.
    Target: Preview.
-   On Vercel, use the **Encrypted** type, not **Sensitive**.
+   On Vercel, use the **plain** type, not **Sensitive**.
 3. **Update deployment build step**
    Choose one of:
 
