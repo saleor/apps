@@ -40,7 +40,7 @@ export interface ILogsRepository {
     saleorApiUrl: string;
     appId: string;
   }): Promise<Result<undefined, unknown>>;
-  pruneAllLogs(args: { saleorApiUrl: string; appId: string }): Promise<Result<undefined, unknown>>;
+  pruneAllLogs(args: { saleorApiUrl: string }): Promise<Result<undefined, unknown>>;
 }
 
 /**
@@ -331,7 +331,6 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
     saleorApiUrl,
   }: {
     saleorApiUrl: string;
-    appId: string;
   }): Promise<
     Result<
       undefined,
