@@ -32,22 +32,26 @@ export const createAppDeletedHandler = ({ apl, webhookPath, hooks = {}, logger }
   });
 
   const handler = webhook.createHandler(async (_req, res, ctx) => {
-    // todo something failing here
-    console.log("asdf");
-    logger.info("APP_DELETED event received. Auth Data will be removed");
-
-    hooks.onEvent?.(ctx);
-
     try {
-      await apl.delete(ctx.authData.saleorApiUrl);
+      logger.info("APP_DELETED event received. Auth Data will be removed");
 
-      hooks.onAuthDataDeleted?.();
+      hooks.onEvent?.(ctx);
 
-      return res.status(200).end();
+      try {
+        await apl.delete(ctx.authData.saleorApiUrl);
+
+        hooks.onAuthDataDeleted?.();
+
+        return res.status(200).end();
+      } catch (e) {
+        logger.error("Error deleting auth data on APP_DELETED", { error: e });
+
+        hooks.onAuthDataDeleteError?.(e as Error);
+
+        return res.status(500).send("Failed to clean up auth data.");
+      }
     } catch (e) {
-      logger.error("Error deleting auth data on APP_DELETED", e);
-
-      hooks.onAuthDataDeleteError?.(e as Error);
+      logger.error("Failed to execute APP_DELETED event", { error: e });
 
       return res.status(500).send("Failed to clean up auth data.");
     }
