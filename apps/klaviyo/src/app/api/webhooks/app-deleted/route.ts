@@ -1,7 +1,7 @@
 import { createAppDeletedHandler } from "@saleor/webhook-utils/app-deleted-handler";
 
-import { saleorApp } from "../../../../saleor-app";
-import { createLogger } from "../../../logger";
+import { saleorApp } from "../../../../../saleor-app";
+import { createLogger } from "../../../../logger";
 
 const { handler, getWebhookManifest } = createAppDeletedHandler({
   apl: saleorApp.apl,
@@ -11,10 +11,4 @@ const { handler, getWebhookManifest } = createAppDeletedHandler({
 
 export { getWebhookManifest };
 
-export default handler;
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+export const POST = handler;

@@ -1,5 +1,5 @@
 import { type APL } from "@saleor/app-sdk/APL";
-import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
 import { type WebhookContext } from "@saleor/app-sdk/handlers/shared";
 import { type Logger } from "@saleor/apps-logger";
 
@@ -31,7 +31,7 @@ export const createAppDeletedHandler = ({ apl, webhookPath, hooks = {}, logger }
     webhookPath,
   });
 
-  const handler = webhook.createHandler(async (_req, res, ctx) => {
+  const handler = webhook.createHandler(async (_req, ctx) => {
     try {
       logger.info("APP_DELETED event received. Auth Data will be removed");
 
@@ -42,18 +42,18 @@ export const createAppDeletedHandler = ({ apl, webhookPath, hooks = {}, logger }
 
         hooks.onAuthDataDeleted?.();
 
-        return res.status(200).end();
+        return new Response("ok", { status: 200 });
       } catch (e) {
         logger.error("Error deleting auth data on APP_DELETED", { error: e });
 
         hooks.onAuthDataDeleteError?.(e as Error);
 
-        return res.status(500).send("Failed to clean up auth data.");
+        return new Response('"Failed to clean up auth data."', { status: 500 });
       }
     } catch (e) {
       logger.error("Failed to execute APP_DELETED event", { error: e });
 
-      return res.status(500).send("Failed to clean up auth data.");
+      return new Response('"Failed to clean up auth data."', { status: 500 });
     }
   });
 
