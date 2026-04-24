@@ -43,6 +43,7 @@
   "devDependencies": {
     "@aws-sdk/lib-dynamodb": "catalog:",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
+    "@saleor/apps-otel": "workspace:*",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "@saleor/typescript-config-apps": "workspace:*",
@@ -66,6 +67,7 @@
     "@aws-sdk/lib-dynamodb": "catalog:",
     "@saleor/app-sdk": "catalog:",
     "@saleor/apps-logger": "workspace:*",
+    "@saleor/apps-otel": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
