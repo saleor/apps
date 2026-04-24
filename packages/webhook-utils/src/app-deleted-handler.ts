@@ -10,9 +10,9 @@ type Params = {
   webhookPath: string;
   logger: Logger;
   hooks?: {
-    onEvent?: (ctx: WebhookContext<unknown>) => void;
-    onAuthDataDeleted?: () => void;
-    onAuthDataDeleteError?: (e: Error) => void;
+    onEvent?: (ctx: WebhookContext<unknown>) => Promise<void>;
+    onAuthDataDeleted?: () => Promise<void>;
+    onAuthDataDeleteError?: (e: Error) => Promise<void>;
   };
 };
 
@@ -35,18 +35,18 @@ export const createAppDeletedHandler = ({ apl, webhookPath, hooks = {}, logger }
     try {
       logger.info("APP_DELETED event received. Auth Data will be removed");
 
-      hooks.onEvent?.(ctx);
+      await hooks.onEvent?.(ctx);
 
       try {
         await apl.delete(ctx.authData.saleorApiUrl);
 
-        hooks.onAuthDataDeleted?.();
+        await hooks.onAuthDataDeleted?.();
 
         return new Response("ok", { status: 200 });
       } catch (e) {
         logger.error("Error deleting auth data on APP_DELETED", { error: e });
 
-        hooks.onAuthDataDeleteError?.(e as Error);
+        await hooks.onAuthDataDeleteError?.(e as Error);
 
         return new Response('"Failed to clean up auth data."', { status: 500 });
       }

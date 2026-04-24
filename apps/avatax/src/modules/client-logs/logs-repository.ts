@@ -38,6 +38,7 @@ export interface ILogsRepository {
     saleorApiUrl: string;
     appId: string;
   }): Promise<Result<undefined, unknown>>;
+  pruneAllLogs(args: { saleorApiUrl: string; appId: string }): Promise<Result<undefined, unknown>>;
 }
 
 /**
@@ -323,6 +324,11 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
 
     return ok(undefined);
   }
+
+  pruneAllLogs(args: {
+    saleorApiUrl: string;
+    appId: string;
+  }): Promise<Result<undefined, unknown>> {}
 }
 
 /**
@@ -375,5 +381,19 @@ export class LogsRepositoryMemory implements ILogsRepository {
     lastEvaluatedKey: LastEvaluatedKey;
   }): Promise<Result<{ clientLogs: ClientLog[]; lastEvaluatedKey: LastEvaluatedKey }, never>> {
     return ok({ clientLogs: this.logs, lastEvaluatedKey: undefined });
+  }
+
+  async pruneAllLogs(args: {
+    saleorApiUrl: string;
+    appId: string;
+  }): Promise<Result<undefined, unknown>> {
+    this.logs = this.logs.filter((l) => {
+      const log = l.getValue();
+      const [saleorApiUrl] = LogsTable.decomposePrimaryKey(log.id);
+
+      return args.saleorApiUrl !== saleorApiUrl;
+    });
+
+    return ok(undefined);
   }
 }
