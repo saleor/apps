@@ -1,0 +1,34 @@
+apps/klaviyo/src/pages/api/manifest.ts
+  h_463c3d2f499c35 7
+apps/klaviyo/src/app/api/webhooks/app-deleted/route.ts
+  h_463c3d2f499c35 1-14
+packages/webhook-utils/src/app-deleted-handler.ts
+  h_463c3d2f499c35 2,34,45,51,56
+packages/webhook-utils/graphql.config.ts
+  9c0af4c223db09cf 56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "9e69c5f3946378585dc32285ba7ff46ca032e922",
+  "prompts": {
+    "9c0af4c223db09cf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b5c22daf-e9d9-4519-928a-4b87aae4f51c",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Lukasz Ostrowski",
+      "messages": [],
+      "total_additions": 965,
+      "total_deletions": 0,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  },
+  "humans": {
+    "h_463c3d2f499c35": {
+      "author": "Lukasz Ostrowski"
+    }
+  }
+}
