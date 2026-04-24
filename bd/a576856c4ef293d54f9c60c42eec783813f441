@@ -1,0 +1,16 @@
+packages/webhook-utils/src/app-deleted-handler.ts
+  h_463c3d2f499c35 35,47,52-54
+apps/klaviyo/src/pages/api/webhooks/app-deleted.ts
+  h_463c3d2f499c35 15-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "bda576856c4ef293d54f9c60c42eec783813f441",
+  "prompts": {},
+  "humans": {
+    "h_463c3d2f499c35": {
+      "author": "Lukasz Ostrowski"
+    }
+  }
+}
