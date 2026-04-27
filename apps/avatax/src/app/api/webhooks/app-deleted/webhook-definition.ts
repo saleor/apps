@@ -14,7 +14,6 @@ const { handler, getWebhookManifest } = createAppDeletedHandler({
   webhookPath: "api/webhooks/app-deleted",
   hooks: {
     async onEvent({ authData }) {
-      // todo share factory
       const logsTable = LogsTable.create({
         documentClient: createDocumentClient(
           createDynamoClient({
