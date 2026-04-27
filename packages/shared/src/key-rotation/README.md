@@ -4,6 +4,8 @@ Shared infrastructure for rotating the `SECRET_KEY` that each Saleor app uses to
 
 ## How rotation works
 
+**Each app is deployed separately with different env variables, which means these steps will need to be run for each app separately**
+
 Rotation uses two env vars:
 
 | Var | Role during rotation |
@@ -28,36 +30,46 @@ After rotation completes, swap env vars so `SECRET_KEY` holds the new value and 
    openssl rand -hex 32
    ```
 
-2. **Add `NEW_SECRET_KEY` to the deployment** with the value from step 1.
-   Target: Production + Preview.
-   On Vercel, use the **Encrypted** type — **not** Sensitive. Sensitive values cannot be read again
-3. **Redeploy.** The app now encrypts new writes with `NEW_SECRET_KEY` and still decrypts legacy data via `SECRET_KEY` fallback.
-4. **Run the rotation script** for the app you are rotating. The script re-encrypts every stored
-   encrypted field (DynamoDB rows, Saleor app metadata, etc.) from `SECRET_KEY` to `NEW_SECRET_KEY`.
+2. **Add `NEW_SECRET_KEY` to the app deployment** with the value from step 1.
+   Target: Preview.
+   On Vercel, use the **plain** type, not **Sensitive**.
+3. **Update deployment build step**
+   Choose one of:
 
-   Dry run first:
+   a. **Add `pnpm rotate-secret-key` script** to build step in Vercel - this doesn't require code change
 
-   ```bash
-   pnpm rotate-secret-key:dry-run
-   ```
+      Example in:
+      `turbo run deploy --filter=saleor-app-smtp `
 
-   Then real run:
+      add this to the end:
+      `&& pnpm run rotate-secret-key`
 
-   ```bash
-   pnpm rotate-secret-key
-   ```
+      So it becomes:
 
-   The script is idempotent and resumable — re-running it after a failure or partial completion is safe.
+      ```bash
+      turbo run deploy --filter=saleor-app-smtp && pnpm run rotate-secret-key
+      ```
+
+      This will only work if Root Directory is set to the specific app folder (e.g. `apps/smtp`)
+
+   b. **Update scripts/deploy.ts** - each app has a deploy script, in order to run secret key rotation add a following line at the end:
+
+      ```ts
+      execSync("pnpm run rotate-secret-key", { stdio: "inherit" });
+      ```
+
+4. **Redeploy.** The app now encrypts new writes with `NEW_SECRET_KEY` and still decrypts legacy data via `SECRET_KEY` fallback. It will also run rotation script
+   The script is idempotent and resumable: re-running it after a failure or partial completion is safe.
    The runner also detects concurrent writes in DynamoDB and leaves those rows for the next run instead of overwriting them.
-
 5. **Verify the rotation** by inspecting the script's summary output. `Rotated` should cover every row
    that was previously encrypted with the old key; `Failed` should be `0`.
-6. **Swap env vars to finalise:**
+6. **Repeat** steps 1-5 for production deployment
+7. **Swap env vars to finalise:**
    - Delete the old `SECRET_KEY`.
    - Re-add `SECRET_KEY` with the value of `NEW_SECRET_KEY` (the value you still have locally).
-     Use **Encrypted** type.
+     Use **Sensitive** type. Note after saving you won't be able to read the value again
    - Remove `NEW_SECRET_KEY`.
-7. **Redeploy.** Steady state restored. `NEW_SECRET_KEY` is unset again; reads and writes both use the
+8. **Redeploy.** Steady state restored. `NEW_SECRET_KEY` is unset again; reads and writes both use the
    new `SECRET_KEY`.
 
 ## Error: `NEW_SECRET_KEY must be set to run rotation`
