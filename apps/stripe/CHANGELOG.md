@@ -1,5 +1,23 @@
 # saleor-app-payment-stripe
 
+## 2.6.5
+
+### Patch Changes
+
+- 0744721: Added support for changing `SECRET_KEY` in production environment.
+
+  In order to use new secret key add `NEW_SECRET_KEY` env variable.
+  App will use `NEW_SECRET_KEY` for saving new configurations, and will use existing `SECRET_KEY` as a fallback for decryption.
+
+  To update all configurations in all app instances, use rotation script in each app: `pnpm rotate-secret-key`.
+
+  For more details read `packages/shared/src/key-rotation/README.md` documentation
+
+- af75011: Fixed: when the dashboard session/JWT expires, the Stripe app now shows a clear "Session expired" message instead of a cryptic internal error. The backend correctly responds with HTTP 403 instead of 500, so expired sessions no longer show up as server errors in logs.
+- Updated dependencies [0744721]
+  - @saleor/apps-shared@1.14.5
+  - @saleor/apps-trpc@4.0.5
+
 ## 2.6.4
 
 ### Patch Changes
