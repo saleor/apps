@@ -1,3 +1,3 @@
-import { handler } from "./webhook-definition";
+import { appDeletedWebhook } from "./webhook-definition";
 
-export const POST = handler;
+export const POST = appDeletedWebhook.handler;

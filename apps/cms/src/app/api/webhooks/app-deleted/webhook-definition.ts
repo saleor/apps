@@ -1,6 +1,7 @@
 import { createAppDeletedHandler } from "@saleor/webhook-utils/app-deleted-handler";
 
-import { saleorApp } from "../../../../../saleor-app";
+import { saleorApp } from "@/saleor-app";
+
 import { createLogger } from "../../../../logger";
 
 export const appDeletedWebhook = createAppDeletedHandler({

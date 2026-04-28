@@ -3,7 +3,6 @@ import { type AppExtension, type AppManifest } from "@saleor/app-sdk/types";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
 
-import { getWebhookManifest as appDeletedWebhookManifest } from "@/app/api/webhooks/app-deleted/webhook-definition";
 import { env } from "@/env";
 import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { withLoggerContext } from "@/logger-context";
@@ -55,10 +54,7 @@ const handler = createManifestHandler({
       supportUrl: "https://github.com/saleor/apps/discussions",
       tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
-      webhooks: [
-        ...appWebhooks.map((w) => w.getWebhookManifest(apiBaseURL)),
-        appDeletedWebhookManifest(apiBaseURL),
-      ],
+      webhooks: appWebhooks.map((w) => w.getWebhookManifest(apiBaseURL)),
       extensions,
     };
 

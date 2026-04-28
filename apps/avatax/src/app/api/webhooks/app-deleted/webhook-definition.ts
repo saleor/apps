@@ -8,7 +8,7 @@ import { createDocumentClient, createDynamoClient } from "@/modules/dynamodb/dyn
 import { saleorApp } from "../../../../../saleor-app";
 import { createLogger } from "../../../../logger";
 
-const { handler, getWebhookManifest } = createAppDeletedHandler({
+export const appDeletedWebhook = createAppDeletedHandler({
   apl: saleorApp.apl,
   logger: createLogger("APP_DELETED handler"),
   webhookPath: "api/webhooks/app-deleted",
@@ -37,5 +37,3 @@ const { handler, getWebhookManifest } = createAppDeletedHandler({
     },
   },
 });
-
-export { getWebhookManifest, handler };
