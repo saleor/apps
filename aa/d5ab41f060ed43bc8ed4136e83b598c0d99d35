@@ -1,0 +1,32 @@
+apps/klaviyo/src/app/api/webhooks/app-deleted/webhook-definition.ts
+  h_463c3d2f499c35 6
+apps/avatax/src/app/api/manifest/route.ts
+  h_463c3d2f499c35 57
+apps/avatax/src/app/api/webhooks/app-deleted/webhook-definition.ts
+  h_463c3d2f499c35 11
+apps/avatax/webhooks.ts
+  h_463c3d2f499c35 1-2,13
+apps/klaviyo/src/app/api/webhooks/app-deleted/route.ts
+  h_463c3d2f499c35 1,3
+apps/avatax/src/app/api/webhooks/app-deleted/route.ts
+  h_463c3d2f499c35 1,3
+apps/cms/src/app/api/webhooks/app-deleted/webhook-definition.ts
+  h_463c3d2f499c35 1-11
+apps/cms/src/app/api/webhooks/app-deleted/route.ts
+  h_463c3d2f499c35 1-3
+apps/klaviyo/src/pages/api/manifest.ts
+  h_463c3d2f499c35 7,45
+apps/cms/src/pages/api/manifest.ts
+  h_463c3d2f499c35 6,66-69
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "aad5ab41f060ed43bc8ed4136e83b598c0d99d35",
+  "prompts": {},
+  "humans": {
+    "h_463c3d2f499c35": {
+      "author": "Lukasz Ostrowski"
+    }
+  }
+}
