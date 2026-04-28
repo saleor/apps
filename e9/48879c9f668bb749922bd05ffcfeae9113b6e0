@@ -1,0 +1,23 @@
+apps/smtp/src/pages/api/webhooks/invoice-sent.ts
+  9047191d954eef9d 102
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "e948879c9f668bb749922bd05ffcfeae9113b6e0",
+  "prompts": {
+    "9047191d954eef9d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ccd7b05b-164d-41a9-842e-136815a68753",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Lukasz Ostrowski",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 2,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
