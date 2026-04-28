@@ -99,7 +99,7 @@ const handler: NextJsWebhookHandler<InvoiceSentWebhookPayloadFragment> = async (
       .sendEventMessages({
         channelSlug: channel,
         event: "INVOICE_SENT",
-        payload: { order: payload.order },
+        payload: { order: payload.order, invoice: payload.invoice },
         recipientEmail,
         saleorApiUrl: authData.saleorApiUrl,
       })
