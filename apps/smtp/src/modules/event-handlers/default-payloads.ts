@@ -1,4 +1,13 @@
 import {
+  type AccountChangeEmailRequestedWebhookPayloadFragment,
+  type AccountConfirmationRequestedWebhookPayloadFragment,
+  type AccountDeleteRequestedWebhookPayloadFragment,
+  type AccountEmailChangedWebhookPayloadFragment,
+  type AccountSetPasswordRequestedWebhookPayloadFragment,
+  type FulfillmentApprovedWebhookPayloadFragment,
+  type FulfillmentCanceledWebhookPayloadFragment,
+  type FulfillmentCreatedWebhookPayloadFragment,
+  type FulfillmentTrackingNumberUpdatedWebhookPayloadFragment,
   type GiftCardSentWebhookPayloadFragment,
   type InvoiceSentWebhookPayloadFragment,
   type OrderCancelledWebhookPayloadFragment,
@@ -1019,34 +1028,31 @@ const exampleShopPayload = {
   domain: { host: "acme-store.example.com" },
 };
 
-const accountConfirmationRequestedPayload = {
+const accountConfirmationRequestedPayload: AccountConfirmationRequestedWebhookPayloadFragment = {
   user: exampleAccountUserPayload,
-  recipientEmail: "sarah.johnson@example.com",
   redirectUrl: "https://example.com/account/confirm",
   token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
   channel: { slug: "default-channel" },
   shop: exampleShopPayload,
 };
 
-const accountDeleteRequestedPayload = {
+const accountDeleteRequestedPayload: AccountDeleteRequestedWebhookPayloadFragment = {
   user: exampleAccountUserPayload,
-  recipientEmail: "sarah.johnson@example.com",
   redirectUrl: "https://example.com/account/delete",
   token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
   channel: { slug: "default-channel" },
   shop: exampleShopPayload,
 };
 
-const accountSetPasswordRequestedPayload = {
+const accountSetPasswordRequestedPayload: AccountSetPasswordRequestedWebhookPayloadFragment = {
   user: exampleAccountUserPayload,
-  recipientEmail: "sarah.johnson@example.com",
   redirectUrl: "https://example.com/account/reset-password",
   token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
   channel: { slug: "default-channel" },
   shop: exampleShopPayload,
 };
 
-const accountChangeEmailRequestedPayload = {
+const accountChangeEmailRequestedPayload: AccountChangeEmailRequestedWebhookPayloadFragment = {
   user: exampleAccountUserPayload,
   newEmail: "sarah.j.johnson@example.com",
   redirectUrl: "https://example.com/account/change-email",
@@ -1055,7 +1061,7 @@ const accountChangeEmailRequestedPayload = {
   shop: exampleShopPayload,
 };
 
-const accountEmailChangedPayload = {
+const accountEmailChangedPayload: AccountEmailChangedWebhookPayloadFragment = {
   user: { ...exampleAccountUserPayload, email: "sarah.j.johnson@example.com" },
   newEmail: "sarah.j.johnson@example.com",
   redirectUrl: "https://example.com/account/email-changed",
@@ -1077,15 +1083,16 @@ const exampleFulfillmentOrderPayload = {
   channel: { slug: "default-channel", name: "Acme Store" },
 };
 
-const fulfillmentTrackingNumberUpdatedPayload = {
-  fulfillment: {
-    id: "RnVsZmlsbG1lbnQ6MQ==",
-    trackingNumber: "1Z999AA10123456784",
-  },
-  order: exampleFulfillmentOrderPayload,
-};
+const fulfillmentTrackingNumberUpdatedPayload: FulfillmentTrackingNumberUpdatedWebhookPayloadFragment =
+  {
+    fulfillment: {
+      id: "RnVsZmlsbG1lbnQ6MQ==",
+      trackingNumber: "1Z999AA10123456784",
+    },
+    order: exampleFulfillmentOrderPayload,
+  };
 
-const fulfillmentCreatedPayload = {
+const fulfillmentCreatedPayload: FulfillmentCreatedWebhookPayloadFragment = {
   fulfillment: {
     id: "RnVsZmlsbG1lbnQ6MQ==",
     trackingNumber: "",
@@ -1093,7 +1100,7 @@ const fulfillmentCreatedPayload = {
   order: exampleFulfillmentOrderPayload,
 };
 
-const fulfillmentApprovedPayload = {
+const fulfillmentApprovedPayload: FulfillmentApprovedWebhookPayloadFragment = {
   fulfillment: {
     id: "RnVsZmlsbG1lbnQ6MQ==",
     trackingNumber: "1Z999AA10123456784",
@@ -1101,7 +1108,7 @@ const fulfillmentApprovedPayload = {
   order: exampleFulfillmentOrderPayload,
 };
 
-const fulfillmentCanceledPayload = {
+const fulfillmentCanceledPayload: FulfillmentCanceledWebhookPayloadFragment = {
   fulfillment: {
     id: "RnVsZmlsbG1lbnQ6MQ==",
     trackingNumber: "",
