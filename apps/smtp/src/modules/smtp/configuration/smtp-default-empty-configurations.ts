@@ -1,4 +1,7 @@
-import { messageEventTypes } from "../../event-handlers/message-event-types";
+import {
+  messageEventTypes,
+  messageEventTypesLabels,
+} from "../../event-handlers/message-event-types";
 import { defaultMjmlSubjectTemplates, defaultMjmlTemplates } from "../default-templates";
 import {
   type SmtpConfiguration,
@@ -7,13 +10,15 @@ import {
 } from "./smtp-config-schema";
 
 const eventsConfiguration = (): SmtpConfiguration["events"] =>
-  messageEventTypes.map((eventType) =>
-    smtpConfigurationEventSchema.parse({
-      eventType: eventType,
-      template: defaultMjmlTemplates[eventType],
-      subject: defaultMjmlSubjectTemplates[eventType],
-    }),
-  );
+  messageEventTypes
+    .filter((eventType) => !messageEventTypesLabels[eventType].deprecated)
+    .map((eventType) =>
+      smtpConfigurationEventSchema.parse({
+        eventType: eventType,
+        template: defaultMjmlTemplates[eventType],
+        subject: defaultMjmlSubjectTemplates[eventType],
+      }),
+    );
 
 const configuration = (): SmtpConfiguration => {
   const defaultConfig: SmtpConfiguration = smtpConfigurationSchema.parse({

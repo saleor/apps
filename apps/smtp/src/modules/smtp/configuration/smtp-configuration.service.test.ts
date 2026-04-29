@@ -3,10 +3,38 @@ import { okAsync } from "neverthrow";
 import { type Client } from "urql";
 import { describe, expect, it, vi } from "vitest";
 
+import {
+  messageEventTypes,
+  messageEventTypesLabels,
+} from "../../event-handlers/message-event-types";
 import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
-import { type SmtpConfig } from "./smtp-config-schema";
+import { defaultMjmlSubjectTemplates, defaultMjmlTemplates } from "../default-templates";
+import { type SmtpConfig, type SmtpConfiguration } from "./smtp-config-schema";
 import { SmtpConfigurationService } from "./smtp-configuration.service";
 import { SmtpMetadataManager } from "./smtp-metadata-manager";
+
+/**
+ * Mirrors the hydration behavior of `SmtpConfigurationService` so existing-tenant
+ * fixtures (which only contain the legacy 14 events) match read results that include
+ * hydrated entries for non-deprecated event types added after the tenant first saved.
+ */
+const expectHydrated = (configuration: SmtpConfiguration): SmtpConfiguration => {
+  const stored = new Set(configuration.events.map((e) => e.eventType));
+  const additions = messageEventTypes
+    .filter((eventType) => !messageEventTypesLabels[eventType].deprecated)
+    .filter((eventType) => !stored.has(eventType))
+    .map((eventType) => ({
+      active: false,
+      eventType,
+      template: defaultMjmlTemplates[eventType],
+      subject: defaultMjmlSubjectTemplates[eventType],
+    }));
+
+  return {
+    ...configuration,
+    events: [...configuration.events, ...additions],
+  };
+};
 
 const mockSaleorApiUrl = "https://demo.saleor.io/graphql/";
 
@@ -373,7 +401,7 @@ describe("SmtpConfigurationService", function () {
 
       expect(
         (await service.getConfiguration({ id: validConfig.configurations[0].id }))._unsafeUnwrap(),
-      ).toStrictEqual(validConfig.configurations[0]);
+      ).toStrictEqual(expectHydrated(validConfig.configurations[0]));
     });
 
     it("Throws error when configuration with provided ID does not exist", async () => {
@@ -440,8 +468,65 @@ describe("SmtpConfigurationService", function () {
 
       // Only the first configuration is active, so only this one should be returned
       expect((await service.getConfigurations({ active: true }))._unsafeUnwrap()).toStrictEqual([
-        validConfig.configurations[0],
+        expectHydrated(validConfig.configurations[0]),
       ]);
+    });
+  });
+
+  describe("hydrateConfigEvents (read-time)", () => {
+    it("Adds non-deprecated message event types missing from stored events with default templates and active=false", async () => {
+      const configurator = new SmtpMetadataManager(
+        null as unknown as SettingsManager,
+        mockSaleorApiUrl,
+      );
+
+      const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
+        metadataManager: configurator,
+        initialData: { ...validConfig },
+      });
+
+      const hydrated = (
+        await service.getConfiguration({ id: validConfig.configurations[0].id })
+      )._unsafeUnwrap();
+
+      const newEvent = hydrated.events.find(
+        (e) => e.eventType === "ACCOUNT_CONFIRMATION_REQUESTED",
+      );
+
+      expect(newEvent).toBeDefined();
+      expect(newEvent?.active).toBe(false);
+      expect(newEvent?.template).toBe(defaultMjmlTemplates.ACCOUNT_CONFIRMATION_REQUESTED);
+      expect(newEvent?.subject).toBe(defaultMjmlSubjectTemplates.ACCOUNT_CONFIRMATION_REQUESTED);
+    });
+
+    it("Preserves existing stored events including deprecated ones", async () => {
+      const configurator = new SmtpMetadataManager(
+        null as unknown as SettingsManager,
+        mockSaleorApiUrl,
+      );
+
+      const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
+        metadataManager: configurator,
+        initialData: { ...validConfig },
+      });
+
+      const hydrated = (
+        await service.getConfiguration({ id: validConfig.configurations[0].id })
+      )._unsafeUnwrap();
+
+      // Legacy ACCOUNT_CONFIRMATION (deprecated) is preserved with its stored values
+      const legacyEvent = hydrated.events.find((e) => e.eventType === "ACCOUNT_CONFIRMATION");
+
+      expect(legacyEvent).toBeDefined();
+      expect(legacyEvent?.subject).toBe("Account activation");
     });
   });
 

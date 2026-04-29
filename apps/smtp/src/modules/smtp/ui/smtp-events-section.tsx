@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
-import { TextLink } from "@saleor/apps-ui";
+import { SemanticChip, TextLink } from "@saleor/apps-ui";
 import { Box, Button, Text, Tooltip } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
@@ -36,7 +36,9 @@ export const SmtpEventsSection = ({ configuration }: SmtpEventsSectionProps) => 
 
   // Sort events by displayed label
   const eventsSorted = configuration.events.sort((a, b) =>
-    messageEventTypesLabels[a.eventType].localeCompare(messageEventTypesLabels[b.eventType]),
+    messageEventTypesLabels[a.eventType].label.localeCompare(
+      messageEventTypesLabels[b.eventType].label,
+    ),
   );
 
   const { register, handleSubmit, setError } = useForm<SmtpUpdateEventArray>({
@@ -99,6 +101,10 @@ export const SmtpEventsSection = ({ configuration }: SmtpEventsSectionProps) => 
                       featureFlags: featureFlags,
                       eventType: event.eventType,
                     });
+                  const metadata = messageEventTypesLabels[event.eventType];
+                  const replacementLabel = metadata.replacedBy
+                    ? messageEventTypesLabels[metadata.replacedBy].label
+                    : null;
 
                   return (
                     <Table.Row key={event.eventType}>
@@ -128,7 +134,24 @@ export const SmtpEventsSection = ({ configuration }: SmtpEventsSectionProps) => 
                         </Tooltip>
                       </Table.Cell>
                       <Table.Cell>
-                        <Text>{messageEventTypesLabels[event.eventType]}</Text>
+                        <Box display="flex" alignItems="center" gap={2}>
+                          <Text>{metadata.label}</Text>
+                          {metadata.deprecated && (
+                            <Tooltip>
+                              <Tooltip.Trigger>
+                                <SemanticChip variant="warning" size="small">
+                                  Deprecated
+                                </SemanticChip>
+                              </Tooltip.Trigger>
+                              {replacementLabel && (
+                                <Tooltip.Content side="top">
+                                  Use &ldquo;{replacementLabel}&rdquo; instead.
+                                  <Tooltip.Arrow />
+                                </Tooltip.Content>
+                              )}
+                            </Tooltip>
+                          )}
+                        </Box>
                       </Table.Cell>
                       <Table.Cell>
                         <Button

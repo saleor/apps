@@ -112,7 +112,7 @@ const EditSmtpEventPage: NextPage = () => {
       breadcrumbs={[
         { name: "Configuration", href: appUrls.configuration() },
         { name: `SMTP:  ${configuration.name}`, href: smtpUrls.configuration(configurationId) },
-        { name: messageEventTypesLabels[eventType] },
+        { name: messageEventTypesLabels[eventType].label },
       ]}
     >
       <EventForm key={eventType} configuration={configuration} eventType={eventType} />
