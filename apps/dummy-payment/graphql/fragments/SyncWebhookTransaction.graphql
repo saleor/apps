@@ -1,0 +1,8 @@
+fragment SyncWebhookTransaction on TransactionItem {
+  id
+  token
+  pspReference
+  events {
+    pspReference
+  }
+}
