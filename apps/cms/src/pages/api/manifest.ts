@@ -3,6 +3,7 @@ import { type AppManifest } from "@saleor/app-sdk/types";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
+import { appDeletedWebhook } from "@/app/api/webhooks/app-deleted/webhook-definition";
 import { env } from "@/env";
 
 import packageJson from "../../../package.json";
@@ -62,6 +63,10 @@ const handler = createManifestHandler({
          * Detect changes in parent product (slug, name) and create/update all variants in CMS
          */
         productUpdatedWebhook.getWebhookManifest(apiBaseURL),
+        /**
+         * Cleans app after uninstall
+         */
+        appDeletedWebhook.getWebhookManifest(apiBaseURL),
       ],
     };
 

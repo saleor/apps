@@ -60,6 +60,10 @@ export class LogsTable extends Table<
     return `${saleorApiUrl}#${appId}`;
   }
 
+  static decomposePrimaryKey(pk: string) {
+    return pk.split("#") as [saleorApiUrl: string, appId: string];
+  }
+
   static getDefaultTTL() {
     const daysUntilExpire = env.DYNAMODB_LOGS_ITEM_TTL_IN_DAYS;
     const now = new Date();

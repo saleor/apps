@@ -1,0 +1,9 @@
+subscription AppDeleted {
+  event {
+    ... on AppDeleted {
+      app {
+        id
+      }
+    }
+  }
+}

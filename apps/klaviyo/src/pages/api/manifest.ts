@@ -1,9 +1,10 @@
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
-import { AppManifest } from "@saleor/app-sdk/types";
+import { type AppManifest } from "@saleor/app-sdk/types";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
 import pkg from "../../../package.json";
+import { appDeletedWebhook } from "../../app/api/webhooks/app-deleted/webhook-definition";
 import { env } from "../../env";
 import { loggerContext } from "../../logger-context";
 import { customerCreatedWebhook } from "./webhooks/customer-created";
@@ -41,6 +42,7 @@ const handler = wrapWithLoggerContext(
             fulfillmentCreatedWebhook.getWebhookManifest(appBaseUrl),
             orderCreatedWebhook.getWebhookManifest(appBaseUrl),
             orderFullyPaidWebhook.getWebhookManifest(appBaseUrl),
+            appDeletedWebhook.getWebhookManifest(appBaseUrl),
           ],
         };
       },
