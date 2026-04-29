@@ -1,5 +1,11 @@
 # saleor-app-avatax
 
+## 1.22.8
+
+### Patch Changes
+
+- 9265c47: Fixed Client Logs date filter showing an opaque error when the "From" date was after the "To" date. Before, the request was sent and DynamoDB rejected it with a generic validation error. Now the form skips the request and shows a clear inline message, and the API rejects inverted ranges with a 400 response.
+
 ## 1.22.7
 
 ### Patch Changes
