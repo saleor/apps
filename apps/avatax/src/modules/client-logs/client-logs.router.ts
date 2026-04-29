@@ -16,6 +16,17 @@ import { ClientLogDynamoEntityFactory, LogsTable } from "./dynamo-logs-table";
 
 const logger = createLogger("clientLogsRouter");
 
+export const getByDateInputSchema = z
+  .object({
+    startDate: z.string().datetime(),
+    endDate: z.string().datetime(),
+    lastEvaluatedKey: z.record(z.unknown()).optional(),
+  })
+  .refine((data) => new Date(data.startDate) <= new Date(data.endDate), {
+    message: "startDate must be before or equal to endDate",
+    path: ["startDate"],
+  });
+
 export function isDynamoValidationError(error: unknown): boolean {
   if (error instanceof Error && error.cause instanceof Error) {
     return error.cause.name === "ValidationException";
@@ -64,13 +75,7 @@ const procedureWithLogsRepository = protectedClientProcedure.use(({ ctx, next })
  */
 export const clientLogsRouter = router({
   getByDate: procedureWithLogsRepository
-    .input(
-      z.object({
-        startDate: z.string().datetime(),
-        endDate: z.string().datetime(),
-        lastEvaluatedKey: z.record(z.unknown()).optional(),
-      }),
-    )
+    .input(getByDateInputSchema)
     .query(
       async ({
         input,
