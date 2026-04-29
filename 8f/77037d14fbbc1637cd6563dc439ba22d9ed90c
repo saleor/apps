@@ -1,0 +1,23 @@
+apps/smtp/src/modules/event-handlers/default-payloads.ts
+  05b09172b1128a81 2-10,1031,1039,1047,1055,1064,1086-1093,1095,1103,1111
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "8f77037d14fbbc1637cd6563dc439ba22d9ed90c",
+  "prompts": {
+    "05b09172b1128a81": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e3dcbc07-93e9-4a77-8c81-15a237b9dd3e",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Lukasz Ostrowski",
+      "messages": [],
+      "total_additions": 1226,
+      "total_deletions": 18,
+      "accepted_lines": 25,
+      "overriden_lines": 0
+    }
+  }
+}
