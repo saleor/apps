@@ -1,0 +1,29 @@
+apps/avatax/src/modules/client-logs/client-logs.router.test.ts
+  07df76f62cf00546 3,50-78,80-82
+apps/avatax/src/modules/client-logs/ui/logs-browser.tsx
+  07df76f62cf00546 132-141,176-178
+apps/avatax/src/modules/client-logs/client-logs.router.ts
+  07df76f62cf00546 19-29,78
+.changeset/avatax-logs-date-range-validation.md
+  07df76f62cf00546 1-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "ba3132fe47c597d84f5a1cd61cad382cc10e485d",
+  "prompts": {
+    "07df76f62cf00546": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b5c4e60f-f880-4026-8b30-f5de62a0bbd4",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Lukasz Ostrowski",
+      "messages": [],
+      "total_additions": 66,
+      "total_deletions": 13,
+      "accepted_lines": 63,
+      "overriden_lines": 1
+    }
+  }
+}
