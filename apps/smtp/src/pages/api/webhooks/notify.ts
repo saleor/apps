@@ -9,6 +9,7 @@ import {
 } from "../../../lib/notify-event-types";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
+import { messageEventTypesLabels } from "../../../modules/event-handlers/message-event-types";
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { saleorApp } from "../../../saleor-app";
 import { handleUseCaseErrors } from "./send-event-messages-response-handler";
@@ -60,6 +61,11 @@ const handler: NextJsWebhookHandler<NotifySubscriptionPayload> = async (req, res
 
     return res.status(200).json({ message: `${payload.notify_event} event is not supported.` });
   }
+
+  logger.warn("Legacy notify webhook received", {
+    notifyEvent: payload.notify_event,
+    replacedByMessageEvent: messageEventTypesLabels[event].replacedBy,
+  });
 
   const useCase = useCaseFactory.createFromAuthData(authData);
 

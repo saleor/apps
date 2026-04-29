@@ -4,8 +4,13 @@ import { BaseError } from "../../../errors";
 import { generateRandomId } from "../../../lib/generate-random-id";
 import { createLogger } from "../../../logger";
 import { filterConfigurations } from "../../app-configuration/filter-configurations";
-import { type MessageEventTypes } from "../../event-handlers/message-event-types";
+import {
+  type MessageEventTypes,
+  messageEventTypes,
+  messageEventTypesLabels,
+} from "../../event-handlers/message-event-types";
 import { type FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
+import { defaultMjmlSubjectTemplates, defaultMjmlTemplates } from "../default-templates";
 import { EmailCompiler, type ErrorContext } from "../services/email-compiler";
 import { HandlebarsTemplateCompiler } from "../services/handlebars-template-compiler";
 import { HtmlToTextCompiler } from "../services/html-to-text-compiler";
@@ -191,6 +196,35 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFall
   }
 
   /**
+   * Left-joins non-deprecated message event types onto the stored events array. Existing
+   * stored entries (including deprecated ones) are kept as-is so users keep seeing their
+   * data and the deprecation badge; missing non-deprecated entries are filled with default
+   * templates and `active: false` so new event rows appear in the dashboard without
+   * touching DynamoDB until the user saves.
+   */
+  private hydrateConfigEvents(configuration: SmtpConfiguration): SmtpConfiguration {
+    const storedEventTypes = new Set(configuration.events.map((e) => e.eventType));
+    const missingNonDeprecatedEvents: SmtpConfiguration["events"] = messageEventTypes
+      .filter((eventType) => !messageEventTypesLabels[eventType].deprecated)
+      .filter((eventType) => !storedEventTypes.has(eventType))
+      .map((eventType) => ({
+        active: false,
+        eventType,
+        template: defaultMjmlTemplates[eventType],
+        subject: defaultMjmlSubjectTemplates[eventType],
+      }));
+
+    if (missingNonDeprecatedEvents.length === 0) {
+      return configuration;
+    }
+
+    return {
+      ...configuration,
+      events: [...configuration.events, ...missingNonDeprecatedEvents],
+    };
+  }
+
+  /**
    * Get configuration for given ID. Throws if not found.
    */
   getConfiguration({ id }: { id: string }) {
@@ -205,7 +239,7 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFall
         );
       }
 
-      return okAsync(configuration);
+      return okAsync(this.hydrateConfigEvents(configuration));
     });
   }
 
@@ -216,12 +250,12 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFall
     logger.debug("Get configurations");
 
     return this.getConfigurationRoot().andThen((config) => {
-      return okAsync(
-        filterConfigurations<SmtpConfiguration>({
-          configurations: config.configurations,
-          filter,
-        }),
-      );
+      const filtered = filterConfigurations<SmtpConfiguration>({
+        configurations: config.configurations,
+        filter,
+      });
+
+      return okAsync(filtered.map((c) => this.hydrateConfigEvents(c)));
     });
   }
 
