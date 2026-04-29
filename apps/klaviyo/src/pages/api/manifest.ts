@@ -1,5 +1,5 @@
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
-import { AppManifest } from "@saleor/app-sdk/types";
+import { type AppManifest } from "@saleor/app-sdk/types";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
@@ -27,7 +27,7 @@ const handler = wrapWithLoggerContext(
               default: `${apiBaseURL}/logo.png`,
             },
           },
-          requiredSaleorVersion: ">=3.20 <4",
+          requiredSaleorVersion: ">=3.21 <4",
           dataPrivacyUrl: "https://saleor.io/legal/privacy/",
           homepageUrl: "https://github.com/saleor/apps",
           id: "saleor.app.klaviyo",
