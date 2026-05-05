@@ -1,0 +1,39 @@
+apps/products-feed/src/modules/trpc/protected-client-procedure.ts
+  86f1d3f4a443a79c 94,96
+apps/np-atobarai/src/modules/trpc/protected-client-procedure.ts
+  86f1d3f4a443a79c 101,103
+apps/smtp/src/modules/trpc/protected-client-procedure.ts
+  86f1d3f4a443a79c 92,94
+.changeset/jwt-verification-401-no-sentry.md
+  86f1d3f4a443a79c 1-12
+apps/search/src/modules/trpc/protected-client-procedure.ts
+  86f1d3f4a443a79c 102,104
+apps/avatax/src/modules/trpc/protected-client-procedure.ts
+  86f1d3f4a443a79c 92
+apps/segment/src/modules/trpc/protected-client-procedure.ts
+  86f1d3f4a443a79c 91,93
+apps/stripe/src/modules/trpc/protected-client-procedure.ts
+  86f1d3f4a443a79c 103
+apps/cms/src/modules/trpc/protected-client-procedure.ts
+  86f1d3f4a443a79c 91,93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "49cff1f894e0d312a93eff936d9ff530abea16df",
+  "prompts": {
+    "86f1d3f4a443a79c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6d8daaab-325d-43c7-be63-994118ae127e",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Lukasz Ostrowski",
+      "messages": [],
+      "total_additions": 26,
+      "total_deletions": 16,
+      "accepted_lines": 26,
+      "overriden_lines": 0
+    }
+  }
+}
