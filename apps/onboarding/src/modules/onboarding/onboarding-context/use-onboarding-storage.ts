@@ -1,19 +1,10 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useMutation, useQuery } from "urql";
 
 import { MeDocument, UpdateUserMetadataDocument } from "@/generated/graphql";
 
 import { type OnboardingState, type StorageService } from "./types";
 import { METADATA_KEY, type MetadataInput, prepareUserMetadata } from "./utils";
-
-const debounce = <Args extends unknown[]>(fn: (...args: Args) => void, ms: number) => {
-  let timer: ReturnType<typeof setTimeout> | null = null;
-
-  return (...args: Args) => {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => fn(...args), ms);
-  };
-};
 
 export type OnboardingUser = {
   id: string;
@@ -24,63 +15,80 @@ export type OnboardingUser = {
 export const useUserData = (): { user: OnboardingUser | null; isUserLoading: boolean } => {
   const [{ data, fetching }] = useQuery({ query: MeDocument });
 
-  if (fetching || !data?.me) {
-    return { user: null, isUserLoading: fetching };
-  }
+  // Memoize so the user reference is stable across renders when the underlying data hasn't changed.
+  const user = useMemo<OnboardingUser | null>(() => {
+    if (!data?.me) return null;
 
-  return {
-    user: {
+    return {
       id: data.me.id,
       metadata: data.me.metadata,
       userPermissions: (data.me.userPermissions ?? []).map((p) => p.code),
-    },
-    isUserLoading: false,
-  };
+    };
+  }, [data?.me]);
+
+  return { user, isUserLoading: fetching };
 };
 
 export const useOnboardingStorage = (user: OnboardingUser | null): StorageService => {
   const [, saveMetadata] = useMutation(UpdateUserMetadataDocument);
 
-  const getOnboardingState: StorageService["getOnboardingState"] = () => {
-    try {
-      const metadata = user?.metadata.find((m) => m.key === METADATA_KEY);
+  /*
+   * Keep the latest user/saveMetadata accessible from a single, stable debounced fn
+   * so re-renders don't spawn parallel timers.
+   */
+  const userRef = useRef(user);
+  const saveMetadataRef = useRef(saveMetadata);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-      if (!metadata) {
-        return undefined;
-      }
+  useEffect(() => {
+    userRef.current = user;
+    saveMetadataRef.current = saveMetadata;
+  });
+
+  useEffect(
+    () => () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    },
+    [],
+  );
+
+  const getOnboardingState: StorageService["getOnboardingState"] = useCallback(() => {
+    try {
+      const metadata = userRef.current?.metadata.find((m) => m.key === METADATA_KEY);
+
+      if (!metadata) return undefined;
 
       return JSON.parse(metadata.value) as OnboardingState;
     } catch {
       return undefined;
     }
-  };
+  }, []);
 
-  const saveOnboardingState = useCallback(
-    async (onboardingState: OnboardingState) => {
-      if (!user) {
-        return;
-      }
+  const saveOnboardingState: StorageService["saveOnboardingState"] = useCallback(
+    (onboardingState: OnboardingState) => {
+      if (timerRef.current) clearTimeout(timerRef.current);
 
-      /*
-       * Self-metadata writes can fail for staff without MANAGE_STAFF; widget keeps working
-       * in-memory but state will not persist for those users.
-       */
-      const userMetadata = prepareUserMetadata(user.metadata, onboardingState);
+      timerRef.current = setTimeout(() => {
+        const currentUser = userRef.current;
 
-      await saveMetadata({ id: user.id, input: userMetadata }).catch(() => {
-        // intentionally swallowed — widget continues to work without persistence
-      });
+        if (!currentUser) return;
+
+        const userMetadata = prepareUserMetadata(currentUser.metadata, onboardingState);
+
+        /*
+         * Self-metadata writes can fail for staff without MANAGE_STAFF; widget keeps working
+         * in-memory but state will not persist for those users.
+         */
+        saveMetadataRef.current({ id: currentUser.id, input: userMetadata }).catch(() => {
+          // intentionally swallowed — widget continues to work without persistence
+        });
+      }, 1000);
     },
-    [saveMetadata, user],
+    [],
   );
 
-  const debouncedSave = useMemo(
-    () => debounce(saveOnboardingState, 1000),
-    [saveOnboardingState],
-  ) as StorageService["saveOnboardingState"];
-
-  return {
-    getOnboardingState,
-    saveOnboardingState: debouncedSave,
-  };
+  return useMemo(
+    () => ({ getOnboardingState, saveOnboardingState }),
+    [getOnboardingState, saveOnboardingState],
+  );
 };

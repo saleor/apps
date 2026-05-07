@@ -1,9 +1,7 @@
-"use client";
-
+import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Button, Tooltip } from "@saleor/macaw-ui";
 
 import { useAppRedirect } from "../../hooks/use-app-redirect";
-import { useOnboarding } from "../../onboarding-context/onboarding-context";
 import { FakeDisabledButton } from "../fake-disabled-button";
 
 type Props = {
@@ -21,9 +19,10 @@ export const PermissionGatedRedirectButton = ({
   missingPermissionTooltip,
   onClick,
 }: Props) => {
-  const { userPermissions } = useOnboarding();
+  const { appBridgeState } = useAppBridge();
+
   const redirect = useAppRedirect();
-  const hasPermission = userPermissions.includes(permission);
+  const hasPermission = appBridgeState?.user?.permissions.includes(permission);
 
   if (!hasPermission) {
     return (

@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@saleor/macaw-ui";
 
 import { useAppRedirect } from "../../hooks/use-app-redirect";
@@ -13,7 +11,7 @@ export const ExtensionsButton = ({ onClick }: PrimaryActionProps) => {
       variant="primary"
       onClick={() => {
         onClick?.();
-        redirect("/extensions/installed-extensions");
+        redirect("/extensions/installed");
       }}
     >
       Go to Extensions

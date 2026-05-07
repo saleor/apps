@@ -22,7 +22,7 @@ export type OnboardingState = {
 
 export interface StorageService {
   getOnboardingState(): OnboardingState | undefined;
-  saveOnboardingState(onboardingState: OnboardingState): Promise<void>;
+  saveOnboardingState(onboardingState: OnboardingState): void;
 }
 
 export interface OnboardingContextType {
