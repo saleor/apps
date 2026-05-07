@@ -1,0 +1,11 @@
+a {
+  text-decoration: none;
+}
+
+code {
+  background-color: var(--mu-colors-background-surface-brand-subdued);
+}
+
+body {
+  margin: 0;
+}

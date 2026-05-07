@@ -1,0 +1,5 @@
+query TransactionDetailsViaId($id: ID!) {
+  transaction(id: $id) {
+    ...Transaction
+  }
+}

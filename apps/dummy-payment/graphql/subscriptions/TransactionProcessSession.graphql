@@ -1,0 +1,5 @@
+subscription TransactionProcessSession {
+  event {
+    ...TransactionProcessSessionEvent
+  }
+}

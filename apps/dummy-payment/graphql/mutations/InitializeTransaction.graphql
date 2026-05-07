@@ -1,0 +1,28 @@
+mutation InitializeTransaction($id: ID!, $data: JSON!) {
+  transactionInitialize(
+    id: $id
+    paymentGateway: { id: "saleor.io.dummy-payment-app", data: $data }
+  ) {
+    errors {
+      code
+      field
+      message
+    }
+    transaction {
+      id
+      pspReference
+    }
+    transactionEvent {
+      id
+      pspReference
+      message
+      externalUrl
+      amount {
+        currency
+        amount
+      }
+      type
+      idempotencyKey
+    }
+  }
+}
