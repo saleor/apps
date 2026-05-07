@@ -2,6 +2,10 @@
   "name": "@saleor/webhook-utils",
   "version": "0.2.10",
   "type": "module",
+  "exports": {
+    ".": "./index.ts",
+    "./app-deleted-handler": "./src/app-deleted-handler.ts"
+  },
   "main": "index.ts",
   "scripts": {
     "check-types": "tsc",
@@ -38,6 +42,7 @@
     "vitest": "catalog:"
   },
   "peerDependencies": {
+    "@saleor/apps-logger": "workspace:*",
     "next": "catalog:",
     "urql": "catalog:"
   }
