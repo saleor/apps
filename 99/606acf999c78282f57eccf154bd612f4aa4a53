@@ -1,0 +1,25 @@
+apps/onboarding/src/pages/index.tsx
+  s_6b816de61d83f6::t_65e6e96be09fe6 1-14
+apps/onboarding/src/pages/_error.tsx
+  s_6b816de61d83f6::t_022896a5827c9d 1-17
+apps/onboarding/src/pages/_app.tsx
+  s_6b816de61d83f6::t_fd4747509fbb6e 1-42
+apps/onboarding/eslint.config.js
+  s_6b816de61d83f6::t_9bf403c3cfda3e 25-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "99606acf999c78282f57eccf154bd612f4aa4a53",
+  "prompts": {},
+  "sessions": {
+    "s_6b816de61d83f6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "11cf66da-82a9-4073-8f57-b049ad9ef4a9",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>"
+    }
+  }
+}
