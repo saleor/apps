@@ -1,5 +1,12 @@
 # saleor-app-avatax
 
+## 1.22.8
+
+### Patch Changes
+
+- 9265c47: Fixed Client Logs date filter showing an opaque error when the "From" date was after the "To" date. Before, the request was sent and DynamoDB rejected it with a generic validation error. Now the form skips the request and shows a clear inline message, and the API rejects inverted ranges with a 400 response.
+- 4af78c1: Failed JWT verification in tRPC procedures no longer reports to Sentry as an error. Before, an expired or invalid token raised a 500 (or 403) and produced an error in monitoring even though it was a normal client-side auth failure. Now it logs a warning and returns 401, so dashboards stay clean and the client can react to the auth state correctly.
+
 ## 1.22.7
 
 ### Patch Changes
