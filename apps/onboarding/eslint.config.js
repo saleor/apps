@@ -22,8 +22,8 @@ export default [
     },
   },
   {
-    name: "saleor-app-onboarding/app-router-default-exports",
-    files: ["src/app/**/*"],
+    name: "saleor-app-onboarding/router-default-exports",
+    files: ["src/app/**/*", "src/pages/**/*"],
     rules: {
       "import/no-default-export": "off",
     },
