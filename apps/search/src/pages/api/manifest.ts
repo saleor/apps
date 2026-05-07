@@ -48,7 +48,7 @@ export default wrapWithLoggerContext(
           version: packageJson.version,
           webhooks: appWebhooks.map((w) => w.getWebhookManifest(apiBaseURL)),
           author: "Saleor Commerce",
-          requiredSaleorVersion: ">=3.20 <4",
+          requiredSaleorVersion: ">=3.21 <4",
         };
 
         return manifest;
