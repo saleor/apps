@@ -1,4 +1,13 @@
 import {
+  type AccountChangeEmailRequestedWebhookPayloadFragment,
+  type AccountConfirmationRequestedWebhookPayloadFragment,
+  type AccountDeleteRequestedWebhookPayloadFragment,
+  type AccountEmailChangedWebhookPayloadFragment,
+  type AccountSetPasswordRequestedWebhookPayloadFragment,
+  type FulfillmentApprovedWebhookPayloadFragment,
+  type FulfillmentCanceledWebhookPayloadFragment,
+  type FulfillmentCreatedWebhookPayloadFragment,
+  type FulfillmentTrackingNumberUpdatedWebhookPayloadFragment,
   type GiftCardSentWebhookPayloadFragment,
   type InvoiceSentWebhookPayloadFragment,
   type OrderCancelledWebhookPayloadFragment,
@@ -997,6 +1006,118 @@ const fulfillmentUpdatePayload: NotifyPayloadFulfillmentUpdate = {
 
 /*
  * =============================================================================
+ * DEDICATED ACCOUNT WEBHOOK PAYLOADS (GraphQL subscription - camelCase)
+ * =============================================================================
+ * Used for: ACCOUNT_CONFIRMATION_REQUESTED (and future dedicated account events)
+ *
+ * These payloads come from Saleor GraphQL subscriptions, not the legacy NOTIFY
+ * webhook, so field names are camelCase and the structure mirrors the schema
+ * types directly.
+ * =============================================================================
+ */
+
+const exampleAccountUserPayload = {
+  id: "VXNlcjoxOTY=",
+  email: "sarah.johnson@example.com",
+  firstName: "Sarah",
+  lastName: "Johnson",
+};
+
+const exampleShopPayload = {
+  name: "Acme Store",
+  domain: { host: "acme-store.example.com" },
+};
+
+const accountConfirmationRequestedPayload: AccountConfirmationRequestedWebhookPayloadFragment = {
+  user: exampleAccountUserPayload,
+  redirectUrl: "https://example.com/account/confirm",
+  token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  channel: { slug: "default-channel" },
+  shop: exampleShopPayload,
+};
+
+const accountDeleteRequestedPayload: AccountDeleteRequestedWebhookPayloadFragment = {
+  user: exampleAccountUserPayload,
+  redirectUrl: "https://example.com/account/delete",
+  token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  channel: { slug: "default-channel" },
+  shop: exampleShopPayload,
+};
+
+const accountSetPasswordRequestedPayload: AccountSetPasswordRequestedWebhookPayloadFragment = {
+  user: exampleAccountUserPayload,
+  redirectUrl: "https://example.com/account/reset-password",
+  token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  channel: { slug: "default-channel" },
+  shop: exampleShopPayload,
+};
+
+const accountChangeEmailRequestedPayload: AccountChangeEmailRequestedWebhookPayloadFragment = {
+  user: exampleAccountUserPayload,
+  newEmail: "sarah.j.johnson@example.com",
+  redirectUrl: "https://example.com/account/change-email",
+  token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  channel: { slug: "default-channel" },
+  shop: exampleShopPayload,
+};
+
+const accountEmailChangedPayload: AccountEmailChangedWebhookPayloadFragment = {
+  user: { ...exampleAccountUserPayload, email: "sarah.j.johnson@example.com" },
+  newEmail: "sarah.j.johnson@example.com",
+  redirectUrl: "https://example.com/account/email-changed",
+  token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  channel: { slug: "default-channel" },
+  shop: exampleShopPayload,
+};
+
+/*
+ * =============================================================================
+ * DEDICATED FULFILLMENT WEBHOOK PAYLOADS (GraphQL subscription - camelCase)
+ * =============================================================================
+ */
+
+const exampleFulfillmentOrderPayload = {
+  id: "T3JkZXI6NTdiNTBhNDAtYzRmYi00YjQzLWIxODgtM2JhZmRlMTc3MGQ5",
+  number: "1042",
+  userEmail: "adrian.king@example.com",
+  channel: { slug: "default-channel", name: "Acme Store" },
+};
+
+const fulfillmentTrackingNumberUpdatedPayload: FulfillmentTrackingNumberUpdatedWebhookPayloadFragment =
+  {
+    fulfillment: {
+      id: "RnVsZmlsbG1lbnQ6MQ==",
+      trackingNumber: "1Z999AA10123456784",
+    },
+    order: exampleFulfillmentOrderPayload,
+  };
+
+const fulfillmentCreatedPayload: FulfillmentCreatedWebhookPayloadFragment = {
+  fulfillment: {
+    id: "RnVsZmlsbG1lbnQ6MQ==",
+    trackingNumber: "",
+  },
+  order: exampleFulfillmentOrderPayload,
+};
+
+const fulfillmentApprovedPayload: FulfillmentApprovedWebhookPayloadFragment = {
+  fulfillment: {
+    id: "RnVsZmlsbG1lbnQ6MQ==",
+    trackingNumber: "1Z999AA10123456784",
+  },
+  order: exampleFulfillmentOrderPayload,
+};
+
+const fulfillmentCanceledPayload: FulfillmentCanceledWebhookPayloadFragment = {
+  fulfillment: {
+    id: "RnVsZmlsbG1lbnQ6MQ==",
+    trackingNumber: "",
+  },
+  order: exampleFulfillmentOrderPayload,
+};
+
+/*
+ * =============================================================================
  * GIFT CARD PAYLOAD
  * =============================================================================
  */
@@ -1056,9 +1177,18 @@ const giftCardSentPayload: GiftCardSentWebhookPayloadFragment = {
 export const examplePayloads: Record<MessageEventTypes, any> = {
   ACCOUNT_CHANGE_EMAIL_CONFIRM: accountChangeEmailConfirmPayload,
   ACCOUNT_CHANGE_EMAIL_REQUEST: accountChangeEmailRequestPayload,
+  ACCOUNT_CHANGE_EMAIL_REQUESTED: accountChangeEmailRequestedPayload,
+  ACCOUNT_EMAIL_CHANGED: accountEmailChangedPayload,
   ACCOUNT_CONFIRMATION: accountConfirmationPayload,
+  ACCOUNT_CONFIRMATION_REQUESTED: accountConfirmationRequestedPayload,
   ACCOUNT_DELETE: accountDeletePayload,
+  ACCOUNT_DELETE_REQUESTED: accountDeleteRequestedPayload,
   ACCOUNT_PASSWORD_RESET: accountPasswordResetPayload,
+  ACCOUNT_SET_PASSWORD_REQUESTED: accountSetPasswordRequestedPayload,
+  FULFILLMENT_APPROVED: fulfillmentApprovedPayload,
+  FULFILLMENT_CANCELED: fulfillmentCanceledPayload,
+  FULFILLMENT_CREATED: fulfillmentCreatedPayload,
+  FULFILLMENT_TRACKING_NUMBER_UPDATED: fulfillmentTrackingNumberUpdatedPayload,
   GIFT_CARD_SENT: giftCardSentPayload,
   INVOICE_SENT: invoiceSentPayload,
   ORDER_CANCELLED: orderCancelledPayload,

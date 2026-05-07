@@ -47,6 +47,33 @@ const headerSection = `<mj-section padding="0 0 24px">
   </mj-column>
 </mj-section>`;
 
+// —— Header for Account events (camelCase, GraphQL subscription payloads) ——
+const accountHeaderSection = `<mj-section padding="0 0 24px">
+  <mj-column>
+    {{#if shop.name}}
+    <mj-text font-size="20px" font-weight="700" color="${colors.primary}" padding="0 0 16px">{{shop.name}}</mj-text>
+    {{/if}}
+  </mj-column>
+</mj-section>`;
+
+// —— Footer for Account events (camelCase, GraphQL subscription payloads) ——
+const accountFooterSection = `<mj-section padding="24px 0 0">
+  <mj-column>
+    <mj-divider border-color="${colors.border}" border-width="1px" padding="0 0 24px" />
+    <mj-text font-size="14px" color="${colors.muted}" align="center">
+      Questions? Reply to this email or contact our support team.
+    </mj-text>
+    {{#if shop.name}}
+    <mj-text font-size="14px" color="${colors.muted}" align="center" padding-top="8px">
+      &copy; {{shop.name}}
+    </mj-text>
+    {{/if}}
+    <mj-text font-size="12px" color="${colors.muted}" align="center" padding-top="12px" font-style="italic">
+      Powered by Saleor Commerce
+    </mj-text>
+  </mj-column>
+</mj-section>`;
+
 // —— Header for Order webhooks (uses branding from app config) ——
 const orderHeaderSection = `<mj-section padding="0 0 24px">
   <mj-column>
@@ -404,6 +431,117 @@ ${mjHead}
 
 /*
  * ============================================================
+ * FULFILLMENT TEMPLATES (camelCase, GraphQL subscription payloads)
+ * ============================================================
+ */
+
+const fulfillmentHeaderSection = `<mj-section padding="0 0 24px">
+  <mj-column>
+    {{#if order.channel.name}}
+    <mj-text font-size="20px" font-weight="700" color="${colors.primary}" padding="0 0 16px">{{order.channel.name}}</mj-text>
+    {{/if}}
+  </mj-column>
+</mj-section>`;
+
+const fulfillmentFooterSection = `<mj-section padding="24px 0 0">
+  <mj-column>
+    <mj-divider border-color="${colors.border}" border-width="1px" padding="0 0 24px" />
+    <mj-text font-size="14px" color="${colors.muted}" align="center">
+      Questions? Reply to this email or contact our support team.
+    </mj-text>
+    {{#if order.channel.name}}
+    <mj-text font-size="14px" color="${colors.muted}" align="center" padding-top="8px">
+      &copy; {{order.channel.name}}
+    </mj-text>
+    {{/if}}
+    <mj-text font-size="12px" color="${colors.muted}" align="center" padding-top="12px" font-style="italic">
+      Powered by Saleor Commerce
+    </mj-text>
+  </mj-column>
+</mj-section>`;
+
+const defaultFulfillmentTrackingNumberUpdatedMjmlTemplate = `<mjml>
+${mjHead}
+<mj-body>
+  <mj-wrapper>
+    ${fulfillmentHeaderSection}
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="24px" font-weight="700" color="${colors.primary}" padding="0 0 16px">Tracking number updated</mj-text>
+        <mj-text padding="0 0 8px">Hi {{order.userEmail}}, the tracking number for your order #{{order.number}} has been updated.</mj-text>
+        {{#if fulfillment.trackingNumber}}
+        <mj-text padding="8px 0 0">
+          <strong>Tracking number:</strong> {{fulfillment.trackingNumber}}
+        </mj-text>
+        {{/if}}
+      </mj-column>
+    </mj-section>
+    ${fulfillmentFooterSection}
+  </mj-wrapper>
+</mj-body>
+</mjml>`;
+
+const defaultFulfillmentCreatedMjmlTemplate = `<mjml>
+${mjHead}
+<mj-body>
+  <mj-wrapper>
+    ${fulfillmentHeaderSection}
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="24px" font-weight="700" color="${colors.primary}" padding="0 0 16px">Fulfillment created</mj-text>
+        <mj-text padding="0 0 8px">Hi {{order.userEmail}}, fulfillment for your order #{{order.number}} has been created.</mj-text>
+        {{#if fulfillment.trackingNumber}}
+        <mj-text padding="8px 0 0">
+          <strong>Tracking number:</strong> {{fulfillment.trackingNumber}}
+        </mj-text>
+        {{/if}}
+      </mj-column>
+    </mj-section>
+    ${fulfillmentFooterSection}
+  </mj-wrapper>
+</mj-body>
+</mjml>`;
+
+const defaultFulfillmentApprovedMjmlTemplate = `<mjml>
+${mjHead}
+<mj-body>
+  <mj-wrapper>
+    ${fulfillmentHeaderSection}
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="24px" font-weight="700" color="${colors.primary}" padding="0 0 16px">Fulfillment approved</mj-text>
+        <mj-text padding="0 0 8px">Hi {{order.userEmail}}, fulfillment for your order #{{order.number}} has been approved.</mj-text>
+        {{#if fulfillment.trackingNumber}}
+        <mj-text padding="8px 0 0">
+          <strong>Tracking number:</strong> {{fulfillment.trackingNumber}}
+        </mj-text>
+        {{/if}}
+      </mj-column>
+    </mj-section>
+    ${fulfillmentFooterSection}
+  </mj-wrapper>
+</mj-body>
+</mjml>`;
+
+const defaultFulfillmentCanceledMjmlTemplate = `<mjml>
+${mjHead}
+<mj-body>
+  <mj-wrapper>
+    ${fulfillmentHeaderSection}
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="24px" font-weight="700" color="${colors.primary}" padding="0 0 16px">Fulfillment canceled</mj-text>
+        <mj-text padding="0 0 8px">Hi {{order.userEmail}}, fulfillment for your order #{{order.number}} has been canceled.</mj-text>
+        <mj-text padding="0" color="${colors.muted}">If you have any questions, please contact our support team.</mj-text>
+      </mj-column>
+    </mj-section>
+    ${fulfillmentFooterSection}
+  </mj-wrapper>
+</mj-body>
+</mjml>`;
+
+/*
+ * ============================================================
  * INVOICE TEMPLATE
  * ============================================================
  */
@@ -609,6 +747,138 @@ ${mjHead}
 </mj-body>
 </mjml>`;
 
+const defaultAccountConfirmationRequestedMjmlTemplate = `<mjml>
+${mjHead}
+<mj-body>
+  <mj-wrapper>
+    ${accountHeaderSection}
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="24px" font-weight="700" color="${colors.primary}" padding="0 0 16px">Activate your account</mj-text>
+        <mj-text padding="0 0 8px">Hi{{#if user.firstName}} {{user.firstName}}{{/if}}! Thanks for signing up.</mj-text>
+        <mj-text padding="0">Click the button below to activate your account and get started.</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="24px 0 0">
+      <mj-column>
+        <mj-button href="{{redirectUrl}}?token={{token}}">Activate account</mj-button>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="16px 0 0">
+      <mj-column>
+        <mj-text font-size="14px" color="${colors.muted}">If you didn't create an account, you can safely ignore this email.</mj-text>
+      </mj-column>
+    </mj-section>
+    ${accountFooterSection}
+  </mj-wrapper>
+</mj-body>
+</mjml>`;
+
+const defaultAccountDeleteRequestedMjmlTemplate = `<mjml>
+${mjHead}
+<mj-body>
+  <mj-wrapper>
+    ${accountHeaderSection}
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="24px" font-weight="700" color="${colors.primary}" padding="0 0 16px">Delete your account</mj-text>
+        <mj-text padding="0 0 8px">Hi{{#if user.firstName}} {{user.firstName}}{{/if}}, we received a request to delete your account.</mj-text>
+        <mj-text padding="0">If you want to proceed, click the button below. This action cannot be undone.</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="24px 0 0">
+      <mj-column>
+        <mj-button href="{{redirectUrl}}?token={{token}}" background-color="#dc2626">Delete my account</mj-button>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="16px 0 0">
+      <mj-column>
+        <mj-text font-size="14px" color="${colors.muted}">If you didn't request this, you can safely ignore this email. Your account will remain active.</mj-text>
+      </mj-column>
+    </mj-section>
+    ${accountFooterSection}
+  </mj-wrapper>
+</mj-body>
+</mjml>`;
+
+const defaultAccountSetPasswordRequestedMjmlTemplate = `<mjml>
+${mjHead}
+<mj-body>
+  <mj-wrapper>
+    ${accountHeaderSection}
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="24px" font-weight="700" color="${colors.primary}" padding="0 0 16px">Reset your password</mj-text>
+        <mj-text padding="0 0 8px">Hi{{#if user.firstName}} {{user.firstName}}{{/if}}! We received a request to reset your password.</mj-text>
+        <mj-text padding="0">Click the button below to create a new password.</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="24px 0 0">
+      <mj-column>
+        <mj-button href="{{redirectUrl}}?token={{token}}">Reset password</mj-button>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="16px 0 0">
+      <mj-column>
+        <mj-text font-size="14px" color="${colors.muted}">If you didn't request a password reset, you can safely ignore this email. Your password won't be changed.</mj-text>
+      </mj-column>
+    </mj-section>
+    ${accountFooterSection}
+  </mj-wrapper>
+</mj-body>
+</mjml>`;
+
+const defaultAccountChangeEmailRequestedMjmlTemplate = `<mjml>
+${mjHead}
+<mj-body>
+  <mj-wrapper>
+    ${accountHeaderSection}
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="24px" font-weight="700" color="${colors.primary}" padding="0 0 16px">Confirm your new email</mj-text>
+        <mj-text padding="0 0 8px">Hi{{#if user.firstName}} {{user.firstName}}{{/if}}! You requested to change the email on the account <strong>{{user.email}}</strong> to <strong>{{newEmail}}</strong>.</mj-text>
+        <mj-text padding="0">Click the button below to confirm this change.</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="24px 0 0">
+      <mj-column>
+        <mj-button href="{{redirectUrl}}?token={{token}}">Confirm email change</mj-button>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="16px 0 0">
+      <mj-column>
+        <mj-text font-size="14px" color="${colors.muted}">If you didn't request this change, please ignore this email or contact support.</mj-text>
+      </mj-column>
+    </mj-section>
+    ${accountFooterSection}
+  </mj-wrapper>
+</mj-body>
+</mjml>`;
+
+const defaultAccountEmailChangedMjmlTemplate = `<mjml>
+${mjHead}
+<mj-body>
+  <mj-wrapper>
+    ${accountHeaderSection}
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="24px" font-weight="700" color="${colors.primary}" padding="0 0 16px">Email updated</mj-text>
+        <mj-text padding="0 0 8px">Hi{{#if user.firstName}} {{user.firstName}}{{/if}}! Your email address has been successfully updated.</mj-text>
+        {{#if newEmail}}
+        <mj-text padding="0">Your new email is <strong>{{newEmail}}</strong>.</mj-text>
+        {{/if}}
+      </mj-column>
+    </mj-section>
+    <mj-section padding="16px 0 0">
+      <mj-column>
+        <mj-text font-size="14px" color="${colors.muted}">If you didn't make this change, please contact support immediately.</mj-text>
+      </mj-column>
+    </mj-section>
+    ${accountFooterSection}
+  </mj-wrapper>
+</mj-body>
+</mjml>`;
+
 /*
  * ============================================================
  * EXPORTS
@@ -618,9 +888,18 @@ ${mjHead}
 export const defaultMjmlTemplates: Record<MessageEventTypes, string> = {
   ACCOUNT_CHANGE_EMAIL_CONFIRM: defaultAccountChangeEmailConfirmationMjmlTemplate,
   ACCOUNT_CHANGE_EMAIL_REQUEST: defaultAccountChangeEmailRequestMjmlTemplate,
+  ACCOUNT_CHANGE_EMAIL_REQUESTED: defaultAccountChangeEmailRequestedMjmlTemplate,
+  ACCOUNT_EMAIL_CHANGED: defaultAccountEmailChangedMjmlTemplate,
   ACCOUNT_CONFIRMATION: defaultAccountConfirmationMjmlTemplate,
+  ACCOUNT_CONFIRMATION_REQUESTED: defaultAccountConfirmationRequestedMjmlTemplate,
   ACCOUNT_DELETE: defaultAccountDeleteMjmlTemplate,
+  ACCOUNT_DELETE_REQUESTED: defaultAccountDeleteRequestedMjmlTemplate,
   ACCOUNT_PASSWORD_RESET: defaultAccountPasswordResetMjmlTemplate,
+  ACCOUNT_SET_PASSWORD_REQUESTED: defaultAccountSetPasswordRequestedMjmlTemplate,
+  FULFILLMENT_APPROVED: defaultFulfillmentApprovedMjmlTemplate,
+  FULFILLMENT_CANCELED: defaultFulfillmentCanceledMjmlTemplate,
+  FULFILLMENT_CREATED: defaultFulfillmentCreatedMjmlTemplate,
+  FULFILLMENT_TRACKING_NUMBER_UPDATED: defaultFulfillmentTrackingNumberUpdatedMjmlTemplate,
   GIFT_CARD_SENT: defaultGiftCardSentMjmlTemplate,
   INVOICE_SENT: defaultInvoiceSentMjmlTemplate,
   ORDER_CANCELLED: defaultOrderCancelledMjmlTemplate,
@@ -635,9 +914,18 @@ export const defaultMjmlTemplates: Record<MessageEventTypes, string> = {
 export const defaultMjmlSubjectTemplates: Record<MessageEventTypes, string> = {
   ACCOUNT_CHANGE_EMAIL_CONFIRM: "Your email has been updated",
   ACCOUNT_CHANGE_EMAIL_REQUEST: "Confirm your new email address",
+  ACCOUNT_CHANGE_EMAIL_REQUESTED: "Confirm your new email address",
+  ACCOUNT_EMAIL_CHANGED: "Your email has been updated",
   ACCOUNT_CONFIRMATION: "Activate your account",
+  ACCOUNT_CONFIRMATION_REQUESTED: "Activate your account",
   ACCOUNT_DELETE: "Confirm account deletion",
+  ACCOUNT_DELETE_REQUESTED: "Confirm account deletion",
   ACCOUNT_PASSWORD_RESET: "Reset your password",
+  ACCOUNT_SET_PASSWORD_REQUESTED: "Reset your password",
+  FULFILLMENT_APPROVED: "Your fulfillment has been approved",
+  FULFILLMENT_CANCELED: "Your fulfillment has been canceled",
+  FULFILLMENT_CREATED: "Your order is being prepared",
+  FULFILLMENT_TRACKING_NUMBER_UPDATED: "Tracking number updated for your order",
   GIFT_CARD_SENT: "You've received a gift card!",
   INVOICE_SENT: "Your invoice is ready",
   ORDER_CANCELLED: "Your order has been cancelled",

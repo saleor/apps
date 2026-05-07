@@ -2,6 +2,15 @@ import { type Client } from "urql";
 
 import { type WebhookEventTypeAsyncEnum } from "../../../generated/graphql";
 import { createLogger } from "../../logger";
+import { accountChangeEmailRequestedWebhook } from "../../pages/api/webhooks/account-change-email-requested";
+import { accountConfirmationRequestedWebhook } from "../../pages/api/webhooks/account-confirmation-requested";
+import { accountDeleteRequestedWebhook } from "../../pages/api/webhooks/account-delete-requested";
+import { accountEmailChangedWebhook } from "../../pages/api/webhooks/account-email-changed";
+import { accountSetPasswordRequestedWebhook } from "../../pages/api/webhooks/account-set-password-requested";
+import { fulfillmentApprovedWebhook } from "../../pages/api/webhooks/fulfillment-approved";
+import { fulfillmentCanceledWebhook } from "../../pages/api/webhooks/fulfillment-canceled";
+import { fulfillmentCreatedWebhook } from "../../pages/api/webhooks/fulfillment-created";
+import { fulfillmentTrackingNumberUpdatedWebhook } from "../../pages/api/webhooks/fulfillment-tracking-number-updated";
 import { giftCardSentWebhook } from "../../pages/api/webhooks/gift-card-sent";
 import { invoiceSentWebhook } from "../../pages/api/webhooks/invoice-sent";
 import { notifyWebhook } from "../../pages/api/webhooks/notify";
@@ -16,6 +25,15 @@ import { type FeatureFlagService } from "../feature-flag-service/feature-flag-se
 import { createAppWebhook, deleteAppWebhook, fetchAppWebhooks } from "./api-operations";
 
 export const AppWebhooks = {
+  accountChangeEmailRequestedWebhook,
+  accountConfirmationRequestedWebhook,
+  accountDeleteRequestedWebhook,
+  accountEmailChangedWebhook,
+  accountSetPasswordRequestedWebhook,
+  fulfillmentApprovedWebhook,
+  fulfillmentCanceledWebhook,
+  fulfillmentCreatedWebhook,
+  fulfillmentTrackingNumberUpdatedWebhook,
   giftCardSentWebhook,
   invoiceSentWebhook,
   notifyWebhook,
@@ -32,9 +50,18 @@ export type AppWebhook = keyof typeof AppWebhooks;
 export const eventToWebhookMapping: Record<MessageEventTypes, AppWebhook> = {
   ACCOUNT_CHANGE_EMAIL_CONFIRM: "notifyWebhook",
   ACCOUNT_CHANGE_EMAIL_REQUEST: "notifyWebhook",
+  ACCOUNT_CHANGE_EMAIL_REQUESTED: "accountChangeEmailRequestedWebhook",
+  ACCOUNT_EMAIL_CHANGED: "accountEmailChangedWebhook",
   ACCOUNT_CONFIRMATION: "notifyWebhook",
+  ACCOUNT_CONFIRMATION_REQUESTED: "accountConfirmationRequestedWebhook",
   ACCOUNT_DELETE: "notifyWebhook",
+  ACCOUNT_DELETE_REQUESTED: "accountDeleteRequestedWebhook",
   ACCOUNT_PASSWORD_RESET: "notifyWebhook",
+  ACCOUNT_SET_PASSWORD_REQUESTED: "accountSetPasswordRequestedWebhook",
+  FULFILLMENT_APPROVED: "fulfillmentApprovedWebhook",
+  FULFILLMENT_CANCELED: "fulfillmentCanceledWebhook",
+  FULFILLMENT_CREATED: "fulfillmentCreatedWebhook",
+  FULFILLMENT_TRACKING_NUMBER_UPDATED: "fulfillmentTrackingNumberUpdatedWebhook",
   GIFT_CARD_SENT: "giftCardSentWebhook",
   INVOICE_SENT: "invoiceSentWebhook",
   ORDER_CANCELLED: "orderCancelledWebhook",
