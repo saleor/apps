@@ -1,0 +1,13 @@
+query Me {
+  me {
+    id
+    dateJoined
+    metadata {
+      key
+      value
+    }
+    userPermissions {
+      code
+    }
+  }
+}
