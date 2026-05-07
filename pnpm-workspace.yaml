@@ -28,6 +28,7 @@ packages:
   - apps/*
   - packages/*
   - templates/*
+  - scripts
 
 onlyBuiltDependencies:
   - "@sentry/cli"
