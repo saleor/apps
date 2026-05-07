@@ -1,0 +1,14 @@
+apps/onboarding/src/app/api/manifest/route.ts
+  h_0b728ee11e7481 12,14,17,26,28,30,33,35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "dcbba47a29baf26c3fed5725b1fb2bc464750a98",
+  "prompts": {},
+  "humans": {
+    "h_0b728ee11e7481": {
+      "author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>"
+    }
+  }
+}
