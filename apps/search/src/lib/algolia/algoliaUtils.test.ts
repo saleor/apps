@@ -1,6 +1,16 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { channelListingToAlgoliaIndexId, productAndVariantToAlgolia } from "./algoliaUtils";
+
+const warnSpy = vi.fn();
+
+vi.mock("../logger", () => ({
+  createLogger: () => ({
+    info: vi.fn(),
+    warn: (...args: unknown[]) => warnSpy(...args),
+    error: vi.fn(),
+  }),
+}));
 
 describe("algoliaUtils", function () {
   describe("channelListingToAlgoliaIndexId", function () {
@@ -172,6 +182,213 @@ describe("algoliaUtils", function () {
 
       // @ts-expect-error - record is not typed (attributes are dynamic keys)
       expect(mappedEntity.attributes["size"]).toBe("Large");
+    });
+
+    it("Maps NUMERIC attribute as a number so Algolia numericFilters work", () => {
+      const mappedEntity = productAndVariantToAlgolia({
+        channel: "test",
+        enabledKeys: ["attributes"],
+        variant: {
+          id: "id",
+          attributes: [
+            {
+              attribute: { name: "width" },
+              values: [
+                {
+                  name: "15",
+                  inputType: "NUMERIC",
+                  boolean: null,
+                },
+              ],
+            },
+          ],
+          name: "product name",
+          metadata: [],
+          product: {
+            __typename: undefined,
+            id: "",
+            name: "",
+            description: undefined,
+            slug: "",
+            productType: { id: "pt-1", name: "Default", slug: "default" },
+            variants: undefined,
+            category: undefined,
+            thumbnail: undefined,
+            media: undefined,
+            attributes: [],
+            channelListings: undefined,
+            collections: undefined,
+            metadata: [],
+          },
+        },
+      });
+
+      // @ts-expect-error - record is not typed (attributes are dynamic keys)
+      expect(mappedEntity.attributes["width"]).toBe(15);
+      // @ts-expect-error - record is not typed (attributes are dynamic keys)
+      expect(typeof mappedEntity.attributes["width"]).toBe("number");
+    });
+
+    it("Drops NUMERIC attribute that cannot be parsed as a number", () => {
+      warnSpy.mockClear();
+
+      const mappedEntity = productAndVariantToAlgolia({
+        channel: "test",
+        enabledKeys: ["attributes"],
+        variant: {
+          id: "id",
+          attributes: [
+            {
+              attribute: { name: "width" },
+              values: [
+                {
+                  name: "15 cm",
+                  inputType: "NUMERIC",
+                  boolean: null,
+                },
+              ],
+            },
+          ],
+          name: "product name",
+          metadata: [],
+          product: {
+            __typename: undefined,
+            id: "",
+            name: "",
+            description: undefined,
+            slug: "",
+            productType: { id: "pt-1", name: "Default", slug: "default" },
+            variants: undefined,
+            category: undefined,
+            thumbnail: undefined,
+            media: undefined,
+            attributes: [],
+            channelListings: undefined,
+            collections: undefined,
+            metadata: [],
+          },
+        },
+      });
+
+      expect(mappedEntity.attributes).not.toHaveProperty("width");
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining("NUMERIC"),
+        expect.objectContaining({ attributeName: "width", rawValue: "15 cm" }),
+      );
+    });
+
+    it("Maps NUMERIC, BOOLEAN and string attributes correctly when present on the same product", () => {
+      const mappedEntity = productAndVariantToAlgolia({
+        channel: "test",
+        enabledKeys: ["attributes"],
+        variant: {
+          id: "id",
+          attributes: [
+            {
+              attribute: { name: "width" },
+              values: [{ name: "15", inputType: "NUMERIC", boolean: null }],
+            },
+            {
+              attribute: { name: "inStock" },
+              values: [{ name: "true", inputType: "BOOLEAN", boolean: true }],
+            },
+            {
+              attribute: { name: "size" },
+              values: [{ name: "Large", inputType: "DROPDOWN", boolean: null }],
+            },
+          ],
+          name: "product name",
+          metadata: [],
+          product: {
+            __typename: undefined,
+            id: "",
+            name: "",
+            description: undefined,
+            slug: "",
+            productType: { id: "pt-1", name: "Default", slug: "default" },
+            variants: undefined,
+            category: undefined,
+            thumbnail: undefined,
+            media: undefined,
+            attributes: [],
+            channelListings: undefined,
+            collections: undefined,
+            metadata: [],
+          },
+        },
+      });
+
+      // @ts-expect-error - record is not typed (attributes are dynamic keys)
+      expect(mappedEntity.attributes["width"]).toBe(15);
+      // @ts-expect-error - record is not typed (attributes are dynamic keys)
+      expect(mappedEntity.attributes["inStock"]).toBe(true);
+      // @ts-expect-error - record is not typed (attributes are dynamic keys)
+      expect(mappedEntity.attributes["size"]).toBe("Large");
+    });
+
+    it("Indexes productTypeName when product type is set", () => {
+      const mappedEntity = productAndVariantToAlgolia({
+        channel: "test",
+        enabledKeys: [],
+        variant: {
+          id: "id",
+          attributes: [],
+          name: "product name",
+          metadata: [],
+          product: {
+            __typename: undefined,
+            id: "",
+            name: "",
+            description: undefined,
+            slug: "",
+            productType: { id: "pt-tyre", name: "Tyres", slug: "tyres" },
+            variants: undefined,
+            category: undefined,
+            thumbnail: undefined,
+            media: undefined,
+            attributes: [],
+            channelListings: undefined,
+            collections: undefined,
+            metadata: [],
+          },
+        },
+      });
+
+      expect(mappedEntity.productTypeName).toBe("Tyres");
+      expect(mappedEntity.productTypeId).toBe("pt-tyre");
+    });
+
+    it("Sets productTypeName to null when product type is absent", () => {
+      const mappedEntity = productAndVariantToAlgolia({
+        channel: "test",
+        enabledKeys: [],
+        variant: {
+          id: "id",
+          attributes: [],
+          name: "product name",
+          metadata: [],
+          product: {
+            __typename: undefined,
+            id: "",
+            name: "",
+            description: undefined,
+            slug: "",
+            productType: undefined as unknown as { id: string; name: string; slug: string },
+            variants: undefined,
+            category: undefined,
+            thumbnail: undefined,
+            media: undefined,
+            attributes: [],
+            channelListings: undefined,
+            collections: undefined,
+            metadata: [],
+          },
+        },
+      });
+
+      expect(mappedEntity.productTypeName).toBeNull();
+      expect(mappedEntity.productTypeId).toBeNull();
     });
 
     it("Maps multi-value attributes as array of strings", () => {
