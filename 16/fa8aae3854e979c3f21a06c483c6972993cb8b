@@ -1,0 +1,31 @@
+apps/search/src/lib/algolia/algoliaUtils.ts
+  s_36d278950592c5::t_6465cbd2886c5e 84-96,101-104,114,123-141,155
+  s_36d278950592c5::t_7a744da862e21d 168,171,183
+  s_36d278950592c5::t_936a309d62fe15 220
+  s_36d278950592c5::t_d58f6dc32710b2 9,13
+apps/search/src/lib/algolia/pageAlgoliaUtils.ts
+  s_36d278950592c5::t_bfa10bce7cad2b 30
+apps/search/src/lib/algolia/algoliaUtils.test.ts
+  s_36d278950592c5::t_9c832f5c2fa8c8 187-376,378-393
+  s_36d278950592c5::t_e345ea43b8c8e9 377
+  s_36d278950592c5::t_5088b2550ab598 1,5-13
+.changeset/search-numeric-attributes-and-product-type-name.md
+  s_36d278950592c5::t_0c95af885c452d 1-4,6-9
+  ai_agent 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "16fa8aae3854e979c3f21a06c483c6972993cb8b",
+  "prompts": {},
+  "sessions": {
+    "s_36d278950592c5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "26fa9683-5edc-4de4-b34d-ad49eb30836a",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>"
+    }
+  }
+}
