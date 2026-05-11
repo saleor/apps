@@ -4901,6 +4901,28 @@ export type CheckoutCustomerNoteUpdate = {
 };
 
 /**
+ * Deletes a checkout.
+ *
+ * Added in Saleor 3.23.
+ *
+ * Requires one of the following permissions: MANAGE_CHECKOUTS.
+ */
+export type CheckoutDelete = {
+  __typename?: 'CheckoutDelete';
+  errors: Array<CheckoutDeleteError>;
+};
+
+export type CheckoutDeleteError = {
+  __typename?: 'CheckoutDeleteError';
+  /** The error code. */
+  code: CheckoutErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+/**
  * Updates the delivery method (shipping method or pick up point) of the checkout. Updates the checkout shipping_address for click and collect delivery for a warehouse address.
  *
  * Triggers the following webhook events:
@@ -6897,6 +6919,25 @@ export type CustomerDelete = {
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
   user?: Maybe<User>;
+};
+
+/**
+ * Event sent when customer user is deleted.
+ *
+ * Added in Saleor 3.23.
+ */
+export type CustomerDeleted = Event & {
+  __typename?: 'CustomerDeleted';
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** The user the event relates to. */
+  user?: Maybe<User>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
 };
 
 /** History log of the customer. */
@@ -12528,6 +12569,14 @@ export type Mutation = {
    */
   checkoutCustomerNoteUpdate?: Maybe<CheckoutCustomerNoteUpdate>;
   /**
+   * Deletes a checkout.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: MANAGE_CHECKOUTS.
+   */
+  checkoutDelete?: Maybe<CheckoutDelete>;
+  /**
    * Updates the delivery method (shipping method or pick up point) of the checkout. Updates the checkout shipping_address for click and collect delivery for a warehouse address.
    *
    * Triggers the following webhook events:
@@ -14766,6 +14815,11 @@ export type MutationCheckoutCustomerDetachArgs = {
 
 export type MutationCheckoutCustomerNoteUpdateArgs = {
   customerNote: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationCheckoutDeleteArgs = {
   id: Scalars['ID']['input'];
 };
 
