@@ -11,8 +11,6 @@ const handler = createManifestHandler({
 
     // todo update manifest we dont need tokenTargetUrl and appUrl
     const manifest: AppManifest = {
-      // todo we can remove it later
-      appUrl: iframeBaseUrl,
       about:
         "Saleor Onboarding App — guides new users through the first steps of using Saleor Dashboard.",
       author: "Saleor Commerce",
