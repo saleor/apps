@@ -1,0 +1,14 @@
+pnpm-workspace.yaml
+  h_0b728ee11e7481 66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "727578d633f13a2b92baadb37f0ea2e739f50fad",
+  "prompts": {},
+  "humans": {
+    "h_0b728ee11e7481": {
+      "author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>"
+    }
+  }
+}
