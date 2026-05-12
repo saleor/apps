@@ -1,5 +1,16 @@
 # saleor-app-search
 
+## 1.29.3
+
+### Patch Changes
+
+- 4af78c1: Failed JWT verification in tRPC procedures no longer reports to Sentry as an error. Before, an expired or invalid token raised a 500 (or 403) and produced an error in monitoring even though it was a normal client-side auth failure. Now it logs a warning and returns 401, so dashboards stay clean and the client can react to the auth state correctly.
+- 82fc741: Fixed NUMERIC product/variant attributes (e.g. `width`, etc) being indexed in Algolia as strings, which prevented using `numericFilters` against them. They are now indexed as numbers.
+
+  Added `productTypeName` to every indexed product record alongside the existing `productTypeId`, so storefronts can filter by product type name in Algolia without an extra round trip to the Saleor API.
+
+  **After upgrading, run a full re-import via the in-app "Import products to Algolia" button — existing records will retain their old (string) attribute values and missing `productTypeName` until re-indexed.**
+
 ## 1.29.2
 
 ### Patch Changes

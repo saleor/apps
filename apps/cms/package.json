@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-cms",
-  "version": "2.15.5",
+  "version": "2.15.6",
   "private": true,
   "type": "module",
   "scripts": {
