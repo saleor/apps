@@ -23,11 +23,25 @@ const handler = createManifestHandler({
       extensions: [
         {
           label: "Onboarding",
+          //@ts-expect-error temp
+          mount: "HOMEPAGE_WIDGETS",
+          target: "WIDGET",
+          url: new URL("/api/test", iframeBaseUrl).toString(),
+          permissions: [],
+          options: {
+            //@ts-expect-error temp
+            homeWidgetTarget: { method: "POST", fullscreen: true },
+          },
+        },
+        {
+          label: "Onboarding",
+          //@ts-expect-error temp
           mount: "HOMEPAGE_WIDGETS",
           target: "WIDGET",
           url: new URL("/", iframeBaseUrl).toString(),
           permissions: [],
           options: {
+            //@ts-expect-error temp
             homeWidgetTarget: { method: "GET", fullscreen: true },
           },
         },
