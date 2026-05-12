@@ -1,5 +1,11 @@
 # saleor-app-smtp
 
+## 2.3.4
+
+### Patch Changes
+
+- 2865a4f: Upgraded next.js to v15.5.18, more info: https://vercel.com/changelog/next-js-may-2026-security-release
+
 ## 2.3.3
 
 ### Patch Changes

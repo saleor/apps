@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 3.0.7
+
+### Patch Changes
+
+- 2865a4f: Upgraded next.js to v15.5.18, more info: https://vercel.com/changelog/next-js-may-2026-security-release
+
 ## 3.0.6
 
 ### Patch Changes

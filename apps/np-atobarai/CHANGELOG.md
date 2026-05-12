@@ -1,5 +1,11 @@
 # saleor-app-payment-np-atobarai
 
+## 1.4.9
+
+### Patch Changes
+
+- 2865a4f: Upgraded next.js to v15.5.18, more info: https://vercel.com/changelog/next-js-may-2026-security-release
+
 ## 1.4.8
 
 ### Patch Changes
