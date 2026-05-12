@@ -1,0 +1,35 @@
+apps/onboarding/src/app/layout.tsx
+  s_6f7c25a2c2441a::t_3c1a0d16ef9f0d 1-9
+apps/onboarding/src/app/test/page.tsx
+  s_6f7c25a2c2441a::t_acdb31da60666c 1-6,12,15,19-21
+  s_6f7c25a2c2441a::t_d79d0e0c3a4385 7,13-14,16-18,22-23
+  s_6f7c25a2c2441a::t_921453dfd4bb59 8-11,24-26
+apps/onboarding/src/app/api/manifest/route.ts
+  h_0b728ee11e7481 26,29-38,44
+apps/onboarding/src/app/api/test/route.ts
+  s_6f7c25a2c2441a::t_fe439d1bb28629 14
+  s_6f7c25a2c2441a::t_e2f07b1c9038bc 8
+  s_6f7c25a2c2441a::t_65f009c6cd19a5 3-4,11,15
+  h_0b728ee11e7481 1-2,5-7,9-10,12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "5b9716654e7ceadfbcc46283324700d16303205d",
+  "prompts": {},
+  "humans": {
+    "h_0b728ee11e7481": {
+      "author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>"
+    }
+  },
+  "sessions": {
+    "s_6f7c25a2c2441a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8734da2e-1350-49d9-8111-42d73ad61ff5",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>"
+    }
+  }
+}
