@@ -53,6 +53,7 @@
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-trpc": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
+    "@saleor/errors": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "@saleor/react-hook-form-macaw": "workspace:*",
     "@saleor/sentry-utils": "workspace:*",
