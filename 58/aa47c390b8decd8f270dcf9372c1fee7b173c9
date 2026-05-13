@@ -1,0 +1,82 @@
+apps/search/package.json
+  s_3694dcfa3fd57d::t_e2eca09f125299 68-69
+apps/stripe/src/lib/env.ts
+  s_3694dcfa3fd57d::t_0acd9956ed8a0b 77
+  s_3694dcfa3fd57d::t_c402133f64c44b 6
+apps/products-feed/package.json
+  s_3694dcfa3fd57d::t_addf969e09ea8e 74-75
+  s_3694dcfa3fd57d::t_5f4603a6ec9cee 40
+apps/cms/package.json
+  s_3694dcfa3fd57d::t_133e1d9cdd51bc 74-75
+  s_3694dcfa3fd57d::t_02489cbb1327b5 40
+packages/errors/src/index.ts
+  s_3694dcfa3fd57d::t_b6ac8771f9b119 2
+apps/klaviyo/package.json
+  s_3694dcfa3fd57d::t_9a4c4f7280a1a0 34
+  s_3694dcfa3fd57d::t_5fa68995945d3c 55-56
+packages/errors/package.json
+  s_3694dcfa3fd57d::t_3cdd8a601a7428 14-15,25-26,30-31
+apps/klaviyo/src/env.ts
+  s_3694dcfa3fd57d::t_f25902fbf5d5b3 66
+  s_3694dcfa3fd57d::t_da6034bd2a9ea7 6
+apps/search/src/env.ts
+  s_3694dcfa3fd57d::t_3597250b2e3f3d 6
+  s_3694dcfa3fd57d::t_a759a636ba3421 68
+apps/avatax/package.json
+  s_3694dcfa3fd57d::t_cc66b6c57c8a36 47
+  s_3694dcfa3fd57d::t_94ca2f37f52519 79-80
+apps/smtp/package.json
+  s_3694dcfa3fd57d::t_8c1f4206ad4ccf 41
+  s_3694dcfa3fd57d::t_d9f9945d59c7b9 80-81
+packages/errors/src/env-validation.test.ts
+  s_3694dcfa3fd57d::t_df31401837977e 1,4,22-34,36-40,43-45,48-49,51-55,57-59,63-64,66-70,73-74,79-98
+  s_3694dcfa3fd57d::t_e141a53c535fa3 2-3,5-11,13-18,20-21,35,41-42,46,60,65,71-72,76-77,100-101
+  s_3694dcfa3fd57d::t_e84661160ecc38 50,56,61,99
+  s_3694dcfa3fd57d::t_565aa4452360b2 12,19,47,62,75,78
+.changeset/env-validation-error-formatting.md
+  s_3694dcfa3fd57d::t_26fe532636f57c 1-13
+apps/cms/src/env.ts
+  s_3694dcfa3fd57d::t_025610d01ceca7 6
+  s_3694dcfa3fd57d::t_3f5b71c5509048 70
+packages/errors/src/env-validation.ts
+  s_3694dcfa3fd57d::t_f7c99305793f71 2-5,8,16,18
+  s_3694dcfa3fd57d::t_a52c32f384b982 1,6-7,11,13,15,17
+  s_3694dcfa3fd57d::t_b2a3d025e457fe 12,14
+  s_3694dcfa3fd57d::t_c44e325a8ea84f 9-10
+apps/segment/package.json
+  s_3694dcfa3fd57d::t_14b7e3cebd5cba 41
+  s_3694dcfa3fd57d::t_fe5538fe0de141 73-74
+apps/stripe/package.json
+  s_3694dcfa3fd57d::t_8ea62120df262c 56
+apps/products-feed/src/env.ts
+  s_3694dcfa3fd57d::t_8d4c79b4b93f30 6
+  s_3694dcfa3fd57d::t_75e44cf29b63e8 74
+apps/segment/src/env.ts
+  s_3694dcfa3fd57d::t_dd2fd79318fd78 6
+  s_3694dcfa3fd57d::t_f4005f7510acf2 79
+apps/avatax/src/env.ts
+  s_3694dcfa3fd57d::t_0d4d38818f2c28 6
+  s_3694dcfa3fd57d::t_392b60b9335752 116
+apps/smtp/src/env.ts
+  s_3694dcfa3fd57d::t_7045113dab5691 6
+  s_3694dcfa3fd57d::t_c276485d8f6c6b 88
+apps/np-atobarai/src/lib/env.ts
+  s_3694dcfa3fd57d::t_99c2dd5c4273d3 73
+  s_3694dcfa3fd57d::t_dc66056efd9e0c 6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "58aa47c390b8decd8f270dcf9372c1fee7b173c9",
+  "prompts": {},
+  "sessions": {
+    "s_3694dcfa3fd57d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b291e6b-10ff-44ec-82f7-0110c9ce3a09",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>"
+    }
+  }
+}
