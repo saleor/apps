@@ -1,0 +1,19 @@
+apps/smtp/src/lib/notify-event-types.ts
+  s_517fd0c7b20af4::t_1d65aba9182511 40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "862582ef2d4ed0dcb6a9d61ecfab1e6a1c5814ee",
+  "prompts": {},
+  "sessions": {
+    "s_517fd0c7b20af4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b9b71c64-e410-4d37-83e7-0390e2144de1",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>"
+    }
+  }
+}
