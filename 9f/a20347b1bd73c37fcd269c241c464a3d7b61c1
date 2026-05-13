@@ -1,0 +1,38 @@
+.changeset/smtp-account-set-customer-password-email.md
+  s_517fd0c7b20af4::t_5448dfc0e02270 1-5
+apps/smtp/src/lib/notify-event-types.ts
+  s_517fd0c7b20af4::t_6b842e7987eb3f 8
+  s_517fd0c7b20af4::t_f9761d90863755 41-43
+  s_517fd0c7b20af4::t_b96aa6f9258616 91-101
+apps/smtp/src/modules/smtp/default-templates.ts
+  s_517fd0c7b20af4::t_41e5b13190393c 651
+  s_517fd0c7b20af4::t_f5bc7d2ce27e3e 669
+  s_517fd0c7b20af4::t_33561abb726523 534-560
+apps/smtp/src/lib/notify-event-types.test.ts
+  s_517fd0c7b20af4::t_37537f05ca6c4f 1-15
+apps/smtp/src/modules/event-handlers/message-event-types.ts
+  s_517fd0c7b20af4::t_c9a61271d8ba76 7
+  s_517fd0c7b20af4::t_3730d1b4b0deca 27
+apps/smtp/src/modules/webhook-management/webhook-management-service.ts
+  s_517fd0c7b20af4::t_b0b73161da5af8 38
+apps/smtp/src/modules/event-handlers/default-payloads.ts
+  s_517fd0c7b20af4::t_e1b381aa95ef82 18
+  s_517fd0c7b20af4::t_0c8eb329e14c2a 600-621
+  s_517fd0c7b20af4::t_5453d859fdb8b8 1085
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "9fa20347b1bd73c37fcd269c241c464a3d7b61c1",
+  "prompts": {},
+  "sessions": {
+    "s_517fd0c7b20af4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b9b71c64-e410-4d37-83e7-0390e2144de1",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>"
+    }
+  }
+}
