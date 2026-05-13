@@ -1,0 +1,37 @@
+apps/avatax/package.json
+  s_3694dcfa3fd57d::t_a9712a444299ec 79
+apps/stripe/package.json
+  s_3694dcfa3fd57d::t_9f4ca0416bb3e0 82
+apps/klaviyo/package.json
+  s_3694dcfa3fd57d::t_318ba027580fdb 55
+apps/products-feed/package.json
+  s_3694dcfa3fd57d::t_ba70d058093fc3 74
+packages/errors/src/env-validation.test.ts
+  s_3694dcfa3fd57d::t_022ce769a88134 86-105
+packages/errors/src/env-validation.ts
+  s_3694dcfa3fd57d::t_0a87c5deba7c62 4-6,10-15,25-29
+apps/search/package.json
+  s_3694dcfa3fd57d::t_636d775d61cdf5 68
+apps/segment/package.json
+  s_3694dcfa3fd57d::t_2dc2869f204995 73
+apps/cms/package.json
+  s_3694dcfa3fd57d::t_3e366af783502d 74
+apps/smtp/package.json
+  s_3694dcfa3fd57d::t_7c0a363d9d9d79 80
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "5ad270581ac4cb815c328e5d9450101b48378ec0",
+  "prompts": {},
+  "sessions": {
+    "s_3694dcfa3fd57d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6b291e6b-10ff-44ec-82f7-0110c9ce3a09",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>"
+    }
+  }
+}
