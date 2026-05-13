@@ -37,7 +37,7 @@ export type NotifySubscriptionPayload = {
       payload: NotifyPayloadAccountPasswordReset;
     }
   | {
-      notify_event: "account_change_email";
+      notify_event: "account_change_email_request";
       payload: NotifyPayloadAccountChangeEmailRequest;
     }
   | {
