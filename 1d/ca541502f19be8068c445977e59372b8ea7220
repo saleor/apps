@@ -1,0 +1,26 @@
+apps/smtp/src/env.ts
+  s_aeff632f5ee469::t_1d95a2a3a6eba9 100-101,105
+  s_aeff632f5ee469::t_b2be1c2701cd54 7-20
+  s_aeff632f5ee469::t_402ece880d8af5 102-104,106-107
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "1dca541502f19be8068c445977e59372b8ea7220",
+  "prompts": {},
+  "humans": {
+    "h_0b728ee11e7481": {
+      "author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>"
+    }
+  },
+  "sessions": {
+    "s_aeff632f5ee469": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c86e329e-88d4-4689-a291-4b7faf02aa91",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>"
+    }
+  }
+}
