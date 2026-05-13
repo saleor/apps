@@ -1,0 +1,60 @@
+apps/smtp/src/lib/get-event-form-status.ts
+  s_aeff632f5ee469::t_37f4bfb0e7ef88 49-62
+apps/smtp/src/lib/get-event-form-status.test.ts
+  s_aeff632f5ee469::t_fc1bc48d0a75dc 14,47
+  s_aeff632f5ee469::t_d2debe298994b7 29,65
+  s_aeff632f5ee469::t_d94e7cc21e3726 74-109
+apps/smtp/src/modules/event-handlers/default-payloads.ts
+  s_aeff632f5ee469::t_4f93ad4bfc4195 7
+  s_aeff632f5ee469::t_dc27a6cc1f7b7e 1193
+  s_aeff632f5ee469::t_cbc8346faf4d5b 1065-1068
+apps/smtp/src/pages/api/webhooks/customer-deleted.test.ts
+  s_aeff632f5ee469::t_f482d92702d29c 1-91
+apps/smtp/src/modules/smtp/default-templates.ts
+  s_aeff632f5ee469::t_81c88eeced7162 952
+  s_aeff632f5ee469::t_1ac9558041a2ba 925
+  s_aeff632f5ee469::t_e67b1e00dd22d9 858-883
+.changeset/customer-deleted-webhook.md
+  s_aeff632f5ee469::t_4267df9214b067 5
+  s_aeff632f5ee469::t_06388e9abd35ec 1-4
+apps/smtp/src/modules/feature-flag-service/get-feature-flags.test.ts
+  s_aeff632f5ee469::t_f36197871ce659 12-19
+apps/smtp/src/modules/event-handlers/message-event-types.ts
+  s_aeff632f5ee469::t_75f90d7cafb010 71
+  s_aeff632f5ee469::t_aea985b79ad849 12
+apps/smtp/src/modules/webhook-management/webhook-status-dict.ts
+  s_aeff632f5ee469::t_2be2c2d43974bc 22
+apps/smtp/src/modules/smtp/configuration/smtp-configuration.service.ts
+  s_aeff632f5ee469::t_058aa3a20a88ad 170-183
+  s_aeff632f5ee469::t_a36c59bcd309c0 204-215
+apps/smtp/src/pages/api/webhooks/customer-deleted.ts
+  s_aeff632f5ee469::t_b4a68a2db8e78f 1-40,42-72,77-113
+  s_aeff632f5ee469::t_f280f6a0f7cd53 73-76
+apps/smtp/src/modules/feature-flag-service/get-feature-flags.ts
+  s_aeff632f5ee469::t_b1e5a08c622b20 25
+  s_aeff632f5ee469::t_f601f9d198cca1 3-7
+apps/smtp/src/modules/webhook-management/webhook-management-service.ts
+  s_aeff632f5ee469::t_f4247ae4ab05c1 130,132-136
+  s_aeff632f5ee469::t_3fca0406dfafbc 10
+  s_aeff632f5ee469::t_67bc6f53ba2191 63
+  s_aeff632f5ee469::t_b681ebb92287c9 34
+apps/smtp/src/modules/webhook-management/sync-webhook-status.test.ts
+  s_aeff632f5ee469::t_3ffa2de17682fd 57,122,187
+  s_aeff632f5ee469::t_764ff19a3cf4b6 81,146,211
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "2893bb6c5d079f32d28f7b5ae334e802ba82b8e9",
+  "prompts": {},
+  "sessions": {
+    "s_aeff632f5ee469": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c86e329e-88d4-4689-a291-4b7faf02aa91",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>"
+    }
+  }
+}
