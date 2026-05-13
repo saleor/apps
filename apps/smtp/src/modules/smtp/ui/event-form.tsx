@@ -33,7 +33,7 @@ type ResetTarget = "subject" | "template" | null;
 
 const TEMPLATE_OPTIONS = messageEventTypes.map((type) => ({
   value: type,
-  label: messageEventTypesLabels[type],
+  label: messageEventTypesLabels[type].label,
 }));
 
 const extractSelectValue = (value: string | { value: string }): string =>

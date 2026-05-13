@@ -46,6 +46,20 @@ export const getEventFormStatus = ({
       };
     }
 
+    case "CUSTOMER_DELETED": {
+      const isUnsupported = !featureFlags?.customerDeletedEvent;
+
+      const hasPermission = (appPermissions || []).includes("MANAGE_USERS");
+
+      const isDisabled = isUnsupported || !hasPermission;
+
+      return {
+        isDisabled,
+        missingPermission: hasPermission ? undefined : "MANAGE_USERS",
+        requiredSaleorVersion: isUnsupported ? ">=3.23" : undefined,
+      };
+    }
+
     default:
       return {
         isDisabled: false,

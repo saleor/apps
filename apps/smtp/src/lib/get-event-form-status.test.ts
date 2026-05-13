@@ -11,6 +11,7 @@ describe("getEventFormStatus", function () {
         featureFlags: {
           giftCardSentEvent: true,
           orderRefundedEvent: true,
+          customerDeletedEvent: true,
         },
       }),
     ).toStrictEqual({
@@ -25,6 +26,7 @@ describe("getEventFormStatus", function () {
         featureFlags: {
           giftCardSentEvent: false,
           orderRefundedEvent: true,
+          customerDeletedEvent: true,
         },
       }),
     ).toStrictEqual({
@@ -42,6 +44,7 @@ describe("getEventFormStatus", function () {
         featureFlags: {
           giftCardSentEvent: true,
           orderRefundedEvent: true,
+          customerDeletedEvent: true,
         },
       }),
     ).toStrictEqual({
@@ -59,12 +62,49 @@ describe("getEventFormStatus", function () {
         featureFlags: {
           giftCardSentEvent: false,
           orderRefundedEvent: true,
+          customerDeletedEvent: true,
         },
       }),
     ).toStrictEqual({
       isDisabled: true,
       missingPermission: undefined,
       requiredSaleorVersion: ">=3.13",
+    });
+  });
+
+  it("Return disable flag and unsupported Saleor version message, when CUSTOMER_DELETED is passed with missing feature flag", () => {
+    expect(
+      getEventFormStatus({
+        eventType: "CUSTOMER_DELETED",
+        appPermissions: ["MANAGE_USERS"],
+        featureFlags: {
+          giftCardSentEvent: true,
+          orderRefundedEvent: true,
+          customerDeletedEvent: false,
+        },
+      }),
+    ).toStrictEqual({
+      isDisabled: true,
+      missingPermission: undefined,
+      requiredSaleorVersion: ">=3.23",
+    });
+  });
+
+  it("Return disable flag and lack of the permission message, when CUSTOMER_DELETED is passed and app has no manage users permission", () => {
+    expect(
+      getEventFormStatus({
+        eventType: "CUSTOMER_DELETED",
+        appPermissions: [],
+        featureFlags: {
+          giftCardSentEvent: true,
+          orderRefundedEvent: true,
+          customerDeletedEvent: true,
+        },
+      }),
+    ).toStrictEqual({
+      isDisabled: true,
+      missingPermission: "MANAGE_USERS",
+      requiredSaleorVersion: undefined,
     });
   });
 });

@@ -130,7 +130,7 @@ async function main() {
     const subject = compileSubject(subjectTemplate, payload);
     const htmlBody = compileBody(bodyTemplate, payload);
 
-    const label = messageEventTypesLabels[eventType];
+    const label = messageEventTypesLabels[eventType].label;
     const slug = eventType.toLowerCase().replace(/_/g, "-");
     const fullPage = wrapInPage(label, subject, htmlBody);
 

@@ -4,8 +4,13 @@ import { BaseError } from "../../../errors";
 import { generateRandomId } from "../../../lib/generate-random-id";
 import { createLogger } from "../../../logger";
 import { filterConfigurations } from "../../app-configuration/filter-configurations";
-import { type MessageEventTypes } from "../../event-handlers/message-event-types";
+import {
+  type MessageEventTypes,
+  messageEventTypes,
+  messageEventTypesLabels,
+} from "../../event-handlers/message-event-types";
 import { type FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
+import { defaultMjmlSubjectTemplates, defaultMjmlTemplates } from "../default-templates";
 import { EmailCompiler, type ErrorContext } from "../services/email-compiler";
 import { HandlebarsTemplateCompiler } from "../services/handlebars-template-compiler";
 import { HtmlToTextCompiler } from "../services/html-to-text-compiler";
@@ -162,6 +167,20 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFall
     return false;
   }
 
+  private containActiveCustomerDeletedEvent(config: SmtpConfig) {
+    for (const configuration of config.configurations) {
+      const customerDeletedEvent = configuration.events.find(
+        (event) => event.eventType === "CUSTOMER_DELETED",
+      );
+
+      if (customerDeletedEvent?.active) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   // Saves configuration to Saleor API and cache it
   private setConfigurationRoot(config: SmtpConfig) {
     logger.debug("Validate configuration before sending it to the Saleor API");
@@ -182,12 +201,53 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFall
         );
       }
 
+      if (!features.customerDeletedEvent && this.containActiveCustomerDeletedEvent(config)) {
+        logger.error(
+          "Attempt to enable customer deleted event for unsupported Saleor version. Aborting configuration update.",
+        );
+
+        return errAsync(
+          new SmtpConfigurationService.WrongSaleorVersionError(
+            "Customer deleted event is not supported for this Saleor version (requires Saleor >= 3.23)",
+          ),
+        );
+      }
+
       logger.debug("Set configuration root");
 
       this.configurationData = config;
 
       return this.pushConfiguration();
     });
+  }
+
+  /**
+   * Left-joins non-deprecated message event types onto the stored events array. Existing
+   * stored entries (including deprecated ones) are kept as-is so users keep seeing their
+   * data and the deprecation badge; missing non-deprecated entries are filled with default
+   * templates and `active: false` so new event rows appear in the dashboard without
+   * touching DynamoDB until the user saves.
+   */
+  private hydrateConfigEvents(configuration: SmtpConfiguration): SmtpConfiguration {
+    const storedEventTypes = new Set(configuration.events.map((e) => e.eventType));
+    const missingNonDeprecatedEvents: SmtpConfiguration["events"] = messageEventTypes
+      .filter((eventType) => !messageEventTypesLabels[eventType].deprecated)
+      .filter((eventType) => !storedEventTypes.has(eventType))
+      .map((eventType) => ({
+        active: false,
+        eventType,
+        template: defaultMjmlTemplates[eventType],
+        subject: defaultMjmlSubjectTemplates[eventType],
+      }));
+
+    if (missingNonDeprecatedEvents.length === 0) {
+      return configuration;
+    }
+
+    return {
+      ...configuration,
+      events: [...configuration.events, ...missingNonDeprecatedEvents],
+    };
   }
 
   /**
@@ -205,7 +265,7 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFall
         );
       }
 
-      return okAsync(configuration);
+      return okAsync(this.hydrateConfigEvents(configuration));
     });
   }
 
@@ -216,12 +276,12 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFall
     logger.debug("Get configurations");
 
     return this.getConfigurationRoot().andThen((config) => {
-      return okAsync(
-        filterConfigurations<SmtpConfiguration>({
-          configurations: config.configurations,
-          filter,
-        }),
-      );
+      const filtered = filterConfigurations<SmtpConfiguration>({
+        configurations: config.configurations,
+        filter,
+      });
+
+      return okAsync(filtered.map((c) => this.hydrateConfigEvents(c)));
     });
   }
 

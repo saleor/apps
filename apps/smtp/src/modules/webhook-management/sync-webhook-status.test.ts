@@ -49,6 +49,16 @@ describe("syncWebhookStatus", function () {
       .mockImplementation(() => Promise.resolve());
 
     vi.spyOn(statusesExports, "getWebhookStatusesFromConfigurations").mockReturnValue({
+      accountChangeEmailRequestedWebhook: false,
+      accountConfirmationRequestedWebhook: false,
+      accountDeleteRequestedWebhook: false,
+      accountEmailChangedWebhook: false,
+      accountSetPasswordRequestedWebhook: false,
+      customerDeletedWebhook: false,
+      fulfillmentApprovedWebhook: false,
+      fulfillmentCanceledWebhook: false,
+      fulfillmentCreatedWebhook: false,
+      fulfillmentTrackingNumberUpdatedWebhook: false,
       invoiceSentWebhook: false,
       notifyWebhook: false,
       orderCancelledWebhook: false,
@@ -63,6 +73,16 @@ describe("syncWebhookStatus", function () {
     const getWebhooksStatusMock = vi
       .spyOn(webhookManagementService, "getWebhooksStatus")
       .mockResolvedValue({
+        accountChangeEmailRequestedWebhook: false,
+        accountConfirmationRequestedWebhook: false,
+        accountDeleteRequestedWebhook: false,
+        accountEmailChangedWebhook: false,
+        accountSetPasswordRequestedWebhook: false,
+        customerDeletedWebhook: false,
+        fulfillmentApprovedWebhook: false,
+        fulfillmentCanceledWebhook: false,
+        fulfillmentCreatedWebhook: false,
+        fulfillmentTrackingNumberUpdatedWebhook: false,
         invoiceSentWebhook: false,
         notifyWebhook: false,
         orderCancelledWebhook: false,
@@ -94,6 +114,16 @@ describe("syncWebhookStatus", function () {
       .mockImplementation(() => Promise.resolve());
 
     vi.spyOn(statusesExports, "getWebhookStatusesFromConfigurations").mockReturnValue({
+      accountChangeEmailRequestedWebhook: false,
+      accountConfirmationRequestedWebhook: false,
+      accountDeleteRequestedWebhook: false,
+      accountEmailChangedWebhook: false,
+      accountSetPasswordRequestedWebhook: false,
+      customerDeletedWebhook: false,
+      fulfillmentApprovedWebhook: false,
+      fulfillmentCanceledWebhook: false,
+      fulfillmentCreatedWebhook: false,
+      fulfillmentTrackingNumberUpdatedWebhook: false,
       invoiceSentWebhook: false,
       notifyWebhook: false,
       orderCancelledWebhook: false,
@@ -108,6 +138,16 @@ describe("syncWebhookStatus", function () {
     const getWebhooksStatusMock = vi
       .spyOn(webhookManagementService, "getWebhooksStatus")
       .mockResolvedValue({
+        accountChangeEmailRequestedWebhook: false,
+        accountConfirmationRequestedWebhook: false,
+        accountDeleteRequestedWebhook: false,
+        accountEmailChangedWebhook: false,
+        accountSetPasswordRequestedWebhook: false,
+        customerDeletedWebhook: false,
+        fulfillmentApprovedWebhook: false,
+        fulfillmentCanceledWebhook: false,
+        fulfillmentCreatedWebhook: false,
+        fulfillmentTrackingNumberUpdatedWebhook: false,
         invoiceSentWebhook: true,
         notifyWebhook: true,
         orderCancelledWebhook: false,
@@ -139,6 +179,16 @@ describe("syncWebhookStatus", function () {
       .mockImplementation(() => Promise.resolve());
 
     vi.spyOn(statusesExports, "getWebhookStatusesFromConfigurations").mockReturnValue({
+      accountChangeEmailRequestedWebhook: false,
+      accountConfirmationRequestedWebhook: false,
+      accountDeleteRequestedWebhook: false,
+      accountEmailChangedWebhook: false,
+      accountSetPasswordRequestedWebhook: false,
+      customerDeletedWebhook: false,
+      fulfillmentApprovedWebhook: false,
+      fulfillmentCanceledWebhook: false,
+      fulfillmentCreatedWebhook: false,
+      fulfillmentTrackingNumberUpdatedWebhook: false,
       invoiceSentWebhook: true,
       notifyWebhook: true,
       orderCancelledWebhook: false,
@@ -153,6 +203,16 @@ describe("syncWebhookStatus", function () {
     const getWebhooksStatusMock = vi
       .spyOn(webhookManagementService, "getWebhooksStatus")
       .mockResolvedValue({
+        accountChangeEmailRequestedWebhook: false,
+        accountConfirmationRequestedWebhook: false,
+        accountDeleteRequestedWebhook: false,
+        accountEmailChangedWebhook: false,
+        accountSetPasswordRequestedWebhook: false,
+        customerDeletedWebhook: false,
+        fulfillmentApprovedWebhook: false,
+        fulfillmentCanceledWebhook: false,
+        fulfillmentCreatedWebhook: false,
+        fulfillmentTrackingNumberUpdatedWebhook: false,
         invoiceSentWebhook: false,
         notifyWebhook: false,
         orderCancelledWebhook: false,
