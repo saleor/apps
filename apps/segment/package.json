@@ -70,8 +70,7 @@
     "urql": "catalog:",
     "usehooks-ts": "catalog:",
     "uuid": "11.0.4",
-    "zod": "catalog:",
-    "zod-validation-error": "catalog:"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "catalog:",

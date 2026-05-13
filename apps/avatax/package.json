@@ -76,8 +76,7 @@
     "ulid": "2.3.0",
     "urql": "catalog:",
     "usehooks-ts": "catalog:",
-    "zod": "catalog:",
-    "zod-validation-error": "catalog:"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@faker-js/faker": "8.4.1",

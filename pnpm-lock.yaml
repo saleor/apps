@@ -412,9 +412,6 @@ importers:
       zod:
         specifier: 'catalog:'
         version: 3.21.4
-      zod-validation-error:
-        specifier: 'catalog:'
-        version: 3.4.0(zod@3.21.4)
     devDependencies:
       '@faker-js/faker':
         specifier: 8.4.1
@@ -677,9 +674,6 @@ importers:
       zod:
         specifier: 'catalog:'
         version: 3.21.4
-      zod-validation-error:
-        specifier: 'catalog:'
-        version: 3.4.0(zod@3.21.4)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 'catalog:'
@@ -852,9 +846,6 @@ importers:
       zod:
         specifier: 'catalog:'
         version: 3.21.4
-      zod-validation-error:
-        specifier: 'catalog:'
-        version: 3.4.0(zod@3.21.4)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 'catalog:'
@@ -1319,9 +1310,6 @@ importers:
       zod:
         specifier: 'catalog:'
         version: 3.21.4
-      zod-validation-error:
-        specifier: 'catalog:'
-        version: 3.4.0(zod@3.21.4)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 'catalog:'
@@ -1533,9 +1521,6 @@ importers:
       zod:
         specifier: 'catalog:'
         version: 3.21.4
-      zod-validation-error:
-        specifier: 'catalog:'
-        version: 3.4.0(zod@3.21.4)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 'catalog:'
@@ -1762,9 +1747,6 @@ importers:
       zod:
         specifier: 'catalog:'
         version: 3.21.4
-      zod-validation-error:
-        specifier: 'catalog:'
-        version: 3.4.0(zod@3.21.4)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 'catalog:'
@@ -2012,9 +1994,6 @@ importers:
       zod:
         specifier: 'catalog:'
         version: 3.21.4
-      zod-validation-error:
-        specifier: 'catalog:'
-        version: 3.4.0(zod@3.21.4)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 'catalog:'
@@ -2223,9 +2202,6 @@ importers:
       zod:
         specifier: 'catalog:'
         version: 3.21.4
-      zod-validation-error:
-        specifier: 'catalog:'
-        version: 3.4.0(zod@3.21.4)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 'catalog:'

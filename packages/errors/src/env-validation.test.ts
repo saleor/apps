@@ -83,6 +83,26 @@ describe("formatEnvValidationError", () => {
     expect(consoleErrorSpy).toHaveBeenNthCalledWith(2, JSON.stringify(error.issues, null, 2));
   });
 
+  it("Throws ZodValidationError instead of exiting when process.exit is unavailable", () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const originalExit = process.exit;
+
+    // Simulate browser / Edge runtime: process.exit not callable
+    Object.defineProperty(process, "exit", { value: undefined, configurable: true });
+
+    try {
+      expect(() => formatEnvValidationError(getError({}))).toThrowError(
+        'Validation error: Expected number, received nan at "PORT"; Required at "SECRET_KEY"; Required at "APL"',
+      );
+      expect(consoleErrorSpy).toHaveBeenNthCalledWith(
+        1,
+        'Validation error: Expected number, received nan at "PORT"; Required at "SECRET_KEY"; Required at "APL"',
+      );
+    } finally {
+      Object.defineProperty(process, "exit", { value: originalExit, configurable: true });
+    }
+  });
+
   it("Does not log the error stack", () => {
     const { consoleErrorSpy } = setup();
 

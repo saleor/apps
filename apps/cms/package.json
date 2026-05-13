@@ -71,8 +71,7 @@
     "usehooks-ts": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:",
-    "zod": "catalog:",
-    "zod-validation-error": "catalog:"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "catalog:",

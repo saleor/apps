@@ -65,8 +65,7 @@
     "react-helmet": "6.1.0",
     "react-hook-form": "catalog:",
     "urql": "catalog:",
-    "zod": "catalog:",
-    "zod-validation-error": "catalog:"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "catalog:",
