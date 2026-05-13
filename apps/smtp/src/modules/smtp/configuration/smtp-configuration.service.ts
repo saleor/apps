@@ -167,6 +167,20 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFall
     return false;
   }
 
+  private containActiveCustomerDeletedEvent(config: SmtpConfig) {
+    for (const configuration of config.configurations) {
+      const customerDeletedEvent = configuration.events.find(
+        (event) => event.eventType === "CUSTOMER_DELETED",
+      );
+
+      if (customerDeletedEvent?.active) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   // Saves configuration to Saleor API and cache it
   private setConfigurationRoot(config: SmtpConfig) {
     logger.debug("Validate configuration before sending it to the Saleor API");
@@ -183,6 +197,18 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFall
         return errAsync(
           new SmtpConfigurationService.WrongSaleorVersionError(
             "Gift card sent event is not supported for this Saleor version",
+          ),
+        );
+      }
+
+      if (!features.customerDeletedEvent && this.containActiveCustomerDeletedEvent(config)) {
+        logger.error(
+          "Attempt to enable customer deleted event for unsupported Saleor version. Aborting configuration update.",
+        );
+
+        return errAsync(
+          new SmtpConfigurationService.WrongSaleorVersionError(
+            "Customer deleted event is not supported for this Saleor version (requires Saleor >= 3.23)",
           ),
         );
       }

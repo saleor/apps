@@ -9,4 +9,12 @@ describe("getFeatureFlags", function () {
   it("Flag should be turned on, when using version with feature support", () => {
     expect(getFeatureFlags({ saleorVersion: "3.13.0" }).giftCardSentEvent).toStrictEqual(true);
   });
+
+  it("customerDeletedEvent flag should be off for Saleor < 3.23", () => {
+    expect(getFeatureFlags({ saleorVersion: "3.22.0" }).customerDeletedEvent).toStrictEqual(false);
+  });
+
+  it("customerDeletedEvent flag should be on for Saleor >= 3.23", () => {
+    expect(getFeatureFlags({ saleorVersion: "3.23.0" }).customerDeletedEvent).toStrictEqual(true);
+  });
 });

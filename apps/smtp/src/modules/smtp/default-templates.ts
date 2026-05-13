@@ -855,6 +855,32 @@ ${mjHead}
 </mj-body>
 </mjml>`;
 
+const defaultCustomerDeletedMjmlTemplate = `<mjml>
+${mjHead}
+<mj-body>
+  <mj-wrapper>
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="24px" font-weight="700" color="${colors.primary}" padding="0 0 16px">Your account has been deleted</mj-text>
+        <mj-text padding="0 0 8px">Hi{{#if user.firstName}} {{user.firstName}}{{/if}}, this is a confirmation that your account has been deleted.</mj-text>
+        <mj-text padding="0">If this wasn't expected, please contact our support team.</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="24px 0 0">
+      <mj-column>
+        <mj-divider border-color="${colors.border}" border-width="1px" padding="0 0 24px" />
+        <mj-text font-size="14px" color="${colors.muted}" align="center">
+          Questions? Reply to this email or contact our support team.
+        </mj-text>
+        <mj-text font-size="12px" color="${colors.muted}" align="center" padding-top="12px" font-style="italic">
+          Powered by Saleor Commerce
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-wrapper>
+</mj-body>
+</mjml>`;
+
 const defaultAccountEmailChangedMjmlTemplate = `<mjml>
 ${mjHead}
 <mj-body>
@@ -896,6 +922,7 @@ export const defaultMjmlTemplates: Record<MessageEventTypes, string> = {
   ACCOUNT_DELETE_REQUESTED: defaultAccountDeleteRequestedMjmlTemplate,
   ACCOUNT_PASSWORD_RESET: defaultAccountPasswordResetMjmlTemplate,
   ACCOUNT_SET_PASSWORD_REQUESTED: defaultAccountSetPasswordRequestedMjmlTemplate,
+  CUSTOMER_DELETED: defaultCustomerDeletedMjmlTemplate,
   FULFILLMENT_APPROVED: defaultFulfillmentApprovedMjmlTemplate,
   FULFILLMENT_CANCELED: defaultFulfillmentCanceledMjmlTemplate,
   FULFILLMENT_CREATED: defaultFulfillmentCreatedMjmlTemplate,
@@ -922,6 +949,7 @@ export const defaultMjmlSubjectTemplates: Record<MessageEventTypes, string> = {
   ACCOUNT_DELETE_REQUESTED: "Confirm account deletion",
   ACCOUNT_PASSWORD_RESET: "Reset your password",
   ACCOUNT_SET_PASSWORD_REQUESTED: "Reset your password",
+  CUSTOMER_DELETED: "Your account has been deleted",
   FULFILLMENT_APPROVED: "Your fulfillment has been approved",
   FULFILLMENT_CANCELED: "Your fulfillment has been canceled",
   FULFILLMENT_CREATED: "Your order is being prepared",

@@ -4,6 +4,7 @@ import {
   type AccountDeleteRequestedWebhookPayloadFragment,
   type AccountEmailChangedWebhookPayloadFragment,
   type AccountSetPasswordRequestedWebhookPayloadFragment,
+  type CustomerDeletedWebhookPayloadFragment,
   type FulfillmentApprovedWebhookPayloadFragment,
   type FulfillmentCanceledWebhookPayloadFragment,
   type FulfillmentCreatedWebhookPayloadFragment,
@@ -1061,6 +1062,10 @@ const accountChangeEmailRequestedPayload: AccountChangeEmailRequestedWebhookPayl
   shop: exampleShopPayload,
 };
 
+const customerDeletedPayload: CustomerDeletedWebhookPayloadFragment = {
+  user: exampleAccountUserPayload,
+};
+
 const accountEmailChangedPayload: AccountEmailChangedWebhookPayloadFragment = {
   user: { ...exampleAccountUserPayload, email: "sarah.j.johnson@example.com" },
   newEmail: "sarah.j.johnson@example.com",
@@ -1185,6 +1190,7 @@ export const examplePayloads: Record<MessageEventTypes, any> = {
   ACCOUNT_DELETE_REQUESTED: accountDeleteRequestedPayload,
   ACCOUNT_PASSWORD_RESET: accountPasswordResetPayload,
   ACCOUNT_SET_PASSWORD_REQUESTED: accountSetPasswordRequestedPayload,
+  CUSTOMER_DELETED: customerDeletedPayload,
   FULFILLMENT_APPROVED: fulfillmentApprovedPayload,
   FULFILLMENT_CANCELED: fulfillmentCanceledPayload,
   FULFILLMENT_CREATED: fulfillmentCreatedPayload,

@@ -19,6 +19,7 @@ export const webhookStatusesFactory = ({
   accountSetPasswordRequestedWebhook: !!enabledWebhooks?.includes(
     "accountSetPasswordRequestedWebhook",
   ),
+  customerDeletedWebhook: !!enabledWebhooks?.includes("customerDeletedWebhook"),
   fulfillmentApprovedWebhook: !!enabledWebhooks?.includes("fulfillmentApprovedWebhook"),
   fulfillmentCanceledWebhook: !!enabledWebhooks?.includes("fulfillmentCanceledWebhook"),
   fulfillmentCreatedWebhook: !!enabledWebhooks?.includes("fulfillmentCreatedWebhook"),

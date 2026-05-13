@@ -7,6 +7,7 @@ import { accountConfirmationRequestedWebhook } from "../../pages/api/webhooks/ac
 import { accountDeleteRequestedWebhook } from "../../pages/api/webhooks/account-delete-requested";
 import { accountEmailChangedWebhook } from "../../pages/api/webhooks/account-email-changed";
 import { accountSetPasswordRequestedWebhook } from "../../pages/api/webhooks/account-set-password-requested";
+import { customerDeletedWebhook } from "../../pages/api/webhooks/customer-deleted";
 import { fulfillmentApprovedWebhook } from "../../pages/api/webhooks/fulfillment-approved";
 import { fulfillmentCanceledWebhook } from "../../pages/api/webhooks/fulfillment-canceled";
 import { fulfillmentCreatedWebhook } from "../../pages/api/webhooks/fulfillment-created";
@@ -30,6 +31,7 @@ export const AppWebhooks = {
   accountDeleteRequestedWebhook,
   accountEmailChangedWebhook,
   accountSetPasswordRequestedWebhook,
+  customerDeletedWebhook,
   fulfillmentApprovedWebhook,
   fulfillmentCanceledWebhook,
   fulfillmentCreatedWebhook,
@@ -58,6 +60,7 @@ export const eventToWebhookMapping: Record<MessageEventTypes, AppWebhook> = {
   ACCOUNT_DELETE_REQUESTED: "accountDeleteRequestedWebhook",
   ACCOUNT_PASSWORD_RESET: "notifyWebhook",
   ACCOUNT_SET_PASSWORD_REQUESTED: "accountSetPasswordRequestedWebhook",
+  CUSTOMER_DELETED: "customerDeletedWebhook",
   FULFILLMENT_APPROVED: "fulfillmentApprovedWebhook",
   FULFILLMENT_CANCELED: "fulfillmentCanceledWebhook",
   FULFILLMENT_CREATED: "fulfillmentCreatedWebhook",
@@ -122,6 +125,13 @@ export class WebhookManagementService {
     if (!flags.giftCardSentEvent && webhook === "giftCardSentWebhook") {
       logger.error(`Attempt to activate Gift Card Sent webhook despite unsupported environment`);
       throw new Error("Gift card event is not supported in this environment");
+    }
+
+    if (!flags.customerDeletedEvent && webhook === "customerDeletedWebhook") {
+      logger.error(`Attempt to activate Customer Deleted webhook despite unsupported environment`);
+      throw new Error(
+        "Customer deleted event is not supported in this environment (requires Saleor >= 3.23)",
+      );
     }
 
     const webhookManifest = AppWebhooks[webhook].getWebhookManifest(this.appBaseUrl);

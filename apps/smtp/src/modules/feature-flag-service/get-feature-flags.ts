@@ -1,6 +1,10 @@
 import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared/saleor-version-compatibility-validator";
 
-export const featureFlags = ["giftCardSentEvent", "orderRefundedEvent"] as const;
+export const featureFlags = [
+  "giftCardSentEvent",
+  "orderRefundedEvent",
+  "customerDeletedEvent",
+] as const;
 
 export type FeatureFlag = (typeof featureFlags)[number];
 
@@ -18,5 +22,6 @@ export const getFeatureFlags = ({ saleorVersion }: GetFeatureFlagsArgs): Feature
   return {
     giftCardSentEvent: new SaleorVersionCompatibilityValidator(">=3.13").isValid(saleorVersion),
     orderRefundedEvent: new SaleorVersionCompatibilityValidator(">=3.14").isValid(saleorVersion),
+    customerDeletedEvent: new SaleorVersionCompatibilityValidator(">=3.23").isValid(saleorVersion),
   };
 };
