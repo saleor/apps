@@ -3,33 +3,33 @@ import { okAsync } from "neverthrow";
 import { createMocks } from "node-mocks-http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { type NotifySubscriptionPayload } from "../../../lib/notify-event-types";
-import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
-import { type SmtpConfiguration } from "../../../modules/smtp/configuration/smtp-config-schema";
+import { type NotifySubscriptionPayload } from "../../lib/notify-event-types";
+import { SendEventMessagesUseCase } from "../../modules/event-handlers/use-case/send-event-messages.use-case";
+import { type SmtpConfiguration } from "../../modules/smtp/configuration/smtp-config-schema";
 import {
   type IGetFallbackSmtpEnabled,
   type IGetSmtpConfiguration,
-} from "../../../modules/smtp/configuration/smtp-configuration.service";
+} from "../../modules/smtp/configuration/smtp-configuration.service";
 import {
   defaultMjmlSubjectTemplates,
   defaultMjmlTemplates,
-} from "../../../modules/smtp/default-templates";
-import { EmailCompiler } from "../../../modules/smtp/services/email-compiler";
-import { HandlebarsTemplateCompiler } from "../../../modules/smtp/services/handlebars-template-compiler";
-import { HtmlToTextCompiler } from "../../../modules/smtp/services/html-to-text-compiler";
-import { MjmlCompiler } from "../../../modules/smtp/services/mjml-compiler";
+} from "../../modules/smtp/default-templates";
+import { EmailCompiler } from "../../modules/smtp/services/email-compiler";
+import { HandlebarsTemplateCompiler } from "../../modules/smtp/services/handlebars-template-compiler";
+import { HtmlToTextCompiler } from "../../modules/smtp/services/html-to-text-compiler";
+import { MjmlCompiler } from "../../modules/smtp/services/mjml-compiler";
 import {
   type ISMTPEmailSender,
   type SendMailArgs,
-} from "../../../modules/smtp/services/smtp-email-sender";
+} from "../../modules/smtp/services/smtp-email-sender";
 // Import handler AFTER mocks are declared so module-level useCaseFactory uses mocked class
-import { handler } from "./notify";
+import { handler } from "../../pages/api/webhooks/notify";
 
 const { mockCreateFromAuthData } = vi.hoisted(() => ({
   mockCreateFromAuthData: vi.fn(),
 }));
 
-vi.mock("../../../modules/event-handlers/use-case/send-event-messages.use-case.factory", () => ({
+vi.mock("../../modules/event-handlers/use-case/send-event-messages.use-case.factory", () => ({
   SendEventMessagesUseCaseFactory: vi.fn().mockImplementation(() => ({
     createFromAuthData: mockCreateFromAuthData,
   })),
