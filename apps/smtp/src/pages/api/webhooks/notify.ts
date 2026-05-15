@@ -30,7 +30,11 @@ const logger = createLogger(notifyWebhook.webhookPath);
 
 const useCaseFactory = new SendEventMessagesUseCaseFactory();
 
-const handler: NextJsWebhookHandler<NotifySubscriptionPayload> = async (req, res, context) => {
+export const handler: NextJsWebhookHandler<NotifySubscriptionPayload> = async (
+  req,
+  res,
+  context,
+) => {
   logger.info("Webhook received");
 
   const { payload, authData } = context;
