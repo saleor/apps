@@ -19,6 +19,13 @@ minimumReleaseAgeExclude:
   - "@next/swc-darwin-arm64@15.5.18"
   - "@next/swc-win32-x64-msvc@15.5.18"
   - "@next/swc-win32-arm64-msvc@15.5.18"
+  # protobufjs 7.5.6 and 8.0.2 fix CVE-2026-41242, CVE-2026-44290,
+  # CVE-2026-44291, CVE-2026-44292, CVE-2026-44293, CVE-2026-44294,
+  # CVE-2026-44295, CVE-2026-45740
+  - protobufjs@7.5.8 || 8.2.0
+  - "@protobufjs/inquire@1.1.1" # needed by 'protobufjs@7.5.8'
+  - "@protobufjs/utf8@1.1.1" # needed by 'protobufjs@7.5.8'
+  - "@protobufjs/codegen@2.0.5" # needed by 'protobufjs@7.5.8'
 
 # Requires installing versions only with provenance (published via CI, not npm token)
 # Allows installing "downgraded" deps, if they are older than 30 days
@@ -55,6 +62,11 @@ overrides:
   # handlebars-helpers uses old version, fixed in 4.7.9: CVE-2026-33938
   handlebars: 4.7.9
   "form-data@>=4.0.0 <=4.0.0": ">=4.0.4"
+  # protobufjs 7.5.6 and 8.0.2 fix CVE-2026-41242, CVE-2026-44290,
+  # CVE-2026-44291, CVE-2026-44292, CVE-2026-44293, CVE-2026-44294,
+  # CVE-2026-44295, CVE-2026-45740
+  "protobufjs@<7.5.6": ">=7.5.8 <8"
+  "protobufjs@>=8 <8.2.0": ">=8.2.0"
 
 catalog:
   "node-mocks-http": 1.16.1
