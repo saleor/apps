@@ -93,6 +93,25 @@ describe("formatEnvValidationError", () => {
     }
   });
 
+  it("Throws ZodValidationError in browser environment where process is undefined and window is defined", () => {
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    vi.stubGlobal("process", undefined);
+    vi.stubGlobal("window", {});
+
+    try {
+      expect(() => formatEnvValidationError(getError({}))).toThrowError(
+        'Validation error: Expected number, received nan at "PORT"; Required at "SECRET_KEY"; Required at "APL"',
+      );
+      expect(consoleErrorSpy).toHaveBeenNthCalledWith(
+        1,
+        'Validation error: Expected number, received nan at "PORT"; Required at "SECRET_KEY"; Required at "APL"',
+      );
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
   it("Does not log the error stack", () => {
     const { consoleErrorSpy } = setup();
 
