@@ -23,7 +23,7 @@ export const formatEnvValidationError = (error: ZodError): never => {
   console.error(JSON.stringify(error.issues, null, 2));
 
   if (canExitProcess()) {
-    process.exit(1);
+    return process.exit(1);
   }
 
   throw validationError;
