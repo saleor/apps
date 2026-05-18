@@ -3,6 +3,7 @@ import { type AppManifest } from "@saleor/app-sdk/types";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
 
+import { appDeletedWebhook } from "@/app/api/webhooks/saleor/app-deleted/webhook-definition";
 import { env } from "@/lib/env";
 import { withLoggerContext } from "@/lib/logger-context";
 import packageJson from "@/package.json";
@@ -47,6 +48,7 @@ const handler = createManifestHandler({
         transactionProcessSessionWebhookDefinition.getWebhookManifest(apiBaseUrl),
         transactionRefundRequestedWebhookDefinition.getWebhookManifest(apiBaseUrl),
         fulfillmentTrackingNumberUpdatedWebhookDefinition.getWebhookManifest(apiBaseUrl),
+        appDeletedWebhook.getWebhookManifest(apiBaseUrl),
       ],
     };
 

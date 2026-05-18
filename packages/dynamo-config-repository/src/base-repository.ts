@@ -1,29 +1,29 @@
-import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
+import { type SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import {
   DeleteItemCommand,
   Entity,
   EntityParser,
   GetItemCommand,
-  InputValue,
+  type InputValue,
   item,
   Parser,
   PutItemCommand,
   QueryCommand,
-  Schema,
+  type Schema,
   string,
-  Table,
-  ValidValue,
+  type Table,
+  type ValidValue,
 } from "dynamodb-toolbox";
-import { err, ok, Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { GenericRootConfig } from "./generic-root-config";
 import {
-  BaseAccessPattern,
-  BaseConfig,
-  ConfigByChannelIdAccessPattern,
-  ConfigByConfigIdAccessPattern,
-  GenericRepo,
-  GetChannelConfigAccessPattern,
+  type BaseAccessPattern,
+  type BaseConfig,
+  type ConfigByChannelIdAccessPattern,
+  type ConfigByConfigIdAccessPattern,
+  type GenericRepo,
+  type GetChannelConfigAccessPattern,
   RepoError,
 } from "./types";
 
@@ -351,6 +351,12 @@ export class DynamoConfigRepository<
         }),
       );
     }
+  }
+
+  async pruneTenant(_saleorApiUrl: SaleorApiUrl) {
+    // todo implement pruning all rows with pk starting with saleorApiUrl
+
+    return ok(undefined);
   }
 }
 

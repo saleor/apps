@@ -1,9 +1,11 @@
 import { type BatchWriteCommandOutput } from "@aws-sdk/lib-dynamodb";
 import {
+  BatchDeleteRequest,
   BatchPutRequest,
   BatchWriteCommand,
   executeBatchWrite,
   QueryCommand,
+  ScanCommand,
 } from "dynamodb-toolbox";
 import { err, ok, Result, ResultAsync } from "neverthrow";
 import { ulid } from "ulid";
@@ -38,6 +40,7 @@ export interface ILogsRepository {
     saleorApiUrl: string;
     appId: string;
   }): Promise<Result<undefined, unknown>>;
+  pruneAllLogs(args: { saleorApiUrl: string }): Promise<Result<undefined, unknown>>;
 }
 
 /**
@@ -323,6 +326,108 @@ export class LogsRepositoryDynamodb implements ILogsRepository {
 
     return ok(undefined);
   }
+
+  async pruneAllLogs({
+    saleorApiUrl,
+  }: {
+    saleorApiUrl: string;
+  }): Promise<
+    Result<
+      undefined,
+      | InstanceType<typeof LogsRepositoryDynamodb.LogsFetchError>
+      | InstanceType<typeof LogsRepositoryDynamodb.WriteLogError>
+      | InstanceType<typeof LogsRepositoryDynamodb.UnprocessedItemsError>
+    >
+  > {
+    this.logger.debug("Starting pruning logs for saleorApiUrl", { saleorApiUrl });
+
+    const pkPrefix = `${saleorApiUrl}#`;
+
+    let lastEvaluatedKey: LastEvaluatedKey;
+    let deletedCount = 0;
+
+    do {
+      const scanResult = await ResultAsync.fromPromise(
+        this.logsTable
+          .build(ScanCommand)
+          .entities(this.logByDateEntity, this.logsByCheckoutOrOrderId)
+          .options({
+            exclusiveStartKey: lastEvaluatedKey,
+            showEntityAttr: true,
+            filters: {
+              LOG_BY_DATE: { attr: "PK", beginsWith: pkPrefix },
+              LOG_BY_CHECKOUT_OR_ORDER_ID: { attr: "PK", beginsWith: pkPrefix },
+            },
+          })
+          .send(),
+        (error) =>
+          new LogsRepositoryDynamodb.LogsFetchError("Error while scanning logs for pruning", {
+            cause: error,
+          }),
+      );
+
+      if (scanResult.isErr()) {
+        this.logger.error("Error while scanning logs for pruning", { error: scanResult.error });
+
+        return err(scanResult.error);
+      }
+
+      lastEvaluatedKey = scanResult.value.LastEvaluatedKey;
+
+      const items = scanResult.value.Items ?? [];
+
+      for (let i = 0; i < items.length; i += 25) {
+        const chunk = items.slice(i, i + 25);
+
+        const requests = chunk.map((item) =>
+          item.entity === "LOG_BY_DATE"
+            ? this.logByDateEntity
+                .build(BatchDeleteRequest)
+                .key({ PK: item.PK, ulid: item.ulid, date: item.date })
+            : this.logsByCheckoutOrOrderId.build(BatchDeleteRequest).key({
+                PK: item.PK,
+                ulid: item.ulid,
+                date: item.date,
+                checkoutOrOrderId: item.checkoutOrOrderId,
+              }),
+        );
+
+        const cmd = this.logsTable.build(BatchWriteCommand).requests(...requests);
+
+        const deleteResult = await ResultAsync.fromPromise(
+          executeBatchWrite({ capacity: "TOTAL", maxAttempts: 3 }, cmd),
+          (error) =>
+            new LogsRepositoryDynamodb.WriteLogError("Error while deleting logs from DynamoDB", {
+              cause: error,
+            }),
+        );
+
+        if (deleteResult.isErr()) {
+          this.logger.error("Error while batch-deleting logs from DynamoDB", {
+            error: deleteResult.error,
+          });
+
+          return err(deleteResult.error);
+        }
+
+        if (this.hasUnprocessedItems(deleteResult.value.UnprocessedItems)) {
+          this.logger.warn("Some logs were not deleted from DynamoDB", {
+            unprocessedItems: deleteResult.value.UnprocessedItems,
+          });
+
+          return err(
+            new LogsRepositoryDynamodb.UnprocessedItemsError("Some logs were not deleted"),
+          );
+        }
+
+        deletedCount += chunk.length;
+      }
+    } while (lastEvaluatedKey);
+
+    this.logger.info("Pruned all logs for saleorApiUrl", { saleorApiUrl, deletedCount });
+
+    return ok(undefined);
+  }
 }
 
 /**
@@ -375,5 +480,19 @@ export class LogsRepositoryMemory implements ILogsRepository {
     lastEvaluatedKey: LastEvaluatedKey;
   }): Promise<Result<{ clientLogs: ClientLog[]; lastEvaluatedKey: LastEvaluatedKey }, never>> {
     return ok({ clientLogs: this.logs, lastEvaluatedKey: undefined });
+  }
+
+  async pruneAllLogs(args: {
+    saleorApiUrl: string;
+    appId: string;
+  }): Promise<Result<undefined, unknown>> {
+    this.logs = this.logs.filter((l) => {
+      const log = l.getValue();
+      const [saleorApiUrl] = LogsTable.decomposePrimaryKey(log.id);
+
+      return args.saleorApiUrl !== saleorApiUrl;
+    });
+
+    return ok(undefined);
   }
 }

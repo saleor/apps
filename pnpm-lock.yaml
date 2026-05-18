@@ -577,6 +577,9 @@ importers:
       '@saleor/sentry-utils':
         specifier: workspace:*
         version: link:../../packages/sentry-utils
+      '@saleor/webhook-utils':
+        specifier: workspace:*
+        version: link:../../packages/webhook-utils
       '@sentry/cli':
         specifier: 'catalog:'
         version: 1.77.3
@@ -782,6 +785,9 @@ importers:
       '@saleor/sentry-utils':
         specifier: workspace:*
         version: link:../../packages/sentry-utils
+      '@saleor/webhook-utils':
+        specifier: workspace:*
+        version: link:../../packages/webhook-utils
       '@sentry/cli':
         specifier: 'catalog:'
         version: 1.77.3
@@ -2917,6 +2923,9 @@ importers:
 
   packages/webhook-utils:
     dependencies:
+      '@saleor/apps-logger':
+        specifier: workspace:*
+        version: link:../logger
       graphql:
         specifier: 'catalog:'
         version: 16.7.1

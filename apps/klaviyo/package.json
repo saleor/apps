@@ -28,6 +28,7 @@
     "@opentelemetry/semantic-conventions": "catalog:",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-logger": "workspace:*",
+    "@saleor/webhook-utils": "workspace:*",
     "@saleor/apps-otel": "workspace:*",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
