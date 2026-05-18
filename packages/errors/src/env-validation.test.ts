@@ -43,11 +43,7 @@ describe("formatEnvValidationError", () => {
   it("Prints exact formatted message via zod-validation-error for missing fields", () => {
     const { consoleErrorSpy } = setup();
 
-    try {
-      formatEnvValidationError(getError({}));
-    } catch {
-      // process.exit is mocked to throw
-    }
+    expect(() => formatEnvValidationError(getError({}))).toThrow("__process.exit_called__");
 
     expect(consoleErrorSpy).toHaveBeenNthCalledWith(
       1,
@@ -58,11 +54,9 @@ describe("formatEnvValidationError", () => {
   it("Prints exact formatted message for invalid values", () => {
     const { consoleErrorSpy } = setup();
 
-    try {
-      formatEnvValidationError(getError({ PORT: "abc", SECRET_KEY: "s", APL: "wrong" }));
-    } catch {
-      // process.exit is mocked to throw
-    }
+    expect(() =>
+      formatEnvValidationError(getError({ PORT: "abc", SECRET_KEY: "s", APL: "wrong" })),
+    ).toThrow("__process.exit_called__");
 
     expect(consoleErrorSpy).toHaveBeenNthCalledWith(
       1,
@@ -74,11 +68,7 @@ describe("formatEnvValidationError", () => {
     const { consoleErrorSpy } = setup();
     const error = getError({});
 
-    try {
-      formatEnvValidationError(error);
-    } catch {
-      // process.exit is mocked to throw
-    }
+    expect(() => formatEnvValidationError(error)).toThrow("__process.exit_called__");
 
     expect(consoleErrorSpy).toHaveBeenNthCalledWith(2, JSON.stringify(error.issues, null, 2));
   });
@@ -106,11 +96,7 @@ describe("formatEnvValidationError", () => {
   it("Does not log the error stack", () => {
     const { consoleErrorSpy } = setup();
 
-    try {
-      formatEnvValidationError(getError({}));
-    } catch {
-      // process.exit is mocked to throw
-    }
+    expect(() => formatEnvValidationError(getError({}))).toThrow("__process.exit_called__");
 
     for (const call of consoleErrorSpy.mock.calls) {
       for (const arg of call) {
