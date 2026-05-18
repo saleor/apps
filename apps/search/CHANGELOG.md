@@ -1,5 +1,38 @@
 # saleor-app-search
 
+## 1.29.4
+
+### Patch Changes
+
+- 2865a4f: Upgraded next.js to v15.5.18, more info: https://vercel.com/changelog/next-js-may-2026-security-release
+
+## 1.29.3
+
+### Patch Changes
+
+- 4af78c1: Failed JWT verification in tRPC procedures no longer reports to Sentry as an error. Before, an expired or invalid token raised a 500 (or 403) and produced an error in monitoring even though it was a normal client-side auth failure. Now it logs a warning and returns 401, so dashboards stay clean and the client can react to the auth state correctly.
+- 82fc741: Fixed NUMERIC product/variant attributes (e.g. `width`, etc) being indexed in Algolia as strings, which prevented using `numericFilters` against them. They are now indexed as numbers.
+
+  Added `productTypeName` to every indexed product record alongside the existing `productTypeId`, so storefronts can filter by product type name in Algolia without an extra round trip to the Saleor API.
+
+  **After upgrading, run a full re-import via the in-app "Import products to Algolia" button — existing records will retain their old (string) attribute values and missing `productTypeName` until re-indexed.**
+
+## 1.29.2
+
+### Patch Changes
+
+- 0744721: Added support for changing `SECRET_KEY` in production environment.
+
+  In order to use new secret key add `NEW_SECRET_KEY` env variable.
+  App will use `NEW_SECRET_KEY` for saving new configurations, and will use existing `SECRET_KEY` as a fallback for decryption.
+
+  To update all configurations in all app instances, use rotation script in each app: `pnpm rotate-secret-key`.
+
+  For more details read `packages/shared/src/key-rotation/README.md` documentation
+
+- Updated dependencies [0744721]
+  - @saleor/apps-shared@1.14.5
+
 ## 1.29.1
 
 ### Patch Changes

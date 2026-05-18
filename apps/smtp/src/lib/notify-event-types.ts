@@ -5,6 +5,7 @@ export const notifyEventMapping: Record<string, MessageEventTypes> = {
   account_confirmation: "ACCOUNT_CONFIRMATION",
   account_delete: "ACCOUNT_DELETE",
   account_password_reset: "ACCOUNT_PASSWORD_RESET",
+  account_set_customer_password: "ACCOUNT_SET_CUSTOMER_PASSWORD",
   account_change_email_request: "ACCOUNT_CHANGE_EMAIL_REQUEST",
   account_change_email_confirm: "ACCOUNT_CHANGE_EMAIL_CONFIRM",
   order_fulfillment_update: "ORDER_FULFILLMENT_UPDATE",
@@ -37,7 +38,11 @@ export type NotifySubscriptionPayload = {
       payload: NotifyPayloadAccountPasswordReset;
     }
   | {
-      notify_event: "account_change_email";
+      notify_event: "account_set_customer_password";
+      payload: NotifyPayloadAccountSetCustomerPassword;
+    }
+  | {
+      notify_event: "account_change_email_request";
       payload: NotifyPayloadAccountChangeEmailRequest;
     }
   | {
@@ -78,6 +83,17 @@ export interface NotifyPayloadAccountPasswordReset {
   logo_url: string;
   recipient_email: string;
   reset_url: string;
+  site_name: string;
+  token: string;
+  user: User;
+}
+
+export interface NotifyPayloadAccountSetCustomerPassword {
+  channel_slug: string;
+  domain: string;
+  logo_url: string;
+  password_set_url: string;
+  recipient_email: string;
   site_name: string;
   token: string;
   user: User;

@@ -100,7 +100,7 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
   } catch (e) {
     logger.warn("JWT verification failed, throwing", { error: e });
     throw new TRPCError({
-      code: "FORBIDDEN",
+      code: "UNAUTHORIZED",
       message: "JWT verification failed",
     });
   }

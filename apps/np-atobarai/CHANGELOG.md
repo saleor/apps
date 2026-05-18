@@ -1,5 +1,34 @@
 # saleor-app-payment-np-atobarai
 
+## 1.4.9
+
+### Patch Changes
+
+- 2865a4f: Upgraded next.js to v15.5.18, more info: https://vercel.com/changelog/next-js-may-2026-security-release
+
+## 1.4.8
+
+### Patch Changes
+
+- 4af78c1: Failed JWT verification in tRPC procedures no longer reports to Sentry as an error. Before, an expired or invalid token raised a 500 (or 403) and produced an error in monitoring even though it was a normal client-side auth failure. Now it logs a warning and returns 401, so dashboards stay clean and the client can react to the auth state correctly.
+
+## 1.4.7
+
+### Patch Changes
+
+- 0744721: Added support for changing `SECRET_KEY` in production environment.
+
+  In order to use new secret key add `NEW_SECRET_KEY` env variable.
+  App will use `NEW_SECRET_KEY` for saving new configurations, and will use existing `SECRET_KEY` as a fallback for decryption.
+
+  To update all configurations in all app instances, use rotation script in each app: `pnpm rotate-secret-key`.
+
+  For more details read `packages/shared/src/key-rotation/README.md` documentation
+
+- Updated dependencies [0744721]
+  - @saleor/apps-shared@1.14.5
+  - @saleor/apps-trpc@4.0.5
+
 ## 1.4.6
 
 ### Patch Changes

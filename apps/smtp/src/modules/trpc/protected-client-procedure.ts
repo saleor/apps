@@ -1,7 +1,6 @@
 import { verifyJWT } from "@saleor/app-sdk/auth";
 import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared/permissions";
 import { setSentrySaleorUser } from "@saleor/sentry-utils";
-import { captureException } from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
@@ -90,10 +89,9 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
         ],
       });
     } catch (e) {
-      captureException(e);
-      logger.error("JWT verification failed, throwing", { error: e });
+      logger.warn("JWT verification failed, throwing", { error: e });
       throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
+        code: "UNAUTHORIZED",
         message: "JWT verification failed",
       });
     }
