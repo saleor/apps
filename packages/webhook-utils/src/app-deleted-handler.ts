@@ -9,6 +9,23 @@ type Params = {
   apl: APL;
   webhookPath: string;
   logger: Logger;
+  /**
+   * Additional hooks that can be executed by the handler.
+   * Error thrown in them are silently dropped.
+   * Each hook should include their own error handling:
+   *
+   * e.g.
+   *
+   * hooks: {
+   *   onAuthDataDeleted: async () => {
+   *     try {
+   *       callDb()
+   *     } catch {
+   *       logger.error("Failed to call db")
+   *     }
+   *   }
+   * }
+   */
   hooks?: {
     onEvent?: (ctx: WebhookContext<unknown>) => Promise<void>;
     onAuthDataDeleted?: () => Promise<void>;
@@ -35,25 +52,28 @@ export const createAppDeletedHandler = ({ apl, webhookPath, hooks = {}, logger }
     try {
       logger.info("APP_DELETED event received. Auth Data will be removed");
 
-      await hooks.onEvent?.(ctx);
+      // Ignore error from hook. Hook should include error handling
+      await hooks.onEvent?.(ctx).catch();
 
       try {
         await apl.delete(ctx.authData.saleorApiUrl);
 
-        await hooks.onAuthDataDeleted?.();
+        // Ignore error from hook. Hook should include error handling
+        await hooks.onAuthDataDeleted?.().catch();
 
         return new Response("ok", { status: 200 });
       } catch (e) {
         logger.error("Error deleting auth data on APP_DELETED", { error: e });
 
-        await hooks.onAuthDataDeleteError?.(e as Error);
+        // Ignore error from hook. Hook should include error handling
+        await hooks.onAuthDataDeleteError?.(e as Error).catch();
 
-        return new Response('"Failed to clean up auth data."', { status: 500 });
+        return new Response("Failed to clean up auth data.", { status: 500 });
       }
     } catch (e) {
       logger.error("Failed to execute APP_DELETED event", { error: e });
 
-      return new Response('"Failed to clean up auth data."', { status: 500 });
+      return new Response("Failed to clean up auth data.", { status: 500 });
     }
   });
 
