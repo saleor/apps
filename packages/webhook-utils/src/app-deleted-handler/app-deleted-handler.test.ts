@@ -4,6 +4,7 @@ import { type WebhookContext } from "@saleor/app-sdk/handlers/shared";
 import { type Logger } from "@saleor/apps-logger";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { BaseError } from "../errors";
 import {
   _innerAppDeletedHandler,
   createAppDeletedHandler,
@@ -104,10 +105,8 @@ describe("_innerAppDeletedHandler", () => {
       expect(onAuthDataDeleted).not.toHaveBeenCalled();
     });
 
-    it("invokes onAuthDataDeleteError hook with the thrown error when apl.delete fails", async () => {
-      const error = new Error("DB connection lost");
-
-      aplDelete.mockRejectedValueOnce(error);
+    it("invokes onAuthDataDeleteError hook with a BaseError-normalized error when apl.delete fails", async () => {
+      aplDelete.mockRejectedValueOnce(new Error("DB connection lost"));
       const onAuthDataDeleteError = vi.fn().mockResolvedValue(undefined);
 
       await _innerAppDeletedHandler(
@@ -115,7 +114,10 @@ describe("_innerAppDeletedHandler", () => {
         buildCtx(),
       );
 
-      expect(onAuthDataDeleteError).toHaveBeenCalledWith(error);
+      expect(onAuthDataDeleteError).toHaveBeenCalledWith(
+        expect.objectContaining({ message: "DB connection lost" }),
+      );
+      expect(onAuthDataDeleteError.mock.calls[0][0]).toBeInstanceOf(BaseError);
     });
 
     it("does not invoke onAuthDataDeleteError hook when apl.delete succeeds", async () => {
