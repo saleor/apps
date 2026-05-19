@@ -3,7 +3,7 @@ import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
 import { type WebhookContext } from "@saleor/app-sdk/handlers/shared";
 import { type Logger } from "@saleor/apps-logger";
 
-import { AppDeletedDocument } from "../generated/graphql";
+import { AppDeletedDocument } from "../../generated/graphql";
 
 type Params = {
   apl: APL;
@@ -33,13 +33,8 @@ type Params = {
   };
 };
 
-/**
- * TODO:
- * 1. Move to app-sdk
- * 2. Implement into non-monorepo apps
- */
-export const createAppDeletedHandler = ({ apl, webhookPath, hooks = {}, logger }: Params) => {
-  const webhook = new SaleorAsyncWebhook({
+export const buildSdkWebhook = ({ webhookPath, apl }: Pick<Params, "webhookPath" | "apl">) => {
+  return new SaleorAsyncWebhook({
     apl,
     name: "APP_DELETED",
     query: AppDeletedDocument,
@@ -47,6 +42,15 @@ export const createAppDeletedHandler = ({ apl, webhookPath, hooks = {}, logger }
     isActive: true,
     webhookPath,
   });
+};
+
+/**
+ * TODO:
+ * 1. Move to app-sdk
+ * 2. Implement into non-monorepo apps
+ */
+export const createAppDeletedHandler = ({ apl, webhookPath, hooks = {}, logger }: Params) => {
+  const webhook = buildSdkWebhook({apl, webhookPath});
 
   const handler = webhook.createHandler(async (_req, ctx) => {
     try {

@@ -3,7 +3,7 @@ import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
 import { type Logger } from "@saleor/apps-logger";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { AppDeletedDocument } from "../generated/graphql";
+import { AppDeletedDocument } from "../../generated/graphql";
 import { createAppDeletedHandler } from "./app-deleted-handler";
 
 vi.mock("@saleor/app-sdk/handlers/next-app-router", () => ({

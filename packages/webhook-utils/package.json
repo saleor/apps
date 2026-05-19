@@ -4,7 +4,7 @@
   "type": "module",
   "exports": {
     ".": "./index.ts",
-    "./app-deleted-handler": "./src/app-deleted-handler.ts"
+    "./app-deleted-handler": "./src/app-deleted-handler/index.ts"
   },
   "main": "index.ts",
   "scripts": {

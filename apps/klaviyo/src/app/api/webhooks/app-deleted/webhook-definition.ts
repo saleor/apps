@@ -1,4 +1,4 @@
-import { createAppDeletedHandler } from "@saleor/webhook-utils/app-deleted-handler";
+import { createAppDeletedHandler } from "@saleor/webhook-utils/src/app-deleted-handler/app-deleted-handler";
 
 import { saleorApp } from "../../../../../saleor-app";
 import { createLogger } from "../../../../logger";
