@@ -4,6 +4,7 @@ import { type WebhookContext } from "@saleor/app-sdk/handlers/shared";
 import { type Logger } from "@saleor/apps-logger";
 
 import { AppDeletedDocument } from "../../generated/graphql";
+import { BaseError } from "../errors";
 
 type Params = {
   apl: APL;
@@ -68,15 +69,19 @@ export const _innerAppDeletedHandler = async (
 
       return new Response("ok", { status: 200 });
     } catch (e) {
-      logger.error("Error deleting auth data on APP_DELETED", { error: e });
+      const error = BaseError.normalize(e)
+
+      logger.error("Error deleting auth data on APP_DELETED", { error });
 
       // Ignore error from hook. Hook should include error handling
-      await hooks.onAuthDataDeleteError?.(e as Error).catch();
+      await hooks.onAuthDataDeleteError?.(error).catch();
 
       return new Response("Failed to clean up auth data.", { status: 500 });
     }
   } catch (e) {
-    logger.error("Failed to execute APP_DELETED event", { error: e });
+    const error = BaseError.normalize(e);
+
+    logger.error("Failed to execute APP_DELETED event", { error });
 
     return new Response("Failed to clean up auth data.", { status: 500 });
   }
