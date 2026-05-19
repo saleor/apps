@@ -33,7 +33,10 @@ type Params = {
   };
 };
 
-export const buildSdkWebhook = ({ webhookPath, apl }: Pick<Params, "webhookPath" | "apl">) => {
+/**
+ * @internal
+ */
+export const _buildSdkWebhook = ({ webhookPath, apl }: Pick<Params, "webhookPath" | "apl">) => {
   return new SaleorAsyncWebhook({
     apl,
     name: "APP_DELETED",
@@ -45,40 +48,50 @@ export const buildSdkWebhook = ({ webhookPath, apl }: Pick<Params, "webhookPath"
 };
 
 /**
+ * @internal
+ */
+export const _innerAppDeletedHandler = async (
+  { apl, hooks = {}, logger }: Params,
+  ctx: WebhookContext<unknown>,
+) => {
+  try {
+    logger.info("APP_DELETED event received. Auth Data will be removed");
+
+    // Ignore error from hook. Hook should include error handling
+    await hooks.onEvent?.(ctx).catch();
+
+    try {
+      await apl.delete(ctx.authData.saleorApiUrl);
+
+      // Ignore error from hook. Hook should include error handling
+      await hooks.onAuthDataDeleted?.().catch();
+
+      return new Response("ok", { status: 200 });
+    } catch (e) {
+      logger.error("Error deleting auth data on APP_DELETED", { error: e });
+
+      // Ignore error from hook. Hook should include error handling
+      await hooks.onAuthDataDeleteError?.(e as Error).catch();
+
+      return new Response("Failed to clean up auth data.", { status: 500 });
+    }
+  } catch (e) {
+    logger.error("Failed to execute APP_DELETED event", { error: e });
+
+    return new Response("Failed to clean up auth data.", { status: 500 });
+  }
+};
+
+/**
  * TODO:
  * 1. Move to app-sdk
  * 2. Implement into non-monorepo apps
  */
 export const createAppDeletedHandler = ({ apl, webhookPath, hooks = {}, logger }: Params) => {
-  const webhook = buildSdkWebhook({apl, webhookPath});
+  const webhook = _buildSdkWebhook({ apl, webhookPath });
 
   const handler = webhook.createHandler(async (_req, ctx) => {
-    try {
-      logger.info("APP_DELETED event received. Auth Data will be removed");
-
-      // Ignore error from hook. Hook should include error handling
-      await hooks.onEvent?.(ctx).catch();
-
-      try {
-        await apl.delete(ctx.authData.saleorApiUrl);
-
-        // Ignore error from hook. Hook should include error handling
-        await hooks.onAuthDataDeleted?.().catch();
-
-        return new Response("ok", { status: 200 });
-      } catch (e) {
-        logger.error("Error deleting auth data on APP_DELETED", { error: e });
-
-        // Ignore error from hook. Hook should include error handling
-        await hooks.onAuthDataDeleteError?.(e as Error).catch();
-
-        return new Response("Failed to clean up auth data.", { status: 500 });
-      }
-    } catch (e) {
-      logger.error("Failed to execute APP_DELETED event", { error: e });
-
-      return new Response("Failed to clean up auth data.", { status: 500 });
-    }
+    return _innerAppDeletedHandler({ logger, hooks, apl, webhookPath }, ctx);
   });
 
   return {
