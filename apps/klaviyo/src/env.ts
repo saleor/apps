@@ -3,6 +3,7 @@ import {
   newSecretKeyRuntimeEnv,
   newSecretKeyServerSchema,
 } from "@saleor/apps-shared/secret-key-resolution";
+import { formatEnvValidationError } from "@saleor/errors";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
@@ -62,4 +63,5 @@ export const env = createEnv({
     ...newSecretKeyRuntimeEnv,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
+  onValidationError: formatEnvValidationError,
 });
