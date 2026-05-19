@@ -26,6 +26,8 @@ minimumReleaseAgeExclude:
   - "@protobufjs/inquire@1.1.1" # needed by 'protobufjs@7.5.8'
   - "@protobufjs/utf8@1.1.1" # needed by 'protobufjs@7.5.8'
   - "@protobufjs/codegen@2.0.5" # needed by 'protobufjs@7.5.8'
+  # Fixes CVE-2026-40175 and more
+  - axios@1.15.2
 
 # Requires installing versions only with provenance (published via CI, not npm token)
 # Allows installing "downgraded" deps, if they are older than 30 days
@@ -67,6 +69,8 @@ overrides:
   # CVE-2026-44295, CVE-2026-45740
   "protobufjs@<7.5.6": ">=7.5.8 <8"
   "protobufjs@>=8 <8.2.0": ">=8.2.0"
+  # Fixes CVE-2026-40175 and more
+  "axios@<1.15.2": ">=1.15.2"
 
 catalog:
   "node-mocks-http": 1.16.1
