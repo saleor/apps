@@ -55,8 +55,12 @@ export const _innerAppDeletedHandler = async (
   { apl, hooks = {}, logger }: Params,
   ctx: WebhookContext<unknown>,
 ) => {
+  const loggerParams = {
+    saleorApiUrl: ctx.authData.saleorApiUrl
+  }
+
   try {
-    logger.info("APP_DELETED event received. Auth Data will be removed");
+    logger.info("APP_DELETED event received. Auth Data will be removed", loggerParams);
 
     try {
       await hooks.onEvent?.(ctx);
@@ -66,6 +70,8 @@ export const _innerAppDeletedHandler = async (
 
     try {
       await apl.delete(ctx.authData.saleorApiUrl);
+
+      logger.info("Auth Data removed successfully", loggerParams);
 
       try {
         await hooks.onAuthDataDeleted?.();
@@ -77,7 +83,7 @@ export const _innerAppDeletedHandler = async (
     } catch (e) {
       const error = BaseError.normalize(e);
 
-      logger.error("Error deleting auth data on APP_DELETED", { error });
+      logger.error("Error deleting auth data on APP_DELETED", { error, ...loggerParams });
 
       try {
         await hooks.onAuthDataDeleteError?.(error);
@@ -90,7 +96,7 @@ export const _innerAppDeletedHandler = async (
   } catch (e) {
     const error = BaseError.normalize(e);
 
-    logger.error("Failed to execute APP_DELETED event", { error });
+    logger.error("Failed to execute APP_DELETED event", { error, ...loggerParams });
 
     return new Response("Failed to clean up auth data.", { status: 500 });
   }
