@@ -58,23 +58,32 @@ export const _innerAppDeletedHandler = async (
   try {
     logger.info("APP_DELETED event received. Auth Data will be removed");
 
-    // Ignore error from hook. Hook should include error handling
-    await hooks.onEvent?.(ctx).catch();
+    try {
+      await hooks.onEvent?.(ctx);
+    } catch {
+      // Ignore error from hook. Hook should include error handling
+    }
 
     try {
       await apl.delete(ctx.authData.saleorApiUrl);
 
-      // Ignore error from hook. Hook should include error handling
-      await hooks.onAuthDataDeleted?.().catch();
+      try {
+        await hooks.onAuthDataDeleted?.();
+      } catch {
+        // Ignore error from hook. Hook should include error handling
+      }
 
       return new Response("ok", { status: 200 });
     } catch (e) {
-      const error = BaseError.normalize(e)
+      const error = BaseError.normalize(e);
 
       logger.error("Error deleting auth data on APP_DELETED", { error });
 
-      // Ignore error from hook. Hook should include error handling
-      await hooks.onAuthDataDeleteError?.(error).catch();
+      try {
+        await hooks.onAuthDataDeleteError?.(error);
+      } catch {
+        // Ignore error from hook. Hook should include error handling
+      }
 
       return new Response("Failed to clean up auth data.", { status: 500 });
     }
