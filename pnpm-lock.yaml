@@ -316,6 +316,9 @@ importers:
       '@saleor/apps-ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@saleor/errors':
+        specifier: workspace:*
+        version: link:../../packages/errors
       '@saleor/macaw-ui':
         specifier: 'catalog:'
         version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -569,6 +572,9 @@ importers:
       '@saleor/apps-ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@saleor/errors':
+        specifier: workspace:*
+        version: link:../../packages/errors
       '@saleor/macaw-ui':
         specifier: 'catalog:'
         version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -777,6 +783,9 @@ importers:
       '@saleor/apps-ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@saleor/errors':
+        specifier: workspace:*
+        version: link:../../packages/errors
       '@saleor/macaw-ui':
         specifier: 'catalog:'
         version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1202,6 +1211,9 @@ importers:
       '@saleor/apps-ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@saleor/errors':
+        specifier: workspace:*
+        version: link:../../packages/errors
       '@saleor/handlebars':
         specifier: workspace:*
         version: link:../../packages/handlebars
@@ -1642,6 +1654,9 @@ importers:
       '@saleor/apps-ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@saleor/errors':
+        specifier: workspace:*
+        version: link:../../packages/errors
       '@saleor/macaw-ui':
         specifier: 'catalog:'
         version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1865,6 +1880,9 @@ importers:
       '@saleor/apps-ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@saleor/errors':
+        specifier: workspace:*
+        version: link:../../packages/errors
       '@saleor/handlebars':
         specifier: workspace:*
         version: link:../../packages/handlebars
@@ -2112,6 +2130,9 @@ importers:
       '@saleor/apps-ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@saleor/errors':
+        specifier: workspace:*
+        version: link:../../packages/errors
       '@saleor/macaw-ui':
         specifier: 'catalog:'
         version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -2190,9 +2211,6 @@ importers:
       zod:
         specifier: 'catalog:'
         version: 3.21.4
-      zod-validation-error:
-        specifier: 'catalog:'
-        version: 3.4.0(zod@3.21.4)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 'catalog:'
@@ -2467,6 +2485,9 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 9.23.0(jiti@2.4.2)
+      zod-validation-error:
+        specifier: 'catalog:'
+        version: 3.4.0(zod@3.21.4)
     devDependencies:
       '@saleor/eslint-config-apps':
         specifier: workspace:*
@@ -2492,6 +2513,9 @@ importers:
       vitest:
         specifier: 'catalog:'
         version: 3.1.1(@types/node@24.1.0)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@24.1.0)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
+      zod:
+        specifier: 'catalog:'
+        version: 3.21.4
 
   packages/eslint-config:
     devDependencies:
