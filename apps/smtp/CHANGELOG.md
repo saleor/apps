@@ -1,5 +1,27 @@
 # saleor-app-smtp
 
+## 2.3.6
+
+### Patch Changes
+
+- 9044c32: Upgraded protobufjs to v7.5.8 to fix the following CVEs: CVE-2026-41242,
+  CVE-2026-44290, CVE-2026-44291, CVE-2026-44292, CVE-2026-44293,
+  CVE-2026-44294, CVE-2026-44295, CVE-2026-45740.
+
+  This is only relevant for you if you use & enabled OpenTelemetry.
+
+## 2.3.5
+
+### Patch Changes
+
+- 5e9143c: You can now configure an email template for the "Customer account password setup" event. Previously, when you created a customer via the `customerCreate` mutation with a `redirectUrl`, Saleor emitted a notification but the SMTP app silently ignored it — no password-setup email was sent. The event is now wired through the existing NOTIFY pipeline alongside the existing password-reset event, with its own default template ("Set your password") and the `{{password_set_url}}` variable bound to Saleor's set-password URL.
+
+## 2.3.4
+
+### Patch Changes
+
+- 2865a4f: Upgraded next.js to v15.5.18, more info: https://vercel.com/changelog/next-js-may-2026-security-release
+
 ## 2.3.3
 
 ### Patch Changes

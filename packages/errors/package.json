@@ -11,7 +11,8 @@
     "test:ci": "vitest run --coverage"
   },
   "dependencies": {
-    "eslint": "catalog:"
+    "eslint": "catalog:",
+    "zod-validation-error": "catalog:"
   },
   "devDependencies": {
     "@saleor/eslint-config-apps": "workspace:*",
@@ -21,10 +22,12 @@
     "modern-errors-serialize": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "zod": "catalog:"
   },
   "peerDependencies": {
     "modern-errors": "catalog:",
-    "modern-errors-serialize": "catalog:"
+    "modern-errors-serialize": "catalog:",
+    "zod": "catalog:"
   }
 }
