@@ -1,5 +1,5 @@
 import { withSentryConfig } from "@sentry/nextjs";
-import { NextConfig } from "next";
+import { type NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     "@saleor/react-hook-form-macaw",
     "@saleor/apps-logger",
     "@saleor/apps-otel",
+    "@saleor/webhook-utils",
   ],
   experimental: {
     optimizePackageImports: ["@sentry/nextjs", "@sentry/node"],
