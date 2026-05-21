@@ -5,7 +5,7 @@ import {
   type FetchSaleorVersionQuery,
 } from "../../../generated/graphql";
 
-gql`
+const _query = gql`
   query FetchSaleorVersion {
     shop {
       version

@@ -158,6 +158,7 @@ describe("smtpConfigurationRouter", () => {
           expect((error as TRPCError).code).toBe("BAD_REQUEST");
           expect((error as TRPCError).cause).toBeDefined();
           // Verify errorContext is available through the cause
+          /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
           const cause = (error as TRPCError).cause as any;
 
           expect(cause.errorContext).toBe("SUBJECT");
@@ -188,6 +189,7 @@ describe("smtpConfigurationRouter", () => {
           expect(error).toBeInstanceOf(TRPCError);
           expect((error as TRPCError).code).toBe("BAD_REQUEST");
           expect((error as TRPCError).cause).toBeDefined();
+          /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
           const cause = (error as TRPCError).cause as any;
 
           expect(cause.errorContext).toBe("BODY_TEMPLATE");
@@ -214,6 +216,7 @@ describe("smtpConfigurationRouter", () => {
           expect(error).toBeInstanceOf(TRPCError);
           expect((error as TRPCError).code).toBe("BAD_REQUEST");
           expect((error as TRPCError).cause).toBeDefined();
+          /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
           const cause = (error as TRPCError).cause as any;
 
           expect(cause.errorContext).toBe("BODY_MJML");

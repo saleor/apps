@@ -46,7 +46,7 @@ const logger = createLogger(orderRefundedWebhook.webhookPath);
 const useCaseFactory = new SendEventMessagesUseCaseFactory();
 
 const handler: NextJsWebhookHandler<OrderRefundedWebhookPayloadFragment> = async (
-  req,
+  _req,
   res,
   context,
 ) => {
@@ -88,7 +88,7 @@ const handler: NextJsWebhookHandler<OrderRefundedWebhookPayloadFragment> = async
       })
       .then((result) =>
         result.match(
-          (r) => {
+          () => {
             logger.info("Successfully sent email(s)");
 
             return res.status(200).json({ message: "The event has been handled" });

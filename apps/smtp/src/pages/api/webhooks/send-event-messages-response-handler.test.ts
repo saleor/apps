@@ -16,7 +16,7 @@ function createMockResponse() {
     json,
   } as unknown as NextApiResponse;
 
-  return { res, status: vi.mocked((res as any).status), json };
+  return { res, status: vi.mocked(res.status), json };
 }
 
 function createMockLogger() {
@@ -25,6 +25,7 @@ function createMockLogger() {
     warn: vi.fn(),
     error: vi.fn(),
     debug: vi.fn(),
+    /* eslint-disable-next-line @typescript-eslint/consistent-type-imports */
   } as unknown as ReturnType<typeof import("../../../logger").createLogger>;
 }
 
