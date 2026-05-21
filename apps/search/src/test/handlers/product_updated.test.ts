@@ -3,8 +3,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AlgoliaInvalidAppIdError } from "../../lib/algolia/algolia-errors";
 import { createSearchProblemReporter } from "../../modules/app-problems";
+import { handler } from "../../pages/api/webhooks/saleor/product_updated";
 import { createWebhookContext } from "../../webhooks/webhook-context";
-import { handler } from "./product_updated";
 
 vi.mock("../../webhooks/webhook-context", () => ({
   createWebhookContext: vi.fn(),
