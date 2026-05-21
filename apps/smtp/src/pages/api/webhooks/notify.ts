@@ -9,9 +9,9 @@ import {
 } from "../../../lib/notify-event-types";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
+import { handleUseCaseErrors } from "../../../modules/event-handlers/send-event-messages-response-handler";
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { saleorApp } from "../../../saleor-app";
-import { handleUseCaseErrors } from "./send-event-messages-response-handler";
 
 /*
  * The Notify webhook is triggered on multiple Saleor events.

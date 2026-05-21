@@ -11,9 +11,9 @@ import {
 } from "../../../../generated/graphql";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
+import { handleUseCaseErrors } from "../../../modules/event-handlers/send-event-messages-response-handler";
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { saleorApp } from "../../../saleor-app";
-import { handleUseCaseErrors } from "./send-event-messages-response-handler";
 
 const OrderRefundedWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}

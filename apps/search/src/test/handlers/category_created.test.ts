@@ -1,16 +1,16 @@
 import { createMocks } from "node-mocks-http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { AlgoliaInvalidAppIdError } from "../../../../lib/algolia/algolia-errors";
-import { createSearchProblemReporter } from "../../../../modules/app-problems";
-import { createWebhookContext } from "../../../../webhooks/webhook-context";
-import { handler } from "./category_updated";
+import { AlgoliaInvalidAppIdError } from "../../lib/algolia/algolia-errors";
+import { createSearchProblemReporter } from "../../modules/app-problems";
+import { handler } from "../../pages/api/webhooks/saleor/category_created";
+import { createWebhookContext } from "../../webhooks/webhook-context";
 
-vi.mock("../../../../webhooks/webhook-context", () => ({
+vi.mock("../../webhooks/webhook-context", () => ({
   createWebhookContext: vi.fn(),
 }));
 
-vi.mock("../../../../lib/logger", () => ({
+vi.mock("../../lib/logger", () => ({
   createLogger: () => ({
     info: vi.fn(),
     warn: vi.fn(),
@@ -22,7 +22,7 @@ const mockReportAuthError = vi.fn();
 const mockReportRecordTooLarge = vi.fn();
 const mockReportInvalidAppIdAndDeactivate = vi.fn();
 
-vi.mock("../../../../modules/app-problems", () => ({
+vi.mock("../../modules/app-problems", () => ({
   createSearchProblemReporter: vi.fn(() => ({
     reportAuthErrorAndDeactivate: mockReportAuthError,
     reportRecordTooLarge: mockReportRecordTooLarge,
@@ -31,7 +31,7 @@ vi.mock("../../../../modules/app-problems", () => ({
 }));
 
 const mockContext = {
-  event: "CATEGORY_UPDATED",
+  event: "CATEGORY_CREATED",
   authData: {
     appId: "app-id",
     domain: "domain.saleor.io",
@@ -39,14 +39,14 @@ const mockContext = {
     saleorApiUrl: "https://domain.saleor.io/graphql/",
   },
   payload: {
-    __typename: "CategoryUpdated" as const,
+    __typename: "CategoryCreated" as const,
     category: {
       id: "cat123",
     },
   },
 };
 
-describe("category_updated webhook handler", () => {
+describe("category_created webhook handler", () => {
   beforeEach(() => {
     vi.resetAllMocks();
     mockReportAuthError.mockResolvedValue(undefined);
@@ -59,7 +59,7 @@ describe("category_updated webhook handler", () => {
 
     const contextWithoutCategory = {
       ...mockContext,
-      payload: { __typename: "CategoryUpdated" as const, category: null },
+      payload: { __typename: "CategoryCreated" as const, category: null },
     };
 
     // @ts-expect-error - mocking request for testing
@@ -68,11 +68,11 @@ describe("category_updated webhook handler", () => {
     expect(res._getStatusCode()).toBe(200);
   });
 
-  it("Returns 200 on successful update", async () => {
+  it("Returns 200 on successful create", async () => {
     const { req, res } = createMocks();
 
     const mockAlgoliaClient = {
-      updateCategory: vi.fn().mockResolvedValue(undefined),
+      createCategory: vi.fn().mockResolvedValue(undefined),
     };
 
     vi.mocked(createWebhookContext).mockResolvedValue({
@@ -83,7 +83,7 @@ describe("category_updated webhook handler", () => {
     await handler(req, res, mockContext);
 
     expect(res._getStatusCode()).toBe(200);
-    expect(mockAlgoliaClient.updateCategory).toHaveBeenCalledWith(mockContext.payload.category);
+    expect(mockAlgoliaClient.createCategory).toHaveBeenCalledWith(mockContext.payload.category);
   });
 
   it("Returns 413 with actionable error message when Algolia record size limit exceeded", async () => {
@@ -95,7 +95,7 @@ describe("category_updated webhook handler", () => {
     };
 
     const mockAlgoliaClient = {
-      updateCategory: vi.fn().mockRejectedValue(recordSizeError),
+      createCategory: vi.fn().mockRejectedValue(recordSizeError),
     };
 
     vi.mocked(createWebhookContext).mockResolvedValue({
@@ -125,7 +125,7 @@ describe("category_updated webhook handler", () => {
     };
 
     const mockAlgoliaClient = {
-      updateCategory: vi.fn().mockRejectedValue(recordSizeError),
+      createCategory: vi.fn().mockRejectedValue(recordSizeError),
     };
 
     vi.mocked(createWebhookContext).mockResolvedValue({
@@ -149,7 +149,7 @@ describe("category_updated webhook handler", () => {
     const otherError = new Error("Some other error");
 
     const mockAlgoliaClient = {
-      updateCategory: vi.fn().mockRejectedValue(otherError),
+      createCategory: vi.fn().mockRejectedValue(otherError),
     };
 
     vi.mocked(createWebhookContext).mockResolvedValue({
@@ -181,7 +181,7 @@ describe("category_updated webhook handler", () => {
     const authError = { status: 403, message: "Invalid Application-ID or API key" };
 
     const mockAlgoliaClient = {
-      updateCategory: vi.fn().mockRejectedValue(authError),
+      createCategory: vi.fn().mockRejectedValue(authError),
     };
 
     vi.mocked(createWebhookContext).mockResolvedValue({
@@ -200,7 +200,7 @@ describe("category_updated webhook handler", () => {
     const { req, res } = createMocks();
 
     const mockAlgoliaClient = {
-      updateCategory: vi
+      createCategory: vi
         .fn()
         .mockRejectedValue(
           new AlgoliaInvalidAppIdError("Algolia Application ID does not exist or is unreachable"),
