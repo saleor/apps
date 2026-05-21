@@ -21,6 +21,7 @@ import { SendEventMessagesUseCaseFactory } from "./send-event-messages.use-case.
 
 vi.mock("../../smtp/configuration/smtp-config-schema", async (importOriginal) => {
   const actual =
+    /* eslint-disable-next-line @typescript-eslint/consistent-type-imports */
     await importOriginal<typeof import("../../smtp/configuration/smtp-config-schema")>();
 
   return {

@@ -54,7 +54,7 @@ export default wrapWithLoggerContext(
           return true;
         },
       ],
-      async onRequestVerified(req, { authData: { token, saleorApiUrl }, respondWithError }) {
+      async onRequestVerified(_req, { authData: { token, saleorApiUrl }, respondWithError }) {
         const logger = createLogger("onRequestVerified");
 
         let saleorVersion: string;
