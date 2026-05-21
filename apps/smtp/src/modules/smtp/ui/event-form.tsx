@@ -171,6 +171,7 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
    * Stable reference so the template editor doesn't re-register completions on
    * every keystroke in the payload editor – only when the parsed result changes.
    */
+  /* eslint-disable-next-line react-hooks/exhaustive-deps */
   const stablePayload = useMemo(() => parsedPayload, [JSON.stringify(parsedPayload)]);
 
   const handlePayloadChange = useCallback((value: string) => {

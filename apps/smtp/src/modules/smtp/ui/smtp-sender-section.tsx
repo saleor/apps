@@ -23,7 +23,7 @@ interface SmtpSenderSectionProps {
 
 export const SmtpSenderSection = ({ configuration }: SmtpSenderSectionProps) => {
   const { notifySuccess, notifyError } = useDashboardNotification();
-  const { handleSubmit, control, setError, register } = useForm<SmtpUpdateSender>({
+  const { handleSubmit, control, setError } = useForm<SmtpUpdateSender>({
     defaultValues: {
       id: configuration.id,
       senderName: configuration.senderName,
@@ -61,7 +61,7 @@ export const SmtpSenderSection = ({ configuration }: SmtpSenderSectionProps) => 
     >
       <BoxWithBorder>
         <form
-          onSubmit={handleSubmit((data, event) => {
+          onSubmit={handleSubmit((data) => {
             mutate({
               ...data,
             });

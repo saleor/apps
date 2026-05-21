@@ -43,7 +43,7 @@ export class HandlebarsTemplateCompiler implements ITemplateCompiler {
 
   compile(
     template: string,
-    variables: any,
+    variables: unknown,
   ): Result<
     { template: string },
     InstanceType<typeof HandlebarsTemplateCompiler.FailedCompileError>

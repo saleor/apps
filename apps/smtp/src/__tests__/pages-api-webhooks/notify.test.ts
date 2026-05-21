@@ -137,8 +137,8 @@ const buildUseCase = ({
   emailSender: ISMTPEmailSender;
 }) => {
   const configService: IGetSmtpConfiguration & IGetFallbackSmtpEnabled = {
-    getConfigurations: vi.fn(() => okAsync(configs) as any),
-    getIsFallbackSmtpEnabled: vi.fn(() => okAsync(false) as any),
+    getConfigurations: vi.fn(() => okAsync(configs)),
+    getIsFallbackSmtpEnabled: vi.fn(() => okAsync(false)),
   };
 
   return new SendEventMessagesUseCase({
@@ -155,17 +155,13 @@ const buildUseCase = ({
 const callHandler = async (payload: NotifySubscriptionPayload) => {
   const { req, res } = createMocks({ method: "POST" });
 
-  await handler(
-    req as any,
-    res as any,
-    {
-      event: "NOTIFY_USER",
-      baseUrl: "https://app.example.com",
-      payload,
-      authData,
-      schemaVersion: null,
-    } as any,
-  );
+  await handler(req, res, {
+    event: "NOTIFY_USER",
+    baseUrl: "https://app.example.com",
+    payload,
+    authData,
+    schemaVersion: null,
+  });
 
   return res;
 };
