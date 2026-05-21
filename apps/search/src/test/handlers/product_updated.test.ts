@@ -1,16 +1,16 @@
 import { createMocks } from "node-mocks-http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { AlgoliaInvalidAppIdError } from "../../../../lib/algolia/algolia-errors";
-import { createSearchProblemReporter } from "../../../../modules/app-problems";
-import { createWebhookContext } from "../../../../webhooks/webhook-context";
-import { handler } from "./category_created";
+import { AlgoliaInvalidAppIdError } from "../../lib/algolia/algolia-errors";
+import { createSearchProblemReporter } from "../../modules/app-problems";
+import { createWebhookContext } from "../../webhooks/webhook-context";
+import { handler } from "./product_updated";
 
-vi.mock("../../../../webhooks/webhook-context", () => ({
+vi.mock("../../webhooks/webhook-context", () => ({
   createWebhookContext: vi.fn(),
 }));
 
-vi.mock("../../../../lib/logger", () => ({
+vi.mock("../../lib/logger", () => ({
   createLogger: () => ({
     info: vi.fn(),
     warn: vi.fn(),
@@ -22,7 +22,7 @@ const mockReportAuthError = vi.fn();
 const mockReportRecordTooLarge = vi.fn();
 const mockReportInvalidAppIdAndDeactivate = vi.fn();
 
-vi.mock("../../../../modules/app-problems", () => ({
+vi.mock("../../modules/app-problems", () => ({
   createSearchProblemReporter: vi.fn(() => ({
     reportAuthErrorAndDeactivate: mockReportAuthError,
     reportRecordTooLarge: mockReportRecordTooLarge,
@@ -31,7 +31,7 @@ vi.mock("../../../../modules/app-problems", () => ({
 }));
 
 const mockContext = {
-  event: "CATEGORY_CREATED",
+  event: "PRODUCT_UPDATED",
   authData: {
     appId: "app-id",
     domain: "domain.saleor.io",
@@ -39,14 +39,15 @@ const mockContext = {
     saleorApiUrl: "https://domain.saleor.io/graphql/",
   },
   payload: {
-    __typename: "CategoryCreated" as const,
-    category: {
-      id: "cat123",
+    __typename: "ProductUpdated" as const,
+    product: {
+      id: "prod123",
+      variants: [],
     },
   },
 };
 
-describe("category_created webhook handler", () => {
+describe("product_updated webhook handler", () => {
   beforeEach(() => {
     vi.resetAllMocks();
     mockReportAuthError.mockResolvedValue(undefined);
@@ -54,25 +55,25 @@ describe("category_created webhook handler", () => {
     mockReportInvalidAppIdAndDeactivate.mockResolvedValue(undefined);
   });
 
-  it("Returns 200 when no category in payload", async () => {
+  it("Returns 200 when no product in payload", async () => {
     const { req, res } = createMocks();
 
-    const contextWithoutCategory = {
+    const contextWithoutProduct = {
       ...mockContext,
-      payload: { __typename: "CategoryCreated" as const, category: null },
+      payload: { __typename: "ProductUpdated" as const, product: null },
     };
 
     // @ts-expect-error - mocking request for testing
-    await handler(req, res, contextWithoutCategory);
+    await handler(req, res, contextWithoutProduct);
 
     expect(res._getStatusCode()).toBe(200);
   });
 
-  it("Returns 200 on successful create", async () => {
+  it("Returns 200 on successful update", async () => {
     const { req, res } = createMocks();
 
     const mockAlgoliaClient = {
-      createCategory: vi.fn().mockResolvedValue(undefined),
+      updateProduct: vi.fn().mockResolvedValue(undefined),
     };
 
     vi.mocked(createWebhookContext).mockResolvedValue({
@@ -83,7 +84,7 @@ describe("category_created webhook handler", () => {
     await handler(req, res, mockContext);
 
     expect(res._getStatusCode()).toBe(200);
-    expect(mockAlgoliaClient.createCategory).toHaveBeenCalledWith(mockContext.payload.category);
+    expect(mockAlgoliaClient.updateProduct).toHaveBeenCalledWith(mockContext.payload.product);
   });
 
   it("Returns 413 with actionable error message when Algolia record size limit exceeded", async () => {
@@ -91,11 +92,11 @@ describe("category_created webhook handler", () => {
 
     const recordSizeError = {
       status: 400,
-      message: "Record at the position 0 objectID=cat123 is too big size=15000/10000 bytes",
+      message: "Record at the position 0 objectID=prod123_var456 is too big size=15000/10000 bytes",
     };
 
     const mockAlgoliaClient = {
-      createCategory: vi.fn().mockRejectedValue(recordSizeError),
+      updateProduct: vi.fn().mockRejectedValue(recordSizeError),
     };
 
     vi.mocked(createWebhookContext).mockResolvedValue({
@@ -116,40 +117,13 @@ describe("category_created webhook handler", () => {
     expect(responseBody).toContain("https://docs.saleor.io");
   });
 
-  it("Reports record too large problem when Algolia record size limit exceeded", async () => {
-    const { req, res } = createMocks();
-
-    const recordSizeError = {
-      status: 400,
-      message: "Record at the position 0 objectID=cat123 is too big size=15000/10000 bytes",
-    };
-
-    const mockAlgoliaClient = {
-      createCategory: vi.fn().mockRejectedValue(recordSizeError),
-    };
-
-    vi.mocked(createWebhookContext).mockResolvedValue({
-      algoliaClient: mockAlgoliaClient,
-    } as any);
-
-    // @ts-expect-error - mocking request for testing
-    await handler(req, res, mockContext);
-
-    expect(res._getStatusCode()).toBe(413);
-    expect(mockReportRecordTooLarge).toHaveBeenCalledWith({
-      type: "category",
-      categoryId: "cat123",
-    });
-    expect(vi.mocked(createSearchProblemReporter)).toHaveBeenCalledWith(mockContext.authData);
-  });
-
   it("Returns 500 on other Algolia errors", async () => {
     const { req, res } = createMocks();
 
     const otherError = new Error("Some other error");
 
     const mockAlgoliaClient = {
-      createCategory: vi.fn().mockRejectedValue(otherError),
+      updateProduct: vi.fn().mockRejectedValue(otherError),
     };
 
     vi.mocked(createWebhookContext).mockResolvedValue({
@@ -181,7 +155,7 @@ describe("category_created webhook handler", () => {
     const authError = { status: 403, message: "Invalid Application-ID or API key" };
 
     const mockAlgoliaClient = {
-      createCategory: vi.fn().mockRejectedValue(authError),
+      updateProduct: vi.fn().mockRejectedValue(authError),
     };
 
     vi.mocked(createWebhookContext).mockResolvedValue({
@@ -196,15 +170,43 @@ describe("category_created webhook handler", () => {
     expect(vi.mocked(createSearchProblemReporter)).toHaveBeenCalledWith(mockContext.authData);
   });
 
+  it("Reports record too large problem when Algolia record size limit exceeded", async () => {
+    const { req, res } = createMocks();
+
+    const recordSizeError = {
+      status: 400,
+      message: "Record at the position 0 objectID=prod123_var456 is too big size=15000/10000 bytes",
+    };
+
+    const mockAlgoliaClient = {
+      updateProduct: vi.fn().mockRejectedValue(recordSizeError),
+    };
+
+    vi.mocked(createWebhookContext).mockResolvedValue({
+      algoliaClient: mockAlgoliaClient,
+    } as any);
+
+    // @ts-expect-error - mocking request for testing
+    await handler(req, res, mockContext);
+
+    expect(res._getStatusCode()).toBe(413);
+    expect(mockReportRecordTooLarge).toHaveBeenCalledWith({
+      type: "product_variant",
+      productId: "prod123",
+      variantId: "var456",
+    });
+    expect(vi.mocked(createSearchProblemReporter)).toHaveBeenCalledWith(mockContext.authData);
+  });
+
   it("Returns 401 and deactivates app when Algolia Application ID is invalid", async () => {
     const { req, res } = createMocks();
 
+    const invalidAppIdError = new AlgoliaInvalidAppIdError(
+      "Algolia Application ID does not exist or is unreachable",
+    );
+
     const mockAlgoliaClient = {
-      createCategory: vi
-        .fn()
-        .mockRejectedValue(
-          new AlgoliaInvalidAppIdError("Algolia Application ID does not exist or is unreachable"),
-        ),
+      updateProduct: vi.fn().mockRejectedValue(invalidAppIdError),
     };
 
     vi.mocked(createWebhookContext).mockResolvedValue({
@@ -217,5 +219,6 @@ describe("category_created webhook handler", () => {
     expect(res._getStatusCode()).toBe(401);
     expect(res._getData()).toContain("Algolia Application ID does not exist");
     expect(mockReportInvalidAppIdAndDeactivate).toHaveBeenCalledWith("app-id");
+    expect(vi.mocked(createSearchProblemReporter)).toHaveBeenCalledWith(mockContext.authData);
   });
 });
