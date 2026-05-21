@@ -2,8 +2,8 @@ import { captureException } from "@sentry/nextjs";
 import { type NextApiResponse } from "next";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { handleUseCaseErrors } from "../../modules/event-handlers/send-event-messages-response-handler";
 import { SendEventMessagesUseCase } from "../../modules/event-handlers/use-case/send-event-messages.use-case";
-import { handleUseCaseErrors } from "../../pages/api/webhooks/send-event-messages-response-handler";
 
 vi.mock("@sentry/nextjs", () => ({
   captureException: vi.fn(),

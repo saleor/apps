@@ -1,8 +1,8 @@
 import { captureException } from "@sentry/nextjs";
 import { type NextApiResponse } from "next";
 
-import { type createLogger } from "../../../logger";
-import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
+import { type createLogger } from "../../logger";
+import { SendEventMessagesUseCase } from "./use-case/send-event-messages.use-case";
 
 type UseCaseErrors = Array<InstanceType<typeof SendEventMessagesUseCase.BaseError>>;
 
