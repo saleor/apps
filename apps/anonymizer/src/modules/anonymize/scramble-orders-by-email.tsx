@@ -1,5 +1,5 @@
 import { Box, Button, Input, Text } from "@saleor/macaw-ui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "urql";
 
 import { env } from "@/env";
@@ -66,6 +66,19 @@ export const ScrambleAllOrdersByEmail = () => {
     pause: true,
   });
 
+  /*
+   * Surface GraphQL errors (e.g. missing MANAGE_ORDERS / MANAGE_USERS permission),
+   * which Saleor returns alongside `data` rather than as a network error.
+   */
+  useEffect(() => {
+    if (error) {
+      logger.error("Failed to fetch user and orders", {
+        graphQLErrors: error.graphQLErrors.map((graphQLError) => graphQLError.message),
+        networkError: error.networkError?.message,
+      });
+    }
+  }, [error]);
+
   const [{ fetching: updating }, updateOrder] = useMutation(OrderUpdateDocument);
   const [, deleteCustomer] = useMutation(CustomerDeleteDocument);
 
@@ -76,15 +89,10 @@ export const ScrambleAllOrdersByEmail = () => {
 
   const handleScrambleAndUpdate = async () => {
     const user = data?.user;
-
-    if (!user) {
-      throw new Error("No user");
-    }
-
-    const userOrders = user.orders?.edges ?? [];
+    const userOrders = data?.orders?.edges ?? [];
 
     if (!userOrders.length) {
-      setMessage("This user has no orders.");
+      setMessage("This customer has no orders.");
 
       return;
     }
@@ -118,7 +126,8 @@ export const ScrambleAllOrdersByEmail = () => {
       }
     }
 
-    if (!errors.length) {
+    // Guest-checkout orders have no linked user, so there is nothing to delete.
+    if (!errors.length && user) {
       const result = await deleteCustomer({ id: user.id });
 
       if (result.error || result.data?.customerDelete?.errors?.length) {
@@ -134,11 +143,13 @@ export const ScrambleAllOrdersByEmail = () => {
     setMessage(
       errors.length
         ? errors.join("\n")
-        : "All orders were successfully anonymized and the user was deleted.",
+        : user
+        ? "All orders were successfully anonymized and the user was deleted."
+        : "All orders were successfully anonymized.",
     );
   };
 
-  const orders = data?.user?.orders?.edges;
+  const orders = data?.orders?.edges;
 
   return (
     <Box display="flex" flexDirection="column" gap={4}>
@@ -157,7 +168,21 @@ export const ScrambleAllOrdersByEmail = () => {
       </Button>
 
       {fetching && <Text>Loading user and orders...</Text>}
-      {error && <Text>Failed to fetch user. Please check the email and try again.</Text>}
+      {error && (
+        <Box>
+          <Text color="critical1">Failed to fetch user and orders.</Text>
+          {error.graphQLErrors.map((graphQLError, index) => (
+            <Text key={index} color="critical1" as="p">
+              {graphQLError.message}
+            </Text>
+          ))}
+          {error.networkError && (
+            <Text color="critical1" as="p">
+              {error.networkError.message}
+            </Text>
+          )}
+        </Box>
+      )}
 
       {orders?.length ? (
         <Box>
@@ -174,7 +199,7 @@ export const ScrambleAllOrdersByEmail = () => {
           </Button>
         </Box>
       ) : (
-        !fetching && <Text>No orders found for this email.</Text>
+        !fetching && !error && data && <Text>No orders found for this email.</Text>
       )}
 
       {message && <Text>{message}</Text>}

@@ -4,37 +4,41 @@ query UserByEmail($email: String!) {
     firstName
     lastName
     email
-    orders(first: 100) {
-      edges {
-        node {
-          id
-          number
-          shippingAddress {
-            firstName
-            lastName
-            phone
-            country {
-              country
-              code
-            }
-            countryArea
-            city
-            postalCode
-            streetAddress1
+  }
+  # The `User.orders` field requires MANAGE_STAFF/OWNER, which this app does not
+  # have. The top-level `orders` query only needs MANAGE_ORDERS and, when
+  # filtered by an email, matches the order's `user_email` exactly - which also
+  # covers guest-checkout orders that have no linked user.
+  orders(first: 100, filter: { customer: $email }) {
+    edges {
+      node {
+        id
+        number
+        shippingAddress {
+          firstName
+          lastName
+          phone
+          country {
+            country
+            code
           }
-          billingAddress {
-            firstName
-            lastName
-            phone
-            city
-            postalCode
-            streetAddress1
-            country {
-              country
-              code
-            }
-            countryArea
+          countryArea
+          city
+          postalCode
+          streetAddress1
+        }
+        billingAddress {
+          firstName
+          lastName
+          phone
+          city
+          postalCode
+          streetAddress1
+          country {
+            country
+            code
           }
+          countryArea
         }
       }
     }
