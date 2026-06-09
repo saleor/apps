@@ -37,11 +37,12 @@ const scrambleAddress = <
     return null;
   }
 
-  const { scrambledFirstName, scrambledLastName, scrambledPhone } = scrambleDetails({
-    firstName: address.firstName,
-    lastName: address.lastName,
-    phone: address.phone,
-  });
+  const { scrambledFirstName, scrambledLastName, scrambledPhone, scrambledStreetAddress1 } =
+    scrambleDetails({
+      firstName: address.firstName,
+      lastName: address.lastName,
+      phone: address.phone,
+    });
 
   return {
     firstName: scrambledFirstName,
@@ -49,7 +50,7 @@ const scrambleAddress = <
     phone: scrambledPhone,
     city: address.city,
     postalCode: address.postalCode,
-    streetAddress1: address.streetAddress1,
+    streetAddress1: scrambledStreetAddress1,
     country: address.country.code as CountryCode,
     countryArea: address.countryArea,
   };

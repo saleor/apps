@@ -5,14 +5,17 @@ import { v4 as uuidv4 } from "uuid";
  */
 const SCRAMBLED_NAME_PLACEHOLDER = "";
 
-/**
- * A constant, non-functional US phone number used to overwrite real numbers.
- * See https://en.wikipedia.org/wiki/555_(telephone_number)
- */
-const NON_FUNCTIONAL_PHONE = "5551234567";
+const SCRAMBLED_PHONE_PLACEHOLDER = "";
 
 /**
- * Produces anonymized values for a single address (name + phone).
+ * The street address (street name + number) is overwritten with a constant fake
+ * value. It is free text in Saleor, so it needs no country-specific format -
+ * unlike the city, postal code and country area, which are kept intact.
+ */
+const SCRAMBLED_STREET_PLACEHOLDER = "Anonymized";
+
+/**
+ * Produces anonymized values for a single address (name, phone and street).
  */
 export const scrambleDetails = (_details: {
   firstName: string;
@@ -22,7 +25,8 @@ export const scrambleDetails = (_details: {
   return {
     scrambledFirstName: SCRAMBLED_NAME_PLACEHOLDER,
     scrambledLastName: SCRAMBLED_NAME_PLACEHOLDER,
-    scrambledPhone: NON_FUNCTIONAL_PHONE,
+    scrambledPhone: SCRAMBLED_PHONE_PLACEHOLDER,
+    scrambledStreetAddress1: SCRAMBLED_STREET_PLACEHOLDER,
   };
 };
 
