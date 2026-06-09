@@ -1,0 +1,42 @@
+query UserByEmail($email: String!) {
+  user(email: $email) {
+    id
+    firstName
+    lastName
+    email
+    orders(first: 100) {
+      edges {
+        node {
+          id
+          number
+          shippingAddress {
+            firstName
+            lastName
+            phone
+            country {
+              country
+              code
+            }
+            countryArea
+            city
+            postalCode
+            streetAddress1
+          }
+          billingAddress {
+            firstName
+            lastName
+            phone
+            city
+            postalCode
+            streetAddress1
+            country {
+              country
+              code
+            }
+            countryArea
+          }
+        }
+      }
+    }
+  }
+}
