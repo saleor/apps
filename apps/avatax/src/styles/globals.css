@@ -16,3 +16,18 @@ code {
   font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
     Bitstream Vera Sans Mono, Courier New, monospace;
 }
+
+/* Order-detail sidebar iframe: shrink-wrap page chrome; height comes from .order-details-widget-embed only. */
+html:has(.order-details-widget-embed),
+body:has(.order-details-widget-embed),
+body:has(.order-details-widget-embed) #__next {
+  margin: 0;
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible;
+}
+
+.order-details-widget-embed {
+  box-sizing: border-box;
+  width: 100%;
+}

@@ -19,13 +19,13 @@ const handler = createManifestHandler({
       target: "WIDGET",
       options: {
         widgetTarget: {
-          method: "POST",
+          method: "GET",
         },
       },
       label: "Transaction details",
       mount: "ORDER_DETAILS_WIDGETS",
-      url: apiBaseURL + "/api/order-details",
-      permissions: [],
+      url: iframeBaseUrl + "/order-details",
+      permissions: ["MANAGE_ORDERS"],
     };
 
     const extensions: AppExtension[] = [];

@@ -39,7 +39,7 @@
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
     "@saleor/app-problems": "workspace:*",
-    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
+    "@saleor/app-sdk": "1.9.0-rc.1",
     "@saleor/apps-logger": "workspace:*",
     "@saleor/apps-otel": "workspace:*",
     "@saleor/apps-shared": "workspace:*",

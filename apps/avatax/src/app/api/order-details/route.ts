@@ -1,5 +1,5 @@
 import { verifyJWT } from "@saleor/app-sdk/auth";
-import { type ExtensionPOSTAttributes } from "@saleor/app-sdk/types";
+import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/headers";
 import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { type TransactionModel } from "avatax/lib/models/TransactionModel";
 import { type NextRequest } from "next/server";
@@ -11,21 +11,11 @@ import { type AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
 import { AvataxSdkClientFactory } from "@/modules/avatax/avatax-sdk-client-factory";
 import { AvataxTransactionDetailsFetcher } from "@/modules/avatax/avatax-transaction-details-fetcher";
 import { CrudSettingsManager } from "@/modules/crud-settings/crud-settings.service";
+import { type OrderDetailsResponse } from "@/modules/order-details/order-details.types";
 import { TAX_PROVIDER_KEY } from "@/modules/provider-connections/public-provider-connections.service";
 
 import { OrderAvataxIdDocument } from "../../../../generated/graphql";
 import { apl } from "../../../../saleor-app";
-
-const getFieldsFromRequest = async (req: NextRequest) => {
-  const body = await req.formData();
-
-  return {
-    orderId: body.get("orderId") as string | undefined,
-    saleorApiUrl: body.get("saleorApiUrl") as string,
-    accessToken: body.get("accessToken") as string,
-    appId: body.get("appId") as string,
-  } satisfies ExtensionPOSTAttributes;
-};
 
 type CacheValue = {
   avataxTransaction: TransactionModel;
@@ -54,70 +44,65 @@ const getFromCache = (keySet: CacheKeySet): CacheValue | undefined => {
 
 const logger = createLogger("orderDetailsHandler");
 
-// todo add caching on http. Probably we need to add stuff to GET for that
 const orderDetailsHandler = async (req: NextRequest) => {
-  const { orderId, saleorApiUrl, appId, accessToken } = await getFieldsFromRequest(req);
+  const orderId = req.nextUrl.searchParams.get("orderId") ?? undefined;
+  const saleorApiUrl = req.headers.get(SALEOR_API_URL_HEADER) ?? undefined;
+  const accessToken = req.headers.get(SALEOR_AUTHORIZATION_BEARER_HEADER) ?? undefined;
 
-  try {
-    await verifyJWT({
-      token: accessToken,
-      appId: appId,
-      saleorApiUrl: saleorApiUrl,
-    });
-  } catch (e) {
-    logger.error("Failed to verify JWT", { error: e });
-
-    return new Response("Failed to verify JWT", {
-      status: 401,
-    });
-  }
-
-  if (!orderId) {
-    return new Response("Order ID is missing", {
-      status: 400,
-    });
+  if (!saleorApiUrl || !accessToken) {
+    return new Response("Missing auth headers", { status: 401 });
   }
 
   const authData = await apl.get(saleorApiUrl);
 
   if (!authData) {
-    return new Response("Not authorized", {
-      status: 401,
-    });
+    return new Response("Not authorized", { status: 401 });
   }
 
-  const client = createGraphQLClient({ token: authData.token, saleorApiUrl: saleorApiUrl });
+  try {
+    await verifyJWT({
+      token: accessToken,
+      appId: authData.appId,
+      saleorApiUrl,
+    });
+  } catch (e) {
+    logger.warn("Failed to verify JWT", { error: e });
+
+    return new Response("Failed to verify JWT", { status: 401 });
+  }
+
+  if (!orderId) {
+    return new Response("Order ID is missing", { status: 400 });
+  }
+
+  const client = createGraphQLClient({ token: authData.token, saleorApiUrl });
 
   const orderMetadata = await client.query(OrderAvataxIdDocument, {
     id: orderId,
   });
 
   if (orderMetadata.error) {
-    return new Response("Failed to fetch order", {
-      // Accept retrying if Saleor failed to answer
-      status: 500,
-    });
+    return new Response("Failed to fetch order", { status: 500 });
   }
 
   const avataxId = orderMetadata.data?.order?.avataxId;
 
-  if (!avataxId) {
-    return new Response("AvaTax was not used for this order", {
-      status: 202,
-    });
+  if (!avataxId || !orderMetadata.data?.order) {
+    return Response.json({ applicable: false } satisfies OrderDetailsResponse, { status: 202 });
   }
 
-  if (!orderMetadata.data?.order) {
-    return new Response("Order can't be resolved", {
-      status: 202,
-    });
-  }
+  const cacheKeySet = {
+    saleorApiUrl,
+    appId: authData.appId,
+    orderId,
+    avataxId,
+  };
 
-  const cachedValue = getFromCache({ saleorApiUrl, appId, orderId, avataxId });
+  const cachedValue = getFromCache(cacheKeySet);
 
   const channelSlug = orderMetadata.data.order.channel.slug;
 
-  const settingsManager = createSettingsManager(client, appId, metadataCache);
+  const settingsManager = createSettingsManager(client, authData.appId, metadataCache);
 
   const connectionsManager = new CrudSettingsManager({
     saleorApiUrl,
@@ -142,49 +127,37 @@ const orderDetailsHandler = async (req: NextRequest) => {
   const thisConfig = (await configManager.readById(relatedConfigId)).data
     .config as unknown as AvataxConfig;
 
-  const detailsService = new AvataxTransactionDetailsFetcher(new AvataxSdkClientFactory());
+  let transactionDetails = cachedValue?.avataxTransaction;
 
-  const transactionDetails =
-    cachedValue?.avataxTransaction ??
-    (await detailsService.fetchTransactionDetails({
-      isSandbox: thisConfig.isSandbox,
-      credentials: thisConfig.credentials,
-      transactionCode: avataxId,
-      companyCode: thisConfig.companyCode,
-    }));
+  if (!transactionDetails) {
+    const detailsService = new AvataxTransactionDetailsFetcher(new AvataxSdkClientFactory());
 
-  addToCache(
-    {
-      appId,
-      orderId,
-      avataxId,
-      saleorApiUrl,
-    },
-    {
-      avataxTransaction: transactionDetails,
-    },
-  );
+    try {
+      transactionDetails = await detailsService.fetchTransactionDetails({
+        isSandbox: thisConfig.isSandbox,
+        credentials: thisConfig.credentials,
+        transactionCode: avataxId,
+        companyCode: thisConfig.companyCode,
+      });
+    } catch (e) {
+      logger.error("Failed to fetch AvaTax transaction details", {
+        error: e,
+        orderId,
+        avataxId,
+      });
 
-  const meaningfulFields = {
+      return new Response("Failed to fetch AvaTax transaction details", { status: 502 });
+    }
+
+    addToCache(cacheKeySet, { avataxTransaction: transactionDetails });
+  }
+
+  return Response.json({
+    applicable: true,
     exemptNo: transactionDetails.exemptNo ?? "",
     totalExempt: transactionDetails.totalExempt?.toString() ?? "",
     totalTaxable: transactionDetails.totalTaxable?.toString() ?? "",
-    /*
-     * todo print taxable and non-taxable lines
-     * todo add link to avalara dashboard
-     */
-  };
-
-  const qs = new URLSearchParams(meaningfulFields);
-
-  // in localhost you may need to replace to http
-  const result = await fetch(new URL("/order-details?" + qs.toString(), req.url));
-
-  return new Response(await result.text(), {
-    headers: {
-      "Content-Type": "text/html",
-    },
-  });
+  } satisfies OrderDetailsResponse);
 };
 
-export const POST = orderDetailsHandler;
+export const GET = orderDetailsHandler;

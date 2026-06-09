@@ -34,6 +34,8 @@ minimumReleaseAgeExclude:
 # This happens if package releases a patch for older major version,
 # that might be missing release workflow which was added in future versions
 trustPolicy: no-downgrade
+trustPolicyExclude:
+  - "@saleor/app-sdk@1.9.0-rc.1"
 trustPolicyIgnoreAfter: 43200 # 30 days (in minutes)
 
 mergeGitBranchLockfilesBranchPattern:

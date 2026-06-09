@@ -302,8 +302,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/app-problems
       '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
+        specifier: 1.9.0-rc.1
+        version: 1.9.0-rc.1(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0))(@aws-sdk/util-dynamodb@3.996.2(@aws-sdk/client-dynamodb@3.1004.0))(dynamodb-toolbox@2.8.0(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0)))(graphql@16.7.1)(next@15.5.18(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/apps-logger':
         specifier: workspace:*
         version: link:../../packages/logger
@@ -6085,6 +6085,41 @@ packages:
 
   '@saleor/app-sdk@1.8.0':
     resolution: {integrity: sha512-Sp6yNTtH0wIdpXk5sbElIGlW8GQUGOJZn82A7S66pOFaPw9h71NEM9KJ2I2EqTQ7kuMcUe19reTiP5wI+/ZRJQ==}
+    peerDependencies:
+      '@aws-sdk/client-dynamodb': ^3.848.0
+      '@aws-sdk/lib-dynamodb': ^3.850.0
+      '@aws-sdk/util-dynamodb': ^3.848.0
+      '@vercel/kv': ^1.0.0
+      dynamodb-toolbox: '>2'
+      graphql: '>=16.6.0'
+      next: '>=12'
+      react: '>=17'
+      react-dom: '>=17'
+      redis: '>=4'
+    peerDependenciesMeta:
+      '@aws-sdk/client-dynamodb':
+        optional: true
+      '@aws-sdk/lib-dynamodb':
+        optional: true
+      '@aws-sdk/util-dynamodb':
+        optional: true
+      '@vercel/kv':
+        optional: true
+      dynamodb-toolbox:
+        optional: true
+      graphql:
+        optional: true
+      next:
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+      redis:
+        optional: true
+
+  '@saleor/app-sdk@1.9.0-rc.1':
+    resolution: {integrity: sha512-p9tyn2FU2C5o1jtktada9j4oy/f2eIiGMpAhakVIDDXjw8I/1gUz9xs9Od2t/ivlxiFJ+p/OqsZavhXo9E/XAw==}
     peerDependencies:
       '@aws-sdk/client-dynamodb': ^3.848.0
       '@aws-sdk/lib-dynamodb': ^3.850.0
@@ -16535,6 +16570,25 @@ snapshots:
       '@aws-sdk/util-dynamodb': 3.996.2(@aws-sdk/client-dynamodb@3.1004.0)
       graphql: 16.7.1
       next: 15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    transitivePeerDependencies:
+      - supports-color
+
+  '@saleor/app-sdk@1.9.0-rc.1(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0))(@aws-sdk/util-dynamodb@3.996.2(@aws-sdk/client-dynamodb@3.1004.0))(dynamodb-toolbox@2.8.0(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0)))(graphql@16.7.1)(next@15.5.18(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/semantic-conventions': 1.30.0
+      debug: 4.4.0
+      jose: 5.10.0
+      raw-body: 3.0.0
+    optionalDependencies:
+      '@aws-sdk/client-dynamodb': 3.1004.0
+      '@aws-sdk/lib-dynamodb': 3.1004.0(@aws-sdk/client-dynamodb@3.1004.0)
+      '@aws-sdk/util-dynamodb': 3.996.2(@aws-sdk/client-dynamodb@3.1004.0)
+      dynamodb-toolbox: 2.8.0(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0))
+      graphql: 16.7.1
+      next: 15.5.18(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     transitivePeerDependencies:
