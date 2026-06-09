@@ -56,6 +56,7 @@ Copy `.env.example` to `.env` and fill in the required values before starting th
 
 ## Auth data storage (APL)
 
-Auth data is stored using the App SDK APL. By default the `FileAPL` is used (`.saleor-app-auth.json`).
-For multi-tenant deployments set `APL=upstash` and provide `UPSTASH_URL` / `UPSTASH_TOKEN`.
+This app has no backend that needs to call Saleor outside of the request that carries its own auth,
+so it does not persist auth data. It uses a `NoopAPL` (`src/lib/noop-apl.ts`) that stores nothing,
+and therefore requires no APL-related environment variables.
 Read more in the [APL documentation](https://docs.saleor.io/developer/extending/apps/developing-apps/app-sdk/apl).

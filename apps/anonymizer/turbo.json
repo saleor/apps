@@ -5,17 +5,13 @@
     "deploy": {
       "env": [
         "ALLOWED_DOMAIN_PATTERN",
-        "APL",
         "APP_API_BASE_URL",
         "APP_IFRAME_BASE_URL",
-        "FILE_APL_PATH",
         "MANIFEST_APP_ID",
         "NEXT_PUBLIC_CUSTOMER_SCRAMBLE_DOMAIN",
         "NEXT_PUBLIC_SENTRY_DSN",
         "SENTRY_AUTH_TOKEN",
-        "SENTRY_PROJECT",
-        "UPSTASH_TOKEN",
-        "UPSTASH_URL"
+        "SENTRY_PROJECT"
       ]
     }
   }
