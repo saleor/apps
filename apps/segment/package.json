@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-segment",
-  "version": "2.3.5",
+  "version": "2.3.8",
   "private": true,
   "type": "module",
   "scripts": {
@@ -38,6 +38,7 @@
     "@saleor/apps-otel": "workspace:*",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
+    "@saleor/errors": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "@saleor/react-hook-form-macaw": "workspace:*",
     "@saleor/sentry-utils": "workspace:*",

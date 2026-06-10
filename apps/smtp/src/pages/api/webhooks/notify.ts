@@ -9,9 +9,9 @@ import {
 } from "../../../lib/notify-event-types";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
+import { handleUseCaseErrors } from "../../../modules/event-handlers/send-event-messages-response-handler";
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { saleorApp } from "../../../saleor-app";
-import { handleUseCaseErrors } from "./send-event-messages-response-handler";
 
 /*
  * The Notify webhook is triggered on multiple Saleor events.
@@ -30,7 +30,11 @@ const logger = createLogger(notifyWebhook.webhookPath);
 
 const useCaseFactory = new SendEventMessagesUseCaseFactory();
 
-const handler: NextJsWebhookHandler<NotifySubscriptionPayload> = async (req, res, context) => {
+export const handler: NextJsWebhookHandler<NotifySubscriptionPayload> = async (
+  _req,
+  res,
+  context,
+) => {
   logger.info("Webhook received");
 
   const { payload, authData } = context;
@@ -74,7 +78,7 @@ const handler: NextJsWebhookHandler<NotifySubscriptionPayload> = async (req, res
       })
       .then((result) =>
         result.match(
-          (r) => {
+          () => {
             logger.info("Successfully sent email(s)");
 
             return res.status(200).json({ message: "The event has been handled" });

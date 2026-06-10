@@ -1,16 +1,16 @@
 import { createMocks } from "node-mocks-http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { AlgoliaInvalidAppIdError } from "../../../../lib/algolia/algolia-errors";
-import { createSearchProblemReporter } from "../../../../modules/app-problems";
-import { createWebhookContext } from "../../../../webhooks/webhook-context";
-import { handler } from "./product_updated";
+import { AlgoliaInvalidAppIdError } from "../../lib/algolia/algolia-errors";
+import { createSearchProblemReporter } from "../../modules/app-problems";
+import { handler } from "../../pages/api/webhooks/saleor/product_updated";
+import { createWebhookContext } from "../../webhooks/webhook-context";
 
-vi.mock("../../../../webhooks/webhook-context", () => ({
+vi.mock("../../webhooks/webhook-context", () => ({
   createWebhookContext: vi.fn(),
 }));
 
-vi.mock("../../../../lib/logger", () => ({
+vi.mock("../../lib/logger", () => ({
   createLogger: () => ({
     info: vi.fn(),
     warn: vi.fn(),
@@ -22,7 +22,7 @@ const mockReportAuthError = vi.fn();
 const mockReportRecordTooLarge = vi.fn();
 const mockReportInvalidAppIdAndDeactivate = vi.fn();
 
-vi.mock("../../../../modules/app-problems", () => ({
+vi.mock("../../modules/app-problems", () => ({
   createSearchProblemReporter: vi.fn(() => ({
     reportAuthErrorAndDeactivate: mockReportAuthError,
     reportRecordTooLarge: mockReportRecordTooLarge,

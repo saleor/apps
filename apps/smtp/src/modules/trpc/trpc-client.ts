@@ -17,7 +17,7 @@ function getBaseUrl() {
 const logger = createLogger("trpc-client");
 
 export const trpcClient = createTRPCNext<AppRouter>({
-  config({ ctx }) {
+  config() {
     return {
       links: [
         httpBatchLink({

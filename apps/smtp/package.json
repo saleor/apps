@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-smtp",
-  "version": "2.3.2",
+  "version": "2.3.6",
   "private": true,
   "type": "module",
   "scripts": {
@@ -38,6 +38,7 @@
     "@saleor/apps-otel": "workspace:*",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
+    "@saleor/errors": "workspace:*",
     "@saleor/handlebars": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "@saleor/react-hook-form-macaw": "workspace:*",
@@ -99,6 +100,7 @@
     "eslint-plugin-n": "catalog:",
     "graphql-codegen-typescript-operation-types": "catalog:",
     "graphql-config": "5.0.3",
+    "node-mocks-http": "catalog:",
     "null-loader": "4.0.1",
     "tsx": "catalog:",
     "typescript": "5.8.2"

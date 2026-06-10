@@ -6,8 +6,11 @@ import {
 } from "../../../generated/graphql";
 import { type AlgoliaRootFields, AlgoliaRootFieldsKeys } from "../algolia-fields";
 import { isNotNil } from "../isNotNil";
+import { createLogger } from "../logger";
 import { safeParseJson } from "../safe-parse-json";
 import { metadataToAlgoliaAttribute } from "./metadata-to-algolia-attribute";
+
+const logger = createLogger("algoliaUtils");
 
 type PartialChannelListing = {
   channel: {
@@ -78,11 +81,27 @@ const isAttributeValueBooleanType = (
   );
 };
 
+const isAttributeValueNumericType = (
+  attributeValue: ProductAttributesDataFragment["values"],
+): attributeValue is [{ name: string; inputType: "NUMERIC" }] => {
+  /**
+   * NUMERIC attributes are single-value by design in Saleor.
+   */
+  return (
+    attributeValue.length === 1 &&
+    attributeValue[0].inputType === "NUMERIC" &&
+    typeof attributeValue[0].name === "string"
+  );
+};
+
 /**
  *  Returns object with a key being attribute name and value of all attribute values
  *  separated by comma. If no value is selected, an empty string will be used instead.
  */
-export const mapSelectedAttributesToRecord = (attr: ProductAttributesDataFragment) => {
+export const mapSelectedAttributesToRecord = (
+  attr: ProductAttributesDataFragment,
+  context?: { productId: string; variantId: string },
+) => {
   if (!attr.attribute.name?.length) {
     return undefined;
   }
@@ -92,7 +111,7 @@ export const mapSelectedAttributesToRecord = (attr: ProductAttributesDataFragmen
    */
   const filteredValues = attr.values.filter((v) => !!v.name?.length);
 
-  let value: string | boolean | string[];
+  let value: string | boolean | number | string[];
 
   /**
    * Strategy for boolean type only
@@ -101,6 +120,25 @@ export const mapSelectedAttributesToRecord = (attr: ProductAttributesDataFragmen
    */
   if (isAttributeValueBooleanType(filteredValues)) {
     value = filteredValues[0].boolean;
+  } else if (isAttributeValueNumericType(filteredValues)) {
+    const rawValue = filteredValues[0].name;
+    const parsed = Number(rawValue);
+
+    if (Number.isNaN(parsed)) {
+      logger.warn(
+        "Failed to parse NUMERIC attribute value as number; dropping attribute from Algolia document",
+        {
+          attributeName: attr.attribute.name,
+          rawValue,
+          productId: context?.productId,
+          variantId: context?.variantId,
+        },
+      );
+
+      return undefined;
+    }
+
+    value = parsed;
   } else if (filteredValues.length === 1 && filteredValues[0].name) {
     value = filteredValues[0].name;
   } else {
@@ -114,7 +152,7 @@ export const mapSelectedAttributesToRecord = (attr: ProductAttributesDataFragmen
 
   return {
     [attr.attribute.name]: value,
-  } as Record<string, string | boolean | string[]>;
+  } as Record<string, string | boolean | number | string[]>;
 };
 
 export function productAndVariantToAlgolia({
@@ -127,9 +165,10 @@ export function productAndVariantToAlgolia({
   enabledKeys: string[];
 }) {
   const product = variant.product;
+  const loggingContext = { productId: product.id, variantId: variant.id };
   const attributes = {
     ...product.attributes.reduce((acc, attr, idx) => {
-      const preparedAttr = mapSelectedAttributesToRecord(attr);
+      const preparedAttr = mapSelectedAttributesToRecord(attr, loggingContext);
 
       if (!preparedAttr) {
         return acc;
@@ -141,7 +180,7 @@ export function productAndVariantToAlgolia({
       };
     }, {}),
     ...variant.attributes.reduce((acc, attr, idx) => {
-      const preparedAttr = mapSelectedAttributesToRecord(attr);
+      const preparedAttr = mapSelectedAttributesToRecord(attr, loggingContext);
 
       if (!preparedAttr) {
         return acc;
@@ -178,6 +217,7 @@ export function productAndVariantToAlgolia({
     descriptionPlaintext: EditorJsPlaintextRenderer({ stringData: product.description ?? "" }),
     slug: product.slug,
     productTypeId: product.productType?.id ?? null,
+    productTypeName: product.productType?.name ?? null,
     categoryId: product.category?.id ?? null,
     categorySlug: product.category?.slug ?? null,
     thumbnail: product.thumbnail?.url,

@@ -43,7 +43,7 @@ export const SmtpDangerousSection = ({ configuration }: SmtpDangerousSectionProp
   return (
     <SectionWithDescription title="Danger zone">
       <form
-        onSubmit={handleSubmit((data, event) => {
+        onSubmit={handleSubmit((data) => {
           mutate({
             ...data,
           });

@@ -2,8 +2,8 @@ import { captureException } from "@sentry/nextjs";
 import { type NextApiResponse } from "next";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
-import { handleUseCaseErrors } from "./send-event-messages-response-handler";
+import { handleUseCaseErrors } from "../../modules/event-handlers/send-event-messages-response-handler";
+import { SendEventMessagesUseCase } from "../../modules/event-handlers/use-case/send-event-messages.use-case";
 
 vi.mock("@sentry/nextjs", () => ({
   captureException: vi.fn(),
@@ -16,7 +16,7 @@ function createMockResponse() {
     json,
   } as unknown as NextApiResponse;
 
-  return { res, status: vi.mocked((res as any).status), json };
+  return { res, status: vi.mocked(res.status), json };
 }
 
 function createMockLogger() {
@@ -25,7 +25,8 @@ function createMockLogger() {
     warn: vi.fn(),
     error: vi.fn(),
     debug: vi.fn(),
-  } as unknown as ReturnType<typeof import("../../../logger").createLogger>;
+    /* eslint-disable-next-line @typescript-eslint/consistent-type-imports */
+  } as unknown as ReturnType<typeof import("../../logger").createLogger>;
 }
 
 describe("handleUseCaseErrors", () => {

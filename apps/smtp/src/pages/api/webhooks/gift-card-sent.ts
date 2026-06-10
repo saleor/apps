@@ -8,9 +8,9 @@ import { gql } from "urql";
 import { type GiftCardSentWebhookPayloadFragment } from "../../../../generated/graphql";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
+import { handleUseCaseErrors } from "../../../modules/event-handlers/send-event-messages-response-handler";
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { saleorApp } from "../../../saleor-app";
-import { handleUseCaseErrors } from "./send-event-messages-response-handler";
 
 const GiftCardSentWebhookPayload = gql`
   fragment GiftCardSentWebhookPayload on GiftCardSent {
@@ -77,7 +77,7 @@ const logger = createLogger(giftCardSentWebhook.webhookPath);
 const useCaseFactory = new SendEventMessagesUseCaseFactory();
 
 const handler: NextJsWebhookHandler<GiftCardSentWebhookPayloadFragment> = async (
-  req,
+  _req,
   res,
   context,
 ) => {
@@ -127,7 +127,7 @@ const handler: NextJsWebhookHandler<GiftCardSentWebhookPayloadFragment> = async 
       })
       .then((result) =>
         result.match(
-          (r) => {
+          () => {
             logger.info("Successfully sent email(s)");
 
             return res.status(200).json({ message: "The event has been handled" });

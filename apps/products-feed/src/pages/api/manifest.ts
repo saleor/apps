@@ -6,6 +6,7 @@ import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { env } from "@/env";
 
 import packageJson from "../../../package.json";
+import { appDeletedWebhook } from "../../app/api/webhooks/app-deleted/webhook-definition";
 import { createLogger } from "../../logger";
 import { loggerContext } from "../../logger-context";
 
@@ -39,7 +40,7 @@ export default wrapWithLoggerContext(
           tokenTargetUrl: `${apiBaseURL}/api/register`,
           version: packageJson.version,
           requiredSaleorVersion: ">=3.21 <4",
-          webhooks: [],
+          webhooks: [appDeletedWebhook.getWebhookManifest(apiBaseURL)],
         };
 
         return manifest;

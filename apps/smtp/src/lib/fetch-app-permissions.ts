@@ -7,7 +7,7 @@ import {
 } from "../../generated/graphql";
 import { createLogger } from "../logger";
 
-gql`
+const _query = gql`
   query FetchAppPermissions {
     app {
       permissions {

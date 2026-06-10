@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-products-feed",
-  "version": "3.0.5",
+  "version": "3.0.8",
   "private": true,
   "type": "module",
   "scripts": {
@@ -37,6 +37,7 @@
     "@saleor/apps-otel": "workspace:*",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
+    "@saleor/errors": "workspace:*",
     "@saleor/handlebars": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "@saleor/react-hook-form-macaw": "workspace:*",
