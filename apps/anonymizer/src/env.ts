@@ -6,7 +6,11 @@ import { z } from "zod";
 export const env = createEnv({
   client: {
     NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
-    NEXT_PUBLIC_CUSTOMER_SCRAMBLE_DOMAIN: z.string().default("example.com"),
+    NEXT_PUBLIC_CUSTOMER_SCRAMBLE_DOMAIN: z
+      .string()
+      // Used to build `<uuid>@<domain>`, so reject values that would make an invalid email.
+      .regex(/^[^\s@]+$/, "Must be a bare domain with no spaces or '@'")
+      .default("example.com"),
     NEXT_PUBLIC_BULK_CONCURRENCY: z.coerce.number().int().positive().default(5),
   },
   server: {

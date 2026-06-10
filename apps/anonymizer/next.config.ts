@@ -3,7 +3,12 @@ import { type NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  transpilePackages: ["@saleor/apps-shared", "@saleor/apps-logger", "@saleor/apps-otel"],
+  transpilePackages: [
+    "@saleor/apps-shared",
+    "@saleor/apps-ui",
+    "@saleor/apps-logger",
+    "@saleor/apps-otel",
+  ],
   experimental: {
     optimizePackageImports: ["@sentry/nextjs", "@sentry/node"],
   },

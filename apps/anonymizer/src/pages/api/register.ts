@@ -20,10 +20,23 @@ const handler = createAppRegisterHandler({
   allowedSaleorUrls: [
     (url) => {
       if (allowedUrlsPattern) {
-        // we don't escape the pattern because it's not user input - it's an ENV variable controlled by us
-        const regex = new RegExp(allowedUrlsPattern);
+        let checkResult: boolean;
 
-        const checkResult = regex.test(url);
+        try {
+          // we don't escape the pattern because it's not user input - it's an ENV variable controlled by us
+          checkResult = new RegExp(allowedUrlsPattern).test(url);
+        } catch (error) {
+          /*
+           * An invalid ALLOWED_DOMAIN_PATTERN would make `new RegExp` throw and
+           * turn the register endpoint into a 500, silently blocking every
+           * install. Fail closed with a clear log instead of crashing.
+           */
+          logger.error("ALLOWED_DOMAIN_PATTERN is not a valid regular expression", {
+            reason: error instanceof Error ? error.message : "Unknown error",
+          });
+
+          return false;
+        }
 
         if (!checkResult) {
           logger.warn("Blocked installation attempt from disallowed Saleor instance", {

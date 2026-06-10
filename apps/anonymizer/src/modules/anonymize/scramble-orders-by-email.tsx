@@ -215,7 +215,15 @@ export const ScrambleAllOrdersByEmail = () => {
         orders !== null && <Text>No orders or customer account found for this email.</Text>
       )}
 
-      {message && <Text>{message}</Text>}
+      {message && (
+        <Box>
+          {message.split("\n").map((line, index) => (
+            <Text key={index} as="p">
+              {line}
+            </Text>
+          ))}
+        </Box>
+      )}
     </Box>
   );
 };
