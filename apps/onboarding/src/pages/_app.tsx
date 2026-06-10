@@ -2,14 +2,13 @@ import "@saleor/macaw-ui/style";
 
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
+import { GraphQLProvider } from "@saleor/apps-shared/graphql-provider";
 import { IframeProtectedFallback } from "@saleor/apps-shared/iframe-protected-fallback";
 import { IframeProtectedWrapper } from "@saleor/apps-shared/iframe-protected-wrapper";
 import { NoSSRWrapper } from "@saleor/apps-shared/no-ssr-wrapper";
 import { ThemeSynchronizer } from "@saleor/apps-shared/theme-synchronizer";
 import { Box, ThemeProvider } from "@saleor/macaw-ui";
 import { type AppProps } from "next/app";
-
-import { GraphQLProvider } from "@/modules/graphql/graphql-provider";
 
 /**
  * Ensure instance is a singleton.
