@@ -618,6 +618,9 @@ importers:
       '@total-typescript/ts-reset':
         specifier: 0.6.1
         version: 0.6.1
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.1.0
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -856,6 +859,9 @@ importers:
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../../packages/typescript-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.1.0
       '@types/qs':
         specifier: 6.9.7
         version: 6.9.7
@@ -1507,6 +1513,9 @@ importers:
       '@types/handlebars-helpers':
         specifier: 0.5.6
         version: 0.5.6
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.1.0
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -1715,6 +1724,9 @@ importers:
       '@testing-library/react':
         specifier: 16.2.0
         version: 16.2.0(@testing-library/dom@10.4.0)(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.1.0
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -1938,6 +1950,9 @@ importers:
       '@total-typescript/ts-reset':
         specifier: 0.6.1
         version: 0.6.1
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.1.0
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -2191,6 +2206,9 @@ importers:
       '@types/mjml':
         specifier: 4.7.4
         version: 4.7.4
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.1.0
       '@types/nodemailer':
         specifier: 6.4.7
         version: 6.4.7
