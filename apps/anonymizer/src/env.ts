@@ -7,6 +7,7 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
     NEXT_PUBLIC_CUSTOMER_SCRAMBLE_DOMAIN: z.string().default("example.com"),
+    NEXT_PUBLIC_BULK_CONCURRENCY: z.coerce.number().int().positive().default(5),
   },
   server: {
     ALLOWED_DOMAIN_PATTERN: z.string().optional(),
@@ -35,6 +36,7 @@ export const env = createEnv({
     APP_LOG_LEVEL: process.env.APP_LOG_LEVEL,
     ENV: process.env.ENV,
     MANIFEST_APP_ID: process.env.MANIFEST_APP_ID,
+    NEXT_PUBLIC_BULK_CONCURRENCY: process.env.NEXT_PUBLIC_BULK_CONCURRENCY,
     NEXT_PUBLIC_CUSTOMER_SCRAMBLE_DOMAIN: process.env.NEXT_PUBLIC_CUSTOMER_SCRAMBLE_DOMAIN,
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
     NEXT_RUNTIME: process.env.NEXT_RUNTIME,

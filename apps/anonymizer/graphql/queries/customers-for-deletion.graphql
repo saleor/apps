@@ -1,0 +1,19 @@
+# Fetches a single page of customers for the bulk deletion scan.
+# The `customers` query also returns staff users who have placed an order, so
+# the scan reads `isStaff` and excludes them client-side - staff accounts are
+# never deleted.
+query CustomersForDeletion($after: String) {
+  customers(first: 100, after: $after, sortBy: { field: CREATED_AT, direction: ASC }) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        id
+        email
+        isStaff
+      }
+    }
+  }
+}

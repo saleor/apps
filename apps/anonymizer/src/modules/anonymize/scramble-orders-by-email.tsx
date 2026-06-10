@@ -4,57 +4,15 @@ import { useMutation, useQuery } from "urql";
 
 import { env } from "@/env";
 import {
-  type CountryCode,
   CustomerDeleteDocument,
   OrderUpdateDocument,
   UserByEmailDocument,
 } from "@/generated/graphql";
 import { createLogger } from "@/logger";
 
-import { scrambleDetails, scrambleUserDetails } from "./scramble";
+import { scrambleAddress, scrambleUserDetails } from "./scramble";
 
 const logger = createLogger("ScrambleAllOrdersByEmail");
-
-/**
- * Builds an anonymized `AddressInput` from an order address, keeping the
- * non-identifying fields (city, postal code, street, country) intact.
- */
-const scrambleAddress = <
-  TAddress extends {
-    firstName: string;
-    lastName: string;
-    phone?: string | null;
-    city: string;
-    postalCode: string;
-    streetAddress1: string;
-    countryArea: string;
-    country: { code: string };
-  },
->(
-  address: TAddress | null | undefined,
-) => {
-  if (!address) {
-    return null;
-  }
-
-  const { scrambledFirstName, scrambledLastName, scrambledPhone, scrambledStreetAddress1 } =
-    scrambleDetails({
-      firstName: address.firstName,
-      lastName: address.lastName,
-      phone: address.phone,
-    });
-
-  return {
-    firstName: scrambledFirstName,
-    lastName: scrambledLastName,
-    phone: scrambledPhone,
-    city: address.city,
-    postalCode: address.postalCode,
-    streetAddress1: scrambledStreetAddress1,
-    country: address.country.code as CountryCode,
-    countryArea: address.countryArea,
-  };
-};
 
 export const ScrambleAllOrdersByEmail = () => {
   const [email, setEmail] = useState("");
@@ -154,10 +112,6 @@ export const ScrambleAllOrdersByEmail = () => {
 
   return (
     <Box display="flex" flexDirection="column" gap={4}>
-      <Text as="h2" size={8}>
-        Scramble All Orders by Email
-      </Text>
-
       <Input
         value={email}
         onChange={(e) => setEmail(e.target.value)}

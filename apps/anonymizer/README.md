@@ -26,6 +26,24 @@ The Anonymizer App helps anonymize a customer's personal data:
 The configurable scramble domain is controlled by the
 `NEXT_PUBLIC_CUSTOMER_SCRAMBLE_DOMAIN` environment variable.
 
+### Bulk anonymization
+
+The app can also process the whole store at once:
+
+- A **Scan** walks all orders and customers and shows how many will be processed.
+  The results are kept in memory, so the actions below run without re-fetching.
+- **Anonymize orders** scrambles every order that does not yet carry the
+  `saleor-anonymized: true` public metadata flag, then writes the flag. Orders that
+  already carry it are skipped, so re-runs are idempotent and failed orders are
+  retried on the next run (the flag is written only after a successful scramble).
+- **Delete customers** deletes every non-staff customer account. Staff accounts are
+  never counted or deleted.
+- Everything runs in the browser with a progress bar; records that failed to process
+  are listed as links opening in a new Dashboard tab.
+
+The number of records processed concurrently is controlled by the
+`NEXT_PUBLIC_BULK_CONCURRENCY` environment variable (default: 5).
+
 ## Required permissions
 
 - `MANAGE_ORDERS`

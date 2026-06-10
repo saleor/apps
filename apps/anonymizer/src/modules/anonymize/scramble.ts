@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
+import { type CountryCode } from "@/generated/graphql";
+
 /**
  * Names are removed entirely - replaced with an empty placeholder.
  */
@@ -27,6 +29,47 @@ export const scrambleDetails = (_details: {
     scrambledLastName: SCRAMBLED_NAME_PLACEHOLDER,
     scrambledPhone: SCRAMBLED_PHONE_PLACEHOLDER,
     scrambledStreetAddress1: SCRAMBLED_STREET_PLACEHOLDER,
+  };
+};
+
+/**
+ * Builds an anonymized `AddressInput` from an order address, keeping the
+ * non-identifying fields (city, postal code, country) intact.
+ */
+export const scrambleAddress = <
+  TAddress extends {
+    firstName: string;
+    lastName: string;
+    phone?: string | null;
+    city: string;
+    postalCode: string;
+    streetAddress1: string;
+    countryArea: string;
+    country: { code: string };
+  },
+>(
+  address: TAddress | null | undefined,
+) => {
+  if (!address) {
+    return null;
+  }
+
+  const { scrambledFirstName, scrambledLastName, scrambledPhone, scrambledStreetAddress1 } =
+    scrambleDetails({
+      firstName: address.firstName,
+      lastName: address.lastName,
+      phone: address.phone,
+    });
+
+  return {
+    firstName: scrambledFirstName,
+    lastName: scrambledLastName,
+    phone: scrambledPhone,
+    city: address.city,
+    postalCode: address.postalCode,
+    streetAddress1: scrambledStreetAddress1,
+    country: address.country.code as CountryCode,
+    countryArea: address.countryArea,
   };
 };
 
