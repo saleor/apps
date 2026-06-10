@@ -9,7 +9,6 @@ const handler = createManifestHandler({
     const iframeBaseUrl = env.APP_IFRAME_BASE_URL ?? appBaseUrl;
     const apiBaseUrl = env.APP_API_BASE_URL ?? appBaseUrl;
 
-    // todo update manifest we dont need tokenTargetUrl and appUrl
     const manifest: AppManifest = {
       about:
         "Saleor Onboarding App — guides new users through the first steps of using Saleor Dashboard.",
