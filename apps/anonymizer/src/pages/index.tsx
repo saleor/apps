@@ -1,5 +1,5 @@
 import { Layout } from "@saleor/apps-ui";
-import { Box, Paragraph, Text } from "@saleor/macaw-ui";
+import { Box, Paragraph } from "@saleor/macaw-ui";
 import { type NextPage } from "next";
 
 import { BulkAnonymizeSection } from "@/modules/anonymize/bulk-anonymize-section";

@@ -14,18 +14,21 @@ import { Provider } from "urql";
 export function GraphQLProvider({ children }: PropsWithChildren) {
   const { appBridgeState } = useAppBridge();
 
-  if (!appBridgeState?.saleorApiUrl) {
+  const saleorApiUrl = appBridgeState?.saleorApiUrl;
+  const token = appBridgeState?.token;
+
+  /*
+   * Compute the client unconditionally so the hook order stays stable; it's null
+   * until `saleorApiUrl` is available, and we render nothing until then.
+   */
+  const client = useMemo(
+    () => (saleorApiUrl ? createGraphQLClient({ saleorApiUrl, token }) : null),
+    [saleorApiUrl, token],
+  );
+
+  if (!client) {
     return null;
   }
-
-  const client = useMemo(
-    () =>
-      createGraphQLClient({
-        saleorApiUrl: appBridgeState.saleorApiUrl,
-        token: appBridgeState.token,
-      }),
-    [appBridgeState.saleorApiUrl, appBridgeState.token],
-  );
 
   return <Provider value={client}>{children}</Provider>;
 }

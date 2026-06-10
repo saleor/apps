@@ -93,8 +93,12 @@ export const ScrambleAllOrdersByEmail = () => {
   const handleScrambleAndUpdate = async () => {
     const userOrders = orders ?? [];
 
-    if (!userOrders.length) {
-      setMessage("This customer has no orders.");
+    /*
+     * A registered customer can be erased even with no orders, so only bail out
+     * when there is genuinely nothing to anonymize (no orders and no account).
+     */
+    if (!userOrders.length && !user) {
+      setMessage("Nothing to anonymize for this email.");
 
       return;
     }
@@ -142,13 +146,18 @@ export const ScrambleAllOrdersByEmail = () => {
     }
 
     setScrambling(false);
-    setMessage(
-      errors.length
-        ? errors.join("\n")
-        : user
-        ? "All orders were successfully anonymized and the user was deleted."
-        : "All orders were successfully anonymized.",
-    );
+
+    let successMessage: string;
+
+    if (user && userOrders.length) {
+      successMessage = "All orders were successfully anonymized and the user was deleted.";
+    } else if (user) {
+      successMessage = "The customer account was deleted.";
+    } else {
+      successMessage = "All orders were successfully anonymized.";
+    }
+
+    setMessage(errors.length ? errors.join("\n") : successMessage);
   };
 
   return (
@@ -180,22 +189,30 @@ export const ScrambleAllOrdersByEmail = () => {
         </Box>
       )}
 
-      {orders?.length ? (
+      {orders !== null && (orders.length > 0 || user) ? (
         <Box>
-          <Text>{`Found ${orders.length} orders for email: ${email}`}</Text>
-          <ul>
-            {orders.map(({ node }) => (
-              <li key={node.id}>
-                <Text>{`Order #${node.number}`}</Text>
-              </li>
-            ))}
-          </ul>
+          <Text>
+            {orders.length
+              ? `Found ${orders.length} orders for email: ${email}`
+              : "This customer has no orders, but the account can still be deleted."}
+          </Text>
+          {orders.length > 0 && (
+            <ul>
+              {orders.map(({ node }) => (
+                <li key={node.id}>
+                  <Text>{`Order #${node.number}`}</Text>
+                </li>
+              ))}
+            </ul>
+          )}
           <Button onClick={handleScrambleAndUpdate} disabled={scrambling || updating}>
-            Scramble and Update All Orders
+            {orders.length ? "Scramble Orders and Delete Customer" : "Delete Customer"}
           </Button>
         </Box>
       ) : (
-        !fetching && !error && orders !== null && <Text>No orders found for this email.</Text>
+        !fetching &&
+        !error &&
+        orders !== null && <Text>No orders or customer account found for this email.</Text>
       )}
 
       {message && <Text>{message}</Text>}

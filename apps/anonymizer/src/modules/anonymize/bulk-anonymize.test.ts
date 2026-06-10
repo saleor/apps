@@ -39,4 +39,13 @@ describe("chunkArray", () => {
   it("returns no batches for an empty list", () => {
     expect(chunkArray([], 3)).toStrictEqual([]);
   });
+
+  it("throws instead of looping forever when size is zero or negative", () => {
+    expect(() => chunkArray([1, 2, 3], 0)).toThrow();
+    expect(() => chunkArray([1, 2, 3], -1)).toThrow();
+  });
+
+  it("throws when size is not an integer", () => {
+    expect(() => chunkArray([1, 2, 3], 1.5)).toThrow();
+  });
 });
