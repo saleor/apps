@@ -16,7 +16,7 @@
     "test:ci": "vitest run --coverage"
   },
   "dependencies": {
-    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
+    "@saleor/app-sdk": "catalog:",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "@sentry/nextjs": "catalog:",

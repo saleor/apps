@@ -22,19 +22,7 @@ const handler = createManifestHandler({
       dataPrivacyUrl: "https://saleor.io/legal/privacy/",
       extensions: [
         {
-          label: "Onboarding",
-          //@ts-expect-error temp
-          mount: "HOMEPAGE_WIDGETS",
-          target: "WIDGET",
-          url: new URL("/api/test", iframeBaseUrl).toString(),
-          permissions: [],
-          options: {
-            //@ts-expect-error temp
-            homeWidgetTarget: { method: "POST", fullscreen: true },
-          },
-        },
-        {
-          label: "Onboarding",
+          label: "Welcome to Saleor Dashboard",
           //@ts-expect-error temp
           mount: "HOMEPAGE_WIDGETS",
           target: "WIDGET",

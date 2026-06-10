@@ -25,7 +25,7 @@ export const WelcomePageOnboarding = () => {
   const status = { done: validCompletedStepsCount, total: visibleSteps.length };
 
   return (
-    <DashboardCard borderRadius={3} borderColor="default1" borderWidth={1} borderStyle="solid">
+    <DashboardCard>
       <Accordion
         value={isOnboardingExpanded ? "onboarding" : ""}
         onValueChange={(value: string) => toggleOnboarding(value === "onboarding")}

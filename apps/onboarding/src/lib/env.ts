@@ -10,7 +10,7 @@ export const env = createEnv({
     APP_API_BASE_URL: z.string().optional(),
     APP_IFRAME_BASE_URL: z.string().optional(),
     APP_LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
-    APP_NAME: z.string().default("Onboarding"),
+    APP_NAME: z.string().default("Onboarding to Saleor"),
     MANIFEST_APP_ID: z.string().default("saleor.app.onboarding"),
     PORT: z.coerce.number().default(3000),
   },
