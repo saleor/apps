@@ -1,12 +1,13 @@
 import { Box, Button, Input, Text } from "@saleor/macaw-ui";
-import { useEffect, useState } from "react";
-import { useMutation, useQuery } from "urql";
+import { useState } from "react";
+import { type CombinedError, type OperationResult, useClient, useMutation } from "urql";
 
 import { env } from "@/env";
 import {
   CustomerDeleteDocument,
   OrderUpdateDocument,
   UserByEmailDocument,
+  type UserByEmailQuery,
 } from "@/generated/graphql";
 import { createLogger } from "@/logger";
 
@@ -14,41 +15,83 @@ import { scrambleAddress, scrambleUserDetails } from "./scramble";
 
 const logger = createLogger("ScrambleAllOrdersByEmail");
 
+type FetchedUser = NonNullable<UserByEmailQuery["user"]>;
+type OrderEdge = NonNullable<UserByEmailQuery["orders"]>["edges"][number];
+
 export const ScrambleAllOrdersByEmail = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [scrambling, setScrambling] = useState(false);
+  const [fetching, setFetching] = useState(false);
+  const [error, setError] = useState<CombinedError | null>(null);
+  const [user, setUser] = useState<FetchedUser | null>(null);
+  const [orders, setOrders] = useState<OrderEdge[] | null>(null);
 
-  const [{ data, fetching, error }, refetchOrders] = useQuery({
-    query: UserByEmailDocument,
-    variables: { email },
-    pause: true,
-  });
-
-  /*
-   * Surface GraphQL errors (e.g. missing MANAGE_ORDERS / MANAGE_USERS permission),
-   * which Saleor returns alongside `data` rather than as a network error.
-   */
-  useEffect(() => {
-    if (error) {
-      logger.error("Failed to fetch user and orders", {
-        graphQLErrors: error.graphQLErrors.map((graphQLError) => graphQLError.message),
-        networkError: error.networkError?.message,
-      });
-    }
-  }, [error]);
+  const client = useClient();
 
   const [{ fetching: updating }, updateOrder] = useMutation(OrderUpdateDocument);
   const [, deleteCustomer] = useMutation(CustomerDeleteDocument);
 
-  const handleFetchOrders = () => {
+  const handleFetchOrders = async () => {
     setMessage("");
-    refetchOrders();
+    setError(null);
+    setUser(null);
+    setOrders(null);
+    setFetching(true);
+
+    try {
+      const allOrders: OrderEdge[] = [];
+      let fetchedUser: FetchedUser | null = null;
+      let after: string | null = null;
+
+      /*
+       * Saleor returns at most one page (100) per request, so we walk every page
+       * to make sure customers with more than 100 orders are fully anonymized.
+       */
+      do {
+        const result: OperationResult<UserByEmailQuery> = await client
+          .query(UserByEmailDocument, { email, after })
+          .toPromise();
+
+        if (result.error) {
+          throw result.error;
+        }
+
+        fetchedUser = result.data?.user ?? fetchedUser;
+
+        const connection = result.data?.orders;
+
+        if (!connection) {
+          break;
+        }
+
+        allOrders.push(...connection.edges);
+
+        after = connection.pageInfo.hasNextPage ? connection.pageInfo.endCursor ?? null : null;
+      } while (after);
+
+      setUser(fetchedUser);
+      setOrders(allOrders);
+    } catch (e) {
+      const combinedError = e as CombinedError;
+
+      /*
+       * Surface GraphQL errors (e.g. missing MANAGE_ORDERS / MANAGE_USERS
+       * permission), which Saleor returns alongside `data` rather than as a
+       * network error.
+       */
+      logger.error("Failed to fetch user and orders", {
+        graphQLErrors: combinedError.graphQLErrors?.map((graphQLError) => graphQLError.message),
+        networkError: combinedError.networkError?.message,
+      });
+      setError(combinedError);
+    } finally {
+      setFetching(false);
+    }
   };
 
   const handleScrambleAndUpdate = async () => {
-    const user = data?.user;
-    const userOrders = data?.orders?.edges ?? [];
+    const userOrders = orders ?? [];
 
     if (!userOrders.length) {
       setMessage("This customer has no orders.");
@@ -108,8 +151,6 @@ export const ScrambleAllOrdersByEmail = () => {
     );
   };
 
-  const orders = data?.orders?.edges;
-
   return (
     <Box display="flex" flexDirection="column" gap={4}>
       <Input
@@ -154,7 +195,7 @@ export const ScrambleAllOrdersByEmail = () => {
           </Button>
         </Box>
       ) : (
-        !fetching && !error && data && <Text>No orders found for this email.</Text>
+        !fetching && !error && orders !== null && <Text>No orders found for this email.</Text>
       )}
 
       {message && <Text>{message}</Text>}

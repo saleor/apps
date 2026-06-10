@@ -18,8 +18,11 @@ The Anonymizer App helps anonymize a customer's personal data:
 
 - Looks up a user and all of their orders by email.
 - Scrambles the order billing and shipping details:
-  - First name / last name → blanked out.
-  - Phone → replaced with a constant, non-functional number.
+  - First name / last name → cleared (set to an empty value).
+  - Phone → cleared (set to an empty value). Saleor accepts an empty phone and skips
+    validation, whereas a fake number would fail validation and would not be anonymous.
+  - Street address → replaced with a constant placeholder (`Anonymized`).
+  - City, postal code and country → kept intact, so the address stays valid.
   - Email → replaced with a random `UUID`-based address under a configurable domain.
 - Deletes the customer profile once all of their orders are anonymized.
 
@@ -72,9 +75,9 @@ pnpm --filter saleor-app-anonymizer test
 
 Copy `.env.example` to `.env` and fill in the required values before starting the app.
 
-## Auth data storage (APL)
+## Authentication
 
-This app has no backend that needs to call Saleor outside of the request that carries its own auth,
-so it does not persist auth data. It uses a `NoopAPL` (`src/lib/noop-apl.ts`) that stores nothing,
-and therefore requires no APL-related environment variables.
-Read more in the [APL documentation](https://docs.saleor.io/developer/extending/apps/developing-apps/app-sdk/apl).
+This app runs entirely in the Dashboard iframe and uses the token it receives from the App Bridge
+for every request to Saleor. It has no backend that needs to call Saleor on its own, so it does not
+persist any auth data and needs no related configuration. To satisfy the App SDK, it plugs in a
+`NoopAPL` (`src/lib/noop-apl.ts`) that stores nothing.

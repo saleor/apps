@@ -1,5 +1,5 @@
 import { Layout } from "@saleor/apps-ui";
-import { Box, Text } from "@saleor/macaw-ui";
+import { Box, Paragraph, Text } from "@saleor/macaw-ui";
 import { type NextPage } from "next";
 
 import { BulkAnonymizeSection } from "@/modules/anonymize/bulk-anonymize-section";
@@ -11,11 +11,15 @@ const IndexPage: NextPage = () => {
       <Layout.AppSection
         heading="Anonymize a single customer"
         sideContent={
-          <Text>
-            Look up a customer by email, then scramble the personal data on all of their orders and
-            delete the customer account. Use this for one-off, targeted requests (e.g. a GDPR
-            erasure request).
-          </Text>
+          <>
+            <Paragraph>
+              Look up a customer by email, then scramble the personal data on all of their orders
+              and delete the customer account.
+            </Paragraph>
+            <Paragraph>
+              Use this for one-off, targeted requests (e.g. a GDPR erasure request).
+            </Paragraph>
+          </>
         }
       >
         <Layout.AppSectionCard>
@@ -26,12 +30,17 @@ const IndexPage: NextPage = () => {
       <Layout.AppSection
         heading="Bulk anonymize"
         sideContent={
-          <Text>
-            Scan your entire store, then anonymize every order that hasn&apos;t been processed yet
-            and/or delete all customer accounts. Orders that have already been anonymized are
-            skipped. Staff accounts are never counted or deleted. This runs in your browser - keep
-            this tab open until it finishes.
-          </Text>
+          <>
+            <Paragraph>
+              Scan your entire store, then anonymize every order that hasn&apos;t been processed yet
+              and/or delete all customer accounts.
+            </Paragraph>
+            <Paragraph>
+              Orders that have already been anonymized are skipped. Staff accounts are never counted
+              or deleted.
+            </Paragraph>
+            <Paragraph>This runs in your browser - keep this tab open until it finishes.</Paragraph>
+          </>
         }
       >
         <Layout.AppSectionCard>

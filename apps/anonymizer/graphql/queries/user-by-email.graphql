@@ -1,4 +1,4 @@
-query UserByEmail($email: String!) {
+query UserByEmail($email: String!, $after: String) {
   user(email: $email) {
     id
     firstName
@@ -9,36 +9,29 @@ query UserByEmail($email: String!) {
   # have. The top-level `orders` query only needs MANAGE_ORDERS and, when
   # filtered by an email, matches the order's `user_email` exactly - which also
   # covers guest-checkout orders that have no linked user.
-  orders(first: 100, filter: { customer: $email }) {
+  #
+  # Sorted by number, which is immutable, so the cursor walk stays stable while
+  # orders are being updated mid-run. The client paginates through all pages so
+  # customers with more than one page of orders are fully anonymized.
+  orders(
+    first: 100
+    after: $after
+    filter: { customer: $email }
+    sortBy: { field: NUMBER, direction: ASC }
+  ) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
     edges {
       node {
         id
         number
         shippingAddress {
-          firstName
-          lastName
-          phone
-          country {
-            country
-            code
-          }
-          countryArea
-          city
-          postalCode
-          streetAddress1
+          ...AnonymizationAddress
         }
         billingAddress {
-          firstName
-          lastName
-          phone
-          city
-          postalCode
-          streetAddress1
-          country {
-            country
-            code
-          }
-          countryArea
+          ...AnonymizationAddress
         }
       }
     }

@@ -57,7 +57,7 @@ const RunProgress = ({ run }: { run: RunState }) => {
   }
 
   return (
-    <Box display="flex" flexDirection="column" gap={1}>
+    <Box display="flex" flexDirection="column" gap={1} width="100%">
       <progress value={run.done} max={run.total} style={{ width: "100%" }} />
       <Text size={2}>{`${run.done} / ${run.total}`}</Text>
     </Box>
