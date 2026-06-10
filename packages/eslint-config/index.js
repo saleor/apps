@@ -5,6 +5,7 @@ import saleorPlugin from "@saleor/eslint-plugin-saleor-app";
 import stylisticPlugin from "@stylistic/eslint-plugin";
 import vitestPlugin from "@vitest/eslint-plugin";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
+import dependPlugin from "eslint-plugin-depend";
 import importPlugin from "eslint-plugin-import";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
@@ -27,6 +28,19 @@ export const config = [
   {
     name: "@saleor/eslint-config-apps/ignores",
     ignores: [".next/**/*", "coverage/**/*", "**/generated/**/*", "next-env.d.ts"],
+  },
+  /**
+   * Dependencies - suggests better alternatives for redundant packages
+   */
+  {
+    name: "@saleor/eslint-config-apps/depend",
+    files: ["**/*.{js,ts,tsx}"],
+    plugins: {
+      depend: dependPlugin,
+    },
+    rules: {
+      "depend/ban-dependencies": "error",
+    },
   },
   /**
    * Graphql
