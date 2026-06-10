@@ -23,13 +23,11 @@ const handler = createManifestHandler({
       extensions: [
         {
           label: "Welcome to Saleor Dashboard",
-          //@ts-expect-error temp
           mount: "HOMEPAGE_WIDGETS",
           target: "WIDGET",
           url: new URL("/", iframeBaseUrl).toString(),
           permissions: [],
           options: {
-            //@ts-expect-error temp
             homeWidgetTarget: { method: "GET", fullscreen: true },
           },
         },
