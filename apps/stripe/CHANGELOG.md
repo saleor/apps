@@ -1,5 +1,11 @@
 # saleor-app-payment-stripe
 
+## 2.6.9
+
+### Patch Changes
+
+- c8a4efe: When environment variables fail validation at startup, the app now prints a readable error message and the offending fields, then exits with code 1 — instead of dumping a long stack trace. Before: a wall of webpack stack frames around `Invalid environment variables`. After: e.g. `Validation error: Required at "SECRET_KEY"` followed by a JSON list of the failing fields.
+
 ## 2.6.8
 
 ### Patch Changes
