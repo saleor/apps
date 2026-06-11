@@ -1,5 +1,17 @@
 # saleor-app-klaviyo
 
+## 1.16.0
+
+### Minor Changes
+
+- 6683590: Implemented APP_DELETED handler. On Saleor 3.23+ app will react to its own removal and prune APL data
+
+### Patch Changes
+
+- c8a4efe: When environment variables fail validation at startup, the app now prints a readable error message and the offending fields, then exits with code 1 — instead of dumping a long stack trace. Before: a wall of webpack stack frames around `Invalid environment variables`. After: e.g. `Validation error: Required at "SECRET_KEY"` followed by a JSON list of the failing fields.
+- Updated dependencies [6683590]
+  - @saleor/webhook-utils@0.3.0
+
 ## 1.15.7
 
 ### Patch Changes
