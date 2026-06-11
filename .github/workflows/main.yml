@@ -140,7 +140,7 @@ jobs:
         with:
           name: coverage-files
       - name: Upload coverage for ${{ matrix.name }}
-        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
