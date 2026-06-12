@@ -1,0 +1,39 @@
+query UserByEmail($email: String!, $after: String) {
+  user(email: $email) {
+    id
+    firstName
+    lastName
+    email
+  }
+  # The `User.orders` field requires MANAGE_STAFF/OWNER, which this app does not
+  # have. The top-level `orders` query only needs MANAGE_ORDERS and, when
+  # filtered by an email, matches the order's `user_email` exactly - which also
+  # covers guest-checkout orders that have no linked user.
+  #
+  # Sorted by number, which is immutable, so the cursor walk stays stable while
+  # orders are being updated mid-run. The client paginates through all pages so
+  # customers with more than one page of orders are fully anonymized.
+  orders(
+    first: 100
+    after: $after
+    filter: { customer: $email }
+    sortBy: { field: NUMBER, direction: ASC }
+  ) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        id
+        number
+        shippingAddress {
+          ...AnonymizationAddress
+        }
+        billingAddress {
+          ...AnonymizationAddress
+        }
+      }
+    }
+  }
+}
