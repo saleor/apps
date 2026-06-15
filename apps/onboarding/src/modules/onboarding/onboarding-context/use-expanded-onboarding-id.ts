@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { type OnboardingState, type OnboardingStep, type OnboardingStepsIDs } from "./types";
 import {
-  getFirstExpanderStepId,
+  getFirstExpandedStepId,
   getFirstNotCompletedAndNotExpandedStep,
   getNextStepToExpand,
 } from "./utils";
@@ -17,7 +17,7 @@ export const useExpandedOnboardingId = (
 
   useEffect(() => {
     if (hasBeenCalled.current) {
-      const firstExpandedStepId = getFirstExpanderStepId(onboardingState);
+      const firstExpandedStepId = getFirstExpandedStepId(onboardingState);
 
       if (firstExpandedStepId) {
         setExpandedStepId(firstExpandedStepId);
@@ -37,7 +37,7 @@ export const useExpandedOnboardingId = (
     if (loaded && !hasBeenCalled.current) {
       hasBeenCalled.current = true;
 
-      const firstExpandedStep = getFirstExpanderStepId(onboardingState);
+      const firstExpandedStep = getFirstExpandedStepId(onboardingState);
 
       if (firstExpandedStep) {
         setExpandedStepId(firstExpandedStep);

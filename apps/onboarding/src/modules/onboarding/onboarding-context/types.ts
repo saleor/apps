@@ -16,7 +16,7 @@ export type OnboardingStep = {
 
 export type OnboardingState = {
   stepsCompleted: OnboardingStepsIDs[];
-  stepsExpanded: Record<OnboardingStepsIDs, boolean>;
+  stepsExpanded: Partial<Record<OnboardingStepsIDs, boolean>>;
   onboardingExpanded: boolean;
 };
 
@@ -30,7 +30,6 @@ export interface OnboardingContextType {
   loading: boolean;
   extendedStepId: OnboardingStepsIDs | "";
   onboardingState: OnboardingState;
-  userPermissions: string[];
   markOnboardingStepAsCompleted: (id: OnboardingStepsIDs) => void;
   markAllAsCompleted: () => void;
   toggleExpandedOnboardingStep: (id: string, currentExpandedId: OnboardingStepsIDs | "") => void;

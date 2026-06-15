@@ -16,7 +16,8 @@ export const FakeDisabledButton = forwardRef<HTMLButtonElement, ButtonProps>(
         variant="primary"
         boxShadow="none"
         aria-disabled
-        tabIndex={-1}
+        // Keep keyboard-focusable so keyboard users can reach the tooltip explaining why it's disabled
+        tabIndex={0}
         // Inline styles override macaw-ui's later-applied background classes
         style={{
           backgroundColor: isHovered

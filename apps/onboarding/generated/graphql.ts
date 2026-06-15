@@ -4667,6 +4667,26 @@ export type CheckoutCustomerNoteUpdate = {
 };
 
 /**
+ * Deletes a checkout.
+ *
+ * Added in Saleor 3.23.
+ *
+ * Requires one of the following permissions: MANAGE_CHECKOUTS.
+ */
+export type CheckoutDelete = {
+  readonly errors: ReadonlyArray<CheckoutDeleteError>;
+};
+
+export type CheckoutDeleteError = {
+  /** The error code. */
+  readonly code: CheckoutErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars["String"]["output"]>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars["String"]["output"]>;
+};
+
+/**
  * Updates the delivery method (shipping method or pick up point) of the checkout. Updates the checkout shipping_address for click and collect delivery for a warehouse address.
  *
  * Triggers the following webhook events:
@@ -6593,6 +6613,24 @@ export type CustomerDelete = {
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   readonly user?: Maybe<User>;
+};
+
+/**
+ * Event sent when customer user is deleted.
+ *
+ * Added in Saleor 3.23.
+ */
+export type CustomerDeleted = Event & {
+  /** Time of the event. */
+  readonly issuedAt?: Maybe<Scalars["DateTime"]["output"]>;
+  /** The user or application that triggered the event. */
+  readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The application receiving the webhook. */
+  readonly recipient?: Maybe<App>;
+  /** The user the event relates to. */
+  readonly user?: Maybe<User>;
+  /** Saleor version that triggered the event. */
+  readonly version?: Maybe<Scalars["String"]["output"]>;
 };
 
 /** History log of the customer. */
@@ -12018,6 +12056,14 @@ export type Mutation = {
    */
   readonly checkoutCustomerNoteUpdate?: Maybe<CheckoutCustomerNoteUpdate>;
   /**
+   * Deletes a checkout.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: MANAGE_CHECKOUTS.
+   */
+  readonly checkoutDelete?: Maybe<CheckoutDelete>;
+  /**
    * Updates the delivery method (shipping method or pick up point) of the checkout. Updates the checkout shipping_address for click and collect delivery for a warehouse address.
    *
    * Triggers the following webhook events:
@@ -14193,6 +14239,10 @@ export type MutationCheckoutCustomerDetachArgs = {
 
 export type MutationCheckoutCustomerNoteUpdateArgs = {
   customerNote: Scalars["String"]["input"];
+  id: Scalars["ID"]["input"];
+};
+
+export type MutationCheckoutDeleteArgs = {
   id: Scalars["ID"]["input"];
 };
 
@@ -31360,7 +31410,6 @@ export type MeQuery = {
     readonly id: string;
     readonly dateJoined: string;
     readonly metadata: ReadonlyArray<{ readonly key: string; readonly value: string }>;
-    readonly userPermissions?: ReadonlyArray<{ readonly code: PermissionEnum }> | null;
   } | null;
 };
 
@@ -31383,9 +31432,6 @@ export const UntypedMeDocument = gql`
       metadata {
         key
         value
-      }
-      userPermissions {
-        code
       }
     }
   }
@@ -31490,14 +31536,6 @@ export const MeDocument = {
                       { kind: "Field", name: { kind: "Name", value: "key" } },
                       { kind: "Field", name: { kind: "Name", value: "value" } },
                     ],
-                  },
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "userPermissions" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [{ kind: "Field", name: { kind: "Name", value: "code" } }],
                   },
                 },
               ],

@@ -9,11 +9,12 @@ Saleor App so onboarding can ship independently of Dashboard releases.
 
 ## Tech overview
 
-- **Next.js App Router** for both API endpoints (`/api/manifest`, `/api/register`) and UI (`/`).
-- **Manifest extension**: `HOME_WIDGETS` mount, `WIDGET` target, `GET` method (the staff JWT
+- **Next.js App Router** for API endpoints (`/api/manifest`) and **Pages Router** for the UI
+  (`src/pages/index.tsx`, served at `/`).
+- **Manifest extension**: `HOMEPAGE_WIDGETS` mount, `WIDGET` target, `GET` method (the staff JWT
   comes from AppBridge automatically).
 - **Client-only**: all GraphQL calls run in the browser using the user's JWT issued by AppBridge.
-  No webhooks, no APL persistence (a no-op APL satisfies the SDK's register handler).
+  No webhooks and no APL — the app only exposes the manifest endpoint.
 - **State persistence**: completion state is stored under user metadata key `onboarding`
   (drop-in compatible with the Dashboard widget's existing key) via `updateMetadata`.
 

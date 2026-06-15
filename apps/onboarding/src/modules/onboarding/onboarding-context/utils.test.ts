@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { type OnboardingState, type OnboardingStep, type OnboardingStepsIDs } from "./types";
 import {
-  getFirstExpanderStepId,
+  getFirstExpandedStepId,
   getFirstNotCompletedAndNotExpandedStep,
   getNextStepToExpand,
   handleStateChangeAfterStepCompleted,
@@ -101,14 +101,14 @@ describe("handleStateChangeAfterToggle", () => {
   });
 });
 
-describe("getFirstExpanderStepId", () => {
+describe("getFirstExpandedStepId", () => {
   it("should return the first expanded step id", () => {
     const onboardingState = {
       stepsCompleted: ["get-started"],
       stepsExpanded: { "create-product": true },
     } as OnboardingState;
 
-    expect(getFirstExpanderStepId(onboardingState)).toBe("create-product");
+    expect(getFirstExpandedStepId(onboardingState)).toBe("create-product");
   });
 
   it("should return empty string when no step is expanded", () => {
@@ -117,7 +117,7 @@ describe("getFirstExpanderStepId", () => {
       stepsExpanded: { "get-started": false },
     } as OnboardingState;
 
-    expect(getFirstExpanderStepId(onboardingState)).toBe("");
+    expect(getFirstExpandedStepId(onboardingState)).toBe("");
   });
 });
 

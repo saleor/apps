@@ -75,7 +75,7 @@ export const handleStateChangeAfterToggle = (
   };
 };
 
-export const getFirstExpanderStepId = (onboardingState: OnboardingState) => {
+export const getFirstExpandedStepId = (onboardingState: OnboardingState) => {
   const stepsExpandedEntries = Object.entries(onboardingState.stepsExpanded);
 
   return (stepsExpandedEntries.find(isEntryValueTrue)?.[0] ?? "") as OnboardingStepsIDs;

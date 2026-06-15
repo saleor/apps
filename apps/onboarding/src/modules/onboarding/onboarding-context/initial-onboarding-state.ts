@@ -10,11 +10,11 @@ export const initialOnboardingSteps: OnboardingStep[] = [
   { id: "invite-staff", completed: false, expanded: undefined },
 ];
 
-// Matches dashboard's count: view-extensions and view-webhooks are mutually exclusive.
-export const TOTAL_STEPS_COUNT = initialOnboardingSteps.length - 1;
+// Onboarding is complete once every rendered step is done.
+export const TOTAL_STEPS_COUNT = initialOnboardingSteps.length;
 
 export const getInitialOnboardingState = (): OnboardingState => ({
   onboardingExpanded: true,
   stepsCompleted: [],
-  stepsExpanded: {} as OnboardingState["stepsExpanded"],
+  stepsExpanded: {},
 });

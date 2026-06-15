@@ -23,7 +23,7 @@ export const OnboardingProvider = ({ children }: OnboardingProviderProps) => {
   const [onboardingState, setOnboardingState] = useState<OnboardingState>({
     onboardingExpanded: true,
     stepsCompleted: [],
-    stepsExpanded: {} as OnboardingState["stepsExpanded"],
+    stepsExpanded: {},
   });
   const loaded = useRef(false);
   const { user, isUserLoading } = useUserData();
@@ -68,7 +68,7 @@ export const OnboardingProvider = ({ children }: OnboardingProviderProps) => {
     setOnboardingState((prev) => ({
       ...prev,
       stepsCompleted: initialOnboardingSteps.map((step) => step.id),
-      stepsExpanded: {} as OnboardingState["stepsExpanded"],
+      stepsExpanded: {},
     }));
   };
 
@@ -85,13 +85,8 @@ export const OnboardingProvider = ({ children }: OnboardingProviderProps) => {
   };
 
   const toggleOnboarding = (value: boolean) => {
-    setOnboardingState((prev) => {
-      const newState = { ...prev, onboardingExpanded: value };
-
-      storageService.saveOnboardingState(newState);
-
-      return newState;
-    });
+    // The persistence effect above saves on every onboardingState change.
+    setOnboardingState((prev) => ({ ...prev, onboardingExpanded: value }));
   };
 
   return (
@@ -101,7 +96,6 @@ export const OnboardingProvider = ({ children }: OnboardingProviderProps) => {
         onboardingState,
         extendedStepId,
         loading: isUserLoading || !loaded.current,
-        userPermissions: user?.userPermissions ? [...user.userPermissions] : [],
         markOnboardingStepAsCompleted,
         markAllAsCompleted,
         toggleExpandedOnboardingStep,

@@ -6,8 +6,5 @@ query Me {
       key
       value
     }
-    userPermissions {
-      code
-    }
   }
 }

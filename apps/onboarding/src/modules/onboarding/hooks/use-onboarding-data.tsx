@@ -46,7 +46,7 @@ const buildSteps = ({
     id: "create-product",
     title: "Create a new product",
     description:
-      "Go to all products from where you can create a new product and view it in all product list. View the product in GraphQL",
+      "Go to All products, create a new product, and see it in the product list. View the product in GraphQL.",
     isCompleted: isStepCompleted("create-product"),
     actions: (
       <>
@@ -67,7 +67,7 @@ const buildSteps = ({
     id: "explore-orders",
     title: "Explore orders",
     description:
-      "Go to all orders where you can create an fulfilment and refund and review corresponding statuses. View the order in GraphQL",
+      "Go to all orders where you can create a fulfillment and refund and review corresponding statuses. View the order in GraphQL",
     isCompleted: isStepCompleted("explore-orders"),
     actions: (
       <>

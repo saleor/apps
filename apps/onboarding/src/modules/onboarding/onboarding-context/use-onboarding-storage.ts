@@ -9,7 +9,6 @@ import { METADATA_KEY, type MetadataInput, prepareUserMetadata } from "./utils";
 export type OnboardingUser = {
   id: string;
   metadata: ReadonlyArray<MetadataInput>;
-  userPermissions: ReadonlyArray<string>;
 };
 
 export const useUserData = (): { user: OnboardingUser | null; isUserLoading: boolean } => {
@@ -22,7 +21,6 @@ export const useUserData = (): { user: OnboardingUser | null; isUserLoading: boo
     return {
       id: data.me.id,
       metadata: data.me.metadata,
-      userPermissions: (data.me.userPermissions ?? []).map((p) => p.code),
     };
   }, [data?.me]);
 
@@ -77,11 +75,20 @@ export const useOnboardingStorage = (user: OnboardingUser | null): StorageServic
 
         /*
          * Self-metadata writes can fail for staff without MANAGE_STAFF; widget keeps working
-         * in-memory but state will not persist for those users.
+         * in-memory but state will not persist for those users. urql resolves (does not reject)
+         * on network/GraphQL errors and on mutation payload errors, so check the result too.
+         * Failures are intentionally swallowed — the widget continues without persistence.
          */
-        saveMetadataRef.current({ id: currentUser.id, input: userMetadata }).catch(() => {
-          // intentionally swallowed — widget continues to work without persistence
-        });
+        saveMetadataRef
+          .current({ id: currentUser.id, input: userMetadata })
+          .then((result) => {
+            if (result.error || result.data?.updateMetadata?.errors?.length) {
+              // persistence failed — nothing actionable for the user, keep working in-memory
+            }
+          })
+          .catch(() => {
+            // network/unexpected rejection — same graceful degradation
+          });
       }, 1000);
     },
     [],
