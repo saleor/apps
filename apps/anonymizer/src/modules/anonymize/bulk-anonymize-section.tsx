@@ -21,6 +21,7 @@ import {
   chunkArray,
   isOrderAnonymized,
 } from "./bulk-anonymize";
+import { ConfirmationModal } from "./confirmation-modal";
 import { scrambleAddress, scrambleUserDetails } from "./scramble";
 
 const logger = createLogger("BulkAnonymizeSection");
@@ -51,14 +52,14 @@ const idleRun: RunState = {
   finishedSummary: null,
 };
 
-const RunProgress = ({ run }: { run: RunState }) => {
+const RunProgress = ({ run, label }: { run: RunState; label: string }) => {
   if (!run.running) {
     return null;
   }
 
   return (
     <Box display="flex" flexDirection="column" gap={1} width="100%">
-      <progress value={run.done} max={run.total} style={{ width: "100%" }} />
+      <progress value={run.done} max={run.total} aria-label={label} style={{ width: "100%" }} />
       <Text size={2}>{`${run.done} / ${run.total}`}</Text>
     </Box>
   );
@@ -109,6 +110,9 @@ export const BulkAnonymizeSection = () => {
 
   const [ordersRun, setOrdersRun] = useState<RunState>(idleRun);
   const [customersRun, setCustomersRun] = useState<RunState>(idleRun);
+
+  // Which destructive action is awaiting confirmation, if any.
+  const [pendingAction, setPendingAction] = useState<"orders" | "customers" | null>(null);
 
   const busy = scanning || ordersRun.running || customersRun.running;
 
@@ -236,9 +240,9 @@ export const BulkAnonymizeSection = () => {
             });
           }
         }),
-      ).then(() => {
-        setOrdersRun((previous) => ({ ...previous, done: previous.done + batch.length }));
-      });
+      );
+
+      setOrdersRun((previous) => ({ ...previous, done: previous.done + batch.length }));
     }
 
     setOrdersRun({
@@ -281,9 +285,9 @@ export const BulkAnonymizeSection = () => {
             });
           }
         }),
-      ).then(() => {
-        setCustomersRun((previous) => ({ ...previous, done: previous.done + batch.length }));
-      });
+      );
+
+      setCustomersRun((previous) => ({ ...previous, done: previous.done + batch.length }));
     }
 
     setCustomersRun({
@@ -319,10 +323,13 @@ export const BulkAnonymizeSection = () => {
               <Text fontWeight="bold">{scanResult.orders.length}</Text>
               {" non-anonymized orders found."}
             </Text>
-            <Button onClick={anonymizeOrders} disabled={busy || scanResult.orders.length === 0}>
+            <Button
+              onClick={() => setPendingAction("orders")}
+              disabled={busy || scanResult.orders.length === 0}
+            >
               Anonymize orders
             </Button>
-            <RunProgress run={ordersRun} />
+            <RunProgress run={ordersRun} label="Anonymizing orders" />
             <RunResult run={ordersRun} />
           </Box>
 
@@ -331,14 +338,45 @@ export const BulkAnonymizeSection = () => {
               <Text fontWeight="bold">{scanResult.customers.length}</Text>
               {" customers found. Staff accounts are not counted and will never be deleted."}
             </Text>
-            <Button onClick={deleteCustomers} disabled={busy || scanResult.customers.length === 0}>
+            <Button
+              onClick={() => setPendingAction("customers")}
+              disabled={busy || scanResult.customers.length === 0}
+            >
               Delete customers
             </Button>
-            <RunProgress run={customersRun} />
+            <RunProgress run={customersRun} label="Deleting customers" />
             <RunResult run={customersRun} />
           </Box>
         </>
       )}
+
+      <ConfirmationModal
+        open={pendingAction === "orders"}
+        title="Anonymize all scanned orders?"
+        description={`This will irreversibly scramble personal data on ${
+          scanResult?.orders.length ?? 0
+        } order(s). This cannot be undone.`}
+        confirmLabel="Anonymize orders"
+        onCancel={() => setPendingAction(null)}
+        onConfirm={() => {
+          setPendingAction(null);
+          anonymizeOrders();
+        }}
+      />
+
+      <ConfirmationModal
+        open={pendingAction === "customers"}
+        title="Delete all scanned customers?"
+        description={`This will permanently delete ${
+          scanResult?.customers.length ?? 0
+        } customer account(s). This cannot be undone.`}
+        confirmLabel="Delete customers"
+        onCancel={() => setPendingAction(null)}
+        onConfirm={() => {
+          setPendingAction(null);
+          deleteCustomers();
+        }}
+      />
     </Box>
   );
 };

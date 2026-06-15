@@ -1,6 +1,6 @@
 import { Box, Button, Input, Text } from "@saleor/macaw-ui";
 import { useState } from "react";
-import { type CombinedError, type OperationResult, useClient, useMutation } from "urql";
+import { CombinedError, type OperationResult, useClient, useMutation } from "urql";
 
 import { env } from "@/env";
 import {
@@ -11,6 +11,7 @@ import {
 } from "@/generated/graphql";
 import { createLogger } from "@/logger";
 
+import { ConfirmationModal } from "./confirmation-modal";
 import { scrambleAddress, scrambleUserDetails } from "./scramble";
 
 const logger = createLogger("ScrambleAllOrdersByEmail");
@@ -26,6 +27,7 @@ export const ScrambleAllOrdersByEmail = () => {
   const [error, setError] = useState<CombinedError | null>(null);
   const [user, setUser] = useState<FetchedUser | null>(null);
   const [orders, setOrders] = useState<OrderEdge[] | null>(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const client = useClient();
 
@@ -73,18 +75,23 @@ export const ScrambleAllOrdersByEmail = () => {
       setUser(fetchedUser);
       setOrders(allOrders);
     } catch (e) {
-      const combinedError = e as CombinedError;
-
       /*
        * Surface GraphQL errors (e.g. missing MANAGE_ORDERS / MANAGE_USERS
        * permission), which Saleor returns alongside `data` rather than as a
-       * network error.
+       * network error. Only urql's `CombinedError` exposes `graphQLErrors`, so
+       * guard the type - anything else falls back to a generic message instead
+       * of crashing the render path that reads `error.graphQLErrors`.
        */
-      logger.error("Failed to fetch user and orders", {
-        graphQLErrors: combinedError.graphQLErrors?.map((graphQLError) => graphQLError.message),
-        networkError: combinedError.networkError?.message,
-      });
-      setError(combinedError);
+      if (e instanceof CombinedError) {
+        logger.error("Failed to fetch user and orders", {
+          graphQLErrors: e.graphQLErrors?.map((graphQLError) => graphQLError.message),
+          networkError: e.networkError?.message,
+        });
+        setError(e);
+      } else {
+        logger.error("Unexpected error while fetching user and orders", { error: e });
+        setMessage("Something went wrong while fetching the user and orders. Please try again.");
+      }
     } finally {
       setFetching(false);
     }
@@ -205,7 +212,7 @@ export const ScrambleAllOrdersByEmail = () => {
               ))}
             </ul>
           )}
-          <Button onClick={handleScrambleAndUpdate} disabled={scrambling || updating}>
+          <Button onClick={() => setConfirmOpen(true)} disabled={scrambling || updating}>
             {orders.length ? "Scramble Orders and Delete Customer" : "Delete Customer"}
           </Button>
         </Box>
@@ -224,6 +231,24 @@ export const ScrambleAllOrdersByEmail = () => {
           ))}
         </Box>
       )}
+
+      <ConfirmationModal
+        open={confirmOpen}
+        title={orders?.length ? "Anonymize this customer?" : "Delete this customer?"}
+        description={
+          orders?.length
+            ? `This will irreversibly scramble personal data on ${orders.length} order(s)${
+                user ? " and permanently delete the customer account" : ""
+              }. This cannot be undone.`
+            : "This will permanently delete the customer account. This cannot be undone."
+        }
+        confirmLabel={orders?.length ? "Scramble and delete" : "Delete customer"}
+        onCancel={() => setConfirmOpen(false)}
+        onConfirm={() => {
+          setConfirmOpen(false);
+          handleScrambleAndUpdate();
+        }}
+      />
     </Box>
   );
 };

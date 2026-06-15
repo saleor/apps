@@ -65,9 +65,18 @@ export const scrambleAddress = <
     firstName: scrambledFirstName,
     lastName: scrambledLastName,
     phone: scrambledPhone,
+    streetAddress1: scrambledStreetAddress1,
+    /*
+     * Saleor treats omitted `AddressInput` fields as "no change", so the
+     * remaining free-text fields that can hold personal data must be sent
+     * explicitly to be wiped. `streetAddress2` (e.g. apartment, "c/o ..."),
+     * `companyName` and `cityArea` (district) are all cleared.
+     */
+    streetAddress2: "",
+    companyName: "",
+    cityArea: "",
     city: address.city,
     postalCode: address.postalCode,
-    streetAddress1: scrambledStreetAddress1,
     country: address.country.code as CountryCode,
     countryArea: address.countryArea,
   };

@@ -21,8 +21,10 @@ The Anonymizer App helps anonymize a customer's personal data:
   - First name / last name → cleared (set to an empty value).
   - Phone → cleared (set to an empty value). Saleor accepts an empty phone and skips
     validation, whereas a fake number would fail validation and would not be anonymous.
-  - Street address → replaced with a constant placeholder (`Anonymized`).
-  - City, postal code and country → kept intact, so the address stays valid.
+  - Street address (line 1) → replaced with a constant placeholder (`Anonymized`).
+  - Street address line 2, company name and district → cleared (set to an empty value),
+    since they are free text that can hold personal data.
+  - City, postal code, country area and country → kept intact, so the address stays valid.
   - Email → replaced with a random `UUID`-based address under a configurable domain.
 - Deletes the customer profile once all of their orders are anonymized.
 

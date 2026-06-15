@@ -1,5 +1,5 @@
 import { Layout } from "@saleor/apps-ui";
-import { Box, Paragraph } from "@saleor/macaw-ui";
+import { Box, Paragraph, Text } from "@saleor/macaw-ui";
 import { type NextPage } from "next";
 
 import { BulkAnonymizeSection } from "@/modules/anonymize/bulk-anonymize-section";
@@ -8,6 +8,23 @@ import { ScrambleAllOrdersByEmail } from "@/modules/anonymize/scramble-orders-by
 const IndexPage: NextPage = () => {
   return (
     <Box display="flex" flexDirection="column" gap={10}>
+      <Box
+        backgroundColor="warning1"
+        padding={5}
+        borderRadius={4}
+        display="flex"
+        flexDirection="column"
+        gap={2}
+      >
+        <Text fontWeight="bold">⚠️ GDPR erasure may not be exhaustive</Text>
+        <Text>
+          This extension anonymizes data available through the standard orders, customers and
+          addresses APIs. It does not inspect or erase custom PII stored elsewhere, such as
+          metadata, plugins/extensions, external systems, exports, or third-party integrations (such
+          as payment providers).
+        </Text>
+      </Box>
+
       <Layout.AppSection
         heading="Anonymize a single customer"
         sideContent={
