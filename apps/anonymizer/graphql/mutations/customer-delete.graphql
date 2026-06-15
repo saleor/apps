@@ -1,0 +1,14 @@
+mutation CustomerDelete($id: ID, $externalReference: String) {
+  customerDelete(id: $id, externalReference: $externalReference) {
+    user {
+      id
+      email
+      firstName
+      lastName
+    }
+    errors {
+      field
+      message
+    }
+  }
+}

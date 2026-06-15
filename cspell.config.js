@@ -31,6 +31,7 @@ export default {
     },
   ],
   words: [
+    "anonymization",
     "retryable",
     "atobarai",
     "avalara",
