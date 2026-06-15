@@ -152,25 +152,26 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
           );
         }
 
-        if (confirmedOrderEvent.isStrategyFlatRates()) {
-          logger.info("Order has flat rates tax strategy, skipping...");
+        if (!confirmedOrderEvent.isStrategyTaxApp()) {
+          logger.info("Order channel is not configured to use the tax app, skipping...");
 
           OrderConfirmedLogRequest.createErrorLog({
             sourceId: payload.order?.id,
             channelId: payload.order?.channel.id,
-            errorReason: "Order has flat tax rates strategy",
+            errorReason: "Order channel does not use the tax app strategy",
           })
             .mapErr(captureException)
             .map(logWriter.writeLog);
 
           span.setStatus({
             code: SpanStatusCode.OK,
-            message: "Failed to commit transaction in AvaTax: order has flat tax rates strategy",
+            message:
+              "Failed to commit transaction in AvaTax: order channel does not use the tax app strategy",
           });
 
           return Response.json(
             {
-              message: `Order ${payload.order?.id} has flat rates tax strategy.`,
+              message: `Order ${payload.order?.id} channel does not use the tax app strategy.`,
             },
             { status: 202 },
           );
