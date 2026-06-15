@@ -1,5 +1,3 @@
-import qs from "qs";
-
 import { createLogger } from "@/logger";
 import { type PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloadcms-provider.schema";
 
@@ -31,19 +29,24 @@ export class PayloadCMSClient {
     return `${config.payloadApiUrl}/${config.collectionName}`;
   }
 
-  getItemsBySaleorVariantId(context: Context) {
-    const queryString = qs.stringify(
-      {
-        where: {
-          [context.configuration.productVariantFieldsMapping.variantId]: {
-            equals: context.variant.id,
-          },
-        },
-      },
-      {
-        addQueryPrefix: true,
-      },
+  /**
+   * Builds a Payload CMS REST "where" query string matching a single variant by its mapped id field.
+   * Uses Payload's bracket query syntax, e.g. `?where[variantId][equals]=123`.
+   * https://payloadcms.com/docs/queries/overview#rest-queries
+   */
+  private constructVariantWhereQuery(context: Context) {
+    const params = new URLSearchParams();
+
+    params.set(
+      `where[${context.configuration.productVariantFieldsMapping.variantId}][equals]`,
+      context.variant.id,
     );
+
+    return `?${params.toString()}`;
+  }
+
+  getItemsBySaleorVariantId(context: Context) {
+    const queryString = this.constructVariantWhereQuery(context);
 
     return fetch(`${this.constructCollectionUrl(context.configuration)}${queryString}`, {
       headers: this.getHeaders(context),
@@ -55,18 +58,7 @@ export class PayloadCMSClient {
       configId: context.configuration.id,
     });
 
-    const queryString = qs.stringify(
-      {
-        where: {
-          [context.configuration.productVariantFieldsMapping.variantId]: {
-            equals: context.variant.id,
-          },
-        },
-      },
-      {
-        addQueryPrefix: true,
-      },
-    );
+    const queryString = this.constructVariantWhereQuery(context);
 
     this.logger.debug("Deleting product variant", { queryString });
 
@@ -137,18 +129,7 @@ export class PayloadCMSClient {
       configId: configuration.id,
     });
 
-    const queryString = qs.stringify(
-      {
-        where: {
-          [configuration.productVariantFieldsMapping.variantId]: {
-            equals: variant.id,
-          },
-        },
-      },
-      {
-        addQueryPrefix: true,
-      },
-    );
+    const queryString = this.constructVariantWhereQuery({ configuration, variant });
 
     this.logger.debug("Updating product variant", { queryString });
 
