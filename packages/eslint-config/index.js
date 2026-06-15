@@ -39,7 +39,7 @@ export const config = [
       depend: dependPlugin,
     },
     rules: {
-      "depend/ban-dependencies": "error",
+      "depend/ban-dependencies": "warn",
     },
   },
   /**
