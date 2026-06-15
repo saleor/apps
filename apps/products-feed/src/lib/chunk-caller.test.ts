@@ -185,13 +185,17 @@ describe("ChunkCaller", () => {
 
   it("should execute all items in a chunk in parallel", async () => {
     const items = ["item1", "item2", "item3"];
-    const startTimes: Record<string, number> = {};
-    const endTimes: Record<string, number> = {};
+    let activeCount = 0;
+    let maxActiveCount = 0;
 
     const executeFn = vi.fn(async (item: string) => {
-      startTimes[item] = Date.now();
+      activeCount++;
+      maxActiveCount = Math.max(maxActiveCount, activeCount);
+
+      // Hold the slot open so concurrent calls overlap deterministically.
       await new Promise((resolve) => setTimeout(resolve, 50));
-      endTimes[item] = Date.now();
+
+      activeCount--;
 
       return `result-${item}`;
     });
@@ -200,12 +204,8 @@ describe("ChunkCaller", () => {
 
     await caller.executeCalls();
 
-    // All items in the same chunk should start within a small time window
-    const startTimeValues = Object.values(startTimes);
-    const maxStartDiff = Math.max(...startTimeValues) - Math.min(...startTimeValues);
-
-    // Allow 20ms tolerance for execution timing variance
-    expect(maxStartDiff).toBeLessThan(20);
+    // All items in the chunk run concurrently, so peak concurrency equals the chunk size.
+    expect(maxActiveCount).toBe(3);
   });
 
   it("should process chunk results when processChunkResults is provided", async () => {

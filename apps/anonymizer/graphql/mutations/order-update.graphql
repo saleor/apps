@@ -1,0 +1,16 @@
+mutation OrderUpdate($id: ID!, $input: OrderUpdateInput!) {
+  orderUpdate(id: $id, input: $input) {
+    order {
+      id
+      user {
+        email
+        firstName
+        lastName
+      }
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
