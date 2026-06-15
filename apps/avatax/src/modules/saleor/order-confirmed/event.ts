@@ -21,7 +21,9 @@ export class SaleorOrderConfirmedEvent {
       channel: z.object({
         taxConfiguration: z.object({
           pricesEnteredWithTax: z.boolean(),
-          taxCalculationStrategy: z.union([z.literal("TAX_APP"), z.literal("FLAT_RATES")]),
+          taxCalculationStrategy: z
+            .union([z.literal("TAX_APP"), z.literal("FLAT_RATES")])
+            .nullable(),
         }),
         slug: z.string(),
       }),
@@ -85,8 +87,13 @@ export class SaleorOrderConfirmedEvent {
 
   isFulfilled = () => this.rawPayload.order.status === "FULFILLED";
 
-  isStrategyFlatRates = () =>
-    this.rawPayload.order.channel.taxConfiguration.taxCalculationStrategy === "FLAT_RATES";
+  /**
+   * Returns true only when the channel is explicitly configured to use the tax app (TAX_APP).
+   * Any other value - FLAT_RATES or a missing strategy (null) - means the app is not the tax
+   * calculator for that channel, so we skip committing to AvaTax.
+   */
+  isStrategyTaxApp = () =>
+    this.rawPayload.order.channel.taxConfiguration.taxCalculationStrategy === "TAX_APP";
 
   getIsTaxIncluded = () => this.rawPayload.order.channel.taxConfiguration.pricesEnteredWithTax;
 
