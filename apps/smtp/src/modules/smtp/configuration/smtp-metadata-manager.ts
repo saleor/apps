@@ -65,7 +65,14 @@ export class SmtpMetadataManager {
 
       this.logger.debug("Config found, will parse JSON now");
 
-      return fromThrowable(JSON.parse, SmtpMetadataManager.ParseConfigError.normalize)(config);
+      return fromThrowable(
+        JSON.parse,
+        SmtpMetadataManager.ParseConfigError.normalize,
+      )(config).map((parsed) => ({
+        ...parsed,
+        // Configs saved before this field existed don't have it; default to disabled
+        useSaleorSmtpFallback: parsed.useSaleorSmtpFallback ?? false,
+      }));
     });
   }
 

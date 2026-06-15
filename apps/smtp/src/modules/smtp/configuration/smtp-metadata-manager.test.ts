@@ -25,7 +25,31 @@ describe("SmtpMetadataManager", () => {
       const instance = new SmtpMetadataManager(metadataManager, SALEOR_API_URL);
       const result = await instance.getConfig().unwrapOr("error");
 
-      expect(result).toStrictEqual({ key: "value" });
+      expect(result).toStrictEqual({ key: "value", useSaleorSmtpFallback: false });
+    });
+
+    it("defaults useSaleorSmtpFallback to false for configs saved before the field existed", async () => {
+      const metadataManager = new MockSettingsManager();
+
+      vi.spyOn(metadataManager, "get").mockResolvedValue('{"configurations": []}');
+
+      const instance = new SmtpMetadataManager(metadataManager, SALEOR_API_URL);
+      const result = await instance.getConfig().unwrapOr("error");
+
+      expect(result).toStrictEqual({ configurations: [], useSaleorSmtpFallback: false });
+    });
+
+    it("preserves useSaleorSmtpFallback when set in stored config", async () => {
+      const metadataManager = new MockSettingsManager();
+
+      vi.spyOn(metadataManager, "get").mockResolvedValue(
+        '{"configurations": [], "useSaleorSmtpFallback": true}',
+      );
+
+      const instance = new SmtpMetadataManager(metadataManager, SALEOR_API_URL);
+      const result = await instance.getConfig().unwrapOr("error");
+
+      expect(result).toStrictEqual({ configurations: [], useSaleorSmtpFallback: true });
     });
 
     it("raises error when pulling configuration exceeds the timeout", async () => {
