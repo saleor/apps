@@ -126,7 +126,12 @@ export const BulkAnonymizeSection = () => {
 
       do {
         const result: OperationResult<OrdersForAnonymizationQuery> = await client
-          .query(OrdersForAnonymizationDocument, { after: ordersAfter })
+          .query(
+            OrdersForAnonymizationDocument,
+            { after: ordersAfter },
+            // Always hit the network: a re-scan must reflect the latest store state, not urql's cache.
+            { requestPolicy: "network-only" },
+          )
           .toPromise();
 
         if (result.error || !result.data?.orders) {
@@ -149,7 +154,12 @@ export const BulkAnonymizeSection = () => {
 
       do {
         const result: OperationResult<CustomersForDeletionQuery> = await client
-          .query(CustomersForDeletionDocument, { after: customersAfter })
+          .query(
+            CustomersForDeletionDocument,
+            { after: customersAfter },
+            // Always hit the network: a re-scan must reflect the latest store state, not urql's cache.
+            { requestPolicy: "network-only" },
+          )
           .toPromise();
 
         if (result.error || !result.data?.customers) {

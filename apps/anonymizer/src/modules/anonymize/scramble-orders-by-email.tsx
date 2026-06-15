@@ -52,7 +52,12 @@ export const ScrambleAllOrdersByEmail = () => {
        */
       do {
         const result: OperationResult<UserByEmailQuery> = await client
-          .query(UserByEmailDocument, { email, after })
+          .query(
+            UserByEmailDocument,
+            { email, after },
+            // Always hit the network: re-fetching must reflect the latest store state, not urql's cache.
+            { requestPolicy: "network-only" },
+          )
           .toPromise();
 
         if (result.error) {
