@@ -15,12 +15,34 @@ describe("giftCardMatchesEmail", () => {
     ).toBe(true);
   });
 
-  it("does not match when neither email matches", () => {
+  it("matches the 'send to customer' recipient email stored on an event", () => {
     expect(
       giftCardMatchesEmail(
-        { createdByEmail: "a@example.com", usedByEmail: "b@example.com" },
+        {
+          createdByEmail: "staff@example.com",
+          events: [{ email: null }, { email: "Recipient@Example.com" }],
+        },
+        "recipient@example.com",
+      ),
+    ).toBe(true);
+  });
+
+  it("does not match when neither email nor any event matches", () => {
+    expect(
+      giftCardMatchesEmail(
+        {
+          createdByEmail: "a@example.com",
+          usedByEmail: "b@example.com",
+          events: [{ email: "d@example.com" }],
+        },
         "c@example.com",
       ),
+    ).toBe(false);
+  });
+
+  it("does not match against empty/null event emails", () => {
+    expect(
+      giftCardMatchesEmail({ events: [{ email: null }, { email: "" }] }, "a@example.com"),
     ).toBe(false);
   });
 
