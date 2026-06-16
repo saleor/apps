@@ -15,7 +15,8 @@ const handler = wrapWithLoggerContext(
         const apiBaseURL = env.APP_API_BASE_URL ?? appBaseUrl;
 
         return {
-          about: "Anonymizes customer data by scrambling order details and deleting the customer.",
+          about:
+            "Anonymizes customer data by scrambling order details, deleting checkouts and gift cards, and deleting the customer.",
           appUrl: iframeBaseUrl,
           author: "Saleor Commerce",
           brand: {
@@ -27,7 +28,7 @@ const handler = wrapWithLoggerContext(
           homepageUrl: "https://github.com/saleor/apps",
           id: env.MANIFEST_APP_ID,
           name: "Anonymizer",
-          permissions: ["MANAGE_ORDERS", "MANAGE_USERS"],
+          permissions: ["MANAGE_ORDERS", "MANAGE_USERS", "MANAGE_CHECKOUTS", "MANAGE_GIFT_CARD"],
           requiredSaleorVersion: ">=3.22 <4",
           supportUrl: "https://github.com/saleor/apps/discussions",
           tokenTargetUrl: `${apiBaseURL}/api/register`,
