@@ -49,15 +49,15 @@ describe("SaleorOrderConfirmedEvent", () => {
     });
   });
 
-  describe("isStrategyFlatRates method", () => {
-    it("should return false if order has tax calculation strategy set to TAX_APP", () => {
+  describe("isStrategyTaxApp method", () => {
+    it("should return true if order has tax calculation strategy set to TAX_APP", () => {
       const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
       const event = SaleorOrderConfirmedEvent.createFromGraphQL(payload)._unsafeUnwrap();
 
-      expect(event.isStrategyFlatRates()).toBe(false);
+      expect(event.isStrategyTaxApp()).toBe(true);
     });
 
-    it("should return true if order has tax calculation strategy set to FLAT_RATES", () => {
+    it("should return false if order has tax calculation strategy set to FLAT_RATES", () => {
       const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
       const event = SaleorOrderConfirmedEvent.createFromGraphQL({
         ...payload,
@@ -74,7 +74,27 @@ describe("SaleorOrderConfirmedEvent", () => {
         },
       })._unsafeUnwrap();
 
-      expect(event.isStrategyFlatRates()).toBe(true);
+      expect(event.isStrategyTaxApp()).toBe(false);
+    });
+
+    it("should return false if order has tax calculation strategy set to null", () => {
+      const payload = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
+      const event = SaleorOrderConfirmedEvent.createFromGraphQL({
+        ...payload,
+        order: {
+          ...payload.order,
+          channel: {
+            slug: "channel-slug",
+            id: "channel-id",
+            taxConfiguration: {
+              pricesEnteredWithTax: true,
+              taxCalculationStrategy: null,
+            },
+          },
+        },
+      })._unsafeUnwrap();
+
+      expect(event.isStrategyTaxApp()).toBe(false);
     });
   });
 
