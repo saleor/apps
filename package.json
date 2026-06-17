@@ -35,6 +35,7 @@
     "@cspell/cspell-types": "8.17.5",
     "@saleor/app-sdk": "catalog:",
     "cspell": "8.17.5",
+    "graphql": "catalog:",
     "husky": "9.1.4",
     "knip": "5.46.2",
     "lint-staged": "15.5.0",
