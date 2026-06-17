@@ -1,0 +1,37 @@
+# Fetches a single page of gift cards for deletion.
+#
+# Gift card PII cannot be scrubbed in place: `createdByEmail`, `usedByEmail` and
+# the user links are read-only, and gift card events (which hold email/message)
+# cannot be edited or deleted. So removing the PII means deleting the card.
+#
+# There is no server-side filter for `usedByEmail` (only `createdByEmail` and
+# `usedBy` by user id), so the by-email flow walks every gift card and matches
+# client-side. A customer's email can live in three places: `createdByEmail`
+# (bought/issued), `usedByEmail` (redeemed), and gift card events - the "send to
+# customer" recipient email is stored only on a SENT_TO_CUSTOMER/RESENT event
+# (parameters.email), never on the card itself - so events are matched too.
+#
+# `currentBalance` is read so the UI can warn how much redeemable value the
+# deletion will destroy. Sorted by creation date for a stable cursor walk.
+query GiftCardsForDeletion($after: String) {
+  giftCards(first: 100, after: $after, sortBy: { field: CREATED_AT, direction: ASC }) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        id
+        createdByEmail
+        usedByEmail
+        events {
+          email
+        }
+        currentBalance {
+          amount
+          currency
+        }
+      }
+    }
+  }
+}

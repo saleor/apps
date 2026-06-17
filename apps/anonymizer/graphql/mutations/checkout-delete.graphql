@@ -1,0 +1,13 @@
+# Deletes a checkout, removing all of its PII (email, billing/shipping address,
+# linked user, metadata) in one call. Added in Saleor 3.23. Saleor refuses to
+# delete a checkout that has attached payment transactions, which surfaces here
+# as an error and is reported as a failure rather than aborting the run.
+mutation CheckoutDelete($id: ID!) {
+  checkoutDelete(id: $id) {
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

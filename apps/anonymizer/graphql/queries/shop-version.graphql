@@ -1,0 +1,8 @@
+# Reads the connected Saleor version, used to gate features that depend on a
+# minimum version. `checkoutDelete` was added in Saleor 3.23, so the checkout
+# deletion UI is only enabled when the store reports at least that version.
+query ShopVersion {
+  shop {
+    version
+  }
+}
