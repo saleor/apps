@@ -1,10 +1,11 @@
+import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useMutation, useQuery } from "urql";
 
 import { MeDocument, UpdateUserMetadataDocument } from "@/generated/graphql";
 
 import { type OnboardingState, type StorageService } from "./types";
-import { METADATA_KEY, type MetadataInput, prepareUserMetadata } from "./utils";
+import { METADATA_KEY, type MetadataInput } from "./utils";
 
 export type OnboardingUser = {
   id: string;
@@ -12,7 +13,15 @@ export type OnboardingUser = {
 };
 
 export const useUserData = (): { user: OnboardingUser | null; isUserLoading: boolean } => {
-  const [{ data, fetching }] = useQuery({ query: MeDocument });
+  const { appBridgeState } = useAppBridge();
+
+  /*
+   * AppBridge provides the staff token asynchronously after mount. Pause Me until it arrives,
+   * otherwise the first request runs unauthenticated, resolves with no data, and the provider
+   * marks itself loaded with default state — ignoring (and later overwriting) saved progress.
+   */
+  const hasToken = Boolean(appBridgeState?.token);
+  const [{ data, fetching }] = useQuery({ query: MeDocument, pause: !hasToken });
 
   // Memoize so the user reference is stable across renders when the underlying data hasn't changed.
   const user = useMemo<OnboardingUser | null>(() => {
@@ -24,7 +33,8 @@ export const useUserData = (): { user: OnboardingUser | null; isUserLoading: boo
     };
   }, [data?.me]);
 
-  return { user, isUserLoading: fetching };
+  // Report loading until the token is available so the provider waits for the authenticated user.
+  return { user, isUserLoading: !hasToken || fetching };
 };
 
 export const useOnboardingStorage = (user: OnboardingUser | null): StorageService => {
@@ -71,7 +81,14 @@ export const useOnboardingStorage = (user: OnboardingUser | null): StorageServic
 
         if (!currentUser) return;
 
-        const userMetadata = prepareUserMetadata(currentUser.metadata, onboardingState);
+        /*
+         * Send only the onboarding key. updateMetadata applies partial key updates, so sending
+         * the whole metadata array would overwrite unrelated keys with values that were stale as
+         * of the last Me fetch if another dashboard/app path changed them in the meantime.
+         */
+        const onboardingMetadata: MetadataInput[] = [
+          { key: METADATA_KEY, value: JSON.stringify(onboardingState) },
+        ];
 
         /*
          * Self-metadata writes can fail for staff without MANAGE_STAFF; widget keeps working
@@ -80,7 +97,7 @@ export const useOnboardingStorage = (user: OnboardingUser | null): StorageServic
          * Failures are intentionally swallowed — the widget continues without persistence.
          */
         saveMetadataRef
-          .current({ id: currentUser.id, input: userMetadata })
+          .current({ id: currentUser.id, input: onboardingMetadata })
           .then((result) => {
             if (result.error || result.data?.updateMetadata?.errors?.length) {
               // persistence failed — nothing actionable for the user, keep working in-memory

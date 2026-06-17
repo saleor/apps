@@ -7,9 +7,6 @@ import {
   getNextStepToExpand,
   handleStateChangeAfterStepCompleted,
   handleStateChangeAfterToggle,
-  METADATA_KEY,
-  type MetadataInput,
-  prepareUserMetadata,
 } from "./utils";
 
 describe("handleStateChangeAfterStepCompleted", () => {
@@ -212,52 +209,5 @@ describe("getNextStepToExpand", () => {
     ];
 
     expect(getNextStepToExpand(onboardingState, visibleSteps)).toStrictEqual("");
-  });
-});
-
-describe("prepareUserMetadata", () => {
-  const onboardingState: OnboardingState = {
-    onboardingExpanded: true,
-    stepsCompleted: ["get-started"],
-    stepsExpanded: { "create-product": true } as unknown as Record<OnboardingStepsIDs, boolean>,
-  };
-  const onboardingStateString = JSON.stringify(onboardingState);
-
-  it("should add onboarding metadata if metadata is undefined", () => {
-    const result = prepareUserMetadata(undefined, onboardingState);
-
-    expect(result).toStrictEqual([{ key: METADATA_KEY, value: onboardingStateString }]);
-  });
-
-  it("should add onboarding metadata if key is not present", () => {
-    const metadata: MetadataInput[] = [{ key: "otherKey", value: "otherValue" }];
-
-    const result = prepareUserMetadata(metadata, onboardingState);
-
-    expect(result).toStrictEqual([
-      { key: "otherKey", value: "otherValue" },
-      { key: METADATA_KEY, value: onboardingStateString },
-    ]);
-  });
-
-  it("should update onboarding metadata if key is present", () => {
-    const metadata: MetadataInput[] = [
-      { key: "otherKey", value: "otherValue" },
-      { key: METADATA_KEY, value: "oldValue" },
-    ];
-
-    const result = prepareUserMetadata(metadata, onboardingState);
-
-    expect(result).toStrictEqual([
-      { key: "otherKey", value: "otherValue" },
-      { key: METADATA_KEY, value: onboardingStateString },
-    ]);
-    expect(result.findIndex((m) => m.key === METADATA_KEY)).toBe(1);
-  });
-
-  it("should handle empty initial metadata array", () => {
-    const result = prepareUserMetadata([], onboardingState);
-
-    expect(result).toStrictEqual([{ key: METADATA_KEY, value: onboardingStateString }]);
   });
 });

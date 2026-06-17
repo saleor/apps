@@ -2,14 +2,6 @@ import { type OnboardingState, type OnboardingStep, type OnboardingStepsIDs } fr
 
 export type MetadataInput = { key: string; value: string };
 
-const cloneMetadata = (data: MetadataInput): MetadataInput => ({
-  key: data.key,
-  value: data.value,
-});
-
-const byKey = (keyToFind: string) => (metadataItem: { key: string }) =>
-  metadataItem.key === keyToFind;
-
 const isEntryValueTrue = ([_id, value]: [string, boolean]): boolean => value;
 
 const toStepWithClientState =
@@ -113,20 +105,3 @@ export const getNextStepToExpand = (
  * reflects in the dashboard widget and vice versa.
  */
 export const METADATA_KEY = "onboarding";
-
-export const prepareUserMetadata = (
-  metadata: ReadonlyArray<MetadataInput> | undefined,
-  onboardingState: OnboardingState,
-): MetadataInput[] => {
-  const userMetadata: MetadataInput[] = metadata?.map(cloneMetadata) ?? [];
-  const metadataValue = JSON.stringify(onboardingState);
-  const metadataIndex = userMetadata.findIndex(byKey(METADATA_KEY));
-
-  if (metadataIndex !== -1) {
-    userMetadata[metadataIndex] = { key: METADATA_KEY, value: metadataValue };
-  } else {
-    userMetadata.push({ key: METADATA_KEY, value: metadataValue });
-  }
-
-  return userMetadata;
-};
