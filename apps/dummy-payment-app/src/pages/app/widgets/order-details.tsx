@@ -1,4 +1,4 @@
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { actions, useAppBridge, useWidgetAutoResize } from "@saleor/app-sdk/app-bridge";
 import { Box, Button, Combobox, Input, Spinner, Text, Toggle } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import React from "react";
@@ -77,6 +77,9 @@ const WidgetCard = ({ title, children }: { title: string; children: React.ReactN
 const OrderDetailsWidget = () => {
   const router = useRouter();
   const { appBridge, appBridgeState } = useAppBridge();
+  const rootRef = React.useRef<HTMLDivElement>(null);
+
+  useWidgetAutoResize(rootRef);
 
   const orderId = router.query.orderId as string | undefined;
 
@@ -101,6 +104,11 @@ const OrderDetailsWidget = () => {
   const onSuccess = (title: string) => {
     notify("success", title);
     refetch({ requestPolicy: "network-only" });
+    /*
+     * Ask the Dashboard to refresh the order it currently has open so the
+     * transaction we just created/updated shows up without a manual reload.
+     */
+    appBridge?.dispatch(actions.RefreshEntity());
   };
 
   const onError = (e: unknown) =>
@@ -227,7 +235,7 @@ const OrderDetailsWidget = () => {
   // --- Render -------------------------------------------------------------
   if (!orderId) {
     return (
-      <Box>
+      <Box ref={rootRef}>
         <Text color="critical1">Open this widget from an order&apos;s detail page.</Text>
       </Box>
     );
@@ -235,7 +243,7 @@ const OrderDetailsWidget = () => {
 
   if (error) {
     return (
-      <Box>
+      <Box ref={rootRef}>
         <Text color="critical1">Failed to load order: {error.message}</Text>
       </Box>
     );
@@ -243,7 +251,7 @@ const OrderDetailsWidget = () => {
 
   if (fetching && !order) {
     return (
-      <Box display="flex" justifyContent="center" padding={4}>
+      <Box ref={rootRef} display="flex" justifyContent="center" padding={4}>
         <Spinner />
       </Box>
     );
@@ -254,7 +262,7 @@ const OrderDetailsWidget = () => {
   const isBusy = createMutation.isLoading;
 
   return (
-    <Box display="grid" gap={4}>
+    <Box ref={rootRef} display="grid" gap={4}>
       {/* Quick actions */}
       <WidgetCard title="Quick actions">
         <Text size={2} color="default2">
