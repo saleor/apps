@@ -1,0 +1,20 @@
+# Resolves a customer by the ID the Dashboard passes to the GDPR Removal
+# extension (mounted on CUSTOMER_DETAILS_MORE_ACTIONS). Everything else in this
+# app is email-based, so the GDPR flow reads the customer's `email` here and then
+# reuses the existing email-filtered queries (orders, checkouts, gift cards).
+#
+# `User.orders` is intentionally NOT selected: it requires MANAGE_STAFF/OWNER,
+# which this app does not have - orders are fetched separately via the top-level
+# `orders` query filtered by the resolved email (see UserByEmail).
+#
+# `isStaff` is read so the UI can refuse to remove staff accounts: this action is
+# reachable from any customer detail page, including staff members'.
+query CustomerById($id: ID!) {
+  user(id: $id) {
+    id
+    email
+    firstName
+    lastName
+    isStaff
+  }
+}
