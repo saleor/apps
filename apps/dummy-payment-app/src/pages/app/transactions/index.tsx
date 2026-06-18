@@ -25,7 +25,7 @@ const TransactionsPage = () => {
       });
 
       if (transaction) {
-        router.push(`/app/transactions/${transaction.id}`);
+        router.push(`/app/transactions/${encodeURIComponent(transaction.id)}`);
       } else {
         setNotFoundError(true);
       }
@@ -83,7 +83,7 @@ const TransactionsPage = () => {
               onClick={() => {
                 setNotFoundError(false);
                 if (transactionId) {
-                  router.push(`/app/transactions/${transactionId}`);
+                  router.push(`/app/transactions/${encodeURIComponent(transactionId)}`);
                 } else {
                   fetchTransactions();
                 }
