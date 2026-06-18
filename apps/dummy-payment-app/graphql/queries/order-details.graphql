@@ -1,0 +1,14 @@
+query OrderDetails($id: ID!) {
+  order(id: $id) {
+    id
+    number
+    total {
+      gross {
+        ...Money
+      }
+    }
+    transactions {
+      ...Transaction
+    }
+  }
+}
