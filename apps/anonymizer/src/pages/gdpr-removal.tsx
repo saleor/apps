@@ -7,12 +7,13 @@ import { GdprRemovalView } from "@/modules/anonymize/gdpr-removal/gdpr-removal-v
 /**
  * Popup opened from a customer's detail page (CUSTOMER_DETAILS_MORE_ACTIONS).
  * The Dashboard renders this route in an iframe and passes the customer id as
- * the `id` query parameter.
+ * the `customerId` query parameter. Note: the `id` param is reserved by the
+ * Dashboard for the app's own id (AppBridge), so it must not be used here.
  */
 const GdprRemovalPage: NextPage = () => {
   const router = useRouter();
-  const { id } = router.query;
-  const customerId = typeof id === "string" ? id : null;
+  const { customerId: customerIdParam } = router.query;
+  const customerId = typeof customerIdParam === "string" ? customerIdParam : null;
 
   return (
     <Box display="flex" flexDirection="column" gap={6}>
