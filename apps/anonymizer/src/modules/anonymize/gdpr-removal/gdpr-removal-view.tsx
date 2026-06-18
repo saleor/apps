@@ -1,3 +1,4 @@
+import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import { useState } from "react";
 import { CombinedError, type OperationResult, useClient } from "urql";
@@ -167,6 +168,7 @@ const scanGiftCardsByEmail = async (
  */
 export const GdprRemovalView = ({ customerId }: { customerId: string }) => {
   const client = useClient();
+  const { appBridge } = useAppBridge();
   const { supported: checkoutDeletionSupported, fetching: versionFetching } =
     useCheckoutDeletionSupport();
 
@@ -364,6 +366,14 @@ export const GdprRemovalView = ({ customerId }: { customerId: string }) => {
     }
   };
 
+  /*
+   * The customer detail page this popup was opened from no longer exists once
+   * the account is deleted, so navigate the Dashboard back to the customer list.
+   */
+  const handleFinish = () => {
+    appBridge?.dispatch(actions.Redirect({ to: "/customers" }));
+  };
+
   const giftCardBalances = scanned ? aggregateBalancesByCurrency(scanned.giftCards) : [];
 
   return (
@@ -485,7 +495,8 @@ export const GdprRemovalView = ({ customerId }: { customerId: string }) => {
               ))}
             </Box>
           )}
-          <Box>
+          <Box display="flex" gap={3}>
+            <Button onClick={handleFinish}>Finish</Button>
             <Button variant="secondary" onClick={handleScan}>
               Re-scan
             </Button>
