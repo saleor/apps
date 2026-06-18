@@ -1,0 +1,24 @@
+# Fetches a single page of checkouts for deletion.
+#
+# Saleor exposes no exact server-side filter on a checkout's own email: the
+# `customer` filter matches via the linked user (so it misses guest checkouts -
+# exactly the ones not cascade-deleted with the customer) and `search` is fuzzy
+# full-text. So the by-email flow walks every checkout and matches on the
+# checkout `email` field client-side, which covers both guest and registered
+# checkouts. The bulk flow deletes all of them and ignores the email.
+#
+# Sorted by creation date so the cursor walk stays stable across the scan.
+query CheckoutsForDeletion($after: String) {
+  checkouts(first: 100, after: $after, sortBy: { field: CREATION_DATE, direction: ASC }) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        id
+        email
+      }
+    }
+  }
+}

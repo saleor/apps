@@ -124,6 +124,40 @@ export type AddressInput = {
   readonly streetAddress2?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type CheckoutErrorCode =
+  | 'BILLING_ADDRESS_NOT_SET'
+  | 'CHANNEL_INACTIVE'
+  | 'CHECKOUT_NOT_FULLY_PAID'
+  | 'DELIVERY_METHOD_NOT_APPLICABLE'
+  | 'EMAIL_NOT_SET'
+  | 'GIFT_CARD_NOT_APPLICABLE'
+  | 'GRAPHQL_ERROR'
+  | 'INACTIVE_PAYMENT'
+  | 'INSUFFICIENT_STOCK'
+  | 'INVALID'
+  | 'INVALID_SHIPPING_METHOD'
+  | 'MISSING_ADDRESS_DATA'
+  | 'MISSING_CHANNEL_SLUG'
+  | 'NON_EDITABLE_GIFT_LINE'
+  | 'NON_REMOVABLE_GIFT_LINE'
+  | 'NOT_FOUND'
+  | 'NO_LINES'
+  | 'PAYMENT_ERROR'
+  | 'PRODUCT_NOT_PUBLISHED'
+  | 'PRODUCT_UNAVAILABLE_FOR_PURCHASE'
+  | 'QUANTITY_GREATER_THAN_LIMIT'
+  | 'REQUIRED'
+  | 'SHIPPING_ADDRESS_NOT_SET'
+  | 'SHIPPING_CHANGE_FORBIDDEN'
+  | 'SHIPPING_METHOD_NOT_APPLICABLE'
+  | 'SHIPPING_METHOD_NOT_SET'
+  | 'SHIPPING_NOT_REQUIRED'
+  | 'TAX_ERROR'
+  | 'UNAVAILABLE_VARIANT_IN_CHANNEL'
+  | 'UNIQUE'
+  | 'VOUCHER_NOT_APPLICABLE'
+  | 'ZERO_QUANTITY';
+
 /**
  * Represents country codes defined by the ISO 3166-1 alpha-2 standard.
  *
@@ -632,6 +666,16 @@ export type CountryCode =
   | 'ZM'
   /** Zimbabwe */
   | 'ZW';
+
+export type GiftCardErrorCode =
+  | 'ALREADY_EXISTS'
+  | 'DUPLICATED_INPUT_ITEM'
+  | 'EXPIRED_GIFT_CARD'
+  | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'NOT_FOUND'
+  | 'REQUIRED'
+  | 'UNIQUE';
 
 /** Language code enum. It contains all the languages supported by Saleor. */
 export type LanguageCodeEnum =
@@ -2241,6 +2285,13 @@ export type OrderUpdateInput = {
   readonly userEmail?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type CheckoutDeleteMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type CheckoutDeleteMutation = { readonly checkoutDelete?: { readonly errors: ReadonlyArray<{ readonly field?: string | null, readonly message?: string | null, readonly code: CheckoutErrorCode }> } | null };
+
 export type CustomerDeleteMutationVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
   externalReference?: InputMaybe<Scalars['String']['input']>;
@@ -2248,6 +2299,13 @@ export type CustomerDeleteMutationVariables = Exact<{
 
 
 export type CustomerDeleteMutation = { readonly customerDelete?: { readonly user?: { readonly id: string, readonly email: string, readonly firstName: string, readonly lastName: string } | null, readonly errors: ReadonlyArray<{ readonly field?: string | null, readonly message?: string | null }> } | null };
+
+export type GiftCardBulkDeleteMutationVariables = Exact<{
+  ids: ReadonlyArray<Scalars['ID']['input']> | Scalars['ID']['input'];
+}>;
+
+
+export type GiftCardBulkDeleteMutation = { readonly giftCardBulkDelete?: { readonly count: number, readonly errors: ReadonlyArray<{ readonly field?: string | null, readonly message?: string | null, readonly code: GiftCardErrorCode }> } | null };
 
 export type OrderUpdateMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2265,12 +2323,26 @@ export type UpdateMetadataMutationVariables = Exact<{
 
 export type UpdateMetadataMutation = { readonly updateMetadata?: { readonly errors: ReadonlyArray<{ readonly field?: string | null, readonly message?: string | null, readonly code: MetadataErrorCode }> } | null };
 
+export type CheckoutsForDeletionQueryVariables = Exact<{
+  after?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type CheckoutsForDeletionQuery = { readonly checkouts?: { readonly pageInfo: { readonly hasNextPage: boolean, readonly endCursor?: string | null }, readonly edges: ReadonlyArray<{ readonly node: { readonly id: string, readonly email?: string | null } }> } | null };
+
 export type CustomersForDeletionQueryVariables = Exact<{
   after?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
 export type CustomersForDeletionQuery = { readonly customers?: { readonly pageInfo: { readonly hasNextPage: boolean, readonly endCursor?: string | null }, readonly edges: ReadonlyArray<{ readonly node: { readonly id: string, readonly email: string, readonly isStaff: boolean } }> } | null };
+
+export type GiftCardsForDeletionQueryVariables = Exact<{
+  after?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GiftCardsForDeletionQuery = { readonly giftCards?: { readonly pageInfo: { readonly hasNextPage: boolean, readonly endCursor?: string | null }, readonly edges: ReadonlyArray<{ readonly node: { readonly id: string, readonly createdByEmail?: string | null, readonly usedByEmail?: string | null, readonly events: ReadonlyArray<{ readonly email?: string | null }>, readonly currentBalance: { readonly amount: number, readonly currency: string } } }> } | null };
 
 export type AnonymizationAddressFragment = { readonly firstName: string, readonly lastName: string, readonly phone?: string | null, readonly city: string, readonly postalCode: string, readonly streetAddress1: string, readonly countryArea: string, readonly country: { readonly country: string, readonly code: string } };
 
@@ -2280,6 +2352,11 @@ export type OrdersForAnonymizationQueryVariables = Exact<{
 
 
 export type OrdersForAnonymizationQuery = { readonly orders?: { readonly pageInfo: { readonly hasNextPage: boolean, readonly endCursor?: string | null }, readonly edges: ReadonlyArray<{ readonly node: { readonly id: string, readonly number: string, readonly metadata: ReadonlyArray<{ readonly key: string, readonly value: string }>, readonly shippingAddress?: { readonly firstName: string, readonly lastName: string, readonly phone?: string | null, readonly city: string, readonly postalCode: string, readonly streetAddress1: string, readonly countryArea: string, readonly country: { readonly country: string, readonly code: string } } | null, readonly billingAddress?: { readonly firstName: string, readonly lastName: string, readonly phone?: string | null, readonly city: string, readonly postalCode: string, readonly streetAddress1: string, readonly countryArea: string, readonly country: { readonly country: string, readonly code: string } } | null } }> } | null };
+
+export type ShopVersionQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ShopVersionQuery = { readonly shop: { readonly version: string } };
 
 export type UserByEmailQueryVariables = Exact<{
   email: Scalars['String']['input'];
@@ -2304,6 +2381,17 @@ export const UntypedAnonymizationAddressFragmentDoc = gql`
   }
 }
     `;
+export const UntypedCheckoutDeleteDocument = gql`
+    mutation CheckoutDelete($id: ID!) {
+  checkoutDelete(id: $id) {
+    errors {
+      field
+      message
+      code
+    }
+  }
+}
+    `;
 export const UntypedCustomerDeleteDocument = gql`
     mutation CustomerDelete($id: ID, $externalReference: String) {
   customerDelete(id: $id, externalReference: $externalReference) {
@@ -2316,6 +2404,18 @@ export const UntypedCustomerDeleteDocument = gql`
     errors {
       field
       message
+    }
+  }
+}
+    `;
+export const UntypedGiftCardBulkDeleteDocument = gql`
+    mutation GiftCardBulkDelete($ids: [ID!]!) {
+  giftCardBulkDelete(ids: $ids) {
+    count
+    errors {
+      field
+      message
+      code
     }
   }
 }
@@ -2349,6 +2449,26 @@ export const UntypedUpdateMetadataDocument = gql`
   }
 }
     `;
+export const UntypedCheckoutsForDeletionDocument = gql`
+    query CheckoutsForDeletion($after: String) {
+  checkouts(
+    first: 100
+    after: $after
+    sortBy: {field: CREATION_DATE, direction: ASC}
+  ) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        id
+        email
+      }
+    }
+  }
+}
+    `;
 export const UntypedCustomersForDeletionDocument = gql`
     query CustomersForDeletion($after: String) {
   customers(
@@ -2365,6 +2485,34 @@ export const UntypedCustomersForDeletionDocument = gql`
         id
         email
         isStaff
+      }
+    }
+  }
+}
+    `;
+export const UntypedGiftCardsForDeletionDocument = gql`
+    query GiftCardsForDeletion($after: String) {
+  giftCards(
+    first: 100
+    after: $after
+    sortBy: {field: CREATED_AT, direction: ASC}
+  ) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        id
+        createdByEmail
+        usedByEmail
+        events {
+          email
+        }
+        currentBalance {
+          amount
+          currency
+        }
       }
     }
   }
@@ -2396,6 +2544,13 @@ export const UntypedOrdersForAnonymizationDocument = gql`
   }
 }
     ${UntypedAnonymizationAddressFragmentDoc}`;
+export const UntypedShopVersionDocument = gql`
+    query ShopVersion {
+  shop {
+    version
+  }
+}
+    `;
 export const UntypedUserByEmailDocument = gql`
     query UserByEmail($email: String!, $after: String) {
   user(email: $email) {
@@ -2430,9 +2585,14 @@ export const UntypedUserByEmailDocument = gql`
 }
     ${UntypedAnonymizationAddressFragmentDoc}`;
 export const AnonymizationAddressFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AnonymizationAddress"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Address"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"postalCode"}},{"kind":"Field","name":{"kind":"Name","value":"streetAddress1"}},{"kind":"Field","name":{"kind":"Name","value":"countryArea"}},{"kind":"Field","name":{"kind":"Name","value":"country"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}}]}}]} as unknown as DocumentNode<AnonymizationAddressFragment, unknown>;
+export const CheckoutDeleteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CheckoutDelete"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"checkoutDelete"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}}]}}]}}]} as unknown as DocumentNode<CheckoutDeleteMutation, CheckoutDeleteMutationVariables>;
 export const CustomerDeleteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CustomerDelete"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"externalReference"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"customerDelete"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"externalReference"},"value":{"kind":"Variable","name":{"kind":"Name","value":"externalReference"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}}]} as unknown as DocumentNode<CustomerDeleteMutation, CustomerDeleteMutationVariables>;
+export const GiftCardBulkDeleteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"GiftCardBulkDelete"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"ids"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"giftCardBulkDelete"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"ids"},"value":{"kind":"Variable","name":{"kind":"Name","value":"ids"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}}]}}]}}]} as unknown as DocumentNode<GiftCardBulkDeleteMutation, GiftCardBulkDeleteMutationVariables>;
 export const OrderUpdateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"OrderUpdate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"OrderUpdateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"orderUpdate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"order"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}}]} as unknown as DocumentNode<OrderUpdateMutation, OrderUpdateMutationVariables>;
 export const UpdateMetadataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateMetadata"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"MetadataInput"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateMetadata"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateMetadataMutation, UpdateMetadataMutationVariables>;
+export const CheckoutsForDeletionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CheckoutsForDeletion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"checkouts"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"100"}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}},{"kind":"Argument","name":{"kind":"Name","value":"sortBy"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"field"},"value":{"kind":"EnumValue","value":"CREATION_DATE"}},{"kind":"ObjectField","name":{"kind":"Name","value":"direction"},"value":{"kind":"EnumValue","value":"ASC"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pageInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}},{"kind":"Field","name":{"kind":"Name","value":"endCursor"}}]}},{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]}}]} as unknown as DocumentNode<CheckoutsForDeletionQuery, CheckoutsForDeletionQueryVariables>;
 export const CustomersForDeletionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CustomersForDeletion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"customers"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"100"}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}},{"kind":"Argument","name":{"kind":"Name","value":"sortBy"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"field"},"value":{"kind":"EnumValue","value":"CREATED_AT"}},{"kind":"ObjectField","name":{"kind":"Name","value":"direction"},"value":{"kind":"EnumValue","value":"ASC"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pageInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}},{"kind":"Field","name":{"kind":"Name","value":"endCursor"}}]}},{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"isStaff"}}]}}]}}]}}]}}]} as unknown as DocumentNode<CustomersForDeletionQuery, CustomersForDeletionQueryVariables>;
+export const GiftCardsForDeletionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GiftCardsForDeletion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"giftCards"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"100"}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}},{"kind":"Argument","name":{"kind":"Name","value":"sortBy"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"field"},"value":{"kind":"EnumValue","value":"CREATED_AT"}},{"kind":"ObjectField","name":{"kind":"Name","value":"direction"},"value":{"kind":"EnumValue","value":"ASC"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pageInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}},{"kind":"Field","name":{"kind":"Name","value":"endCursor"}}]}},{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdByEmail"}},{"kind":"Field","name":{"kind":"Name","value":"usedByEmail"}},{"kind":"Field","name":{"kind":"Name","value":"events"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"Field","name":{"kind":"Name","value":"currentBalance"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GiftCardsForDeletionQuery, GiftCardsForDeletionQueryVariables>;
 export const OrdersForAnonymizationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"OrdersForAnonymization"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"orders"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"100"}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}},{"kind":"Argument","name":{"kind":"Name","value":"sortBy"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"field"},"value":{"kind":"EnumValue","value":"NUMBER"}},{"kind":"ObjectField","name":{"kind":"Name","value":"direction"},"value":{"kind":"EnumValue","value":"ASC"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pageInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}},{"kind":"Field","name":{"kind":"Name","value":"endCursor"}}]}},{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"number"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"shippingAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AnonymizationAddress"}}]}},{"kind":"Field","name":{"kind":"Name","value":"billingAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AnonymizationAddress"}}]}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AnonymizationAddress"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Address"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"postalCode"}},{"kind":"Field","name":{"kind":"Name","value":"streetAddress1"}},{"kind":"Field","name":{"kind":"Name","value":"countryArea"}},{"kind":"Field","name":{"kind":"Name","value":"country"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}}]}}]} as unknown as DocumentNode<OrdersForAnonymizationQuery, OrdersForAnonymizationQueryVariables>;
+export const ShopVersionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ShopVersion"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"shop"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"}}]}}]}}]} as unknown as DocumentNode<ShopVersionQuery, ShopVersionQueryVariables>;
 export const UserByEmailDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UserByEmail"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"Field","name":{"kind":"Name","value":"orders"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"100"}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}},{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"customer"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"sortBy"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"field"},"value":{"kind":"EnumValue","value":"NUMBER"}},{"kind":"ObjectField","name":{"kind":"Name","value":"direction"},"value":{"kind":"EnumValue","value":"ASC"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pageInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}},{"kind":"Field","name":{"kind":"Name","value":"endCursor"}}]}},{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"number"}},{"kind":"Field","name":{"kind":"Name","value":"shippingAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AnonymizationAddress"}}]}},{"kind":"Field","name":{"kind":"Name","value":"billingAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AnonymizationAddress"}}]}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AnonymizationAddress"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Address"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"postalCode"}},{"kind":"Field","name":{"kind":"Name","value":"streetAddress1"}},{"kind":"Field","name":{"kind":"Name","value":"countryArea"}},{"kind":"Field","name":{"kind":"Name","value":"country"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}}]}}]} as unknown as DocumentNode<UserByEmailQuery, UserByEmailQueryVariables>;
