@@ -55,6 +55,7 @@
     "@vitejs/plugin-react": "4.3.4",
     "@vitest/coverage-v8": "catalog:",
     "aws-sdk-client-mock": "4.0.1",
+    "graphql": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

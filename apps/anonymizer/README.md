@@ -26,10 +26,26 @@ The Anonymizer App helps anonymize a customer's personal data:
     since they are free text that can hold personal data.
   - City, postal code, country area and country → kept intact, so the address stays valid.
   - Email → replaced with a random `UUID`-based address under a configurable domain.
-- Deletes the customer profile once all of their orders are anonymized.
+- Deletes the customer's checkouts (guest and registered) before the account, so address and
+  email data held on abandoned carts is removed too. Requires Saleor 3.23+ (where `checkoutDelete`
+  exists); on older stores this step is skipped and noted in the UI.
+- Deletes the customer profile once all of their orders and checkouts are processed.
 
 The configurable scramble domain is controlled by the
 `NEXT_PUBLIC_CUSTOMER_SCRAMBLE_DOMAIN` environment variable.
+
+### Gift cards
+
+Gift card personal data (`createdByEmail`, `usedByEmail`, the linked users and the gift card
+events) is read-only in Saleor and cannot be scrubbed in place, so removing it means **deleting the
+card** — which also permanently destroys its remaining balance. The app exposes two explicitly
+triggered, confirmation-gated actions (the per-currency balance at risk is shown before deletion):
+
+- **Delete a customer's gift cards by email** — for erasure requests. Matches on `createdByEmail`
+  **or** `usedByEmail` (there is no server-side filter for `usedByEmail`, so the app scans all gift
+  cards and matches client-side, covering cards the customer redeemed as well as bought).
+- **Delete ALL gift cards** — for sanitizing data copied to a dev/staging environment. Deletes every
+  gift card in the store. Use at your own risk.
 
 ### Bulk anonymization
 
@@ -43,8 +59,12 @@ The app can also process the whole store at once:
   retried on the next run (the flag is written only after a successful scramble).
 - **Delete customers** deletes every non-staff customer account. Staff accounts are
   never counted or deleted.
+- **Delete checkouts** deletes every checkout in the store, removing all of its PII. Requires
+  Saleor 3.23+ (disabled with a note otherwise). Checkouts with attached payment transactions
+  cannot be deleted by Saleor and are reported as failures.
 - Everything runs in the browser with a progress bar; records that failed to process
-  are listed as links opening in a new Dashboard tab.
+  are listed as links opening in a new Dashboard tab (checkouts have no Dashboard detail page, so
+  they are listed as plain text).
 
 The number of records processed concurrently is controlled by the
 `NEXT_PUBLIC_BULK_CONCURRENCY` environment variable (default: 5).
@@ -53,6 +73,8 @@ The number of records processed concurrently is controlled by the
 
 - `MANAGE_ORDERS`
 - `MANAGE_USERS`
+- `MANAGE_CHECKOUTS` (checkout deletion)
+- `MANAGE_GIFT_CARD` (gift card deletion)
 
 ## Development
 

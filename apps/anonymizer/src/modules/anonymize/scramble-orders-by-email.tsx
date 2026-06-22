@@ -4,6 +4,9 @@ import { CombinedError, type OperationResult, useClient, useMutation } from "urq
 
 import { env } from "@/env";
 import {
+  CheckoutDeleteDocument,
+  CheckoutsForDeletionDocument,
+  type CheckoutsForDeletionQuery,
   CustomerDeleteDocument,
   OrderUpdateDocument,
   UserByEmailDocument,
@@ -11,8 +14,10 @@ import {
 } from "@/generated/graphql";
 import { createLogger } from "@/logger";
 
+import { checkoutMatchesEmail } from "./checkouts";
 import { ConfirmationModal } from "./confirmation-modal";
 import { scrambleAddress, scrambleUserDetails } from "./scramble";
+import { useCheckoutDeletionSupport } from "./use-checkout-deletion-support";
 
 const logger = createLogger("ScrambleAllOrdersByEmail");
 
@@ -27,18 +32,23 @@ export const ScrambleAllOrdersByEmail = () => {
   const [error, setError] = useState<CombinedError | null>(null);
   const [user, setUser] = useState<FetchedUser | null>(null);
   const [orders, setOrders] = useState<OrderEdge[] | null>(null);
+  // Ids of this customer's checkouts (guest + registered), deleted on confirm.
+  const [checkoutIds, setCheckoutIds] = useState<string[]>([]);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const client = useClient();
+  const { supported: checkoutDeletionSupported } = useCheckoutDeletionSupport();
 
   const [{ fetching: updating }, updateOrder] = useMutation(OrderUpdateDocument);
   const [, deleteCustomer] = useMutation(CustomerDeleteDocument);
+  const [, deleteCheckout] = useMutation(CheckoutDeleteDocument);
 
   const handleFetchOrders = async () => {
     setMessage("");
     setError(null);
     setUser(null);
     setOrders(null);
+    setCheckoutIds([]);
     setFetching(true);
 
     try {
@@ -77,8 +87,52 @@ export const ScrambleAllOrdersByEmail = () => {
         after = connection.pageInfo.hasNextPage ? connection.pageInfo.endCursor ?? null : null;
       } while (after);
 
+      const matchedCheckoutIds: string[] = [];
+
+      /*
+       * Saleor has no exact server-side filter on a checkout's own email, so we
+       * walk every checkout and match on the `email` field client-side. This
+       * also catches guest checkouts, which are not linked to the user and so
+       * are never removed by `customerDelete`. Only attempted on Saleor >= 3.23,
+       * which is where `checkoutDelete` exists.
+       */
+      if (checkoutDeletionSupported) {
+        let checkoutsAfter: string | null = null;
+
+        do {
+          const result: OperationResult<CheckoutsForDeletionQuery> = await client
+            .query(
+              CheckoutsForDeletionDocument,
+              { after: checkoutsAfter },
+              { requestPolicy: "network-only" },
+            )
+            .toPromise();
+
+          if (result.error) {
+            throw result.error;
+          }
+
+          const connection = result.data?.checkouts;
+
+          if (!connection) {
+            break;
+          }
+
+          for (const { node } of connection.edges) {
+            if (checkoutMatchesEmail(node, email)) {
+              matchedCheckoutIds.push(node.id);
+            }
+          }
+
+          checkoutsAfter = connection.pageInfo.hasNextPage
+            ? connection.pageInfo.endCursor ?? null
+            : null;
+        } while (checkoutsAfter);
+      }
+
       setUser(fetchedUser);
       setOrders(allOrders);
+      setCheckoutIds(matchedCheckoutIds);
     } catch (e) {
       /*
        * Surface GraphQL errors (e.g. missing MANAGE_ORDERS / MANAGE_USERS
@@ -106,10 +160,11 @@ export const ScrambleAllOrdersByEmail = () => {
     const userOrders = orders ?? [];
 
     /*
-     * A registered customer can be erased even with no orders, so only bail out
-     * when there is genuinely nothing to anonymize (no orders and no account).
+     * A registered customer can be erased even with no orders, and a guest can
+     * have only abandoned checkouts, so only bail out when there is genuinely
+     * nothing to anonymize (no orders, no account and no checkouts).
      */
-    if (!userOrders.length && !user) {
+    if (!userOrders.length && !user && !checkoutIds.length) {
       setMessage("Nothing to anonymize for this email.");
 
       return;
@@ -144,7 +199,32 @@ export const ScrambleAllOrdersByEmail = () => {
       }
     }
 
-    // Guest-checkout orders have no linked user, so there is nothing to delete.
+    /*
+     * Delete the customer's checkouts (guest + registered) before the account.
+     * Deleting the account would cascade-delete only the registered ones, so
+     * guest checkouts must be removed explicitly here.
+     */
+    let deletedCheckoutCount = 0;
+
+    for (const checkoutId of checkoutIds) {
+      const result = await deleteCheckout({ id: checkoutId });
+
+      if (result.error || result.data?.checkoutDelete?.errors?.length) {
+        logger.error("Failed to delete checkout", {
+          checkoutId,
+          error: result.error,
+          mutationErrors: result.data?.checkoutDelete?.errors,
+        });
+        errors.push(`Failed to delete a checkout (${checkoutId}).`);
+      } else {
+        deletedCheckoutCount += 1;
+      }
+    }
+
+    /*
+     * Only delete the account once every order and checkout was processed, so a
+     * partial failure leaves the customer in place to retry.
+     */
     if (!errors.length && user) {
       const result = await deleteCustomer({ id: user.id });
 
@@ -159,18 +239,37 @@ export const ScrambleAllOrdersByEmail = () => {
 
     setScrambling(false);
 
-    let successMessage: string;
+    const doneParts: string[] = [];
 
-    if (user && userOrders.length) {
-      successMessage = "All orders were successfully anonymized and the user was deleted.";
-    } else if (user) {
-      successMessage = "The customer account was deleted.";
-    } else {
-      successMessage = "All orders were successfully anonymized.";
+    if (userOrders.length) {
+      doneParts.push(`anonymized ${userOrders.length} order(s)`);
     }
+
+    if (deletedCheckoutCount) {
+      doneParts.push(`deleted ${deletedCheckoutCount} checkout(s)`);
+    }
+
+    if (user && !errors.length) {
+      doneParts.push("deleted the customer account");
+    }
+
+    const successMessage = doneParts.length
+      ? `Successfully ${doneParts.join(", ")}.`
+      : "Nothing to anonymize for this email.";
 
     setMessage(errors.length ? errors.join("\n") : successMessage);
   };
+
+  const foundOrders = orders?.length ?? 0;
+  const hasAnythingToAnonymize =
+    orders !== null && (foundOrders > 0 || user || checkoutIds.length > 0);
+
+  // Human-readable list of the irreversible actions, used in the confirmation.
+  const plannedActions = [
+    foundOrders ? `scramble personal data on ${foundOrders} order(s)` : null,
+    checkoutIds.length ? `permanently delete ${checkoutIds.length} checkout(s)` : null,
+    user ? "permanently delete the customer account" : null,
+  ].filter((action): action is string => action !== null);
 
   return (
     <Box display="flex" flexDirection="column" gap={4}>
@@ -201,16 +300,26 @@ export const ScrambleAllOrdersByEmail = () => {
         </Box>
       )}
 
-      {orders !== null && (orders.length > 0 || user) ? (
+      {hasAnythingToAnonymize ? (
         <Box>
-          <Text>
-            {orders.length
-              ? `Found ${orders.length} orders for email: ${email}`
-              : "This customer has no orders, but the account can still be deleted."}
+          <Text as="p">
+            {foundOrders
+              ? `Found ${foundOrders} order(s) for email: ${email}`
+              : "This customer has no orders."}
           </Text>
-          {orders.length > 0 && (
+          {checkoutDeletionSupported ? (
+            checkoutIds.length > 0 && (
+              <Text as="p">{`Found ${checkoutIds.length} checkout(s) - these will be permanently deleted.`}</Text>
+            )
+          ) : (
+            <Text as="p" size={2}>
+              Checkout deletion requires Saleor 3.23+ and is skipped on this store.
+            </Text>
+          )}
+          {user && <Text as="p">The customer account will be permanently deleted.</Text>}
+          {foundOrders > 0 && (
             <ul>
-              {orders.map(({ node }) => (
+              {(orders ?? []).map(({ node }) => (
                 <li key={node.id}>
                   <Text>{`Order #${node.number}`}</Text>
                 </li>
@@ -218,13 +327,15 @@ export const ScrambleAllOrdersByEmail = () => {
             </ul>
           )}
           <Button onClick={() => setConfirmOpen(true)} disabled={scrambling || updating}>
-            {orders.length ? "Scramble Orders and Delete Customer" : "Delete Customer"}
+            Anonymize customer data
           </Button>
         </Box>
       ) : (
         !fetching &&
         !error &&
-        orders !== null && <Text>No orders or customer account found for this email.</Text>
+        orders !== null && (
+          <Text>No orders, checkouts or customer account found for this email.</Text>
+        )
       )}
 
       {message && (
@@ -239,15 +350,9 @@ export const ScrambleAllOrdersByEmail = () => {
 
       <ConfirmationModal
         open={confirmOpen}
-        title={orders?.length ? "Anonymize this customer?" : "Delete this customer?"}
-        description={
-          orders?.length
-            ? `This will irreversibly scramble personal data on ${orders.length} order(s)${
-                user ? " and permanently delete the customer account" : ""
-              }. This cannot be undone.`
-            : "This will permanently delete the customer account. This cannot be undone."
-        }
-        confirmLabel={orders?.length ? "Scramble and delete" : "Delete customer"}
+        title="Anonymize this customer?"
+        description={`This will ${plannedActions.join(", ")}. This cannot be undone.`}
+        confirmLabel="Anonymize"
         onCancel={() => setConfirmOpen(false)}
         onConfirm={() => {
           setConfirmOpen(false);
