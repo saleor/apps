@@ -76,8 +76,8 @@ catalogs:
       specifier: 1.30.0
       version: 1.30.0
     '@saleor/app-sdk':
-      specifier: 1.10.0
-      version: 1.10.0
+      specifier: 1.11.0
+      version: 1.11.0
     '@saleor/macaw-ui':
       specifier: 1.3.1
       version: 1.3.1
@@ -234,7 +234,7 @@ importers:
         version: 8.17.5
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 1.10.0(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0))(@aws-sdk/util-dynamodb@3.996.2(@aws-sdk/client-dynamodb@3.1004.0))(graphql@16.7.1)(next@15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.11.0(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0))(@aws-sdk/util-dynamodb@3.996.2(@aws-sdk/client-dynamodb@3.1004.0))(graphql@16.7.1)(next@15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       cspell:
         specifier: 8.17.5
         version: 8.17.5
@@ -306,7 +306,7 @@ importers:
         version: link:../../packages/errors
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(lucide-react@0.577.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@sentry/cli':
         specifier: 'catalog:'
         version: 1.77.3
@@ -475,7 +475,7 @@ importers:
         version: link:../../packages/errors
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(lucide-react@0.577.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -547,7 +547,7 @@ importers:
         version: 6.2.1
       next:
         specifier: 'catalog:'
-        version: 15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.5.18(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 'catalog:'
         version: 18.2.0
@@ -734,7 +734,7 @@ importers:
         version: link:../../packages/errors
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(lucide-react@0.577.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -800,7 +800,7 @@ importers:
         version: 6.2.1
       next:
         specifier: 'catalog:'
-        version: 15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.5.18(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       p-ratelimit:
         specifier: 1.0.1
         version: 1.0.1
@@ -893,6 +893,199 @@ importers:
         specifier: 5.8.2
         version: 5.8.2
 
+  apps/dummy-payment-app:
+    dependencies:
+      '@aws-sdk/client-dynamodb':
+        specifier: 'catalog:'
+        version: 3.1004.0
+      '@aws-sdk/lib-dynamodb':
+        specifier: 'catalog:'
+        version: 3.1004.0(@aws-sdk/client-dynamodb@3.1004.0)
+      '@aws-sdk/util-dynamodb':
+        specifier: 'catalog:'
+        version: 3.996.2(@aws-sdk/client-dynamodb@3.1004.0)
+      '@opentelemetry/api':
+        specifier: 'catalog:'
+        version: 1.9.0
+      '@opentelemetry/api-logs':
+        specifier: 'catalog:'
+        version: 0.57.2
+      '@opentelemetry/instrumentation':
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/resources':
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-logs':
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-node':
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/semantic-conventions':
+        specifier: 'catalog:'
+        version: 1.30.0
+      '@saleor/app-sdk':
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
+      '@saleor/apps-logger':
+        specifier: workspace:*
+        version: link:../../packages/logger
+      '@saleor/apps-otel':
+        specifier: workspace:*
+        version: link:../../packages/otel
+      '@saleor/apps-shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      '@saleor/errors':
+        specifier: workspace:*
+        version: link:../../packages/errors
+      '@saleor/macaw-ui':
+        specifier: 'catalog:'
+        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(lucide-react@0.577.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@sentry/cli':
+        specifier: 'catalog:'
+        version: 1.77.3
+      '@sentry/nextjs':
+        specifier: 'catalog:'
+        version: 9.8.0(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(next@15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+      '@t3-oss/env-nextjs':
+        specifier: 'catalog:'
+        version: 0.11.1(typescript@5.8.2)(zod@3.21.4)
+      '@trpc/client':
+        specifier: 'catalog:'
+        version: 10.45.3(@trpc/server@10.45.3)
+      '@trpc/next':
+        specifier: 'catalog:'
+        version: 10.45.3(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.45.3(@trpc/server@10.45.3))(@trpc/react-query@10.45.3(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.45.3(@trpc/server@10.45.3))(@trpc/server@10.45.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.45.3)(next@15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@trpc/react-query':
+        specifier: 'catalog:'
+        version: 10.45.3(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.45.3(@trpc/server@10.45.3))(@trpc/server@10.45.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@trpc/server':
+        specifier: 'catalog:'
+        version: 10.45.3
+      '@vercel/oidc-aws-credentials-provider':
+        specifier: 'catalog:'
+        version: 3.0.7
+      '@vercel/otel':
+        specifier: 'catalog:'
+        version: 1.10.1(@opentelemetry/api-logs@0.57.2)(@opentelemetry/api@1.9.0)(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
+      dynamodb-toolbox:
+        specifier: 'catalog:'
+        version: 2.8.0(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0))
+      graphql:
+        specifier: 'catalog:'
+        version: 16.7.1
+      graphql-tag:
+        specifier: 'catalog:'
+        version: 2.12.6(graphql@16.7.1)
+      lucide-react:
+        specifier: 0.577.0
+        version: 0.577.0(react@18.2.0)
+      modern-errors:
+        specifier: 'catalog:'
+        version: 7.0.1
+      modern-errors-serialize:
+        specifier: 'catalog:'
+        version: 6.1.0(modern-errors@7.0.1)
+      next:
+        specifier: 'catalog:'
+        version: 15.5.18(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react:
+        specifier: 'catalog:'
+        version: 18.2.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 18.2.0(react@18.2.0)
+      urql:
+        specifier: 'catalog:'
+        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
+      usehooks-ts:
+        specifier: 'catalog:'
+        version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      uuid:
+        specifier: 11.0.4
+        version: 11.0.4
+      zod:
+        specifier: 'catalog:'
+        version: 3.21.4
+    devDependencies:
+      '@graphql-codegen/cli':
+        specifier: 'catalog:'
+        version: 5.0.2(@types/node@24.1.0)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.8.2)
+      '@graphql-codegen/introspection':
+        specifier: 'catalog:'
+        version: 4.0.3(graphql@16.7.1)
+      '@graphql-codegen/typed-document-node':
+        specifier: 'catalog:'
+        version: 5.0.5(graphql@16.7.1)
+      '@graphql-codegen/typescript':
+        specifier: 'catalog:'
+        version: 4.0.5(graphql@16.7.1)
+      '@graphql-codegen/typescript-operations':
+        specifier: 'catalog:'
+        version: 4.1.3(graphql@16.7.1)
+      '@graphql-codegen/typescript-urql':
+        specifier: 'catalog:'
+        version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
+      '@graphql-typed-document-node/core':
+        specifier: 'catalog:'
+        version: 3.2.0(graphql@16.7.1)
+      '@saleor/eslint-config-apps':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@saleor/typescript-config-apps':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@total-typescript/ts-reset':
+        specifier: 0.6.1
+        version: 0.6.1
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.1.0
+      '@types/react':
+        specifier: 18.2.5
+        version: 18.2.5
+      '@types/react-dom':
+        specifier: 18.2.5
+        version: 18.2.5
+      '@vitejs/plugin-react':
+        specifier: 'catalog:'
+        version: 4.7.0(vite@6.2.4(@types/node@24.1.0)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0))
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 3.1.1(vitest@3.1.1(@types/node@24.1.0)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@24.1.0)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0))
+      eslint:
+        specifier: 'catalog:'
+        version: 9.23.0(jiti@2.4.2)
+      eslint-plugin-n:
+        specifier: 'catalog:'
+        version: 17.16.2(eslint@9.23.0(jiti@2.4.2))
+      graphql-config:
+        specifier: 5.0.3
+        version: 5.0.3(@types/node@24.1.0)(graphql@16.7.1)(typescript@5.8.2)
+      jsdom:
+        specifier: 'catalog:'
+        version: 20.0.3
+      json-schema-to-typescript:
+        specifier: 'catalog:'
+        version: 15.0.4
+      tsx:
+        specifier: 'catalog:'
+        version: 4.19.3
+      typescript:
+        specifier: 'catalog:'
+        version: 5.8.2
+      vite:
+        specifier: 'catalog:'
+        version: 6.2.4(@types/node@24.1.0)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
+      vite-tsconfig-paths:
+        specifier: 'catalog:'
+        version: 5.1.4(typescript@5.8.2)(vite@6.2.4(@types/node@24.1.0)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0))
+      vitest:
+        specifier: 'catalog:'
+        version: 3.1.1(@types/node@24.1.0)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@24.1.0)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
+
   apps/klaviyo:
     dependencies:
       '@aws-sdk/client-dynamodb':
@@ -945,7 +1138,7 @@ importers:
         version: link:../../packages/errors
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(lucide-react@0.577.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/sentry-utils':
         specifier: workspace:*
         version: link:../../packages/sentry-utils
@@ -981,7 +1174,7 @@ importers:
         version: 2.12.6(graphql@16.7.1)
       next:
         specifier: 'catalog:'
-        version: 15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.5.18(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       node-fetch:
         specifier: 3.2.6
         version: 3.2.6
@@ -1141,7 +1334,7 @@ importers:
         version: link:../../packages/errors
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(lucide-react@0.577.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1192,7 +1385,7 @@ importers:
         version: 6.2.1
       next:
         specifier: 'catalog:'
-        version: 15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.5.18(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 'catalog:'
         version: 18.2.0
@@ -1319,7 +1512,7 @@ importers:
         version: link:../../packages/shared
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(lucide-react@0.577.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@sentry/nextjs':
         specifier: 'catalog:'
         version: 9.8.0(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(next@15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
@@ -1328,7 +1521,7 @@ importers:
         version: 0.11.1(typescript@5.8.2)(zod@3.21.4)
       next:
         specifier: 'catalog:'
-        version: 15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.5.18(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 'catalog:'
         version: 18.2.0
@@ -1494,7 +1687,7 @@ importers:
         version: link:../../packages/handlebars
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(lucide-react@0.577.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1563,7 +1756,7 @@ importers:
         version: 6.2.1
       next:
         specifier: 'catalog:'
-        version: 15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.5.18(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 'catalog:'
         version: 18.2.0
@@ -1723,7 +1916,7 @@ importers:
         version: link:../../packages/errors
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(lucide-react@0.577.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1786,7 +1979,7 @@ importers:
         version: 2.12.6(graphql@16.7.1)
       next:
         specifier: 'catalog:'
-        version: 15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.5.18(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 'catalog:'
         version: 18.2.0
@@ -1940,7 +2133,7 @@ importers:
         version: link:../../packages/errors
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(lucide-react@0.577.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -2009,7 +2202,7 @@ importers:
         version: 6.2.1
       next:
         specifier: 'catalog:'
-        version: 15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.5.18(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 'catalog:'
         version: 18.2.0
@@ -2172,7 +2365,7 @@ importers:
         version: link:../../packages/handlebars
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(lucide-react@0.577.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -2253,7 +2446,7 @@ importers:
         version: 6.2.1
       next:
         specifier: 'catalog:'
-        version: 15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.5.18(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       nodemailer:
         specifier: 6.9.1
         version: 6.9.1
@@ -2422,7 +2615,7 @@ importers:
         version: link:../../packages/errors
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(lucide-react@0.577.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -2476,7 +2669,7 @@ importers:
         version: 6.2.1
       next:
         specifier: 'catalog:'
-        version: 15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.5.18(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 'catalog:'
         version: 18.2.0
@@ -2606,7 +2799,7 @@ importers:
     dependencies:
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 1.10.0(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0))(@aws-sdk/util-dynamodb@3.996.2(@aws-sdk/client-dynamodb@3.1004.0))(graphql@16.7.1)(next@15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.11.0(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0))(@aws-sdk/util-dynamodb@3.996.2(@aws-sdk/client-dynamodb@3.1004.0))(graphql@16.7.1)(next@15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/errors':
         specifier: workspace:*
         version: link:../errors
@@ -2756,7 +2949,7 @@ importers:
         version: 9.23.0(jiti@2.4.2)
       next:
         specifier: 'catalog:'
-        version: 15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.5.18(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       typescript:
         specifier: 5.8.2
         version: 5.8.2
@@ -2935,7 +3128,7 @@ importers:
         version: 9.23.0(jiti@2.4.2)
       next:
         specifier: 'catalog:'
-        version: 15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.5.18(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       typescript:
         specifier: 'catalog:'
         version: 5.8.2
@@ -3002,7 +3195,7 @@ importers:
         version: 9.23.0(jiti@2.4.2)
       next:
         specifier: 'catalog:'
-        version: 15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.5.18(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       typescript:
         specifier: 'catalog:'
         version: 5.8.2
@@ -3020,7 +3213,7 @@ importers:
         version: link:../eslint-config
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(lucide-react@0.577.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../typescript-config
@@ -3099,7 +3292,7 @@ importers:
         version: link:../eslint-config
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(lucide-react@0.577.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../typescript-config
@@ -3193,7 +3386,7 @@ importers:
         version: 24.1.0
       next:
         specifier: 'catalog:'
-        version: 15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.5.18(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       typescript:
         specifier: 5.8.2
         version: 5.8.2
@@ -3210,7 +3403,7 @@ importers:
         version: link:../eslint-config
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(lucide-react@0.577.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../typescript-config
@@ -3225,7 +3418,7 @@ importers:
         version: 9.23.0(jiti@2.4.2)
       next:
         specifier: 'catalog:'
-        version: 15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.5.18(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 'catalog:'
         version: 18.2.0
@@ -3255,7 +3448,7 @@ importers:
         version: 6.1.0(modern-errors@7.0.1)
       next:
         specifier: 'catalog:'
-        version: 15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 15.5.18(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       semver:
         specifier: 'catalog:'
         version: 7.7.4
@@ -6326,8 +6519,8 @@ packages:
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
 
-  '@saleor/app-sdk@1.10.0':
-    resolution: {integrity: sha512-BUbh8PaTAdOAmqHSprpF9alzfXJ12a9Yy/2LyR13kBF3wg+qDy8VT/biD0o/EvN06B2soQ2iVeC79hbdMOPyrw==}
+  '@saleor/app-sdk@1.11.0':
+    resolution: {integrity: sha512-JaGciedF69sahwsO1MtDuBRRktcgiLYFBshEg9KNAu39gctuzNP5dbndngmjqYLd91cLt9hmssGozYrIvblcLQ==}
     peerDependencies:
       '@aws-sdk/client-dynamodb': ^3.848.0
       '@aws-sdk/lib-dynamodb': ^3.850.0
@@ -9980,6 +10173,11 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
+  lucide-react@0.577.0:
+    resolution: {integrity: sha512-4LjoFv2eEPwYDPg/CUdBJQSDfPyzXCRrVW1X7jrx/trgxnxkHFjnVZINbzvzxjN70dxychOfg+FTYwBiS3pQ5A==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
     hasBin: true
@@ -11742,6 +11940,7 @@ packages:
   tsconfck@3.1.5:
     resolution: {integrity: sha512-CLDfGgUp7XPswWnezWwsCRxNmgQjhYq3VXHM0/XIRxhVrKw0M1if9agzryh1QS3nxjCROvV+xWxoJO1YctzzWg==}
     engines: {node: ^18 || >=20}
+    deprecated: unmaintained
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -16689,7 +16888,7 @@ snapshots:
 
   '@rtsao/scc@1.1.0': {}
 
-  '@saleor/app-sdk@1.10.0(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0))(@aws-sdk/util-dynamodb@3.996.2(@aws-sdk/client-dynamodb@3.1004.0))(graphql@16.7.1)(next@15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@saleor/app-sdk@1.11.0(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0))(@aws-sdk/util-dynamodb@3.996.2(@aws-sdk/client-dynamodb@3.1004.0))(graphql@16.7.1)(next@15.5.18(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/semantic-conventions': 1.30.0
@@ -16717,7 +16916,7 @@ snapshots:
       - eslint
       - supports-color
 
-  '@saleor/macaw-ui@1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@saleor/macaw-ui@1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(lucide-react@0.577.0(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@dessert-box/react': 0.4.0(react@18.2.0)
       '@floating-ui/react-dom': 2.0.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -16737,6 +16936,8 @@ snapshots:
       downshift: 9.0.8(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    optionalDependencies:
+      lucide-react: 0.577.0(react@18.2.0)
     transitivePeerDependencies:
       - '@vanilla-extract/css'
 
@@ -21199,6 +21400,10 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
+  lucide-react@0.577.0(react@18.2.0):
+    dependencies:
+      react: 18.2.0
+
   lz-string@1.5.0: {}
 
   magic-string@0.30.17:
@@ -21805,7 +22010,7 @@ snapshots:
       postcss: 8.4.31
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      styled-jsx: 5.1.6(react@18.2.0)
+      styled-jsx: 5.1.6(@babel/core@7.26.10)(react@18.2.0)
     optionalDependencies:
       '@next/swc-darwin-arm64': 15.5.18
       '@next/swc-darwin-x64': 15.5.18
@@ -23148,11 +23353,6 @@ snapshots:
       react: 18.2.0
     optionalDependencies:
       '@babel/core': 7.28.6
-
-  styled-jsx@5.1.6(react@18.2.0):
-    dependencies:
-      client-only: 0.0.1
-      react: 18.2.0
 
   success-symbol@0.1.0: {}
 

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://turbo.build/schema.v2.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "env": [
+        "ALLOWED_DOMAIN_PATTERN",
+        "APL",
+        "APP_API_BASE_URL",
+        "APP_IFRAME_BASE_URL",
+        "AWS_ACCESS_KEY_ID",
+        "AWS_REGION",
+        "AWS_ROLE_ARN",
+        "AWS_SECRET_ACCESS_KEY",
+        "DYNAMODB_MAIN_TABLE_NAME",
+        "DYNAMODB_MAIN_TABLE_TIMEOUT_MS",
+        "DYNAMODB_MAIN_TABLE_CONNECTION_TIMEOUT_MS",
+        "FILE_APL_PATH",
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "OTEL_ACCESS_TOKEN",
+        "OTEL_SERVICE_NAME",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_ORG",
+        "SENTRY_PROJECT",
+        "UPSTASH_TOKEN",
+        "UPSTASH_URL"
+      ]
+    }
+  }
+}
