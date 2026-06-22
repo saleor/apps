@@ -21,7 +21,7 @@ function NextApp({ Component, pageProps }: AppProps) {
     <NoSSRWrapper>
       <ThemeProvider>
         <IframeProtectedWrapper
-          allowedPathNames={["/"]}
+          allowedPathNames={["/", "/gdpr-removal"]}
           fallback={<IframeProtectedFallback appName="Saleor Anonymizer App" />}
         >
           <AppBridgeProvider appBridgeInstance={appBridgeInstance}>

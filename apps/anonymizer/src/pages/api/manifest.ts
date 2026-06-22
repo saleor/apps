@@ -25,6 +25,25 @@ const handler = wrapWithLoggerContext(
             },
           },
           dataPrivacyUrl: "https://saleor.io/legal/privacy/",
+          extensions: [
+            /*
+             * Adds a "GDPR removal" action to a customer's detail page. The
+             * Dashboard opens this URL in a modal iframe and appends the
+             * customer id as the `id` query param.
+             */
+            {
+              label: "GDPR removal",
+              mount: "CUSTOMER_DETAILS_MORE_ACTIONS",
+              target: "POPUP",
+              permissions: [
+                "MANAGE_ORDERS",
+                "MANAGE_USERS",
+                "MANAGE_CHECKOUTS",
+                "MANAGE_GIFT_CARD",
+              ],
+              url: `${iframeBaseUrl}/gdpr-removal`,
+            },
+          ],
           homepageUrl: "https://github.com/saleor/apps",
           id: env.MANIFEST_APP_ID,
           name: "Anonymizer",
