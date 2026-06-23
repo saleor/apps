@@ -1,5 +1,19 @@
 # saleor-app-anonymizer
 
+## 1.2.0
+
+### Minor Changes
+
+- 4e5ec45: Added a "GDPR removal" action to the customer detail page in the Dashboard. Before, erasing a customer required opening the app and typing their email by hand. Now you can open the action directly from a customer, scan their orders, checkouts and gift cards, review the exact list, and — after a red confirmation — anonymize the orders and delete the checkouts, gift cards and account in one step. The flow then re-checks the store and shows a per-type pass/fail summary so you can confirm nothing was left behind. Staff accounts are blocked from removal.
+
+### Patch Changes
+
+- @saleor/errors@1.0.2
+- @saleor/apps-logger@1.6.4
+- @saleor/apps-otel@2.4.1
+- @saleor/apps-shared@1.14.5
+- @saleor/apps-ui@1.3.3
+
 ## 1.1.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @saleor/eslint-config-apps
 
+## 0.6.0
+
+### Minor Changes
+
+- adf64c1: Added eslint-plugin-depend with the `depend/ban-dependencies` rule. ESLint will now report a warning when code imports redundant packages (e.g. lodash, moment, axios) that have native or better-maintained alternatives.
+
 ## 0.5.1
 
 ### Patch Changes
