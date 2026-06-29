@@ -453,7 +453,7 @@ ${mjHead}
     <mj-section padding="24px 0 0">
       <mj-column background-color="${colors.accent}" border-radius="8px" padding="24px">
         <mj-text font-size="12px" font-weight="600" color="${colors.muted}" letter-spacing="1px" padding="0 0 8px">YOUR GIFT CARD CODE</mj-text>
-        <mj-text font-size="28px" font-weight="700" color="${colors.primary}" letter-spacing="2px" padding="0 0 16px">{{giftCard.displayCode}}</mj-text>
+        <mj-text font-size="28px" font-weight="700" color="${colors.primary}" letter-spacing="2px" padding="0 0 16px">{{giftCard.code}}</mj-text>
         {{#if giftCard.currentBalance}}
         <mj-text font-size="18px" font-weight="600" color="${colors.primary}" padding="0 0 4px">
           {{giftCard.currentBalance.amount}} {{giftCard.currentBalance.currency}}
