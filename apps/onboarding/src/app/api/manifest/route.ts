@@ -11,7 +11,7 @@ const handler = createManifestHandler({
 
     const manifest: AppManifest = {
       about:
-        "Saleor Onboarding App — guides new users through the first steps of using Saleor Dashboard.",
+        "Saleor Onboarding App — guides new users through the first steps of using Saleor Dashboard. App mounts itself on the Dashboard home page and do not provide dedicated UI in the extension view.",
       author: "Saleor Commerce",
       brand: {
         logo: {
