@@ -1,5 +1,11 @@
 # saleor-app-onboarding
 
+## 0.0.3
+
+### Patch Changes
+
+- 1baff6d: Updated the app description shown in the Saleor Dashboard to clarify that the Onboarding app mounts itself on the Dashboard home page and does not provide a dedicated UI in the extensions view.
+
 ## 0.0.2
 
 ### Patch Changes
