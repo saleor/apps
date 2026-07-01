@@ -113,6 +113,15 @@ describe("Manifest handler", async () => {
                 ],
                 "targetUrl": "https://localhost:3000/api/webhooks/saleor/transaction-refund-requested",
               },
+              {
+                "asyncEvents": [
+                  "APP_DELETED",
+                ],
+                "isActive": true,
+                "name": "APP_DELETED",
+                "query": "subscription AppDeleted { event { ... on AppDeleted { app { id } } }}",
+                "targetUrl": "https://localhost:3000/api/webhooks/app-deleted",
+              },
             ],
           }
         `,
