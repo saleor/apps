@@ -799,6 +799,32 @@ export type AllocationStrategyEnum =
   | 'PRIORITIZE_HIGH_STOCK'
   | 'PRIORITIZE_SORTING_ORDER';
 
+/** Lists current announcements that the user should see. */
+export type Announcement = {
+  /** The date & time at which this announcement was created. */
+  readonly createdAt: Scalars['DateTime']['output'];
+  /** Additional information about this announcement. */
+  readonly extra: Scalars['Metadata']['output'];
+  /** Determine the how critical the announcement is. UNSET if no severity level was defined for this announcement. */
+  readonly importance: AnnouncementImportanceEnum;
+  /** The announcement's description, may contain HTML formatting. */
+  readonly messageHtml: Scalars['String']['output'];
+  /** The announcement's title. */
+  readonly title: Scalars['String']['output'];
+  /** The announcement's type, for example "CUSTOM". Used to programatically distinguish between message types thus allowing to render the message differently, and allows to know the expected shape for the `extra` field. */
+  readonly type: Scalars['String']['output'];
+  /** The date & time at which this announcement was last updated. */
+  readonly updatedAt: Scalars['DateTime']['output'];
+};
+
+/** Defines a shop-level announcement's level/severity. */
+export type AnnouncementImportanceEnum =
+  | 'CRITICAL'
+  | 'HIGH'
+  | 'LOW'
+  | 'MODERATE'
+  | 'UNSET';
+
 /** Represents app data. */
 export type App = Node & ObjectWithMetadata & {
   /** Description of this app. */
@@ -26968,6 +26994,12 @@ export type Shop = ObjectWithMetadata & {
    * Requires one of the following permissions: MANAGE_SETTINGS.
    */
   readonly allowLoginWithoutConfirmation?: Maybe<Scalars['Boolean']['output']>;
+  /**
+   * List of announcements for this shop.
+   *
+   * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
+   */
+  readonly announcements: ReadonlyArray<Announcement>;
   /** List of available external authentications. */
   readonly availableExternalAuthentications: ReadonlyArray<ExternalAuthentication>;
   /** List of available payment gateways. */
