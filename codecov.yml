@@ -6,10 +6,14 @@ coverage:
     project:
       default:
         target: auto
+      app-anonymizer:
+        flags: [anonymizer]
       app-avatax:
         flags: [avatax]
       app-cms:
         flags: [cms]
+      app-onboarding:
+        flags: [onboarding]
       app-products-feed:
         flags: [products-feed]
       app-search:
@@ -22,20 +26,24 @@ coverage:
         flags: [stripe]
       app-payment-np-atobarai:
         flags: [np-atobarai]
+      packages-app-problems:
+        flags: [app-problems]
+      packages-domain:
+        flags: [domain]
+      packages-dynamo-config-repository:
+        flags: [dynamo-config-repository]
+      packages-errors:
+        flags: [errors]
+      packages-handlebars:
+        flags: [handlebars]
       packages-logger:
         flags: [logger]
+      packages-otel:
+        flags: [otel]
       packages-shared:
         flags: [shared]
       packages-webhook-utils:
         flags: [webhook-utils]
-      packages-domain:
-        flags: [domain]
-      packages-errors:
-        flags: [errors]
-      packages-apl-dynamo:
-        flags: [apl-dynamo]
-      packages-dynamo-config-repository:
-        flags: [dynamo-config-repository]
 ignore:
   - "**/scripts/**"
   - "**/e2e/**"
@@ -45,12 +53,18 @@ ignore:
   - "**/*.config.ts"
 
 flags:
+  anonymizer:
+    paths:
+      - apps/anonymizer/
   avatax:
     paths:
       - apps/avatax/
   cms:
     paths:
       - apps/cms/
+  onboarding:
+    paths:
+      - apps/onboarding/
   products-feed:
     paths:
       - apps/products-feed/
@@ -69,24 +83,30 @@ flags:
   np-atobarai:
     paths:
       - apps/np-atobarai/
+  app-problems:
+    paths:
+      - packages/app-problems/
+  domain:
+    paths:
+      - packages/domain/
+  dynamo-config-repository:
+    paths:
+      - packages/dynamo-config-repository/
+  errors:
+    paths:
+      - packages/errors/
+  handlebars:
+    paths:
+      - packages/handlebars/
   logger:
     paths:
       - packages/logger/
+  otel:
+    paths:
+      - packages/otel/
   shared:
     paths:
       - packages/shared/
   webhook-utils:
     paths:
       - packages/webhook-utils/
-  domain:
-    paths:
-      - packages/domain/
-  errors:
-    paths:
-      - packages/errors/
-  apl-dynamo:
-    paths:
-      - packages/apl-dynamo/
-  dynamo-config-repository:
-    paths:
-      - packages/dynamo-config-repository/

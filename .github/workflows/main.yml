@@ -78,10 +78,14 @@ jobs:
     strategy:
       matrix:
         include:
+          - name: anonymizer
+            path: apps/anonymizer
           - name: avatax
             path: apps/avatax
           - name: cms
             path: apps/cms
+          - name: onboarding
+            path: apps/onboarding
           - name: products-feed
             path: apps/products-feed
           - name: search
@@ -94,20 +98,24 @@ jobs:
             path: apps/stripe
           - name: np-atobarai
             path: apps/np-atobarai
+          - name: app-problems
+            path: packages/app-problems
+          - name: domain
+            path: packages/domain
+          - name: dynamo-config-repository
+            path: packages/dynamo-config-repository
+          - name: errors
+            path: packages/errors
+          - name: handlebars
+            path: packages/handlebars
           - name: logger
             path: packages/logger
+          - name: otel
+            path: packages/otel
           - name: shared
             path: packages/shared
           - name: webhook-utils
             path: packages/webhook-utils
-          - name: domain
-            path: packages/domain
-          - name: errors
-            path: packages/errors
-          - name: apl-dynamo
-            path: packages/apl-dynamo
-          - name: dynamo-config-repository
-            path: packages/dynamo-config-repository
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - name: Download coverage artifacts
