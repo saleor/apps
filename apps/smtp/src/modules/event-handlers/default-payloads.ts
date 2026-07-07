@@ -15,6 +15,7 @@ import {
   type NotifyPayloadAccountConfirmation,
   type NotifyPayloadAccountDelete,
   type NotifyPayloadAccountPasswordReset,
+  type NotifyPayloadAccountSetCustomerPassword,
   type NotifyPayloadFulfillmentUpdate,
 } from "../../lib/notify-event-types";
 import { type MessageEventTypes } from "./message-event-types";
@@ -596,6 +597,28 @@ const accountPasswordResetPayload: NotifyPayloadAccountPasswordReset = {
   logo_url: "",
 };
 
+const accountSetCustomerPasswordPayload: NotifyPayloadAccountSetCustomerPassword = {
+  user: {
+    id: "VXNlcjoxOTY=",
+    email: "sarah.johnson@example.com",
+    first_name: "Sarah",
+    last_name: "Johnson",
+    is_staff: false,
+    is_active: false,
+    private_metadata: {},
+    metadata: {},
+    language_code: "en",
+  },
+  recipient_email: "sarah.johnson@example.com",
+  token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  password_set_url:
+    "https://example.com/account/set-password?email=sarah.johnson%40example.com&token=bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  channel_slug: "default-channel",
+  domain: "acme-store.example.com",
+  site_name: "Acme Store",
+  logo_url: "",
+};
+
 const accountChangeEmailRequestPayload: NotifyPayloadAccountChangeEmailRequest = {
   user: {
     id: "VXNlcjoxOTY=",
@@ -1059,6 +1082,7 @@ export const examplePayloads: Record<MessageEventTypes, any> = {
   ACCOUNT_CONFIRMATION: accountConfirmationPayload,
   ACCOUNT_DELETE: accountDeletePayload,
   ACCOUNT_PASSWORD_RESET: accountPasswordResetPayload,
+  ACCOUNT_SET_CUSTOMER_PASSWORD: accountSetCustomerPasswordPayload,
   GIFT_CARD_SENT: giftCardSentPayload,
   INVOICE_SENT: invoiceSentPayload,
   ORDER_CANCELLED: orderCancelledPayload,

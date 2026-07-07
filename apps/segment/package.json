@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-segment",
-  "version": "2.3.4",
+  "version": "2.3.9",
   "private": true,
   "type": "module",
   "scripts": {
@@ -38,6 +38,7 @@
     "@saleor/apps-otel": "workspace:*",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
+    "@saleor/errors": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "@saleor/react-hook-form-macaw": "workspace:*",
     "@saleor/sentry-utils": "workspace:*",
@@ -82,6 +83,7 @@
     "@saleor/typescript-config-apps": "workspace:*",
     "@testing-library/dom": "10.4.0",
     "@total-typescript/ts-reset": "0.6.1",
+    "@types/node": "catalog:",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "@vitest/coverage-v8": "catalog:",

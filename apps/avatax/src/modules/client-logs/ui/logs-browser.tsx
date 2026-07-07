@@ -129,11 +129,16 @@ const LogsByDate = () => {
     };
   });
 
-  const { data, error, isLoading } = trpcClient.clientLogs.getByDate.useQuery({
-    startDate: formatDateForQuery(rangeDates.start),
-    endDate: formatDateForQuery(rangeDates.end),
-    lastEvaluatedKey: currentEvaluatedKey,
-  });
+  const isRangeValid = rangeDates.start <= rangeDates.end;
+
+  const { data, error, isLoading } = trpcClient.clientLogs.getByDate.useQuery(
+    {
+      startDate: formatDateForQuery(rangeDates.start),
+      endDate: formatDateForQuery(rangeDates.end),
+      lastEvaluatedKey: currentEvaluatedKey,
+    },
+    { enabled: isRangeValid },
+  );
 
   const isEmpty = !isLoading && data?.clientLogs && data.clientLogs.length === 0;
   const isLoaded = !isLoading && data?.clientLogs && data.clientLogs.length > 0;
@@ -168,6 +173,9 @@ const LogsByDate = () => {
           <Text marginX={2}>To</Text>
         </RangeInput>
       </Box>
+      {!isRangeValid && (
+        <Text color="critical1">&quot;From&quot; date must be before &quot;To&quot; date</Text>
+      )}
       {error && <Text color="critical1">{error.message}</Text>}
       {isEmpty && <Text>No logs are available for specified date range</Text>}
       {isLoaded && <LogsList logs={logs} />}

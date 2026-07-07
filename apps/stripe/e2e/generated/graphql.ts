@@ -822,6 +822,33 @@ export type AllocationStrategyEnum =
   | 'PRIORITIZE_HIGH_STOCK'
   | 'PRIORITIZE_SORTING_ORDER';
 
+/** Lists current announcements that the user should see. */
+export type Announcement = {
+  __typename?: 'Announcement';
+  /** The date & time at which this announcement was created. */
+  createdAt: Scalars['DateTime']['output'];
+  /** Additional information about this announcement. */
+  extra: Scalars['Metadata']['output'];
+  /** Determine the how critical the announcement is. UNSET if no severity level was defined for this announcement. */
+  importance: AnnouncementImportanceEnum;
+  /** The announcement's description, may contain HTML formatting. */
+  messageHtml: Scalars['String']['output'];
+  /** The announcement's title. */
+  title: Scalars['String']['output'];
+  /** The announcement's type, for example "CUSTOM". Used to programatically distinguish between message types thus allowing to render the message differently, and allows to know the expected shape for the `extra` field. */
+  type: Scalars['String']['output'];
+  /** The date & time at which this announcement was last updated. */
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+/** Defines a shop-level announcement's level/severity. */
+export type AnnouncementImportanceEnum =
+  | 'CRITICAL'
+  | 'HIGH'
+  | 'LOW'
+  | 'MODERATE'
+  | 'UNSET';
+
 /** Represents app data. */
 export type App = Node & ObjectWithMetadata & {
   __typename?: 'App';
@@ -2127,6 +2154,22 @@ export type AssignedSwatchAttributeValue = {
   name?: Maybe<Scalars['String']['output']>;
   /** Slug of the selected swatch value. */
   slug?: Maybe<Scalars['String']['output']>;
+  /**
+   * Translation of the name.
+   *
+   * Added in Saleor 3.22.
+   */
+  translation?: Maybe<Scalars['String']['output']>;
+};
+
+
+/**
+ * Represents a single swatch value.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSwatchAttributeValueTranslationArgs = {
+  languageCode: LanguageCodeEnum;
 };
 
 /**
@@ -4901,6 +4944,28 @@ export type CheckoutCustomerNoteUpdate = {
 };
 
 /**
+ * Deletes a checkout.
+ *
+ * Added in Saleor 3.23.
+ *
+ * Requires one of the following permissions: MANAGE_CHECKOUTS.
+ */
+export type CheckoutDelete = {
+  __typename?: 'CheckoutDelete';
+  errors: Array<CheckoutDeleteError>;
+};
+
+export type CheckoutDeleteError = {
+  __typename?: 'CheckoutDeleteError';
+  /** The error code. */
+  code: CheckoutErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+/**
  * Updates the delivery method (shipping method or pick up point) of the checkout. Updates the checkout shipping_address for click and collect delivery for a warehouse address.
  *
  * Triggers the following webhook events:
@@ -6899,6 +6964,25 @@ export type CustomerDelete = {
   user?: Maybe<User>;
 };
 
+/**
+ * Event sent when customer user is deleted.
+ *
+ * Added in Saleor 3.23.
+ */
+export type CustomerDeleted = Event & {
+  __typename?: 'CustomerDeleted';
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** The user the event relates to. */
+  user?: Maybe<User>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
 /** History log of the customer. */
 export type CustomerEvent = Node & {
   __typename?: 'CustomerEvent';
@@ -8136,6 +8220,18 @@ export type Fulfillment = Node & ObjectWithMetadata & {
   privateMetafield?: Maybe<Scalars['String']['output']>;
   /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   privateMetafields?: Maybe<Scalars['Metadata']['output']>;
+  /**
+   * Reason for returning this fulfillment.
+   *
+   * Added in Saleor 3.23.
+   */
+  reason?: Maybe<Scalars['String']['output']>;
+  /**
+   * Reason Model (Page) reference for this fulfillment.
+   *
+   * Added in Saleor 3.23.
+   */
+  reasonReference?: Maybe<Page>;
   /** Amount of refunded shipping price. */
   shippingRefundedAmount?: Maybe<Money>;
   /** Status of fulfillment. */
@@ -8288,6 +8384,18 @@ export type FulfillmentLine = Node & {
   orderLine?: Maybe<OrderLine>;
   /** The number of items included in the fulfillment line. */
   quantity: Scalars['Int']['output'];
+  /**
+   * Reason for returning this fulfillment line.
+   *
+   * Added in Saleor 3.23.
+   */
+  reason?: Maybe<Scalars['String']['output']>;
+  /**
+   * Reason Model (Page) reference for this fulfillment line.
+   *
+   * Added in Saleor 3.23.
+   */
+  reasonReference?: Maybe<Page>;
 };
 
 /** Event sent when fulfillment metadata is updated. */
@@ -12528,6 +12636,14 @@ export type Mutation = {
    */
   checkoutCustomerNoteUpdate?: Maybe<CheckoutCustomerNoteUpdate>;
   /**
+   * Deletes a checkout.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: MANAGE_CHECKOUTS.
+   */
+  checkoutDelete?: Maybe<CheckoutDelete>;
+  /**
    * Updates the delivery method (shipping method or pick up point) of the checkout. Updates the checkout shipping_address for click and collect delivery for a warehouse address.
    *
    * Triggers the following webhook events:
@@ -12741,6 +12857,16 @@ export type Mutation = {
    * Deletes selected warehouse.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   *
+   * Triggers the following webhook events:
+   * - WAREHOUSE_DELETED (async): A warehouse is deleted.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK (async): A product variant stock is removed together with the deleted warehouse.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL (async): A product variant is out of stock in a channel (non click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is out of stock in a channel (click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
    */
   deleteWarehouse?: Maybe<WarehouseDelete>;
   /**
@@ -13685,18 +13811,53 @@ export type Mutation = {
    * Creates stocks for product variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   *
+   * Triggers the following webhook events:
+   * - PRODUCT_VARIANT_BACK_IN_STOCK (async): A product variant stock is created in a warehouse.
+   * - PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL (async): A product variant is back in stock in a channel (non click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   * - PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is back in stock in a channel (click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
    */
   productVariantStocksCreate?: Maybe<ProductVariantStocksCreate>;
   /**
    * Deletes stocks from product variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   *
+   * Triggers the following webhook events:
+   * - PRODUCT_VARIANT_OUT_OF_STOCK (async): A product variant stock is deleted from a warehouse.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL (async): A product variant is out of stock in a channel (non click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is out of stock in a channel (click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
    */
   productVariantStocksDelete?: Maybe<ProductVariantStocksDelete>;
   /**
    * Updates stocks for product variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   *
+   * Triggers the following webhook events:
+   * - PRODUCT_VARIANT_STOCK_UPDATED (async): A product variant stock is updated.
+   * - PRODUCT_VARIANT_BACK_IN_STOCK (async): A product variant stock transitioned from no availability to available quantity.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK (async): A product variant stock transitioned from available quantity to no availability.
+   * - PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL (async): A product variant is back in stock in a channel (non click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL (async): A product variant is out of stock in a channel (non click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   * - PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is back in stock in a channel (click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is out of stock in a channel (click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
    */
   productVariantStocksUpdate?: Maybe<ProductVariantStocksUpdate>;
   /**
@@ -13824,6 +13985,22 @@ export type Mutation = {
    * - STAFF_SET_PASSWORD_REQUESTED (async): Setting a new password for the staff account is requested.
    */
   requestPasswordReset?: Maybe<RequestPasswordReset>;
+  /**
+   * Updates ReturnSettings. The `Page` (Model) Type will be cleared from `reasonReferenceType`. When it's cleared, passing reason reference to return mutations is no longer accepted and will raise error.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: MANAGE_SETTINGS.
+   */
+  returnReasonReferenceClear?: Maybe<ReturnReasonReferenceTypeClear>;
+  /**
+   * Update return settings across all channels.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: MANAGE_SETTINGS.
+   */
+  returnSettingsUpdate?: Maybe<ReturnSettingsUpdate>;
   /**
    * Deletes sales.
    *
@@ -14721,6 +14898,11 @@ export type MutationCheckoutCustomerDetachArgs = {
 
 export type MutationCheckoutCustomerNoteUpdateArgs = {
   customerNote: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationCheckoutDeleteArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -15829,6 +16011,11 @@ export type MutationRequestPasswordResetArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
   redirectUrl: Scalars['String']['input'];
+};
+
+
+export type MutationReturnSettingsUpdateArgs = {
+  input: ReturnSettingsUpdateInput;
 };
 
 
@@ -17735,6 +17922,7 @@ export type OrderGrantRefundCreateErrorCode =
   | 'AMOUNT_GREATER_THAN_AVAILABLE'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
+  | 'NOT_CONFIGURED'
   | 'NOT_FOUND'
   | 'REQUIRED'
   | 'SHIPPING_COSTS_ALREADY_GRANTED';
@@ -17778,6 +17966,8 @@ export type OrderGrantRefundCreateLineError = {
 
 export type OrderGrantRefundCreateLineErrorCode =
   | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'NOT_CONFIGURED'
   | 'NOT_FOUND'
   | 'QUANTITY_GREATER_THAN_AVAILABLE';
 
@@ -17788,6 +17978,12 @@ export type OrderGrantRefundCreateLineInput = {
   quantity: Scalars['Int']['input'];
   /** Reason of the granted refund for the line. */
   reason?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of a `Page` (Model) to reference in reason for the line.
+   *
+   * Added in Saleor 3.23.
+   */
+  reasonReference?: InputMaybe<Scalars['ID']['input']>;
 };
 
 /**
@@ -17822,6 +18018,7 @@ export type OrderGrantRefundUpdateErrorCode =
   | 'AMOUNT_GREATER_THAN_AVAILABLE'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
+  | 'NOT_CONFIGURED'
   | 'NOT_FOUND'
   | 'REQUIRED'
   | 'SHIPPING_COSTS_ALREADY_GRANTED';
@@ -17860,6 +18057,12 @@ export type OrderGrantRefundUpdateLineAddInput = {
   quantity: Scalars['Int']['input'];
   /** Reason of the granted refund for the line. */
   reason?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of a `Page` (Model) to reference in reason for the line.
+   *
+   * Added in Saleor 3.23.
+   */
+  reasonReference?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type OrderGrantRefundUpdateLineError = {
@@ -17876,6 +18079,8 @@ export type OrderGrantRefundUpdateLineError = {
 
 export type OrderGrantRefundUpdateLineErrorCode =
   | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'NOT_CONFIGURED'
   | 'NOT_FOUND'
   | 'QUANTITY_GREATER_THAN_AVAILABLE';
 
@@ -17939,6 +18144,12 @@ export type OrderGrantedRefundLine = {
   quantity: Scalars['Int']['output'];
   /** Reason for refunding the line. */
   reason?: Maybe<Scalars['String']['output']>;
+  /**
+   * Reason Model (Page) reference for this refund line.
+   *
+   * Added in Saleor 3.23.
+   */
+  reasonReference?: Maybe<Page>;
 };
 
 /**
@@ -18396,6 +18607,18 @@ export type OrderReturnFulfillmentLineInput = {
   fulfillmentLineId: Scalars['ID']['input'];
   /** The number of items to be returned. */
   quantity: Scalars['Int']['input'];
+  /**
+   * Reason for returning this fulfillment line.
+   *
+   * Added in Saleor 3.23.
+   */
+  reason?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of a `Page` (Model) to reference in reason for this fulfillment line.
+   *
+   * Added in Saleor 3.23.
+   */
+  reasonReference?: InputMaybe<Scalars['ID']['input']>;
   /** Determines, if the line should be added to replace order. */
   replace?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -18405,6 +18628,18 @@ export type OrderReturnLineInput = {
   orderLineId: Scalars['ID']['input'];
   /** The number of items to be returned. */
   quantity: Scalars['Int']['input'];
+  /**
+   * Reason for returning this line.
+   *
+   * Added in Saleor 3.23.
+   */
+  reason?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of a `Page` (Model) to reference in reason for this line.
+   *
+   * Added in Saleor 3.23.
+   */
+  reasonReference?: InputMaybe<Scalars['ID']['input']>;
   /** Determines, if the line should be added to replace order. */
   replace?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -18418,6 +18653,18 @@ export type OrderReturnProductsInput = {
   includeShippingCosts?: InputMaybe<Scalars['Boolean']['input']>;
   /** List of unfulfilled lines to return. */
   orderLines?: InputMaybe<Array<OrderReturnLineInput>>;
+  /**
+   * Reason for returning this order.
+   *
+   * Added in Saleor 3.23.
+   */
+  reason?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of a `Page` (Model) to reference in reason for this return.
+   *
+   * Added in Saleor 3.23.
+   */
+  reasonReference?: InputMaybe<Scalars['ID']['input']>;
   /** If true, Saleor will call refund action for all lines. */
   refund?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -22711,6 +22958,52 @@ export type ProductVariantBackInStockProductVariantArgs = {
 };
 
 /**
+ * Event sent when a product variant becomes available again across click-and-collect warehouses in a channel.
+ *
+ * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductVariantBackInStockForClickAndCollect = Event & {
+  __typename?: 'ProductVariantBackInStockForClickAndCollect';
+  /** The channel the stock availability changed in. */
+  channel: Channel;
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The product variant the event relates to. */
+  productVariant: ProductVariant;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Event sent when a product variant becomes available again across non click-and-collect warehouses in a channel.
+ *
+ * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductVariantBackInStockInChannel = Event & {
+  __typename?: 'ProductVariantBackInStockInChannel';
+  /** The channel the stock availability changed in. */
+  channel: Channel;
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The product variant the event relates to. */
+  productVariant: ProductVariant;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
  * Creates product variants for a given product.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
@@ -23221,6 +23514,52 @@ export type ProductVariantOutOfStockProductVariantArgs = {
 };
 
 /**
+ * Event sent when a product variant becomes out of stock across all click-and-collect warehouses in a channel.
+ *
+ * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductVariantOutOfStockForClickAndCollect = Event & {
+  __typename?: 'ProductVariantOutOfStockForClickAndCollect';
+  /** The channel the stock availability changed in. */
+  channel: Channel;
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The product variant the event relates to. */
+  productVariant: ProductVariant;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Event sent when a product variant becomes out of stock across all non click-and-collect warehouses in a channel.
+ *
+ * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductVariantOutOfStockInChannel = Event & {
+  __typename?: 'ProductVariantOutOfStockInChannel';
+  /** The channel the stock availability changed in. */
+  channel: Channel;
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The product variant the event relates to. */
+  productVariant: ProductVariant;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
  * Deactivates product variant preorder. It changes all preorder allocation into regular allocation.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
@@ -23310,6 +23649,15 @@ export type ProductVariantStockUpdatedProductVariantArgs = {
  * Creates stocks for product variant.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
+ *
+ * Triggers the following webhook events:
+ * - PRODUCT_VARIANT_BACK_IN_STOCK (async): A product variant stock is created in a warehouse.
+ * - PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL (async): A product variant is back in stock in a channel (non click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ * - PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is back in stock in a channel (click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
  */
 export type ProductVariantStocksCreate = {
   __typename?: 'ProductVariantStocksCreate';
@@ -23324,6 +23672,15 @@ export type ProductVariantStocksCreate = {
  * Deletes stocks from product variant.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
+ *
+ * Triggers the following webhook events:
+ * - PRODUCT_VARIANT_OUT_OF_STOCK (async): A product variant stock is deleted from a warehouse.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL (async): A product variant is out of stock in a channel (non click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is out of stock in a channel (click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
  */
 export type ProductVariantStocksDelete = {
   __typename?: 'ProductVariantStocksDelete';
@@ -23338,6 +23695,23 @@ export type ProductVariantStocksDelete = {
  * Updates stocks for product variant.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
+ *
+ * Triggers the following webhook events:
+ * - PRODUCT_VARIANT_STOCK_UPDATED (async): A product variant stock is updated.
+ * - PRODUCT_VARIANT_BACK_IN_STOCK (async): A product variant stock transitioned from no availability to available quantity.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK (async): A product variant stock transitioned from available quantity to no availability.
+ * - PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL (async): A product variant is back in stock in a channel (non click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL (async): A product variant is out of stock in a channel (non click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ * - PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is back in stock in a channel (click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is out of stock in a channel (click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
  */
 export type ProductVariantStocksUpdate = {
   __typename?: 'ProductVariantStocksUpdate';
@@ -24800,6 +25174,8 @@ export type Query = {
    * @deprecated Field no longer supported
    */
   reportProductSales?: Maybe<ProductVariantCountableConnection>;
+  /** Returns related settings. Returns `ReturnSettings` configuration, global for the entire shop. */
+  returnSettings: ReturnSettings;
   /**
    * Look up a sale by ID.
    *
@@ -25712,6 +26088,88 @@ export type RequestPasswordReset = {
   /** @deprecated Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
+};
+
+/**
+ * Updates ReturnSettings. The `Page` (Model) Type will be cleared from `reasonReferenceType`. When it's cleared, passing reason reference to return mutations is no longer accepted and will raise error.
+ *
+ * Added in Saleor 3.23.
+ *
+ * Requires one of the following permissions: MANAGE_SETTINGS.
+ */
+export type ReturnReasonReferenceTypeClear = {
+  __typename?: 'ReturnReasonReferenceTypeClear';
+  errors: Array<ReturnReasonReferenceTypeClearError>;
+  /** Return settings. */
+  returnSettings?: Maybe<ReturnSettings>;
+  /** @deprecated Use `errors` field instead. */
+  returnSettingsErrors: Array<ReturnReasonReferenceTypeClearError>;
+};
+
+export type ReturnReasonReferenceTypeClearError = {
+  __typename?: 'ReturnReasonReferenceTypeClearError';
+  /** Failed to clear return reason reference type */
+  code: ReturnSettingsErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Return related settings from site settings.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ReturnSettings = {
+  __typename?: 'ReturnSettings';
+  /**
+   * Model type used for return reasons.
+   *
+   * Added in Saleor 3.23.
+   */
+  reasonReferenceType?: Maybe<PageType>;
+};
+
+export type ReturnSettingsErrorCode =
+  | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'NOT_FOUND'
+  | 'REQUIRED';
+
+/**
+ * Update return settings across all channels.
+ *
+ * Added in Saleor 3.23.
+ *
+ * Requires one of the following permissions: MANAGE_SETTINGS.
+ */
+export type ReturnSettingsUpdate = {
+  __typename?: 'ReturnSettingsUpdate';
+  errors: Array<ReturnSettingsUpdateError>;
+  /** Return settings. */
+  returnSettings?: Maybe<ReturnSettings>;
+  /** @deprecated Use `errors` field instead. */
+  returnSettingsErrors: Array<ReturnSettingsUpdateError>;
+};
+
+export type ReturnSettingsUpdateError = {
+  __typename?: 'ReturnSettingsUpdateError';
+  /** Failed to update Return Settings */
+  code: ReturnSettingsErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+export type ReturnSettingsUpdateInput = {
+  /**
+   * The ID of a model type, that will be used to reference return reasons. All models of this type will be accepted as return reasons.
+   *
+   * Added in Saleor 3.23.
+   */
+  returnReasonReferenceType: Scalars['ID']['input'];
 };
 
 export type RewardTypeEnum =
@@ -27251,6 +27709,12 @@ export type Shop = ObjectWithMetadata & {
    * Requires one of the following permissions: MANAGE_SETTINGS.
    */
   allowLoginWithoutConfirmation?: Maybe<Scalars['Boolean']['output']>;
+  /**
+   * List of announcements for this shop.
+   *
+   * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
+   */
+  announcements: Array<Announcement>;
   /** List of available external authentications. */
   availableExternalAuthentications: Array<ExternalAuthentication>;
   /** List of available payment gateways. */
@@ -28402,6 +28866,26 @@ export type Subscription = {
    */
   orderUpdated?: Maybe<OrderUpdated>;
   /**
+   * Event sent when a product variant becomes available again across click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  productVariantBackInStockForClickAndCollect?: Maybe<ProductVariantBackInStockForClickAndCollect>;
+  /**
+   * Event sent when a product variant becomes available again across non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  productVariantBackInStockInChannel?: Maybe<ProductVariantBackInStockInChannel>;
+  /**
    * Event sent when product variant discounted price is recalculated.
    *
    * Added in Saleor 3.22.
@@ -28409,6 +28893,26 @@ export type Subscription = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   productVariantDiscountedPriceUpdated?: Maybe<ProductVariantDiscountedPriceUpdated>;
+  /**
+   * Event sent when a product variant becomes out of stock across all click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  productVariantOutOfStockForClickAndCollect?: Maybe<ProductVariantOutOfStockForClickAndCollect>;
+  /**
+   * Event sent when a product variant becomes out of stock across all non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  productVariantOutOfStockInChannel?: Maybe<ProductVariantOutOfStockInChannel>;
 };
 
 
@@ -28512,7 +29016,27 @@ export type SubscriptionOrderUpdatedArgs = {
 };
 
 
+export type SubscriptionProductVariantBackInStockForClickAndCollectArgs = {
+  channels?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionProductVariantBackInStockInChannelArgs = {
+  channels?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
 export type SubscriptionProductVariantDiscountedPriceUpdatedArgs = {
+  channels?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionProductVariantOutOfStockForClickAndCollectArgs = {
+  channels?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionProductVariantOutOfStockInChannelArgs = {
   channels?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
@@ -31469,6 +31993,16 @@ export type WarehouseCreated = Event & {
  * Deletes selected warehouse.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
+ *
+ * Triggers the following webhook events:
+ * - WAREHOUSE_DELETED (async): A warehouse is deleted.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK (async): A product variant stock is removed together with the deleted warehouse.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL (async): A product variant is out of stock in a channel (non click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is out of stock in a channel (click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
  */
 export type WarehouseDelete = {
   __typename?: 'WarehouseDelete';
@@ -32010,6 +32544,18 @@ export type WebhookEventTypeAsyncEnum =
   | 'PRODUCT_UPDATED'
   /** A product variant is back in stock. */
   | 'PRODUCT_VARIANT_BACK_IN_STOCK'
+  /**
+   * A product variant becomes available again across click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT'
+  /**
+   * A product variant becomes available again across non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL'
   /** A new product variant is created. */
   | 'PRODUCT_VARIANT_CREATED'
   /** A product variant is deleted. Warning: this event will not be executed when parent product has been deleted. Check PRODUCT_DELETED. */
@@ -32019,6 +32565,18 @@ export type WebhookEventTypeAsyncEnum =
   | 'PRODUCT_VARIANT_METADATA_UPDATED'
   /** A product variant is out of stock. */
   | 'PRODUCT_VARIANT_OUT_OF_STOCK'
+  /**
+   * A product variant becomes out of stock across all click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT'
+  /**
+   * A product variant becomes out of stock across all non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL'
   /** A product variant stock is updated */
   | 'PRODUCT_VARIANT_STOCK_UPDATED'
   /** A product variant is updated. */
@@ -32336,6 +32894,18 @@ export type WebhookEventTypeEnum =
   | 'PRODUCT_UPDATED'
   /** A product variant is back in stock. */
   | 'PRODUCT_VARIANT_BACK_IN_STOCK'
+  /**
+   * A product variant becomes available again across click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT'
+  /**
+   * A product variant becomes available again across non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL'
   /** A new product variant is created. */
   | 'PRODUCT_VARIANT_CREATED'
   /** A product variant is deleted. Warning: this event will not be executed when parent product has been deleted. Check PRODUCT_DELETED. */
@@ -32345,6 +32915,18 @@ export type WebhookEventTypeEnum =
   | 'PRODUCT_VARIANT_METADATA_UPDATED'
   /** A product variant is out of stock. */
   | 'PRODUCT_VARIANT_OUT_OF_STOCK'
+  /**
+   * A product variant becomes out of stock across all click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT'
+  /**
+   * A product variant becomes out of stock across all non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL'
   /** A product variant stock is updated */
   | 'PRODUCT_VARIANT_STOCK_UPDATED'
   /** A product variant is updated. */
@@ -32580,11 +33162,15 @@ export type WebhookSampleEventTypeEnum =
   | 'PRODUCT_METADATA_UPDATED'
   | 'PRODUCT_UPDATED'
   | 'PRODUCT_VARIANT_BACK_IN_STOCK'
+  | 'PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT'
+  | 'PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL'
   | 'PRODUCT_VARIANT_CREATED'
   | 'PRODUCT_VARIANT_DELETED'
   | 'PRODUCT_VARIANT_DISCOUNTED_PRICE_UPDATED'
   | 'PRODUCT_VARIANT_METADATA_UPDATED'
   | 'PRODUCT_VARIANT_OUT_OF_STOCK'
+  | 'PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT'
+  | 'PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL'
   | 'PRODUCT_VARIANT_STOCK_UPDATED'
   | 'PRODUCT_VARIANT_UPDATED'
   | 'PROMOTION_CREATED'

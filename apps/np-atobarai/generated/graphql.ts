@@ -799,6 +799,32 @@ export type AllocationStrategyEnum =
   | 'PRIORITIZE_HIGH_STOCK'
   | 'PRIORITIZE_SORTING_ORDER';
 
+/** Lists current announcements that the user should see. */
+export type Announcement = {
+  /** The date & time at which this announcement was created. */
+  readonly createdAt: Scalars['DateTime']['output'];
+  /** Additional information about this announcement. */
+  readonly extra: Scalars['Metadata']['output'];
+  /** Determine the how critical the announcement is. UNSET if no severity level was defined for this announcement. */
+  readonly importance: AnnouncementImportanceEnum;
+  /** The announcement's description, may contain HTML formatting. */
+  readonly messageHtml: Scalars['String']['output'];
+  /** The announcement's title. */
+  readonly title: Scalars['String']['output'];
+  /** The announcement's type, for example "CUSTOM". Used to programatically distinguish between message types thus allowing to render the message differently, and allows to know the expected shape for the `extra` field. */
+  readonly type: Scalars['String']['output'];
+  /** The date & time at which this announcement was last updated. */
+  readonly updatedAt: Scalars['DateTime']['output'];
+};
+
+/** Defines a shop-level announcement's level/severity. */
+export type AnnouncementImportanceEnum =
+  | 'CRITICAL'
+  | 'HIGH'
+  | 'LOW'
+  | 'MODERATE'
+  | 'UNSET';
+
 /** Represents app data. */
 export type App = Node & ObjectWithMetadata & {
   /** Description of this app. */
@@ -2043,6 +2069,22 @@ export type AssignedSwatchAttributeValue = {
   readonly name?: Maybe<Scalars['String']['output']>;
   /** Slug of the selected swatch value. */
   readonly slug?: Maybe<Scalars['String']['output']>;
+  /**
+   * Translation of the name.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly translation?: Maybe<Scalars['String']['output']>;
+};
+
+
+/**
+ * Represents a single swatch value.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSwatchAttributeValueTranslationArgs = {
+  languageCode: LanguageCodeEnum;
 };
 
 /**
@@ -4731,6 +4773,26 @@ export type CheckoutCustomerNoteUpdate = {
 };
 
 /**
+ * Deletes a checkout.
+ *
+ * Added in Saleor 3.23.
+ *
+ * Requires one of the following permissions: MANAGE_CHECKOUTS.
+ */
+export type CheckoutDelete = {
+  readonly errors: ReadonlyArray<CheckoutDeleteError>;
+};
+
+export type CheckoutDeleteError = {
+  /** The error code. */
+  readonly code: CheckoutErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars['String']['output']>;
+};
+
+/**
  * Updates the delivery method (shipping method or pick up point) of the checkout. Updates the checkout shipping_address for click and collect delivery for a warehouse address.
  *
  * Triggers the following webhook events:
@@ -6669,6 +6731,24 @@ export type CustomerDelete = {
   readonly user?: Maybe<User>;
 };
 
+/**
+ * Event sent when customer user is deleted.
+ *
+ * Added in Saleor 3.23.
+ */
+export type CustomerDeleted = Event & {
+  /** Time of the event. */
+  readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The application receiving the webhook. */
+  readonly recipient?: Maybe<App>;
+  /** The user the event relates to. */
+  readonly user?: Maybe<User>;
+  /** Saleor version that triggered the event. */
+  readonly version?: Maybe<Scalars['String']['output']>;
+};
+
 /** History log of the customer. */
 export type CustomerEvent = Node & {
   /** App that performed the action. */
@@ -7859,6 +7939,18 @@ export type Fulfillment = Node & ObjectWithMetadata & {
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
   /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
+  /**
+   * Reason for returning this fulfillment.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly reason?: Maybe<Scalars['String']['output']>;
+  /**
+   * Reason Model (Page) reference for this fulfillment.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly reasonReference?: Maybe<Page>;
   /** Amount of refunded shipping price. */
   readonly shippingRefundedAmount?: Maybe<Money>;
   /** Status of fulfillment. */
@@ -8005,6 +8097,18 @@ export type FulfillmentLine = Node & {
   readonly orderLine?: Maybe<OrderLine>;
   /** The number of items included in the fulfillment line. */
   readonly quantity: Scalars['Int']['output'];
+  /**
+   * Reason for returning this fulfillment line.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly reason?: Maybe<Scalars['String']['output']>;
+  /**
+   * Reason Model (Page) reference for this fulfillment line.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly reasonReference?: Maybe<Page>;
 };
 
 /** Event sent when fulfillment metadata is updated. */
@@ -12157,6 +12261,14 @@ export type Mutation = {
    */
   readonly checkoutCustomerNoteUpdate?: Maybe<CheckoutCustomerNoteUpdate>;
   /**
+   * Deletes a checkout.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: MANAGE_CHECKOUTS.
+   */
+  readonly checkoutDelete?: Maybe<CheckoutDelete>;
+  /**
    * Updates the delivery method (shipping method or pick up point) of the checkout. Updates the checkout shipping_address for click and collect delivery for a warehouse address.
    *
    * Triggers the following webhook events:
@@ -12370,6 +12482,16 @@ export type Mutation = {
    * Deletes selected warehouse.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   *
+   * Triggers the following webhook events:
+   * - WAREHOUSE_DELETED (async): A warehouse is deleted.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK (async): A product variant stock is removed together with the deleted warehouse.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL (async): A product variant is out of stock in a channel (non click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is out of stock in a channel (click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
    */
   readonly deleteWarehouse?: Maybe<WarehouseDelete>;
   /**
@@ -13314,18 +13436,53 @@ export type Mutation = {
    * Creates stocks for product variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   *
+   * Triggers the following webhook events:
+   * - PRODUCT_VARIANT_BACK_IN_STOCK (async): A product variant stock is created in a warehouse.
+   * - PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL (async): A product variant is back in stock in a channel (non click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   * - PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is back in stock in a channel (click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
    */
   readonly productVariantStocksCreate?: Maybe<ProductVariantStocksCreate>;
   /**
    * Deletes stocks from product variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   *
+   * Triggers the following webhook events:
+   * - PRODUCT_VARIANT_OUT_OF_STOCK (async): A product variant stock is deleted from a warehouse.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL (async): A product variant is out of stock in a channel (non click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is out of stock in a channel (click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
    */
   readonly productVariantStocksDelete?: Maybe<ProductVariantStocksDelete>;
   /**
    * Updates stocks for product variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   *
+   * Triggers the following webhook events:
+   * - PRODUCT_VARIANT_STOCK_UPDATED (async): A product variant stock is updated.
+   * - PRODUCT_VARIANT_BACK_IN_STOCK (async): A product variant stock transitioned from no availability to available quantity.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK (async): A product variant stock transitioned from available quantity to no availability.
+   * - PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL (async): A product variant is back in stock in a channel (non click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL (async): A product variant is out of stock in a channel (non click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   * - PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is back in stock in a channel (click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is out of stock in a channel (click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
    */
   readonly productVariantStocksUpdate?: Maybe<ProductVariantStocksUpdate>;
   /**
@@ -13453,6 +13610,22 @@ export type Mutation = {
    * - STAFF_SET_PASSWORD_REQUESTED (async): Setting a new password for the staff account is requested.
    */
   readonly requestPasswordReset?: Maybe<RequestPasswordReset>;
+  /**
+   * Updates ReturnSettings. The `Page` (Model) Type will be cleared from `reasonReferenceType`. When it's cleared, passing reason reference to return mutations is no longer accepted and will raise error.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: MANAGE_SETTINGS.
+   */
+  readonly returnReasonReferenceClear?: Maybe<ReturnReasonReferenceTypeClear>;
+  /**
+   * Update return settings across all channels.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: MANAGE_SETTINGS.
+   */
+  readonly returnSettingsUpdate?: Maybe<ReturnSettingsUpdate>;
   /**
    * Deletes sales.
    *
@@ -14350,6 +14523,11 @@ export type MutationCheckoutCustomerDetachArgs = {
 
 export type MutationCheckoutCustomerNoteUpdateArgs = {
   customerNote: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationCheckoutDeleteArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -15458,6 +15636,11 @@ export type MutationRequestPasswordResetArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
   redirectUrl: Scalars['String']['input'];
+};
+
+
+export type MutationReturnSettingsUpdateArgs = {
+  input: ReturnSettingsUpdateInput;
 };
 
 
@@ -17329,6 +17512,7 @@ export type OrderGrantRefundCreateErrorCode =
   | 'AMOUNT_GREATER_THAN_AVAILABLE'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
+  | 'NOT_CONFIGURED'
   | 'NOT_FOUND'
   | 'REQUIRED'
   | 'SHIPPING_COSTS_ALREADY_GRANTED';
@@ -17371,6 +17555,8 @@ export type OrderGrantRefundCreateLineError = {
 
 export type OrderGrantRefundCreateLineErrorCode =
   | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'NOT_CONFIGURED'
   | 'NOT_FOUND'
   | 'QUANTITY_GREATER_THAN_AVAILABLE';
 
@@ -17381,6 +17567,12 @@ export type OrderGrantRefundCreateLineInput = {
   readonly quantity: Scalars['Int']['input'];
   /** Reason of the granted refund for the line. */
   readonly reason?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of a `Page` (Model) to reference in reason for the line.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly reasonReference?: InputMaybe<Scalars['ID']['input']>;
 };
 
 /**
@@ -17413,6 +17605,7 @@ export type OrderGrantRefundUpdateErrorCode =
   | 'AMOUNT_GREATER_THAN_AVAILABLE'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
+  | 'NOT_CONFIGURED'
   | 'NOT_FOUND'
   | 'REQUIRED'
   | 'SHIPPING_COSTS_ALREADY_GRANTED';
@@ -17451,6 +17644,12 @@ export type OrderGrantRefundUpdateLineAddInput = {
   readonly quantity: Scalars['Int']['input'];
   /** Reason of the granted refund for the line. */
   readonly reason?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of a `Page` (Model) to reference in reason for the line.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly reasonReference?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type OrderGrantRefundUpdateLineError = {
@@ -17466,6 +17665,8 @@ export type OrderGrantRefundUpdateLineError = {
 
 export type OrderGrantRefundUpdateLineErrorCode =
   | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'NOT_CONFIGURED'
   | 'NOT_FOUND'
   | 'QUANTITY_GREATER_THAN_AVAILABLE';
 
@@ -17527,6 +17728,12 @@ export type OrderGrantedRefundLine = {
   readonly quantity: Scalars['Int']['output'];
   /** Reason for refunding the line. */
   readonly reason?: Maybe<Scalars['String']['output']>;
+  /**
+   * Reason Model (Page) reference for this refund line.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly reasonReference?: Maybe<Page>;
 };
 
 /**
@@ -17968,6 +18175,18 @@ export type OrderReturnFulfillmentLineInput = {
   readonly fulfillmentLineId: Scalars['ID']['input'];
   /** The number of items to be returned. */
   readonly quantity: Scalars['Int']['input'];
+  /**
+   * Reason for returning this fulfillment line.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly reason?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of a `Page` (Model) to reference in reason for this fulfillment line.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly reasonReference?: InputMaybe<Scalars['ID']['input']>;
   /** Determines, if the line should be added to replace order. */
   readonly replace?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -17977,6 +18196,18 @@ export type OrderReturnLineInput = {
   readonly orderLineId: Scalars['ID']['input'];
   /** The number of items to be returned. */
   readonly quantity: Scalars['Int']['input'];
+  /**
+   * Reason for returning this line.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly reason?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of a `Page` (Model) to reference in reason for this line.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly reasonReference?: InputMaybe<Scalars['ID']['input']>;
   /** Determines, if the line should be added to replace order. */
   readonly replace?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -17990,6 +18221,18 @@ export type OrderReturnProductsInput = {
   readonly includeShippingCosts?: InputMaybe<Scalars['Boolean']['input']>;
   /** List of unfulfilled lines to return. */
   readonly orderLines?: InputMaybe<ReadonlyArray<OrderReturnLineInput>>;
+  /**
+   * Reason for returning this order.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly reason?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of a `Page` (Model) to reference in reason for this return.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly reasonReference?: InputMaybe<Scalars['ID']['input']>;
   /** If true, Saleor will call refund action for all lines. */
   readonly refund?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -22143,6 +22386,50 @@ export type ProductVariantBackInStockProductVariantArgs = {
 };
 
 /**
+ * Event sent when a product variant becomes available again across click-and-collect warehouses in a channel.
+ *
+ * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductVariantBackInStockForClickAndCollect = Event & {
+  /** The channel the stock availability changed in. */
+  readonly channel: Channel;
+  /** Time of the event. */
+  readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The product variant the event relates to. */
+  readonly productVariant: ProductVariant;
+  /** The application receiving the webhook. */
+  readonly recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  readonly version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Event sent when a product variant becomes available again across non click-and-collect warehouses in a channel.
+ *
+ * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductVariantBackInStockInChannel = Event & {
+  /** The channel the stock availability changed in. */
+  readonly channel: Channel;
+  /** Time of the event. */
+  readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The product variant the event relates to. */
+  readonly productVariant: ProductVariant;
+  /** The application receiving the webhook. */
+  readonly recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  readonly version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
  * Creates product variants for a given product.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
@@ -22634,6 +22921,50 @@ export type ProductVariantOutOfStockProductVariantArgs = {
 };
 
 /**
+ * Event sent when a product variant becomes out of stock across all click-and-collect warehouses in a channel.
+ *
+ * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductVariantOutOfStockForClickAndCollect = Event & {
+  /** The channel the stock availability changed in. */
+  readonly channel: Channel;
+  /** Time of the event. */
+  readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The product variant the event relates to. */
+  readonly productVariant: ProductVariant;
+  /** The application receiving the webhook. */
+  readonly recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  readonly version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Event sent when a product variant becomes out of stock across all non click-and-collect warehouses in a channel.
+ *
+ * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductVariantOutOfStockInChannel = Event & {
+  /** The channel the stock availability changed in. */
+  readonly channel: Channel;
+  /** Time of the event. */
+  readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The product variant the event relates to. */
+  readonly productVariant: ProductVariant;
+  /** The application receiving the webhook. */
+  readonly recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  readonly version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
  * Deactivates product variant preorder. It changes all preorder allocation into regular allocation.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
@@ -22718,6 +23049,15 @@ export type ProductVariantStockUpdatedProductVariantArgs = {
  * Creates stocks for product variant.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
+ *
+ * Triggers the following webhook events:
+ * - PRODUCT_VARIANT_BACK_IN_STOCK (async): A product variant stock is created in a warehouse.
+ * - PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL (async): A product variant is back in stock in a channel (non click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ * - PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is back in stock in a channel (click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
  */
 export type ProductVariantStocksCreate = {
   /** @deprecated Use `errors` field instead. */
@@ -22731,6 +23071,15 @@ export type ProductVariantStocksCreate = {
  * Deletes stocks from product variant.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
+ *
+ * Triggers the following webhook events:
+ * - PRODUCT_VARIANT_OUT_OF_STOCK (async): A product variant stock is deleted from a warehouse.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL (async): A product variant is out of stock in a channel (non click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is out of stock in a channel (click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
  */
 export type ProductVariantStocksDelete = {
   readonly errors: ReadonlyArray<StockError>;
@@ -22744,6 +23093,23 @@ export type ProductVariantStocksDelete = {
  * Updates stocks for product variant.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
+ *
+ * Triggers the following webhook events:
+ * - PRODUCT_VARIANT_STOCK_UPDATED (async): A product variant stock is updated.
+ * - PRODUCT_VARIANT_BACK_IN_STOCK (async): A product variant stock transitioned from no availability to available quantity.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK (async): A product variant stock transitioned from available quantity to no availability.
+ * - PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL (async): A product variant is back in stock in a channel (non click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL (async): A product variant is out of stock in a channel (non click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ * - PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is back in stock in a channel (click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is out of stock in a channel (click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
  */
 export type ProductVariantStocksUpdate = {
   /** @deprecated Use `errors` field instead. */
@@ -24161,6 +24527,8 @@ export type Query = {
    * @deprecated Field no longer supported
    */
   readonly reportProductSales?: Maybe<ProductVariantCountableConnection>;
+  /** Returns related settings. Returns `ReturnSettings` configuration, global for the entire shop. */
+  readonly returnSettings: ReturnSettings;
   /**
    * Look up a sale by ID.
    *
@@ -25064,6 +25432,83 @@ export type RequestPasswordReset = {
   /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
+};
+
+/**
+ * Updates ReturnSettings. The `Page` (Model) Type will be cleared from `reasonReferenceType`. When it's cleared, passing reason reference to return mutations is no longer accepted and will raise error.
+ *
+ * Added in Saleor 3.23.
+ *
+ * Requires one of the following permissions: MANAGE_SETTINGS.
+ */
+export type ReturnReasonReferenceTypeClear = {
+  readonly errors: ReadonlyArray<ReturnReasonReferenceTypeClearError>;
+  /** Return settings. */
+  readonly returnSettings?: Maybe<ReturnSettings>;
+  /** @deprecated Use `errors` field instead. */
+  readonly returnSettingsErrors: ReadonlyArray<ReturnReasonReferenceTypeClearError>;
+};
+
+export type ReturnReasonReferenceTypeClearError = {
+  /** Failed to clear return reason reference type */
+  readonly code: ReturnSettingsErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Return related settings from site settings.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ReturnSettings = {
+  /**
+   * Model type used for return reasons.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly reasonReferenceType?: Maybe<PageType>;
+};
+
+export type ReturnSettingsErrorCode =
+  | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'NOT_FOUND'
+  | 'REQUIRED';
+
+/**
+ * Update return settings across all channels.
+ *
+ * Added in Saleor 3.23.
+ *
+ * Requires one of the following permissions: MANAGE_SETTINGS.
+ */
+export type ReturnSettingsUpdate = {
+  readonly errors: ReadonlyArray<ReturnSettingsUpdateError>;
+  /** Return settings. */
+  readonly returnSettings?: Maybe<ReturnSettings>;
+  /** @deprecated Use `errors` field instead. */
+  readonly returnSettingsErrors: ReadonlyArray<ReturnSettingsUpdateError>;
+};
+
+export type ReturnSettingsUpdateError = {
+  /** Failed to update Return Settings */
+  readonly code: ReturnSettingsErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars['String']['output']>;
+};
+
+export type ReturnSettingsUpdateInput = {
+  /**
+   * The ID of a model type, that will be used to reference return reasons. All models of this type will be accepted as return reasons.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly returnReasonReferenceType: Scalars['ID']['input'];
 };
 
 export type RewardTypeEnum =
@@ -26549,6 +26994,12 @@ export type Shop = ObjectWithMetadata & {
    * Requires one of the following permissions: MANAGE_SETTINGS.
    */
   readonly allowLoginWithoutConfirmation?: Maybe<Scalars['Boolean']['output']>;
+  /**
+   * List of announcements for this shop.
+   *
+   * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
+   */
+  readonly announcements: ReadonlyArray<Announcement>;
   /** List of available external authentications. */
   readonly availableExternalAuthentications: ReadonlyArray<ExternalAuthentication>;
   /** List of available payment gateways. */
@@ -27667,6 +28118,26 @@ export type Subscription = {
    */
   readonly orderUpdated?: Maybe<OrderUpdated>;
   /**
+   * Event sent when a product variant becomes available again across click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly productVariantBackInStockForClickAndCollect?: Maybe<ProductVariantBackInStockForClickAndCollect>;
+  /**
+   * Event sent when a product variant becomes available again across non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly productVariantBackInStockInChannel?: Maybe<ProductVariantBackInStockInChannel>;
+  /**
    * Event sent when product variant discounted price is recalculated.
    *
    * Added in Saleor 3.22.
@@ -27674,6 +28145,26 @@ export type Subscription = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   readonly productVariantDiscountedPriceUpdated?: Maybe<ProductVariantDiscountedPriceUpdated>;
+  /**
+   * Event sent when a product variant becomes out of stock across all click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly productVariantOutOfStockForClickAndCollect?: Maybe<ProductVariantOutOfStockForClickAndCollect>;
+  /**
+   * Event sent when a product variant becomes out of stock across all non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly productVariantOutOfStockInChannel?: Maybe<ProductVariantOutOfStockInChannel>;
 };
 
 
@@ -27777,7 +28268,27 @@ export type SubscriptionOrderUpdatedArgs = {
 };
 
 
+export type SubscriptionProductVariantBackInStockForClickAndCollectArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionProductVariantBackInStockInChannelArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
 export type SubscriptionProductVariantDiscountedPriceUpdatedArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionProductVariantOutOfStockForClickAndCollectArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionProductVariantOutOfStockInChannelArgs = {
   channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
 
@@ -30625,6 +31136,16 @@ export type WarehouseCreated = Event & {
  * Deletes selected warehouse.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
+ *
+ * Triggers the following webhook events:
+ * - WAREHOUSE_DELETED (async): A warehouse is deleted.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK (async): A product variant stock is removed together with the deleted warehouse.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL (async): A product variant is out of stock in a channel (non click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is out of stock in a channel (click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
  */
 export type WarehouseDelete = {
   readonly errors: ReadonlyArray<WarehouseError>;
@@ -31149,6 +31670,18 @@ export type WebhookEventTypeAsyncEnum =
   | 'PRODUCT_UPDATED'
   /** A product variant is back in stock. */
   | 'PRODUCT_VARIANT_BACK_IN_STOCK'
+  /**
+   * A product variant becomes available again across click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT'
+  /**
+   * A product variant becomes available again across non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL'
   /** A new product variant is created. */
   | 'PRODUCT_VARIANT_CREATED'
   /** A product variant is deleted. Warning: this event will not be executed when parent product has been deleted. Check PRODUCT_DELETED. */
@@ -31158,6 +31691,18 @@ export type WebhookEventTypeAsyncEnum =
   | 'PRODUCT_VARIANT_METADATA_UPDATED'
   /** A product variant is out of stock. */
   | 'PRODUCT_VARIANT_OUT_OF_STOCK'
+  /**
+   * A product variant becomes out of stock across all click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT'
+  /**
+   * A product variant becomes out of stock across all non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL'
   /** A product variant stock is updated */
   | 'PRODUCT_VARIANT_STOCK_UPDATED'
   /** A product variant is updated. */
@@ -31475,6 +32020,18 @@ export type WebhookEventTypeEnum =
   | 'PRODUCT_UPDATED'
   /** A product variant is back in stock. */
   | 'PRODUCT_VARIANT_BACK_IN_STOCK'
+  /**
+   * A product variant becomes available again across click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT'
+  /**
+   * A product variant becomes available again across non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL'
   /** A new product variant is created. */
   | 'PRODUCT_VARIANT_CREATED'
   /** A product variant is deleted. Warning: this event will not be executed when parent product has been deleted. Check PRODUCT_DELETED. */
@@ -31484,6 +32041,18 @@ export type WebhookEventTypeEnum =
   | 'PRODUCT_VARIANT_METADATA_UPDATED'
   /** A product variant is out of stock. */
   | 'PRODUCT_VARIANT_OUT_OF_STOCK'
+  /**
+   * A product variant becomes out of stock across all click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT'
+  /**
+   * A product variant becomes out of stock across all non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL'
   /** A product variant stock is updated */
   | 'PRODUCT_VARIANT_STOCK_UPDATED'
   /** A product variant is updated. */
@@ -31719,11 +32288,15 @@ export type WebhookSampleEventTypeEnum =
   | 'PRODUCT_METADATA_UPDATED'
   | 'PRODUCT_UPDATED'
   | 'PRODUCT_VARIANT_BACK_IN_STOCK'
+  | 'PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT'
+  | 'PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL'
   | 'PRODUCT_VARIANT_CREATED'
   | 'PRODUCT_VARIANT_DELETED'
   | 'PRODUCT_VARIANT_DISCOUNTED_PRICE_UPDATED'
   | 'PRODUCT_VARIANT_METADATA_UPDATED'
   | 'PRODUCT_VARIANT_OUT_OF_STOCK'
+  | 'PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT'
+  | 'PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL'
   | 'PRODUCT_VARIANT_STOCK_UPDATED'
   | 'PRODUCT_VARIANT_UPDATED'
   | 'PROMOTION_CREATED'
@@ -31945,6 +32518,8 @@ type EventMetadata_CollectionUpdated_Fragment = { readonly version?: string | nu
 
 type EventMetadata_CustomerCreated_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
 
+type EventMetadata_CustomerDeleted_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
+
 type EventMetadata_CustomerMetadataUpdated_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
 
 type EventMetadata_CustomerUpdated_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
@@ -32083,6 +32658,10 @@ type EventMetadata_ProductUpdated_Fragment = { readonly version?: string | null,
 
 type EventMetadata_ProductVariantBackInStock_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
 
+type EventMetadata_ProductVariantBackInStockForClickAndCollect_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
+
+type EventMetadata_ProductVariantBackInStockInChannel_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
+
 type EventMetadata_ProductVariantCreated_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
 
 type EventMetadata_ProductVariantDeleted_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
@@ -32092,6 +32671,10 @@ type EventMetadata_ProductVariantDiscountedPriceUpdated_Fragment = { readonly ve
 type EventMetadata_ProductVariantMetadataUpdated_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
 
 type EventMetadata_ProductVariantOutOfStock_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
+
+type EventMetadata_ProductVariantOutOfStockForClickAndCollect_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
+
+type EventMetadata_ProductVariantOutOfStockInChannel_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
 
 type EventMetadata_ProductVariantStockUpdated_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
 
@@ -32189,7 +32772,7 @@ type EventMetadata_WarehouseMetadataUpdated_Fragment = { readonly version?: stri
 
 type EventMetadata_WarehouseUpdated_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
 
-export type EventMetadataFragment = EventMetadata_AccountChangeEmailRequested_Fragment | EventMetadata_AccountConfirmationRequested_Fragment | EventMetadata_AccountConfirmed_Fragment | EventMetadata_AccountDeleteRequested_Fragment | EventMetadata_AccountDeleted_Fragment | EventMetadata_AccountEmailChanged_Fragment | EventMetadata_AccountSetPasswordRequested_Fragment | EventMetadata_AddressCreated_Fragment | EventMetadata_AddressDeleted_Fragment | EventMetadata_AddressUpdated_Fragment | EventMetadata_AppDeleted_Fragment | EventMetadata_AppInstalled_Fragment | EventMetadata_AppStatusChanged_Fragment | EventMetadata_AppUpdated_Fragment | EventMetadata_AttributeCreated_Fragment | EventMetadata_AttributeDeleted_Fragment | EventMetadata_AttributeUpdated_Fragment | EventMetadata_AttributeValueCreated_Fragment | EventMetadata_AttributeValueDeleted_Fragment | EventMetadata_AttributeValueUpdated_Fragment | EventMetadata_CalculateTaxes_Fragment | EventMetadata_CategoryCreated_Fragment | EventMetadata_CategoryDeleted_Fragment | EventMetadata_CategoryUpdated_Fragment | EventMetadata_ChannelCreated_Fragment | EventMetadata_ChannelDeleted_Fragment | EventMetadata_ChannelMetadataUpdated_Fragment | EventMetadata_ChannelStatusChanged_Fragment | EventMetadata_ChannelUpdated_Fragment | EventMetadata_CheckoutCreated_Fragment | EventMetadata_CheckoutFilterShippingMethods_Fragment | EventMetadata_CheckoutFullyAuthorized_Fragment | EventMetadata_CheckoutFullyPaid_Fragment | EventMetadata_CheckoutMetadataUpdated_Fragment | EventMetadata_CheckoutUpdated_Fragment | EventMetadata_CollectionCreated_Fragment | EventMetadata_CollectionDeleted_Fragment | EventMetadata_CollectionMetadataUpdated_Fragment | EventMetadata_CollectionUpdated_Fragment | EventMetadata_CustomerCreated_Fragment | EventMetadata_CustomerMetadataUpdated_Fragment | EventMetadata_CustomerUpdated_Fragment | EventMetadata_DraftOrderCreated_Fragment | EventMetadata_DraftOrderDeleted_Fragment | EventMetadata_DraftOrderUpdated_Fragment | EventMetadata_FulfillmentApproved_Fragment | EventMetadata_FulfillmentCanceled_Fragment | EventMetadata_FulfillmentCreated_Fragment | EventMetadata_FulfillmentMetadataUpdated_Fragment | EventMetadata_FulfillmentTrackingNumberUpdated_Fragment | EventMetadata_GiftCardCreated_Fragment | EventMetadata_GiftCardDeleted_Fragment | EventMetadata_GiftCardExportCompleted_Fragment | EventMetadata_GiftCardMetadataUpdated_Fragment | EventMetadata_GiftCardSent_Fragment | EventMetadata_GiftCardStatusChanged_Fragment | EventMetadata_GiftCardUpdated_Fragment | EventMetadata_InvoiceDeleted_Fragment | EventMetadata_InvoiceRequested_Fragment | EventMetadata_InvoiceSent_Fragment | EventMetadata_ListStoredPaymentMethods_Fragment | EventMetadata_MenuCreated_Fragment | EventMetadata_MenuDeleted_Fragment | EventMetadata_MenuItemCreated_Fragment | EventMetadata_MenuItemDeleted_Fragment | EventMetadata_MenuItemUpdated_Fragment | EventMetadata_MenuUpdated_Fragment | EventMetadata_OrderBulkCreated_Fragment | EventMetadata_OrderCancelled_Fragment | EventMetadata_OrderConfirmed_Fragment | EventMetadata_OrderCreated_Fragment | EventMetadata_OrderExpired_Fragment | EventMetadata_OrderFilterShippingMethods_Fragment | EventMetadata_OrderFulfilled_Fragment | EventMetadata_OrderFullyPaid_Fragment | EventMetadata_OrderFullyRefunded_Fragment | EventMetadata_OrderMetadataUpdated_Fragment | EventMetadata_OrderPaid_Fragment | EventMetadata_OrderRefunded_Fragment | EventMetadata_OrderUpdated_Fragment | EventMetadata_PageCreated_Fragment | EventMetadata_PageDeleted_Fragment | EventMetadata_PageTypeCreated_Fragment | EventMetadata_PageTypeDeleted_Fragment | EventMetadata_PageTypeUpdated_Fragment | EventMetadata_PageUpdated_Fragment | EventMetadata_PaymentAuthorize_Fragment | EventMetadata_PaymentCaptureEvent_Fragment | EventMetadata_PaymentConfirmEvent_Fragment | EventMetadata_PaymentGatewayInitializeSession_Fragment | EventMetadata_PaymentGatewayInitializeTokenizationSession_Fragment | EventMetadata_PaymentListGateways_Fragment | EventMetadata_PaymentMethodInitializeTokenizationSession_Fragment | EventMetadata_PaymentMethodProcessTokenizationSession_Fragment | EventMetadata_PaymentProcessEvent_Fragment | EventMetadata_PaymentRefundEvent_Fragment | EventMetadata_PaymentVoidEvent_Fragment | EventMetadata_PermissionGroupCreated_Fragment | EventMetadata_PermissionGroupDeleted_Fragment | EventMetadata_PermissionGroupUpdated_Fragment | EventMetadata_ProductCreated_Fragment | EventMetadata_ProductDeleted_Fragment | EventMetadata_ProductExportCompleted_Fragment | EventMetadata_ProductMediaCreated_Fragment | EventMetadata_ProductMediaDeleted_Fragment | EventMetadata_ProductMediaUpdated_Fragment | EventMetadata_ProductMetadataUpdated_Fragment | EventMetadata_ProductUpdated_Fragment | EventMetadata_ProductVariantBackInStock_Fragment | EventMetadata_ProductVariantCreated_Fragment | EventMetadata_ProductVariantDeleted_Fragment | EventMetadata_ProductVariantDiscountedPriceUpdated_Fragment | EventMetadata_ProductVariantMetadataUpdated_Fragment | EventMetadata_ProductVariantOutOfStock_Fragment | EventMetadata_ProductVariantStockUpdated_Fragment | EventMetadata_ProductVariantUpdated_Fragment | EventMetadata_PromotionCreated_Fragment | EventMetadata_PromotionDeleted_Fragment | EventMetadata_PromotionEnded_Fragment | EventMetadata_PromotionRuleCreated_Fragment | EventMetadata_PromotionRuleDeleted_Fragment | EventMetadata_PromotionRuleUpdated_Fragment | EventMetadata_PromotionStarted_Fragment | EventMetadata_PromotionUpdated_Fragment | EventMetadata_SaleCreated_Fragment | EventMetadata_SaleDeleted_Fragment | EventMetadata_SaleToggle_Fragment | EventMetadata_SaleUpdated_Fragment | EventMetadata_ShippingListMethodsForCheckout_Fragment | EventMetadata_ShippingPriceCreated_Fragment | EventMetadata_ShippingPriceDeleted_Fragment | EventMetadata_ShippingPriceUpdated_Fragment | EventMetadata_ShippingZoneCreated_Fragment | EventMetadata_ShippingZoneDeleted_Fragment | EventMetadata_ShippingZoneMetadataUpdated_Fragment | EventMetadata_ShippingZoneUpdated_Fragment | EventMetadata_ShopMetadataUpdated_Fragment | EventMetadata_StaffCreated_Fragment | EventMetadata_StaffDeleted_Fragment | EventMetadata_StaffSetPasswordRequested_Fragment | EventMetadata_StaffUpdated_Fragment | EventMetadata_StoredPaymentMethodDeleteRequested_Fragment | EventMetadata_ThumbnailCreated_Fragment | EventMetadata_TransactionCancelationRequested_Fragment | EventMetadata_TransactionChargeRequested_Fragment | EventMetadata_TransactionInitializeSession_Fragment | EventMetadata_TransactionItemMetadataUpdated_Fragment | EventMetadata_TransactionProcessSession_Fragment | EventMetadata_TransactionRefundRequested_Fragment | EventMetadata_TranslationCreated_Fragment | EventMetadata_TranslationUpdated_Fragment | EventMetadata_VoucherCodeExportCompleted_Fragment | EventMetadata_VoucherCodesCreated_Fragment | EventMetadata_VoucherCodesDeleted_Fragment | EventMetadata_VoucherCreated_Fragment | EventMetadata_VoucherDeleted_Fragment | EventMetadata_VoucherMetadataUpdated_Fragment | EventMetadata_VoucherUpdated_Fragment | EventMetadata_WarehouseCreated_Fragment | EventMetadata_WarehouseDeleted_Fragment | EventMetadata_WarehouseMetadataUpdated_Fragment | EventMetadata_WarehouseUpdated_Fragment;
+export type EventMetadataFragment = EventMetadata_AccountChangeEmailRequested_Fragment | EventMetadata_AccountConfirmationRequested_Fragment | EventMetadata_AccountConfirmed_Fragment | EventMetadata_AccountDeleteRequested_Fragment | EventMetadata_AccountDeleted_Fragment | EventMetadata_AccountEmailChanged_Fragment | EventMetadata_AccountSetPasswordRequested_Fragment | EventMetadata_AddressCreated_Fragment | EventMetadata_AddressDeleted_Fragment | EventMetadata_AddressUpdated_Fragment | EventMetadata_AppDeleted_Fragment | EventMetadata_AppInstalled_Fragment | EventMetadata_AppStatusChanged_Fragment | EventMetadata_AppUpdated_Fragment | EventMetadata_AttributeCreated_Fragment | EventMetadata_AttributeDeleted_Fragment | EventMetadata_AttributeUpdated_Fragment | EventMetadata_AttributeValueCreated_Fragment | EventMetadata_AttributeValueDeleted_Fragment | EventMetadata_AttributeValueUpdated_Fragment | EventMetadata_CalculateTaxes_Fragment | EventMetadata_CategoryCreated_Fragment | EventMetadata_CategoryDeleted_Fragment | EventMetadata_CategoryUpdated_Fragment | EventMetadata_ChannelCreated_Fragment | EventMetadata_ChannelDeleted_Fragment | EventMetadata_ChannelMetadataUpdated_Fragment | EventMetadata_ChannelStatusChanged_Fragment | EventMetadata_ChannelUpdated_Fragment | EventMetadata_CheckoutCreated_Fragment | EventMetadata_CheckoutFilterShippingMethods_Fragment | EventMetadata_CheckoutFullyAuthorized_Fragment | EventMetadata_CheckoutFullyPaid_Fragment | EventMetadata_CheckoutMetadataUpdated_Fragment | EventMetadata_CheckoutUpdated_Fragment | EventMetadata_CollectionCreated_Fragment | EventMetadata_CollectionDeleted_Fragment | EventMetadata_CollectionMetadataUpdated_Fragment | EventMetadata_CollectionUpdated_Fragment | EventMetadata_CustomerCreated_Fragment | EventMetadata_CustomerDeleted_Fragment | EventMetadata_CustomerMetadataUpdated_Fragment | EventMetadata_CustomerUpdated_Fragment | EventMetadata_DraftOrderCreated_Fragment | EventMetadata_DraftOrderDeleted_Fragment | EventMetadata_DraftOrderUpdated_Fragment | EventMetadata_FulfillmentApproved_Fragment | EventMetadata_FulfillmentCanceled_Fragment | EventMetadata_FulfillmentCreated_Fragment | EventMetadata_FulfillmentMetadataUpdated_Fragment | EventMetadata_FulfillmentTrackingNumberUpdated_Fragment | EventMetadata_GiftCardCreated_Fragment | EventMetadata_GiftCardDeleted_Fragment | EventMetadata_GiftCardExportCompleted_Fragment | EventMetadata_GiftCardMetadataUpdated_Fragment | EventMetadata_GiftCardSent_Fragment | EventMetadata_GiftCardStatusChanged_Fragment | EventMetadata_GiftCardUpdated_Fragment | EventMetadata_InvoiceDeleted_Fragment | EventMetadata_InvoiceRequested_Fragment | EventMetadata_InvoiceSent_Fragment | EventMetadata_ListStoredPaymentMethods_Fragment | EventMetadata_MenuCreated_Fragment | EventMetadata_MenuDeleted_Fragment | EventMetadata_MenuItemCreated_Fragment | EventMetadata_MenuItemDeleted_Fragment | EventMetadata_MenuItemUpdated_Fragment | EventMetadata_MenuUpdated_Fragment | EventMetadata_OrderBulkCreated_Fragment | EventMetadata_OrderCancelled_Fragment | EventMetadata_OrderConfirmed_Fragment | EventMetadata_OrderCreated_Fragment | EventMetadata_OrderExpired_Fragment | EventMetadata_OrderFilterShippingMethods_Fragment | EventMetadata_OrderFulfilled_Fragment | EventMetadata_OrderFullyPaid_Fragment | EventMetadata_OrderFullyRefunded_Fragment | EventMetadata_OrderMetadataUpdated_Fragment | EventMetadata_OrderPaid_Fragment | EventMetadata_OrderRefunded_Fragment | EventMetadata_OrderUpdated_Fragment | EventMetadata_PageCreated_Fragment | EventMetadata_PageDeleted_Fragment | EventMetadata_PageTypeCreated_Fragment | EventMetadata_PageTypeDeleted_Fragment | EventMetadata_PageTypeUpdated_Fragment | EventMetadata_PageUpdated_Fragment | EventMetadata_PaymentAuthorize_Fragment | EventMetadata_PaymentCaptureEvent_Fragment | EventMetadata_PaymentConfirmEvent_Fragment | EventMetadata_PaymentGatewayInitializeSession_Fragment | EventMetadata_PaymentGatewayInitializeTokenizationSession_Fragment | EventMetadata_PaymentListGateways_Fragment | EventMetadata_PaymentMethodInitializeTokenizationSession_Fragment | EventMetadata_PaymentMethodProcessTokenizationSession_Fragment | EventMetadata_PaymentProcessEvent_Fragment | EventMetadata_PaymentRefundEvent_Fragment | EventMetadata_PaymentVoidEvent_Fragment | EventMetadata_PermissionGroupCreated_Fragment | EventMetadata_PermissionGroupDeleted_Fragment | EventMetadata_PermissionGroupUpdated_Fragment | EventMetadata_ProductCreated_Fragment | EventMetadata_ProductDeleted_Fragment | EventMetadata_ProductExportCompleted_Fragment | EventMetadata_ProductMediaCreated_Fragment | EventMetadata_ProductMediaDeleted_Fragment | EventMetadata_ProductMediaUpdated_Fragment | EventMetadata_ProductMetadataUpdated_Fragment | EventMetadata_ProductUpdated_Fragment | EventMetadata_ProductVariantBackInStock_Fragment | EventMetadata_ProductVariantBackInStockForClickAndCollect_Fragment | EventMetadata_ProductVariantBackInStockInChannel_Fragment | EventMetadata_ProductVariantCreated_Fragment | EventMetadata_ProductVariantDeleted_Fragment | EventMetadata_ProductVariantDiscountedPriceUpdated_Fragment | EventMetadata_ProductVariantMetadataUpdated_Fragment | EventMetadata_ProductVariantOutOfStock_Fragment | EventMetadata_ProductVariantOutOfStockForClickAndCollect_Fragment | EventMetadata_ProductVariantOutOfStockInChannel_Fragment | EventMetadata_ProductVariantStockUpdated_Fragment | EventMetadata_ProductVariantUpdated_Fragment | EventMetadata_PromotionCreated_Fragment | EventMetadata_PromotionDeleted_Fragment | EventMetadata_PromotionEnded_Fragment | EventMetadata_PromotionRuleCreated_Fragment | EventMetadata_PromotionRuleDeleted_Fragment | EventMetadata_PromotionRuleUpdated_Fragment | EventMetadata_PromotionStarted_Fragment | EventMetadata_PromotionUpdated_Fragment | EventMetadata_SaleCreated_Fragment | EventMetadata_SaleDeleted_Fragment | EventMetadata_SaleToggle_Fragment | EventMetadata_SaleUpdated_Fragment | EventMetadata_ShippingListMethodsForCheckout_Fragment | EventMetadata_ShippingPriceCreated_Fragment | EventMetadata_ShippingPriceDeleted_Fragment | EventMetadata_ShippingPriceUpdated_Fragment | EventMetadata_ShippingZoneCreated_Fragment | EventMetadata_ShippingZoneDeleted_Fragment | EventMetadata_ShippingZoneMetadataUpdated_Fragment | EventMetadata_ShippingZoneUpdated_Fragment | EventMetadata_ShopMetadataUpdated_Fragment | EventMetadata_StaffCreated_Fragment | EventMetadata_StaffDeleted_Fragment | EventMetadata_StaffSetPasswordRequested_Fragment | EventMetadata_StaffUpdated_Fragment | EventMetadata_StoredPaymentMethodDeleteRequested_Fragment | EventMetadata_ThumbnailCreated_Fragment | EventMetadata_TransactionCancelationRequested_Fragment | EventMetadata_TransactionChargeRequested_Fragment | EventMetadata_TransactionInitializeSession_Fragment | EventMetadata_TransactionItemMetadataUpdated_Fragment | EventMetadata_TransactionProcessSession_Fragment | EventMetadata_TransactionRefundRequested_Fragment | EventMetadata_TranslationCreated_Fragment | EventMetadata_TranslationUpdated_Fragment | EventMetadata_VoucherCodeExportCompleted_Fragment | EventMetadata_VoucherCodesCreated_Fragment | EventMetadata_VoucherCodesDeleted_Fragment | EventMetadata_VoucherCreated_Fragment | EventMetadata_VoucherDeleted_Fragment | EventMetadata_VoucherMetadataUpdated_Fragment | EventMetadata_VoucherUpdated_Fragment | EventMetadata_WarehouseCreated_Fragment | EventMetadata_WarehouseDeleted_Fragment | EventMetadata_WarehouseMetadataUpdated_Fragment | EventMetadata_WarehouseUpdated_Fragment;
 
 export type OrderGrantedRefundFragment = { readonly shippingCostsIncluded: boolean, readonly lines?: ReadonlyArray<{ readonly quantity: number, readonly orderLine: { readonly id: string } }> | null };
 

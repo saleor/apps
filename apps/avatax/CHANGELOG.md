@@ -1,5 +1,60 @@
 # saleor-app-avatax
 
+## 1.22.12
+
+### Patch Changes
+
+- 92e2026: Fixed AvaTax `ORDER_CONFIRMED` webhook failing with a validation error when a channel has no tax calculation strategy configured. Previously the app only accepted `TAX_APP` or `FLAT_RATES` and rejected the payload (returning a 500) when `taxCalculationStrategy` was `null`. Now a `null` strategy is accepted and treated like `FLAT_RATES` — the order is skipped instead of erroring, since the app is not the configured tax calculator for that channel.
+
+## 1.22.11
+
+### Patch Changes
+
+- c8a4efe: When environment variables fail validation at startup, the app now prints a readable error message and the offending fields, then exits with code 1 — instead of dumping a long stack trace. Before: a wall of webpack stack frames around `Invalid environment variables`. After: e.g. `Validation error: Required at "SECRET_KEY"` followed by a JSON list of the failing fields.
+- Updated dependencies [6683590]
+  - @saleor/webhook-utils@0.3.0
+
+## 1.22.10
+
+### Patch Changes
+
+- 9044c32: Upgraded protobufjs to v7.5.8 to fix the following CVEs: CVE-2026-41242,
+  CVE-2026-44290, CVE-2026-44291, CVE-2026-44292, CVE-2026-44293,
+  CVE-2026-44294, CVE-2026-44295, CVE-2026-45740.
+
+  This is only relevant for you if you use & enabled OpenTelemetry.
+
+## 1.22.9
+
+### Patch Changes
+
+- 2865a4f: Upgraded next.js to v15.5.18, more info: https://vercel.com/changelog/next-js-may-2026-security-release
+
+## 1.22.8
+
+### Patch Changes
+
+- 9265c47: Fixed Client Logs date filter showing an opaque error when the "From" date was after the "To" date. Before, the request was sent and DynamoDB rejected it with a generic validation error. Now the form skips the request and shows a clear inline message, and the API rejects inverted ranges with a 400 response.
+- 4af78c1: Failed JWT verification in tRPC procedures no longer reports to Sentry as an error. Before, an expired or invalid token raised a 500 (or 403) and produced an error in monitoring even though it was a normal client-side auth failure. Now it logs a warning and returns 401, so dashboards stay clean and the client can react to the auth state correctly.
+
+## 1.22.7
+
+### Patch Changes
+
+- f4203a7: Updated pactum package
+- 0744721: Added support for changing `SECRET_KEY` in production environment.
+
+  In order to use new secret key add `NEW_SECRET_KEY` env variable.
+  App will use `NEW_SECRET_KEY` for saving new configurations, and will use existing `SECRET_KEY` as a fallback for decryption.
+
+  To update all configurations in all app instances, use rotation script in each app: `pnpm rotate-secret-key`.
+
+  For more details read `packages/shared/src/key-rotation/README.md` documentation
+
+- 378c815: Updated Avatax SDK package
+- Updated dependencies [0744721]
+  - @saleor/apps-shared@1.14.5
+
 ## 1.22.6
 
 ### Patch Changes

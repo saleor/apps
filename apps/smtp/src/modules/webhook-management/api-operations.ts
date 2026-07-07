@@ -7,7 +7,7 @@ import {
   DeleteAppWebhookDocument,
 } from "../../../generated/graphql";
 
-gql`
+const _query = gql`
   fragment WebhookDetails on Webhook {
     id
     name

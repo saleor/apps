@@ -1,0 +1,13 @@
+# Deletes many gift cards in one call, removing all of their PII (including the
+# linked users and the gift card events). Returns an aggregate count plus any
+# errors - partial failures cannot be attributed to individual cards.
+mutation GiftCardBulkDelete($ids: [ID!]!) {
+  giftCardBulkDelete(ids: $ids) {
+    count
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

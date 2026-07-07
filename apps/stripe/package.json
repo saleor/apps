@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "saleor-app-payment-stripe",
-  "version": "2.6.4",
+  "version": "2.6.9",
   "private": true,
   "type": "module",
   "scripts": {
@@ -53,6 +53,7 @@
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-trpc": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
+    "@saleor/errors": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "@saleor/react-hook-form-macaw": "workspace:*",
     "@saleor/sentry-utils": "workspace:*",
@@ -78,8 +79,7 @@
     "stripe": "18.1.0",
     "urql": "catalog:",
     "usehooks-ts": "catalog:",
-    "zod": "catalog:",
-    "zod-validation-error": "catalog:"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "catalog:",

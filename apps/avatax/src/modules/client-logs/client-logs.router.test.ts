@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { isDynamoValidationError } from "./client-logs.router";
+import { getByDateInputSchema, isDynamoValidationError } from "./client-logs.router";
 
 describe("isDynamoValidationError", () => {
   it("returns true when cause is a ValidationException", () => {
@@ -45,5 +45,38 @@ describe("isDynamoValidationError", () => {
     const error = new Error("Some error", { cause: "not an error" });
 
     expect(isDynamoValidationError(error)).toBe(false);
+  });
+});
+
+describe("getByDateInputSchema", () => {
+  it("accepts a range where startDate is before endDate", () => {
+    const result = getByDateInputSchema.safeParse({
+      startDate: "2026-01-01T00:00:00.000Z",
+      endDate: "2026-01-02T00:00:00.000Z",
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it("accepts a range where startDate equals endDate", () => {
+    const result = getByDateInputSchema.safeParse({
+      startDate: "2026-01-01T00:00:00.000Z",
+      endDate: "2026-01-01T00:00:00.000Z",
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects an inverted range where startDate is after endDate", () => {
+    const result = getByDateInputSchema.safeParse({
+      startDate: "2026-01-02T00:00:00.000Z",
+      endDate: "2026-01-01T00:00:00.000Z",
+    });
+
+    expect(result.success).toBe(false);
+
+    if (!result.success) {
+      expect(result.error.issues[0].message).toBe("startDate must be before or equal to endDate");
+    }
   });
 });

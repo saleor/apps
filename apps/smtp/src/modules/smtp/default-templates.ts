@@ -453,7 +453,7 @@ ${mjHead}
     <mj-section padding="24px 0 0">
       <mj-column background-color="${colors.accent}" border-radius="8px" padding="24px">
         <mj-text font-size="12px" font-weight="600" color="${colors.muted}" letter-spacing="1px" padding="0 0 8px">YOUR GIFT CARD CODE</mj-text>
-        <mj-text font-size="28px" font-weight="700" color="${colors.primary}" letter-spacing="2px" padding="0 0 16px">{{giftCard.displayCode}}</mj-text>
+        <mj-text font-size="28px" font-weight="700" color="${colors.primary}" letter-spacing="2px" padding="0 0 16px">{{giftCard.code}}</mj-text>
         {{#if giftCard.currentBalance}}
         <mj-text font-size="18px" font-weight="600" color="${colors.primary}" padding="0 0 4px">
           {{giftCard.currentBalance.amount}} {{giftCard.currentBalance.currency}}
@@ -524,6 +524,33 @@ ${mjHead}
     <mj-section padding="16px 0 0">
       <mj-column>
         <mj-text font-size="14px" color="${colors.muted}">If you didn't request a password reset, you can safely ignore this email. Your password won't be changed.</mj-text>
+      </mj-column>
+    </mj-section>
+    ${footerSection}
+  </mj-wrapper>
+</mj-body>
+</mjml>`;
+
+const defaultAccountSetCustomerPasswordMjmlTemplate = `<mjml>
+${mjHead}
+<mj-body>
+  <mj-wrapper>
+    ${headerSection}
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="24px" font-weight="700" color="${colors.primary}" padding="0 0 16px">Set your password</mj-text>
+        <mj-text padding="0 0 8px">Hi{{#if user.first_name}} {{user.first_name}}{{/if}}! An account has been created for you{{#if site_name}} at {{site_name}}{{/if}}.</mj-text>
+        <mj-text padding="0">Click the button below to set your password and activate your account.</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="24px 0 0">
+      <mj-column>
+        <mj-button href="{{password_set_url}}">Set password</mj-button>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="16px 0 0">
+      <mj-column>
+        <mj-text font-size="14px" color="${colors.muted}">If you weren't expecting this email, you can safely ignore it.</mj-text>
       </mj-column>
     </mj-section>
     ${footerSection}
@@ -621,6 +648,7 @@ export const defaultMjmlTemplates: Record<MessageEventTypes, string> = {
   ACCOUNT_CONFIRMATION: defaultAccountConfirmationMjmlTemplate,
   ACCOUNT_DELETE: defaultAccountDeleteMjmlTemplate,
   ACCOUNT_PASSWORD_RESET: defaultAccountPasswordResetMjmlTemplate,
+  ACCOUNT_SET_CUSTOMER_PASSWORD: defaultAccountSetCustomerPasswordMjmlTemplate,
   GIFT_CARD_SENT: defaultGiftCardSentMjmlTemplate,
   INVOICE_SENT: defaultInvoiceSentMjmlTemplate,
   ORDER_CANCELLED: defaultOrderCancelledMjmlTemplate,
@@ -638,6 +666,7 @@ export const defaultMjmlSubjectTemplates: Record<MessageEventTypes, string> = {
   ACCOUNT_CONFIRMATION: "Activate your account",
   ACCOUNT_DELETE: "Confirm account deletion",
   ACCOUNT_PASSWORD_RESET: "Reset your password",
+  ACCOUNT_SET_CUSTOMER_PASSWORD: "Set your password",
   GIFT_CARD_SENT: "You've received a gift card!",
   INVOICE_SENT: "Your invoice is ready",
   ORDER_CANCELLED: "Your order has been cancelled",

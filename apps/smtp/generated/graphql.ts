@@ -1917,6 +1917,18 @@ export type WebhookEventTypeAsyncEnum =
   | 'PRODUCT_UPDATED'
   /** A product variant is back in stock. */
   | 'PRODUCT_VARIANT_BACK_IN_STOCK'
+  /**
+   * A product variant becomes available again across click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT'
+  /**
+   * A product variant becomes available again across non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL'
   /** A new product variant is created. */
   | 'PRODUCT_VARIANT_CREATED'
   /** A product variant is deleted. Warning: this event will not be executed when parent product has been deleted. Check PRODUCT_DELETED. */
@@ -1926,6 +1938,18 @@ export type WebhookEventTypeAsyncEnum =
   | 'PRODUCT_VARIANT_METADATA_UPDATED'
   /** A product variant is out of stock. */
   | 'PRODUCT_VARIANT_OUT_OF_STOCK'
+  /**
+   * A product variant becomes out of stock across all click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT'
+  /**
+   * A product variant becomes out of stock across all non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL'
   /** A product variant stock is updated */
   | 'PRODUCT_VARIANT_STOCK_UPDATED'
   /** A product variant is updated. */
@@ -2243,6 +2267,18 @@ export type WebhookEventTypeEnum =
   | 'PRODUCT_UPDATED'
   /** A product variant is back in stock. */
   | 'PRODUCT_VARIANT_BACK_IN_STOCK'
+  /**
+   * A product variant becomes available again across click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT'
+  /**
+   * A product variant becomes available again across non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL'
   /** A new product variant is created. */
   | 'PRODUCT_VARIANT_CREATED'
   /** A product variant is deleted. Warning: this event will not be executed when parent product has been deleted. Check PRODUCT_DELETED. */
@@ -2252,6 +2288,18 @@ export type WebhookEventTypeEnum =
   | 'PRODUCT_VARIANT_METADATA_UPDATED'
   /** A product variant is out of stock. */
   | 'PRODUCT_VARIANT_OUT_OF_STOCK'
+  /**
+   * A product variant becomes out of stock across all click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT'
+  /**
+   * A product variant becomes out of stock across all non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  | 'PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL'
   /** A product variant stock is updated */
   | 'PRODUCT_VARIANT_STOCK_UPDATED'
   /** A product variant is updated. */

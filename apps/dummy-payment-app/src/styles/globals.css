@@ -1,0 +1,46 @@
+a {
+  text-decoration: none;
+}
+
+code {
+  background-color: var(--mu-colors-background-surface-brand-subdued);
+}
+
+body {
+  margin: 0;
+}
+
+.overview-columns {
+  display: grid;
+  gap: 2rem;
+  align-items: flex-start;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+}
+
+@media (max-width: 900px) {
+  .overview-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+.overview-capabilities {
+  display: grid;
+  gap: 0.875rem;
+}
+
+.overview-capabilities li {
+  list-style: none;
+}
+
+.transactions-api-callout-inner {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+}
+
+@media (max-width: 900px) {
+  .transactions-api-callout-inner {
+    grid-template-columns: 1fr;
+  }
+}

@@ -11,9 +11,9 @@ import {
 } from "../../../../generated/graphql";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
+import { handleUseCaseErrors } from "../../../modules/event-handlers/send-event-messages-response-handler";
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { saleorApp } from "../../../saleor-app";
-import { handleUseCaseErrors } from "./send-event-messages-response-handler";
 
 const InvoiceSentWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -63,7 +63,7 @@ const logger = createLogger(invoiceSentWebhook.name);
 const useCaseFactory = new SendEventMessagesUseCaseFactory();
 
 const handler: NextJsWebhookHandler<InvoiceSentWebhookPayloadFragment> = async (
-  req,
+  _req,
   res,
   context,
 ) => {
@@ -99,13 +99,13 @@ const handler: NextJsWebhookHandler<InvoiceSentWebhookPayloadFragment> = async (
       .sendEventMessages({
         channelSlug: channel,
         event: "INVOICE_SENT",
-        payload: { order: payload.order },
+        payload,
         recipientEmail,
         saleorApiUrl: authData.saleorApiUrl,
       })
       .then((result) =>
         result.match(
-          (r) => {
+          () => {
             logger.info("Successfully sent email(s)");
 
             return res.status(200).json({ message: "The event has been handled" });

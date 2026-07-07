@@ -6,6 +6,7 @@ import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { env } from "@/env";
 
 import packageJson from "../../../package.json";
+import { appDeletedWebhook } from "../../app/api/webhooks/app-deleted/webhook-definition";
 import { loggerContext } from "../../logger-context";
 import { productUpdatedWebhook } from "./webhooks/product-updated";
 import { productVariantCreatedWebhook } from "./webhooks/product-variant-created";
@@ -62,6 +63,7 @@ const handler = createManifestHandler({
          * Detect changes in parent product (slug, name) and create/update all variants in CMS
          */
         productUpdatedWebhook.getWebhookManifest(apiBaseURL),
+        appDeletedWebhook.getWebhookManifest(apiBaseURL),
       ],
     };
 

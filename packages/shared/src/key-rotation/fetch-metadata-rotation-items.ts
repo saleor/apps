@@ -1,5 +1,6 @@
 import { type APL } from "@saleor/app-sdk/APL";
 import { type Logger } from "@saleor/apps-logger";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { gql } from "urql";
 
 import { createGraphQLClient } from "../create-graphql-client";
@@ -38,9 +39,9 @@ export async function* fetchMetadataRotationItems(
       .toPromise();
 
     if (error || !data?.app) {
-      logger.error(
-        `Failed to fetch metadata for ${saleorApiUrl}: ${error?.message ?? "No app data"}`,
-      );
+      logger.error(`Failed to fetch metadata: ${error?.message ?? "No app data"}`, {
+        [ObservabilityAttributes.SALEOR_API_URL]: saleorApiUrl,
+      });
       continue;
     }
 
@@ -49,6 +50,7 @@ export async function* fetchMetadataRotationItems(
 
     yield {
       id: saleorApiUrl,
+      logAttributes: { [ObservabilityAttributes.SALEOR_API_URL]: saleorApiUrl },
       encryptedFields: metadata
         .filter((entry) => matchesAnyEncryptedMetadataKey(entry.key, encryptedFieldNames))
         .map((entry) => ({

@@ -5,6 +5,7 @@ import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
 import packageJson from "../../../package.json";
 import { appWebhooks } from "../../../webhooks";
+import { appDeletedWebhook } from "../../app/api/webhooks/app-deleted/webhook-definition";
 import { env } from "../../env";
 import { loggerContext } from "../../lib/logger-context";
 
@@ -46,7 +47,10 @@ export default wrapWithLoggerContext(
           supportUrl: "https://github.com/saleor/apps/discussions",
           tokenTargetUrl: `${apiBaseURL}/api/register`,
           version: packageJson.version,
-          webhooks: appWebhooks.map((w) => w.getWebhookManifest(apiBaseURL)),
+          webhooks: [
+            ...appWebhooks.map((w) => w.getWebhookManifest(apiBaseURL)),
+            appDeletedWebhook.getWebhookManifest(apiBaseURL),
+          ],
           author: "Saleor Commerce",
           requiredSaleorVersion: ">=3.21 <4",
         };

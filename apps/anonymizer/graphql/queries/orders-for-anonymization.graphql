@@ -1,0 +1,43 @@
+fragment AnonymizationAddress on Address {
+  firstName
+  lastName
+  phone
+  city
+  postalCode
+  streetAddress1
+  countryArea
+  country {
+    country
+    code
+  }
+}
+
+# Fetches a single page of all orders for the bulk anonymization scan.
+# Saleor cannot filter orders by the *absence* of a metadata key, so the scan
+# walks every order and skips the already-anonymized ones client-side.
+# Sorted by number, which is immutable, so the cursor walk stays stable while
+# orders are being updated mid-run.
+query OrdersForAnonymization($after: String) {
+  orders(first: 100, after: $after, sortBy: { field: NUMBER, direction: ASC }) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        id
+        number
+        metadata {
+          key
+          value
+        }
+        shippingAddress {
+          ...AnonymizationAddress
+        }
+        billingAddress {
+          ...AnonymizationAddress
+        }
+      }
+    }
+  }
+}

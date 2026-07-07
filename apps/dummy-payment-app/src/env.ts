@@ -1,0 +1,73 @@
+import { booleanEnv } from "@saleor/apps-shared/boolean-env";
+import { formatEnvValidationError } from "@saleor/errors";
+import { createEnv } from "@t3-oss/env-nextjs";
+import { z } from "zod";
+
+export const env = createEnv({
+  client: {
+    NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
+  },
+  server: {
+    ALLOWED_DOMAIN_PATTERN: z.string().optional(),
+    APL: z.enum(["file", "dynamodb", "upstash"]).default("file"),
+    APP_API_BASE_URL: z.string().optional(),
+    APP_IFRAME_BASE_URL: z.string().optional(),
+    APP_LOG_LEVEL: z
+      .enum(["silent", "fatal", "error", "warn", "info", "debug", "trace"])
+      .default("info"),
+    FILE_APL_PATH: z.string().optional(),
+    UPSTASH_URL: z.string().optional(),
+    UPSTASH_TOKEN: z.string().optional(),
+    DYNAMODB_MAIN_TABLE_NAME: z.string().optional(),
+    DYNAMODB_MAIN_TABLE_TIMEOUT_MS: z.coerce.number().default(2_000),
+    DYNAMODB_MAIN_TABLE_CONNECTION_TIMEOUT_MS: z.coerce.number().default(5_000),
+    AWS_REGION: z.string().optional(),
+    AWS_ACCESS_KEY_ID: z.string().optional(),
+    AWS_SECRET_ACCESS_KEY: z.string().optional(),
+    AWS_ROLE_ARN: z.string().optional(),
+    OTEL_ENABLED: booleanEnv.defaultFalse,
+    OTEL_SERVICE_NAME: z.string().optional(),
+    OTEL_ACCESS_TOKEN: z.string().optional(),
+    PORT: z.coerce.number().default(3000),
+    VERCEL_URL: z.string().optional(),
+    VERCEL_ENV: z.string().optional(),
+    VERCEL_GIT_COMMIT_SHA: z.string().optional(),
+    REPOSITORY_URL: z.string().optional(),
+  },
+  shared: {
+    NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+    ENV: z.enum(["local", "development", "staging", "production"]).default("local"),
+  },
+  // we use the manual destruction here to validate if env variable is set inside turbo.json
+  runtimeEnv: {
+    ALLOWED_DOMAIN_PATTERN: process.env.ALLOWED_DOMAIN_PATTERN,
+    APL: process.env.APL,
+    APP_API_BASE_URL: process.env.APP_API_BASE_URL,
+    APP_IFRAME_BASE_URL: process.env.APP_IFRAME_BASE_URL,
+    APP_LOG_LEVEL: process.env.APP_LOG_LEVEL,
+    FILE_APL_PATH: process.env.FILE_APL_PATH,
+    UPSTASH_URL: process.env.UPSTASH_URL,
+    UPSTASH_TOKEN: process.env.UPSTASH_TOKEN,
+    DYNAMODB_MAIN_TABLE_NAME: process.env.DYNAMODB_MAIN_TABLE_NAME,
+    DYNAMODB_MAIN_TABLE_TIMEOUT_MS: process.env.DYNAMODB_MAIN_TABLE_TIMEOUT_MS,
+    DYNAMODB_MAIN_TABLE_CONNECTION_TIMEOUT_MS:
+      process.env.DYNAMODB_MAIN_TABLE_CONNECTION_TIMEOUT_MS,
+    AWS_REGION: process.env.AWS_REGION,
+    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+    AWS_ROLE_ARN: process.env.AWS_ROLE_ARN,
+    OTEL_ENABLED: process.env.OTEL_ENABLED,
+    OTEL_SERVICE_NAME: process.env.OTEL_SERVICE_NAME,
+    OTEL_ACCESS_TOKEN: process.env.OTEL_ACCESS_TOKEN,
+    PORT: process.env.PORT,
+    NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    NODE_ENV: process.env.NODE_ENV,
+    ENV: process.env.ENV,
+    VERCEL_URL: process.env.VERCEL_URL,
+    VERCEL_ENV: process.env.VERCEL_ENV,
+    VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
+    REPOSITORY_URL: process.env.REPOSITORY_URL,
+  },
+  isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
+  onValidationError: formatEnvValidationError,
+});

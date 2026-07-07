@@ -1,0 +1,31 @@
+mutation TransactionCreate(
+  $id: ID!
+  $name: String
+  $message: String
+  $pspReference: String
+  $availableActions: [TransactionActionEnum!]
+  $externalUrl: String
+  $paymentMethodDetails: PaymentMethodDetailsInput
+) {
+  transactionCreate(
+    id: $id
+    transaction: {
+      name: $name
+      message: $message
+      pspReference: $pspReference
+      availableActions: $availableActions
+      externalUrl: $externalUrl
+      paymentMethodDetails: $paymentMethodDetails
+    }
+  ) {
+    transaction {
+      id
+      pspReference
+    }
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

@@ -3,6 +3,7 @@ import { type AppManifest } from "@saleor/app-sdk/types";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
 import packageJson from "../../../package.json";
+import { appDeletedWebhook } from "../../app/api/webhooks/app-deleted/webhook-definition";
 import { env } from "../../env";
 
 export default withSpanAttributes(
@@ -36,6 +37,7 @@ export default withSpanAttributes(
         supportUrl: "https://github.com/saleor/apps/discussions",
         tokenTargetUrl: `${apiBaseURL}/api/register`,
         version: packageJson.version,
+        webhooks: [appDeletedWebhook.getWebhookManifest(apiBaseURL)],
       };
 
       return manifest;

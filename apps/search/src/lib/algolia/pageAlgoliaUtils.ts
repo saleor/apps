@@ -27,7 +27,7 @@ export function pageToAlgolia(page: PageDataFragment, enabledKeys: string[]) {
         ...preparedAttr,
       };
     },
-    {} as Record<string, string | boolean | string[]>,
+    {} as Record<string, string | boolean | number | string[]>,
   );
 
   const document: Record<string, unknown> = {

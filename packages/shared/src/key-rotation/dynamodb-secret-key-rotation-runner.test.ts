@@ -199,6 +199,34 @@ describe("createDynamoDBSecretKeyRotationRunner", () => {
     expect(mockDocumentClient.commandCalls(UpdateCommand)).toHaveLength(0);
   });
 
+  it("tags item-scoped log lines with saleorApiUrl extracted from PK", async () => {
+    const oldCipher = mockEncrypt("plain", FALLBACK_KEY);
+    const saleorApiUrl = "https://shop.example.com/graphql/";
+
+    mockDocumentClient.on(ScanCommand).resolves({
+      Items: [
+        {
+          PK: `${saleorApiUrl}#app-123`,
+          SK: "CONFIG#1",
+          secretA: oldCipher,
+          secretB: oldCipher,
+        },
+      ],
+      $metadata: {},
+    });
+    mockDocumentClient.on(UpdateCommand).resolves({ $metadata: {} });
+
+    const { runner, logger } = buildRunner();
+
+    await runner.run();
+
+    const reEncryptedCall = logger.info.mock.calls.find((c) =>
+      String(c[0]).includes("Re-encrypted"),
+    );
+
+    expect(reEncryptedCall?.[1]).toStrictEqual({ saleorApiUrl });
+  });
+
   it("logs each scan page with its LastEvaluatedKey", async () => {
     mockDocumentClient
       .on(ScanCommand)
