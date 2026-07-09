@@ -84,6 +84,8 @@ jobs:
             path: apps/avatax
           - name: cms
             path: apps/cms
+          - name: klaviyo
+            path: apps/klaviyo
           - name: onboarding
             path: apps/onboarding
           - name: products-feed
@@ -98,6 +100,8 @@ jobs:
             path: apps/stripe
           - name: np-atobarai
             path: apps/np-atobarai
+          - name: dummy-payment-app
+            path: apps/dummy-payment-app
           - name: app-problems
             path: packages/app-problems
           - name: domain

@@ -12,6 +12,8 @@ coverage:
         flags: [avatax]
       app-cms:
         flags: [cms]
+      app-klaviyo:
+        flags: [klaviyo]
       app-onboarding:
         flags: [onboarding]
       app-products-feed:
@@ -26,6 +28,8 @@ coverage:
         flags: [stripe]
       app-payment-np-atobarai:
         flags: [np-atobarai]
+      app-payment-dummy:
+        flags: [dummy-payment-app]
       packages-app-problems:
         flags: [app-problems]
       packages-domain:
@@ -62,6 +66,9 @@ flags:
   cms:
     paths:
       - apps/cms/
+  klaviyo:
+    paths:
+      - apps/klaviyo/
   onboarding:
     paths:
       - apps/onboarding/
@@ -83,6 +90,9 @@ flags:
   np-atobarai:
     paths:
       - apps/np-atobarai/
+  dummy-payment-app:
+    paths:
+      - apps/dummy-payment-app/
   app-problems:
     paths:
       - packages/app-problems/
