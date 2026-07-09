@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.31.0
+
+### Minor Changes
+
+- f7f0e74: Minimum Saleor version required is now 3.21 (Saleor 3.20 is EOL)
+
 ## 1.30.0
 
 ### Minor Changes
