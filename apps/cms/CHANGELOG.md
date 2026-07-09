@@ -1,5 +1,11 @@
 # saleor-app-cms
 
+## 2.17.0
+
+### Minor Changes
+
+- f7f0e74: Minimum Saleor version required is now 3.21 (Saleor 3.20 is EOL)
+
 ## 2.16.0
 
 ### Minor Changes

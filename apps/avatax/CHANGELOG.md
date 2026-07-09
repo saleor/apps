@@ -1,5 +1,11 @@
 # saleor-app-avatax
 
+## 1.23.0
+
+### Minor Changes
+
+- f7f0e74: Minimum Saleor version required is now 3.21 (Saleor 3.20 is EOL)
+
 ## 1.22.12
 
 ### Patch Changes
