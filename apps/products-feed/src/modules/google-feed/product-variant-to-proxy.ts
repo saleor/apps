@@ -1,10 +1,9 @@
-import { EditorJsPlaintextRenderer } from "@saleor/apps-shared/editor-js-plaintext-renderer";
-
 import { type RootConfig } from "../app-configuration/app-config";
 import { renderHandlebarsTemplate } from "../handlebarsTemplates/render-handlebars-template";
 import { transformTemplateFormat } from "../handlebarsTemplates/transform-template-format";
 import { getMappedAttributes } from "./attribute-mapping";
 import { type ProductVariant } from "./fetch-product-data";
+import { getDescriptionAttributeValue } from "./get-description-attribute-value";
 import { getRelatedMedia, getVariantMediaMap } from "./get-related-media";
 import { getWeightAttributeValue } from "./get-weight-attribute-value";
 import { priceMapping } from "./price-mapping";
@@ -74,7 +73,10 @@ export const productVariantToProxy = ({
     slug: variant.product.slug,
     variantId: variant.id,
     sku: variant.sku ?? undefined,
-    description: EditorJsPlaintextRenderer({ stringData: variant.product.description ?? "" }),
+    description: getDescriptionAttributeValue({
+      description: variant.product.description,
+      seoDescription: variant.product.seoDescription,
+    }),
     availability:
       variant.quantityAvailable && variant.quantityAvailable > 0 ? "in_stock" : "out_of_stock",
     category: variant.product.category?.name || "unknown",
