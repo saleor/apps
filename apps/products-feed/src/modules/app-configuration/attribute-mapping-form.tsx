@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Box, Button, Text } from "@saleor/macaw-ui";
-import { Multiselect } from "@saleor/react-hook-form-macaw";
+import { Multiselect, Toggle } from "@saleor/react-hook-form-macaw";
 import { useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
@@ -65,12 +65,22 @@ export const AttributeMappingConfigurationForm = (props: Props) => {
         label="Size attributes"
         options={options}
       />
-      <Multiselect
-        control={control}
-        name="gtinAttributeIds"
-        label="GTIN attributes"
-        options={options}
-      />
+      <Box display={"flex"} flexDirection={"column"} gap={2}>
+        <Multiselect
+          control={control}
+          name="gtinAttributeIds"
+          label="GTIN attributes"
+          options={options}
+        />
+        <Toggle name="useSkuAsGtin" control={control}>
+          <Text>Use SKU as GTIN (fallback)</Text>
+        </Toggle>
+        <Text size={2} color={"default2"}>
+          When a product has no mapped GTIN attribute, its SKU is used as the GTIN. Products with a
+          mapped GTIN attribute keep that value. Only enable this if your SKUs are genuine
+          GTINs/barcodes — Google may reject invalid GTIN values.
+        </Text>
+      </Box>
       <Multiselect
         control={control}
         name="shippingLabelAttributeIds"
