@@ -159,6 +159,7 @@ describe("attribute-mapping", () => {
             sizeAttributeIds: ["size-id"],
             gtinAttributeIds: ["gtin-id"],
             shippingLabelAttributeIds: ["shipping-label-id"],
+            useSkuAsGtin: false,
           },
         }),
       ).toStrictEqual({
@@ -274,6 +275,7 @@ describe("attribute-mapping", () => {
             patternAttributeIds: ["pattern-id"],
             gtinAttributeIds: ["gtin-id"],
             shippingLabelAttributeIds: ["shipping-label-id"],
+            useSkuAsGtin: false,
           },
         }),
       ).toStrictEqual({

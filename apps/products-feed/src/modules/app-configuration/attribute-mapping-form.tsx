@@ -125,6 +125,7 @@ export const ConnectedAttributeMappingForm = () => {
       materialAttributeIds: [],
       gtinAttributeIds: [],
       shippingLabelAttributeIds: [],
+      useSkuAsGtin: false,
     };
   }, [data]);
 
