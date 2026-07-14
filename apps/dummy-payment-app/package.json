@@ -8,6 +8,7 @@
     "build": "next build",
     "check-types": "tsc",
     "dev": "NODE_OPTIONS='--inspect' next dev",
+    "fetch-schema": "curl -sSL https://raw.githubusercontent.com/saleor/saleor/lkostrowski/checkout-line-price-reason/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "pnpm run /generate:.*/",
     "generate:app-graphql-types": "graphql-codegen",
     "generate:app-webhooks-types": "tsx ./scripts/generate-app-webhooks-types.ts --json-schema-version=${npm_package_config_saleor_schemaVersion}",

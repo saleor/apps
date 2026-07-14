@@ -46,6 +46,10 @@ export default wrapWithLoggerContext(
              * This can be removed
              */
             "MANAGE_CHECKOUTS",
+            /**
+             * Required to set a custom `price` and `priceOverrideReason` on checkout lines.
+             */
+            "HANDLE_CHECKOUTS",
             "HANDLE_PAYMENTS",
             "MANAGE_ORDERS",
           ],
