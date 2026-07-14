@@ -88,7 +88,8 @@ export const productVariantToProxy = ({
     brand: attributes?.brand,
     pattern: attributes?.pattern,
     size: attributes?.size,
-    gtin: attributes?.gtin,
+    gtin:
+      attributes?.gtin || (attributeMapping?.useSkuAsGtin ? variant.sku ?? undefined : undefined),
     shipping_label: attributes?.shipping_label,
     weight,
     ...pricing,
