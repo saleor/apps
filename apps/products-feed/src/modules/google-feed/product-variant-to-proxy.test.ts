@@ -111,4 +111,35 @@ describe("productVariantToProxy — GTIN resolution", () => {
 
     expect(findGtin(result.item)).toBeUndefined();
   });
+
+  it("falls through to SKU when mapped GTIN attribute is an empty string", () => {
+    const productWithEmptyGtin: ProductVariant["product"] = {
+      ...productBase,
+      attributes: [
+        {
+          attribute: { id: "gtin-attr" },
+          values: [{ name: "" }],
+        },
+      ],
+    };
+
+    const result = run(buildVariant({ product: productWithEmptyGtin }), {
+      ...baseMapping,
+      gtinAttributeIds: ["gtin-attr"],
+      useSkuAsGtin: true,
+    });
+
+    expect(findGtin(result.item)).toStrictEqual({
+      "g:gtin": [{ "#text": "SKU-123" }],
+    });
+  });
+
+  it("omits GTIN when useSkuAsGtin is on but the SKU is an empty string", () => {
+    const result = run(buildVariant({ sku: "" }), {
+      ...baseMapping,
+      useSkuAsGtin: true,
+    });
+
+    expect(findGtin(result.item)).toBeUndefined();
+  });
 });
