@@ -49,13 +49,19 @@ function hasErrorContext(error: unknown): error is { errorContext?: ErrorContext
 
 export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFallbackSmtpEnabled {
   static SmtpConfigurationServiceError = BaseError.subclass("SmtpConfigurationServiceError");
-  static ConfigNotFoundError = BaseError.subclass("ConfigNotFoundError");
-  static EventConfigNotFoundError = BaseError.subclass("EventConfigNotFoundError");
-  static CantFetchConfigError = BaseError.subclass("CantFetchConfigError");
-  static WrongSaleorVersionError = BaseError.subclass("WrongSaleorVersionError");
-  static TemplateValidationError = BaseError.subclass("TemplateValidationError", {
-    props: {} as TemplateValidationErrorProps,
-  });
+  static ConfigNotFoundError = this.SmtpConfigurationServiceError.subclass("ConfigNotFoundError");
+  static EventConfigNotFoundError = this.SmtpConfigurationServiceError.subclass(
+    "EventConfigNotFoundError",
+  );
+  static CantFetchConfigError = this.SmtpConfigurationServiceError.subclass("CantFetchConfigError");
+  static WrongSaleorVersionError =
+    this.SmtpConfigurationServiceError.subclass("WrongSaleorVersionError");
+  static TemplateValidationError = this.SmtpConfigurationServiceError.subclass(
+    "TemplateValidationError",
+    {
+      props: {} as TemplateValidationErrorProps,
+    },
+  );
 
   private configurationData?: SmtpConfig;
   private metadataConfigurator: SmtpMetadataManager;

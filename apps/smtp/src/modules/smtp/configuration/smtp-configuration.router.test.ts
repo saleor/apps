@@ -2,7 +2,11 @@ import { TRPCError } from "@trpc/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { saleorApp } from "../../../saleor-app";
-import { smtpConfigurationRouter } from "./smtp-configuration.router";
+import {
+  smtpConfigurationRouter,
+  throwTrpcErrorFromConfigurationServiceError,
+} from "./smtp-configuration.router";
+import { SmtpConfigurationService } from "./smtp-configuration.service";
 
 const validMjmlTemplate = `<mjml>
   <mj-body>
@@ -262,6 +266,71 @@ describe("smtpConfigurationRouter", () => {
           expect(trpcError.message.length).toBeGreaterThan(0);
         }
       });
+    });
+  });
+
+  describe("throwTrpcErrorFromConfigurationServiceError", () => {
+    const getThrownError = (error: unknown) => {
+      try {
+        throwTrpcErrorFromConfigurationServiceError(error);
+      } catch (e) {
+        return e as TRPCError;
+      }
+
+      throw new Error("Expected function to throw");
+    };
+
+    it("should map TemplateValidationError to BAD_REQUEST (not INTERNAL_SERVER_ERROR)", () => {
+      const error = new SmtpConfigurationService.TemplateValidationError(
+        "expected the first argument to be a number",
+        { props: { errorContext: "BODY_TEMPLATE" } },
+      );
+
+      const thrown = getThrownError(error);
+
+      expect(thrown).toBeInstanceOf(TRPCError);
+      expect(thrown.code).toBe("BAD_REQUEST");
+      expect(thrown.message).toBe("expected the first argument to be a number");
+    });
+
+    it("should map ConfigNotFoundError to NOT_FOUND", () => {
+      const error = new SmtpConfigurationService.ConfigNotFoundError("Configuration not found");
+
+      const thrown = getThrownError(error);
+
+      expect(thrown.code).toBe("NOT_FOUND");
+    });
+
+    it("should map EventConfigNotFoundError to NOT_FOUND", () => {
+      const error = new SmtpConfigurationService.EventConfigNotFoundError(
+        "Event configuration not found",
+      );
+
+      const thrown = getThrownError(error);
+
+      expect(thrown.code).toBe("NOT_FOUND");
+    });
+
+    it("should map CantFetchConfigError to INTERNAL_SERVER_ERROR", () => {
+      const error = new SmtpConfigurationService.CantFetchConfigError("Can't fetch configuration");
+
+      const thrown = getThrownError(error);
+
+      expect(thrown.code).toBe("INTERNAL_SERVER_ERROR");
+    });
+
+    it("should map WrongSaleorVersionError to INTERNAL_SERVER_ERROR", () => {
+      const error = new SmtpConfigurationService.WrongSaleorVersionError("Wrong Saleor version");
+
+      const thrown = getThrownError(error);
+
+      expect(thrown.code).toBe("INTERNAL_SERVER_ERROR");
+    });
+
+    it("should map unknown errors to INTERNAL_SERVER_ERROR", () => {
+      const thrown = getThrownError(new Error("Some unexpected error"));
+
+      expect(thrown.code).toBe("INTERNAL_SERVER_ERROR");
     });
   });
 
