@@ -26,6 +26,7 @@ const exampleAttributeMappingConfig: RootConfig["attributeMapping"] = {
   sizeAttributeIds: [],
   gtinAttributeIds: [],
   shippingLabelAttributeIds: [],
+  useSkuAsGtin: false,
 };
 
 const exampleTitleTemplate: RootConfig["titleTemplate"] =
@@ -57,6 +58,7 @@ describe("AppConfig", function () {
           sizeAttributeIds: [],
           gtinAttributeIds: [],
           shippingLabelAttributeIds: [],
+          useSkuAsGtin: false,
         },
         titleTemplate: "{{variant.product.name}} - {{variant.name}}",
         imageSize: 1024,
@@ -91,6 +93,7 @@ describe("AppConfig", function () {
           sizeAttributeIds: [],
           gtinAttributeIds: [],
           shippingLabelAttributeIds: [],
+          useSkuAsGtin: false,
         },
         titleTemplate: "{{variant.product.name}} - {{variant.name}}",
         imageSize: 1024,
@@ -124,6 +127,7 @@ describe("AppConfig", function () {
           sizeAttributeIds: [],
           gtinAttributeIds: [],
           shippingLabelAttributeIds: [],
+          useSkuAsGtin: false,
         },
         titleTemplate: "{{ variant.name }}",
         imageSize: 1024,
@@ -149,6 +153,7 @@ describe("AppConfig", function () {
           sizeAttributeIds: [],
           gtinAttributeIds: [],
           shippingLabelAttributeIds: [],
+          useSkuAsGtin: false,
         },
         titleTemplate: "{{ variant.name }}",
         imageSize: 1024,
@@ -180,6 +185,7 @@ describe("AppConfig", function () {
         sizeAttributeIds: ["size-id"],
         gtinAttributeIds: [],
         shippingLabelAttributeIds: ["shipping-label-id"],
+        useSkuAsGtin: false,
       },
       titleTemplate: "{{ variant.product.name }} - {{ variant.name }}",
       imageSize: 1024,
@@ -209,6 +215,7 @@ describe("AppConfig", function () {
           sizeAttributeIds: ["size-id"],
           gtinAttributeIds: [],
           shippingLabelAttributeIds: ["shipping-label-id"],
+          useSkuAsGtin: false,
         },
         titleTemplate: "{{ variant.product.name }} - {{ variant.name }}",
         imageSize: 1024,
@@ -239,6 +246,7 @@ describe("AppConfig", function () {
           sizeAttributeIds: ["size-id"],
           gtinAttributeIds: [],
           shippingLabelAttributeIds: ["shipping-label-id"],
+          useSkuAsGtin: false,
         },
         titleTemplate: "{{ variant.product.name }} - {{ variant.name }}",
         imageSize: 1024,
@@ -272,6 +280,7 @@ describe("AppConfig", function () {
         sizeAttributeIds: ["size-id"],
         gtinAttributeIds: [],
         shippingLabelAttributeIds: ["shipping-label-id"],
+        useSkuAsGtin: false,
       });
     });
   });
@@ -338,5 +347,28 @@ describe("AppConfig", function () {
       accessKeyId: "access",
       secretAccessKey: "secret",
     });
+  });
+
+  it("Defaults useSkuAsGtin to false when not provided", () => {
+    const config = new AppConfig();
+
+    expect(config.getAttributeMapping()?.useSkuAsGtin).toBe(false);
+  });
+
+  it("Persists useSkuAsGtin when set through attribute mapping", () => {
+    const config = new AppConfig();
+
+    config.setAttributeMapping({
+      brandAttributeIds: [],
+      colorAttributeIds: [],
+      patternAttributeIds: [],
+      materialAttributeIds: [],
+      sizeAttributeIds: [],
+      gtinAttributeIds: [],
+      shippingLabelAttributeIds: [],
+      useSkuAsGtin: true,
+    });
+
+    expect(config.getAttributeMapping()?.useSkuAsGtin).toBe(true);
   });
 });
