@@ -26,6 +26,11 @@ export const env = createEnv({
     AWS_SECRET_ACCESS_KEY: z.string().optional(),
     AWS_ROLE_ARN: z.string().optional(),
     OTEL_ENABLED: booleanEnv.defaultFalse,
+    /**
+     * When enabled, Saleor GraphQL operations executed on the server (e.g. price-override
+     * checkout create) are logged with their variables and responses. Keep it off in production.
+     */
+    LOG_SALEOR_OPERATIONS: booleanEnv.defaultFalse,
     OTEL_SERVICE_NAME: z.string().optional(),
     OTEL_ACCESS_TOKEN: z.string().optional(),
     PORT: z.coerce.number().default(3000),
@@ -57,6 +62,7 @@ export const env = createEnv({
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     AWS_ROLE_ARN: process.env.AWS_ROLE_ARN,
     OTEL_ENABLED: process.env.OTEL_ENABLED,
+    LOG_SALEOR_OPERATIONS: process.env.LOG_SALEOR_OPERATIONS,
     OTEL_SERVICE_NAME: process.env.OTEL_SERVICE_NAME,
     OTEL_ACCESS_TOKEN: process.env.OTEL_ACCESS_TOKEN,
     PORT: process.env.PORT,

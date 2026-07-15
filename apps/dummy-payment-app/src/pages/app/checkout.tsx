@@ -17,7 +17,6 @@ import React from "react";
 
 import { SectionWithDescription } from "@/components/section-with-description";
 import {
-  type CheckoutLineInput,
   useChannelsListQuery,
   useCompleteCheckoutMutation,
   useCreateCheckoutMutation,
@@ -27,6 +26,7 @@ import {
 } from "@/generated/graphql";
 import { type TransactionEventType, transactionEventTypeSchema } from "@/modules/validation/common";
 import { type SyncWebhookRequestData } from "@/modules/validation/sync-transaction";
+import { trpcClient } from "@/trpc-client";
 
 interface TransactionResponseOptions {
   value: TransactionEventType;
@@ -64,12 +64,36 @@ const CheckoutPage = () => {
     variables: { channelSlug },
   });
   const [checkoutCreateResult, checkoutCreateExecute] = useCreateCheckoutMutation();
+  /**
+   * Server-side checkout create. Used only when a line has a price override, so the Saleor call
+   * is logged (behind `LOG_SALEOR_OPERATIONS`) and its error is forwarded to the UI. Checkouts
+   * without a price override keep using the client-side `checkoutCreateExecute` above.
+   */
+  const checkoutCreateServer = trpcClient.checkout.create.useMutation();
+
+  // Lines added to the checkout. Reset when the channel changes, since variants are channel-scoped.
+  const [lines, setLines] = React.useState<CheckoutLineDraft[]>([]);
+
+  // Unified view over the two create paths (client-side urql vs. server-side tRPC).
+  const createdCheckout =
+    checkoutCreateServer.data?.checkout ??
+    checkoutCreateResult.data?.checkoutCreate?.checkout ??
+    null;
+  const createCheckoutErrors =
+    checkoutCreateServer.data?.errors ?? checkoutCreateResult.data?.checkoutCreate?.errors ?? [];
+  // Top-level error forwarded from either path (tRPC error, or urql network/GraphQL error).
+  const createCheckoutErrorMessage =
+    checkoutCreateServer.error?.message ?? checkoutCreateResult.error?.message ?? null;
+  const isCreatingCheckout = checkoutCreateResult.fetching || checkoutCreateServer.isLoading;
+  const hasCheckoutOutcome = Boolean(
+    createdCheckout || createCheckoutErrors.length > 0 || createCheckoutErrorMessage,
+  );
 
   const [deliveryUpdateResult, deliveryUpdateExecute] = useUpdateDeliveryMutation();
   const handleExecuteDeliveryUpdate = () => {
     deliveryUpdateExecute({
-      id: checkoutCreateResult.data?.checkoutCreate?.checkout?.id ?? "",
-      methodId: checkoutCreateResult.data?.checkoutCreate?.checkout?.shippingMethods[0]?.id ?? "",
+      id: createdCheckout?.id ?? "",
+      methodId: createdCheckout?.shippingMethods[0]?.id ?? "",
     });
   };
 
@@ -78,8 +102,17 @@ const CheckoutPage = () => {
 
   const [completeCheckoutResult, completeCheckoutExecute] = useCompleteCheckoutMutation();
 
-  // Lines added to the checkout. Reset when the channel changes, since variants are channel-scoped.
-  const [lines, setLines] = React.useState<CheckoutLineDraft[]>([]);
+  /**
+   * Any in-flight query or mutation. While something is loading we disable interactive controls
+   * and show a busy cursor, so the user can't fire overlapping operations.
+   */
+  const isBusy =
+    fetchingChannels ||
+    fetchingProducts ||
+    isCreatingCheckout ||
+    deliveryUpdateResult.fetching ||
+    transactionInitializeResult.fetching ||
+    completeCheckoutResult.fetching;
 
   // Draft of the line currently being configured before "Add line" is pressed.
   const [draftVariantId, setDraftVariantId] = React.useState<string>("");
@@ -139,7 +172,7 @@ const CheckoutPage = () => {
 
   const handleExecuteInitializeTransaction = () => {
     transactionInitializeExecute({
-      id: checkoutCreateResult.data?.checkoutCreate?.checkout?.id ?? "",
+      id: createdCheckout?.id ?? "",
       data: {
         event: {
           type: response.value,
@@ -150,30 +183,45 @@ const CheckoutPage = () => {
   };
 
   const handleExecuteCheckoutCreate = () => {
-    const variants: CheckoutLineInput[] = lines.map((line) => ({
-      variantId: line.variantId,
-      quantity: line.quantity,
+    const usesPriceOverride = lines.some((line) => line.customPrice);
+
+    const variants = lines.map((line) => {
+      const variant: {
+        variantId: string;
+        quantity: number;
+        price?: string;
+        priceOverrideReason?: string;
+      } = {
+        variantId: line.variantId,
+        quantity: line.quantity,
+      };
+
       /*
        * `price` and `priceOverrideReason` are only sent when a custom price is enabled. A reason
        * without a price is rejected by Saleor, so both travel together.
        */
-      ...(line.customPrice
-        ? {
-            price: line.price,
-            ...(line.reason.trim() !== "" ? { priceOverrideReason: line.reason } : {}),
-          }
-        : {}),
-    }));
+      if (line.customPrice) {
+        variant.price = line.price;
 
-    checkoutCreateExecute({
-      channelSlug,
-      variants,
+        if (line.reason.trim() !== "") {
+          variant.priceOverrideReason = line.reason;
+        }
+      }
+
+      return variant;
     });
+
+    if (usesPriceOverride) {
+      // Route through the backend so the price-override operation is logged and errors surface.
+      checkoutCreateServer.mutate({ channelSlug, variants });
+    } else {
+      checkoutCreateExecute({ channelSlug, variants });
+    }
   };
 
   const handleExecuteCompleteCheckout = () => {
     completeCheckoutExecute({
-      id: checkoutCreateResult.data?.checkoutCreate?.checkout?.id ?? "",
+      id: createdCheckout?.id ?? "",
     });
   };
 
@@ -192,11 +240,8 @@ const CheckoutPage = () => {
     );
   };
 
-  const createdCheckout = checkoutCreateResult.data?.checkoutCreate?.checkout;
-  const createCheckoutErrors = checkoutCreateResult.data?.checkoutCreate?.errors ?? [];
-
   return (
-    <Box display="grid" gap={8}>
+    <Box display="grid" gap={8} __cursor={isBusy ? "wait" : undefined}>
       <Box>
         <Text as="h1" size={6} fontWeight="bold">
           Quick checkout
@@ -220,11 +265,13 @@ const CheckoutPage = () => {
             <Text size={3}>Channel</Text>
             <Combobox
               value={channelSlug}
+              disabled={isBusy}
               onChange={(value) => {
                 setChannelSlug(value as string);
                 // Variants are channel-scoped, so lines built for another channel no longer apply.
                 setLines([]);
                 resetDraft();
+                checkoutCreateServer.reset();
               }}
               options={(channelsData?.channels ?? []).map((value) => ({
                 value: value.slug,
@@ -240,6 +287,7 @@ const CheckoutPage = () => {
                 value,
               }))}
               value={response}
+              disabled={isBusy}
               onChange={(value) => setResponse(value as TransactionResponseOptions)}
               size="small"
               __width="250px"
@@ -247,6 +295,7 @@ const CheckoutPage = () => {
           </Box>
           <Toggle
             pressed={includePspReference}
+            disabled={isBusy}
             onPressedChange={(pressed) => setIncludePspReference(pressed)}
           >
             <Text>Return pspReference</Text>
@@ -269,7 +318,7 @@ const CheckoutPage = () => {
       >
         <Box display="grid" gap={4}>
           <Box display="flex" gap={4} alignItems="flex-end" flexWrap="wrap">
-            <Box display="grid" gap={1}>
+            <Box display="grid" gap={1} __cursor={fetchingProducts ? "wait" : undefined}>
               <Text size={2} color="default2">
                 Product
               </Text>
@@ -277,7 +326,7 @@ const CheckoutPage = () => {
                 value={draftVariantId}
                 onChange={(value) => setDraftVariantId((value as string) ?? "")}
                 options={productOptions}
-                disabled={channelSlug === "" || fetchingProducts}
+                disabled={channelSlug === "" || isBusy}
                 __width="280px"
               />
             </Box>
@@ -286,6 +335,7 @@ const CheckoutPage = () => {
               label="Quantity"
               value={draftQuantity}
               min={1}
+              disabled={isBusy}
               onChange={(event) => setDraftQuantity(event.target.value)}
               __width="120px"
             />
@@ -293,6 +343,7 @@ const CheckoutPage = () => {
 
           <Checkbox
             checked={draftCustomPrice}
+            disabled={isBusy}
             onCheckedChange={(checked) => setDraftCustomPrice(checked === true)}
           >
             <Text>Custom price</Text>
@@ -305,6 +356,7 @@ const CheckoutPage = () => {
                 label="Price"
                 value={draftPrice}
                 min={0}
+                disabled={isBusy}
                 onChange={(event) => setDraftPrice(event.target.value)}
                 __width="160px"
               />
@@ -312,6 +364,7 @@ const CheckoutPage = () => {
                 type="text"
                 label="Reason (optional)"
                 value={draftReason}
+                disabled={isBusy}
                 onChange={(event) => setDraftReason(event.target.value)}
                 __width="320px"
               />
@@ -319,7 +372,11 @@ const CheckoutPage = () => {
           )}
 
           <Box>
-            <Button variant="secondary" disabled={!isDraftValid} onClick={() => handleAddLine()}>
+            <Button
+              variant="secondary"
+              disabled={!isDraftValid || isBusy}
+              onClick={() => handleAddLine()}
+            >
               Add line
             </Button>
           </Box>
@@ -353,6 +410,7 @@ const CheckoutPage = () => {
                   <Button
                     variant="tertiary"
                     icon={<TrashBinIcon />}
+                    disabled={isBusy}
                     onClick={() => handleRemoveLine(index)}
                   />
                 </List.Item>
@@ -372,9 +430,7 @@ const CheckoutPage = () => {
       >
         <Box display="flex" gap={4} alignItems="center" flexWrap="wrap">
           <Button
-            disabled={
-              channelSlug === "" || fetchingChannels || fetchingProducts || lines.length === 0
-            }
+            disabled={channelSlug === "" || lines.length === 0 || isBusy}
             onClick={() => handleExecuteCheckoutCreate()}
           >
             Create checkout
@@ -382,20 +438,20 @@ const CheckoutPage = () => {
           <ArrowRightIcon />
           <Button
             onClick={() => handleExecuteDeliveryUpdate()}
-            disabled={!checkoutCreateResult.data}
+            disabled={!createdCheckout || isBusy}
           >
             Set delivery
           </Button>
           <ArrowRightIcon />
           <Button
-            disabled={!checkoutCreateResult.data}
+            disabled={!createdCheckout || isBusy}
             onClick={() => handleExecuteInitializeTransaction()}
           >
             Initialize transaction
           </Button>
           <ArrowRightIcon />
           <Button
-            disabled={!checkoutCreateResult.data || !deliveryUpdateResult.data}
+            disabled={!createdCheckout || !deliveryUpdateResult.data || isBusy}
             onClick={() => handleExecuteCompleteCheckout()}
           >
             Complete checkout
@@ -403,7 +459,7 @@ const CheckoutPage = () => {
         </Box>
       </SectionWithDescription>
 
-      {checkoutCreateResult.data && (
+      {hasCheckoutOutcome && (
         <Box
           display="grid"
           gap={4}
@@ -413,6 +469,17 @@ const CheckoutPage = () => {
           borderWidth={1}
           borderColor="default1"
         >
+          {createCheckoutErrorMessage && (
+            <Box display="grid" gap={1}>
+              <Text size={4} fontWeight="bold" color="critical1">
+                Checkout create failed
+              </Text>
+              <Text size={3} color="critical1">
+                {createCheckoutErrorMessage}
+              </Text>
+            </Box>
+          )}
+
           {createCheckoutErrors.length > 0 && (
             <Box display="grid" gap={1}>
               <Text size={4} fontWeight="bold" color="critical1">
