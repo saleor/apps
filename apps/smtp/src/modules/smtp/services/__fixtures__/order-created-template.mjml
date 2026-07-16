@@ -1,0 +1,270 @@
+<mjml>
+  <mj-head>
+  <mj-breakpoint width="480px" />
+  <mj-font name="Figtree" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&display=swap" />
+  <mj-attributes>
+    <mj-all font-family="Figtree, Arial, Helvetica, sans-serif" />
+    <mj-text font-size="16px" line-height="24px" color='#151515' padding="2px 0" />
+    <mj-button
+      background-color="#243953"
+      color="#ffffff"
+      font-size="16px"
+      line-height="24px"
+      font-weight="bold"
+      border-radius="0"
+      padding="0"
+    />
+    <mj-class name="footer-additional-info" font-size="14px" line-height="20px" align="center" color="#4a4a4a" />
+    <mj-class name="h2" font-size="36px" line-height="48px" font-weight="600"/>
+  </mj-attributes>
+  <mj-style>
+    a { text-decoration: underline; }
+    .footer-nav a { color: #151515; text-decoration: underline; padding: 0 12px; display: inline-block; }
+    .mobile-full-btn table { width: 100% !important; padding-top: 14px;}
+    .mobile-full-btn a { width: 100% !important; box-sizing: border-box;}
+    @media only screen and (max-width:479px) {
+      .line-prices { padding-top: 16px !important; }
+    }
+  </mj-style>
+</mj-head>
+
+  <mj-body width="736px">
+    <!-- ============================= HEADER (universal) ============================= -->
+<mj-section background-color="#243953" padding="28px 0">
+  <mj-column>
+    <mj-image
+      src="https://example.com/media/logo.png"
+      alt="Example Store"
+      width="70px"
+      align="center"
+      padding="0"
+    />
+  </mj-column>
+</mj-section>
+
+    <!-- ============================= MAIN CONTENT ============================= -->
+    <mj-section padding="30px 24px 8px">
+      <mj-column>
+        <mj-image
+  src="https://example.com/media/success-icon.png"
+  alt="Success"
+  width="64px"
+  height="64px"
+  align="center"
+  border-radius="32px"
+  padding="0 0 24px"
+/>
+        <mj-text align="center" font-size="34px" line-height="42px" font-weight="bold" padding="0 0 20px">
+          Thank you for your order!
+        </mj-text>
+        <mj-text>Your order has been received. Once it has been processed and shipped from our warehouse, you will receive another email.</mj-text>
+        <mj-button href="#" css-class="mobile-full-btn">
+          View order
+        </mj-button>
+      </mj-column>
+    </mj-section>
+
+    <!-- ============================= ORDER DETAIL (shared) ============================= -->
+
+<!-- Order number / date -->
+<mj-section padding="8px 24px 0">
+  <mj-group>
+    <mj-column width="50%">
+      <mj-text font-weight="bold">Order</mj-text>
+      <mj-text>#{{order.number}}</mj-text>
+    </mj-column>
+    <mj-column width="50%">
+      <mj-text font-weight="bold">Order date</mj-text>
+      <mj-text>{{moment order.created format="DD.MM.YYYY"}}</mj-text>
+    </mj-column>
+  </mj-group>
+</mj-section>
+
+<!-- Shipping / billing address -->
+<mj-section padding="24px 24px 0">
+  <mj-group>
+    <mj-column width="50%">
+      <mj-text font-weight="bold">Shipping address</mj-text>
+      <mj-text>
+        {{#if order.shippingAddress.companyName}}
+          {{order.shippingAddress.companyName}}<br />
+        {{/if}}
+        {{order.shippingAddress.firstName}} {{order.shippingAddress.lastName}}<br />
+        {{order.shippingAddress.streetAddress1}}<br />
+        {{#if order.shippingAddress.streetAddress2}}
+          {{order.shippingAddress.streetAddress2}}<br />
+        {{/if}}
+        {{order.shippingAddress.postalCode}} {{order.shippingAddress.city}}<br />
+        {{#if order.shippingAddress.phone}}
+          tel. {{order.shippingAddress.phone}}
+        {{/if}}
+      </mj-text>
+    </mj-column>
+    <mj-column width="50%">
+      <mj-text font-weight="bold">Billing address</mj-text>
+      <mj-text>
+        {{#if order.billingAddress.companyName}}
+          {{order.billingAddress.companyName}}<br />
+        {{/if}}
+        {{order.billingAddress.firstName}} {{order.billingAddress.lastName}}<br />
+        {{order.billingAddress.streetAddress1}}<br />
+        {{#if order.billingAddress.streetAddress2}}
+          {{order.billingAddress.streetAddress2}}<br />
+        {{/if}}
+        {{order.billingAddress.postalCode}} {{order.billingAddress.city}}<br />
+        {{#if order.billingAddress.phone}}
+          tel. {{order.billingAddress.phone}}
+        {{/if}}
+      </mj-text>
+    </mj-column>
+  </mj-group>
+</mj-section>
+
+<!-- Shipping method -->
+<mj-section padding="24px 24px 0">
+  <mj-group>
+    <mj-column width="50%">
+      <mj-text font-weight="bold">Shipping</mj-text>
+      <mj-text>{{order.shippingMethodName}}</mj-text>
+    </mj-column>
+    <mj-column width="50%">
+      <mj-text>&nbsp;</mj-text>
+    </mj-column>
+  </mj-group>
+</mj-section>
+
+<!-- Order lines -->
+{{#each order.lines}}
+<mj-section padding="32px 24px 0">
+  <!-- Product: image + info (stays side by side on mobile) -->
+  <mj-group width="45%" vertical-align="middle">
+    <mj-column width="32%" vertical-align="middle" padding="0 12px 0 0">
+      <mj-image
+        src="{{thumbnail.url}}"
+        alt="{{thumbnail.alt}}"
+        width="88px"
+        align="left"
+        padding="0"
+      />
+    </mj-column>
+    <mj-column width="68%" vertical-align="middle">
+      {{#each variant.product.attributes}}
+        {{#if (eq attribute.slug "brand")}}
+          <mj-text color="#4B5563">{{#each values}}{{name}}{{#unless @last}}, {{/unless}}{{/each}}</mj-text>
+        {{/if}}
+      {{/each}}
+      <mj-text>{{#if variantName}}{{variantName}}{{else}}{{productName}}{{/if}}</mj-text>
+      <mj-text>{{productSku}}</mj-text>
+    </mj-column>
+  </mj-group>
+  <!-- Prices: unit / qty / total (drops below product on mobile, stays 3-across) -->
+  <mj-group width="55%" vertical-align="middle" css-class="line-prices">
+    <mj-column width="38%" vertical-align="middle">
+      <mj-text>Unit price</mj-text>
+      <mj-text font-weight="bold">{{unitPrice.gross.amount}} {{unitPrice.gross.currency}}</mj-text>
+    </mj-column>
+    <mj-column width="28%" vertical-align="middle">
+      <mj-text>Quantity</mj-text>
+      <mj-text font-weight="bold">{{quantity}} pcs</mj-text>
+    </mj-column>
+    <mj-column width="34%" vertical-align="middle">
+      <mj-text align="right">Total</mj-text>
+      <mj-text align="right" font-weight="bold">{{totalPrice.gross.amount}} {{totalPrice.gross.currency}}</mj-text>
+    </mj-column>
+  </mj-group>
+</mj-section>
+<mj-section>
+  <mj-column>
+    <mj-divider border-width="1px" border-color="#e6e6e6" padding="0 24px" />
+  </mj-column>
+</mj-section>
+{{/each}}
+
+<!-- Totals -->
+<mj-section padding="0 24px 0">
+  <mj-column>
+    <mj-table font-size="16px" line-height="24px" color="#151515" padding="0">
+      <tr>
+        <td style="padding: 2px 0;">Subtotal (VAT 0%)</td>
+        <td style="padding: 2px 0; text-align: right;">
+          {{order.subtotal.net.amount}} {{order.subtotal.net.currency}}
+        </td>
+      </tr>
+      {{#if (subtract order.undiscountedTotal.gross.amount order.total.gross.amount)}}
+      <tr>
+        <td style="padding: 2px 0;">Discount</td>
+        <td style="padding: 2px 0; text-align: right; color: #e01e1e;">
+          -{{subtract order.undiscountedTotal.gross.amount order.total.gross.amount}} {{order.total.gross.currency}}
+        </td>
+      </tr>
+      {{/if}}
+      {{#if order.isShippingRequired}}
+      <tr>
+        <td style="padding: 2px 0;">Shipping and handling</td>
+        <td style="padding: 2px 0; text-align: right;">
+          {{order.shippingPrice.gross.amount}} {{order.shippingPrice.gross.currency}}
+        </td>
+      </tr>
+      {{/if}}
+      <tr>
+        <td style="padding: 2px 0;">Total (excl. tax)</td>
+        <td style="padding: 2px 0; text-align: right;">
+          {{order.total.net.amount}} {{order.total.net.currency}}
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 2px 0;">Tax</td>
+        <td style="padding: 2px 0; text-align: right;">
+          {{order.total.tax.amount}} {{order.total.tax.currency}}
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 14px 0 2px; font-weight: bold;">
+          Total (incl. tax)
+        </td>
+        <td style="padding: 14px 0 2px; text-align: right; font-weight: bold;">
+          {{order.total.gross.amount}} {{order.total.gross.currency}}
+        </td>
+      </tr>
+    </mj-table>
+  </mj-column>
+</mj-section>
+
+    <mj-section>
+  <mj-column>
+    <mj-divider border-width="1px" border-color="#e6e6e6" padding="0 24px" />
+  </mj-column>
+</mj-section>
+
+    <mj-section padding="0 24px">
+      <mj-column>
+        <mj-text mj-class="footer-additional-info">
+          If you did not place this order, you can safely ignore this message.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <!-- ============================= FOOTER (universal) ============================= -->
+<mj-section padding="24px 24px 8px">
+  <mj-column>
+    <mj-text css-class="footer-nav" align="center">
+      <a href="#">Example Store</a>
+      <a href="#">FAQ</a>
+      <a href="#">Terms &amp; Conditions</a>
+      <a href="#">Contact us</a>
+    </mj-text>
+  </mj-column>
+</mj-section>
+
+<mj-section padding="16px 24px 0">
+  <mj-column>
+    <mj-text mj-class="footer-additional-info" align="center">
+      © 2026 Example Store
+    </mj-text>
+    <mj-text mj-class="footer-additional-info" align="center" padding="0 25px 8px">
+      support@example.com&nbsp;&nbsp;&nbsp;&nbsp;tel. +1 (555) 010-1234
+    </mj-text>
+  </mj-column>
+</mj-section>
+  </mj-body>
+</mjml>
