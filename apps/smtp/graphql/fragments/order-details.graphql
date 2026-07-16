@@ -229,4 +229,31 @@ fragment OrderDetails on Order {
   displayGrossPrices
   isShippingRequired
   shippingMethodName
+  transactions {
+    chargedAmount {
+      amount
+      currency
+    }
+    authorizedAmount {
+      amount
+      currency
+    }
+    paymentMethodDetails {
+      __typename
+      name
+      ... on CardPaymentMethodDetails {
+        brand
+        lastDigits
+        expMonth
+        expYear
+      }
+      ... on GiftCardPaymentMethodDetails {
+        brand
+        lastChars
+      }
+      ... on OtherPaymentMethodDetails {
+        name
+      }
+    }
+  }
 }

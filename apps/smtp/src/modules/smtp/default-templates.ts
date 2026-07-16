@@ -161,6 +161,25 @@ const orderTotals = `<mj-section padding="16px 0 0">
   </mj-column>
 </mj-section>`;
 
+// —— Payment methods (lists transactions that captured or authorized funds; handles split payments) ——
+const paymentMethodsSection = `{{#if order.transactions}}
+<mj-section padding="24px 0 0">
+  <mj-column>
+    <mj-text font-size="12px" font-weight="600" color="${colors.muted}" letter-spacing="1px" padding="0 0 8px">PAYMENT</mj-text>
+    <mj-table padding="0" cellpadding="0" cellspacing="0" font-size="14px" color="${colors.text}">
+      {{#each order.transactions}}
+      {{#if (or (gt this.chargedAmount.amount 0) (gt this.authorizedAmount.amount 0))}}
+      <tr class="totals-row">
+        <td>{{#if this.paymentMethodDetails}}{{this.paymentMethodDetails.name}}{{#if this.paymentMethodDetails.brand}} · {{this.paymentMethodDetails.brand}}{{/if}}{{#if this.paymentMethodDetails.lastDigits}} ····{{this.paymentMethodDetails.lastDigits}}{{/if}}{{#if this.paymentMethodDetails.lastChars}} ····{{this.paymentMethodDetails.lastChars}}{{/if}}{{else}}Payment{{/if}}</td>
+        <td style="text-align: right;">{{#if (gt this.chargedAmount.amount 0)}}{{this.chargedAmount.amount}} {{this.chargedAmount.currency}}{{else}}{{this.authorizedAmount.amount}} {{this.authorizedAmount.currency}}{{/if}}</td>
+      </tr>
+      {{/if}}
+      {{/each}}
+    </mj-table>
+  </mj-column>
+</mj-section>
+{{/if}}`;
+
 // —— Address blocks (side by side on desktop, stacked on mobile) ——
 const addressBlocksBothColumns = `<mj-section padding="24px 0 0">
   <mj-column>
@@ -257,6 +276,7 @@ ${mjHead}
     <mj-section padding="16px 0"><mj-column><mj-divider border-color="${colors.border}" border-width="1px" padding="0" /></mj-column></mj-section>
     ${orderLinesWithImages}
     ${orderTotals}
+    ${paymentMethodsSection}
     ${addressBlocksBothColumns}
     ${orderFooterSection}
   </mj-wrapper>
