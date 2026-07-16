@@ -400,6 +400,28 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFall
     });
   }
 
+  /**
+   * Replace the custom variables of a configuration. Accepts an array of key-value
+   * pairs (as produced by the UI) and flattens it to a `Record<string, string>` for storage.
+   */
+  updateCustomVariables({
+    id,
+    variables,
+  }: {
+    id: string;
+    variables: Array<{ key: string; value: string }>;
+  }) {
+    logger.debug("Update custom variables");
+
+    const customVariables = variables.reduce<Record<string, string>>((acc, { key, value }) => {
+      acc[key] = value;
+
+      return acc;
+    }, {});
+
+    return this.updateConfiguration({ id, customVariables });
+  }
+
   updateFallbackSmtpSettings({ useSaleorSmtpFallback }: { useSaleorSmtpFallback: boolean }) {
     return this.getConfigurationRoot().andThen((d) => {
       const newSettings = {

@@ -35,6 +35,7 @@ const validConfig: SmtpConfig = {
     {
       id: "1685343953413npk9p",
       active: true,
+      customVariables: {},
       name: "Best name",
       smtpHost: "smtpHost",
       smtpPort: "1337",
@@ -126,6 +127,7 @@ const validConfig: SmtpConfig = {
     {
       id: "1685343951244olejs",
       active: false,
+      customVariables: {},
       name: "Deactivated name",
       smtpHost: "smtpHost",
       smtpPort: "1337",
@@ -481,6 +483,7 @@ describe("SmtpConfigurationService", function () {
         await service.createConfiguration({
           active: true,
           channels: { channels: [], mode: "exclude", override: false },
+          customVariables: {},
           encryption: "NONE",
           name: "New configuration",
           smtpHost: "smtp.example.com",

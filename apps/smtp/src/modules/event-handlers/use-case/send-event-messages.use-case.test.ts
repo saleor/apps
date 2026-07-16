@@ -86,6 +86,7 @@ class MockConfigService implements IGetSmtpConfiguration, IGetFallbackSmtpEnable
         },
       ],
       channels: { channels: ["default-channel"], mode: "exclude", override: false },
+      customVariables: {},
       encryption: "SSL",
       name: "Config 1",
       smtpHost: "localhost",
