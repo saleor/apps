@@ -4,6 +4,7 @@ import { BaseError } from "../../../errors";
 import { generateRandomId } from "../../../lib/generate-random-id";
 import { createLogger } from "../../../logger";
 import { filterConfigurations } from "../../app-configuration/filter-configurations";
+import { examplePayloads } from "../../event-handlers/default-payloads";
 import { type MessageEventTypes } from "../../event-handlers/message-event-types";
 import { type FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
 import { EmailCompiler, type ErrorContext } from "../services/email-compiler";
@@ -324,10 +325,12 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFall
   private validateEventTemplates(eventConfiguration: SmtpEventConfiguration) {
     logger.debug("Validating event templates");
 
+    const examplePayload = examplePayloads[eventConfiguration.eventType] ?? {};
+
     const validationResult = this.emailCompiler.validate(
       eventConfiguration.subject || "",
       eventConfiguration.template || "",
-      {}, // Empty payload for subject and template validation
+      examplePayload,
     );
 
     if (validationResult.isErr()) {
