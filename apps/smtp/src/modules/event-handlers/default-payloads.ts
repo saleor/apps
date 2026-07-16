@@ -490,6 +490,43 @@ const exampleOrderPayload: OrderDetailsFragment = {
       currency: "USD",
     },
   },
+  // Split payment: $200 paid by card + $13 paid by gift card = $213.00 total
+  transactions: [
+    {
+      chargedAmount: {
+        amount: 200,
+        currency: "USD",
+      },
+      authorizedAmount: {
+        amount: 0,
+        currency: "USD",
+      },
+      paymentMethodDetails: {
+        __typename: "CardPaymentMethodDetails",
+        name: "Credit card",
+        brand: "visa",
+        lastDigits: "4242",
+        expMonth: 12,
+        expYear: 2028,
+      },
+    },
+    {
+      chargedAmount: {
+        amount: 13,
+        currency: "USD",
+      },
+      authorizedAmount: {
+        amount: 0,
+        currency: "USD",
+      },
+      paymentMethodDetails: {
+        __typename: "GiftCardPaymentMethodDetails",
+        name: "Gift card",
+        brand: null,
+        lastChars: "A1B2",
+      },
+    },
+  ],
 };
 
 const orderCreatedPayload: OrderCreatedWebhookPayloadFragment = {
