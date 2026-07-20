@@ -1,5 +1,23 @@
 # saleor-app-smtp
 
+## 2.6.0
+
+### Minor Changes
+
+- 518e484: The `ORDER_CREATED` email template payload now exposes the order's transactions, including payment method details (e.g. card brand and last digits, or gift card), charged amount and authorized amount. This lets you show which payment method(s) were used in your email templates, including split payments. The example templates were updated to demonstrate rendering this data.
+
+  Note: this requires Saleor 3.22 or newer (the minimum required version was bumped from 3.21), because transaction payment method details were added in Saleor 3.22.
+
+### Patch Changes
+
+- d72747d: Fixed SMTP order template saving so templates are validated with the matching event example payload instead of an empty payload. Templates that preview correctly for `ORDER_CREATED` can now be saved correctly.
+
+## 2.5.1
+
+### Patch Changes
+
+- a6c95f7: Fixed saving an email event configuration with an invalid template (e.g. a Handlebars helper called with the wrong argument type) returning a generic "Internal server error". These template problems are now reported as validation errors, so the UI shows the actual reason (for example "expected the first argument to be a number") instead of an unexpected server error. As a side effect, invalid-template attempts are no longer reported as application errors in monitoring.
+
 ## 2.5.0
 
 ### Minor Changes

@@ -4,6 +4,7 @@ import { BaseError } from "../../../errors";
 import { generateRandomId } from "../../../lib/generate-random-id";
 import { createLogger } from "../../../logger";
 import { filterConfigurations } from "../../app-configuration/filter-configurations";
+import { examplePayloads } from "../../event-handlers/default-payloads";
 import { type MessageEventTypes } from "../../event-handlers/message-event-types";
 import { type FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
 import { EmailCompiler, type ErrorContext } from "../services/email-compiler";
@@ -49,13 +50,19 @@ function hasErrorContext(error: unknown): error is { errorContext?: ErrorContext
 
 export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFallbackSmtpEnabled {
   static SmtpConfigurationServiceError = BaseError.subclass("SmtpConfigurationServiceError");
-  static ConfigNotFoundError = BaseError.subclass("ConfigNotFoundError");
-  static EventConfigNotFoundError = BaseError.subclass("EventConfigNotFoundError");
-  static CantFetchConfigError = BaseError.subclass("CantFetchConfigError");
-  static WrongSaleorVersionError = BaseError.subclass("WrongSaleorVersionError");
-  static TemplateValidationError = BaseError.subclass("TemplateValidationError", {
-    props: {} as TemplateValidationErrorProps,
-  });
+  static ConfigNotFoundError = this.SmtpConfigurationServiceError.subclass("ConfigNotFoundError");
+  static EventConfigNotFoundError = this.SmtpConfigurationServiceError.subclass(
+    "EventConfigNotFoundError",
+  );
+  static CantFetchConfigError = this.SmtpConfigurationServiceError.subclass("CantFetchConfigError");
+  static WrongSaleorVersionError =
+    this.SmtpConfigurationServiceError.subclass("WrongSaleorVersionError");
+  static TemplateValidationError = this.SmtpConfigurationServiceError.subclass(
+    "TemplateValidationError",
+    {
+      props: {} as TemplateValidationErrorProps,
+    },
+  );
 
   private configurationData?: SmtpConfig;
   private metadataConfigurator: SmtpMetadataManager;
@@ -318,10 +325,12 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFall
   private validateEventTemplates(eventConfiguration: SmtpEventConfiguration) {
     logger.debug("Validating event templates");
 
+    const examplePayload = examplePayloads[eventConfiguration.eventType] ?? {};
+
     const validationResult = this.emailCompiler.validate(
       eventConfiguration.subject || "",
       eventConfiguration.template || "",
-      {}, // Empty payload for subject and template validation
+      examplePayload,
     );
 
     if (validationResult.isErr()) {
