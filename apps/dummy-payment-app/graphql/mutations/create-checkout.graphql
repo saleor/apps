@@ -31,6 +31,18 @@ mutation CreateCheckout($channelSlug: String!, $variants: [CheckoutLineInput!]!)
     }
     checkout {
       id
+      lines {
+        id
+        quantity
+        priceOverrideReason
+        variant {
+          name
+        }
+        undiscountedUnitPrice {
+          amount
+          currency
+        }
+      }
       availablePaymentGateways {
         id
         name
