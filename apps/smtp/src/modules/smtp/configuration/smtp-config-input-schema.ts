@@ -71,6 +71,12 @@ export type SmtpUpdateBranding = z.infer<typeof smtpUpdateBrandingSchema>;
  */
 export const customVariableKeyRegex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
 
+/**
+ * Reserved keys that must never be persisted: even though they match the identifier
+ * regex, flattening them into a plain object could enable prototype pollution.
+ */
+export const reservedCustomVariableKeys = new Set(["__proto__", "constructor", "prototype"]);
+
 export const smtpCustomVariableSchema = z.object({
   key: z
     .string()
@@ -78,7 +84,10 @@ export const smtpCustomVariableSchema = z.object({
     .regex(
       customVariableKeyRegex,
       "Key must start with a letter or underscore and contain only letters, numbers and underscores",
-    ),
+    )
+    .refine((key) => !reservedCustomVariableKeys.has(key), {
+      message: `Key must not be a reserved word (${[...reservedCustomVariableKeys].join(", ")})`,
+    }),
   // Empty values are allowed - they render as an empty string in the template
   value: z.string(),
 });

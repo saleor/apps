@@ -33,6 +33,17 @@ describe("smtpUpdateCustomVariablesSchema", () => {
     }
   });
 
+  it("rejects reserved keys that could enable prototype pollution", () => {
+    for (const key of ["__proto__", "constructor", "prototype"]) {
+      const result = smtpUpdateCustomVariablesSchema.safeParse({
+        id: "config-1",
+        variables: [{ key, value: "x" }],
+      });
+
+      expect(result.success, `expected "${key}" to be rejected`).toBe(false);
+    }
+  });
+
   it("rejects empty keys", () => {
     const result = smtpUpdateCustomVariablesSchema.safeParse({
       id: "config-1",

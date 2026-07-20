@@ -413,11 +413,18 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFall
   }) {
     logger.debug("Update custom variables");
 
-    const customVariables = variables.reduce<Record<string, string>>((acc, { key, value }) => {
-      acc[key] = value;
+    /**
+     * Use a null-prototype object so reserved keys (e.g. __proto__) can never pollute
+     * the prototype chain, even if input validation is somehow bypassed.
+     */
+    const customVariables = variables.reduce<Record<string, string>>(
+      (acc, { key, value }) => {
+        acc[key] = value;
 
-      return acc;
-    }, {});
+        return acc;
+      },
+      Object.create(null) as Record<string, string>,
+    );
 
     return this.updateConfiguration({ id, customVariables });
   }
