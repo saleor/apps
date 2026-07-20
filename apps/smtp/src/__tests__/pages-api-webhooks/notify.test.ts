@@ -65,6 +65,7 @@ const buildConfig = (overrides: Partial<SmtpConfiguration> = {}): SmtpConfigurat
   smtpPassword: "pass",
   encryption: "NONE",
   channels: { channels: [], mode: "restrict", override: false },
+  customVariables: {},
   events: [],
   ...overrides,
 });

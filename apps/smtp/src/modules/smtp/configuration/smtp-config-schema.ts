@@ -32,6 +32,8 @@ export const smtpConfigurationSchema = z.object({
   // Email branding - displayed in email header and footer
   brandingSiteName: z.string().optional(),
   brandingLogoUrl: z.string().url().optional(),
+  // User-defined key-value pairs merged into every template payload as `customVariables`
+  customVariables: z.record(z.string(), z.string()).default({}),
 });
 
 export type SmtpConfiguration = z.infer<typeof smtpConfigurationSchema>;
