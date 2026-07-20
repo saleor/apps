@@ -19,6 +19,7 @@ import {
   smtpGetEventConfigurationInputSchema,
   smtpUpdateBasicInformationSchema,
   smtpUpdateBrandingSchema,
+  smtpUpdateCustomVariablesSchema,
   smtpUpdateEventArraySchema,
   smtpUpdateEventSchema,
   smtpUpdateSenderSchema,
@@ -307,6 +308,21 @@ export const smtpConfigurationRouter = router({
         (v) => v,
         (e) => throwTrpcErrorFromConfigurationServiceError(e),
       );
+    }),
+
+  updateCustomVariables: protectedWithConfigurationServices
+    .input(smtpUpdateCustomVariablesSchema)
+    .mutation(async ({ ctx, input }) => {
+      const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
+
+      logger.debug("smtpConfigurationRouter.updateCustomVariables called");
+
+      return await ctx.smtpConfigurationService
+        .updateCustomVariables({ id: input.id, variables: input.variables })
+        .match(
+          (v) => v,
+          (e) => throwTrpcErrorFromConfigurationServiceError(e),
+        );
     }),
 
   updateChannels: protectedWithConfigurationServices

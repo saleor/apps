@@ -20,6 +20,7 @@ import {
 } from "../configuration/smtp-config-input-schema";
 import { type SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { defaultMjmlSubjectTemplates, defaultMjmlTemplates } from "../default-templates";
+import { enrichPayloadWithConfig } from "../enrich-payload-with-config";
 import { smtpUrls } from "../urls";
 import { CodeEditor } from "./code-editor";
 import { SaleorThrobber } from "./saleor-throbber";
@@ -168,11 +169,30 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
   }, [payload]);
 
   /**
+   * Merge the configuration's branding + custom variables into the payload so both the
+   * live preview and the autocomplete reflect what will actually be sent. The config is
+   * the source of truth for these keys, matching the server-side send behavior.
+   */
+  const enrichedPayload = useMemo<Record<string, unknown> | undefined>(() => {
+    if (!parsedPayload) {
+      return undefined;
+    }
+
+    return enrichPayloadWithConfig(parsedPayload, configuration) as Record<string, unknown>;
+  }, [parsedPayload, configuration]);
+
+  /**
    * Stable reference so the template editor doesn't re-register completions on
    * every keystroke in the payload editor – only when the parsed result changes.
    */
   /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  const stablePayload = useMemo(() => parsedPayload, [JSON.stringify(parsedPayload)]);
+  const stablePayload = useMemo(() => enrichedPayload, [JSON.stringify(enrichedPayload)]);
+
+  // Payload sent to the preview - enriched when valid, raw when not (so the server reports JSON errors)
+  const previewPayload = useMemo(
+    () => (enrichedPayload ? JSON.stringify(enrichedPayload) : payload),
+    [enrichedPayload, payload],
+  );
 
   const handlePayloadChange = useCallback((value: string) => {
     setPayload(value);
@@ -186,7 +206,7 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
   } = useTemplatePreview({
     template: watchedTemplate,
     subject: watchedSubject,
-    payload,
+    payload: previewPayload,
   });
 
   const trpcContext = trpcClient.useContext();

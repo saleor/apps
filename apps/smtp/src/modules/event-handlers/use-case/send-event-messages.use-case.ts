@@ -17,6 +17,7 @@ import {
   type IGetSmtpConfiguration,
 } from "../../smtp/configuration/smtp-configuration.service";
 import { defaultMjmlSubjectTemplates, defaultMjmlTemplates } from "../../smtp/default-templates";
+import { enrichPayloadWithConfig } from "../../smtp/enrich-payload-with-config";
 import { type IEmailCompiler } from "../../smtp/services/email-compiler";
 import { type ISMTPEmailSender, type SendMailArgs } from "../../smtp/services/smtp-email-sender";
 import { type MessageEventTypes, messageEventTypes } from "../message-event-types";
@@ -67,26 +68,6 @@ export class SendEventMessagesUseCase {
       emailSender: ISMTPEmailSender;
     },
   ) {}
-
-  /**
-   * Enriches the payload with branding info from the SMTP configuration.
-   * This allows templates to use {{branding.siteName}} and {{branding.logoUrl}}.
-   */
-  private enrichPayloadWithBranding(payload: unknown, config: SmtpConfiguration): unknown {
-    const hasBranding = config.brandingSiteName || config.brandingLogoUrl;
-
-    if (!hasBranding) {
-      return payload;
-    }
-
-    return {
-      ...(payload as object),
-      branding: {
-        siteName: config.brandingSiteName || null,
-        logoUrl: config.brandingLogoUrl || null,
-      },
-    };
-  }
 
   private processSingleConfiguration({
     config,
@@ -148,8 +129,8 @@ export class SendEventMessagesUseCase {
       );
     }
 
-    // Enrich payload with branding from config
-    const enrichedPayload = this.enrichPayloadWithBranding(payload, config);
+    // Enrich payload with branding and custom variables from config
+    const enrichedPayload = enrichPayloadWithConfig(payload, config);
 
     const preparedEmailResult = this.deps.emailCompiler.compile({
       event: event,
@@ -343,6 +324,7 @@ export class SendEventMessagesUseCase {
       smtpPassword: fallbackSmtpConfig.smtpPassword,
       encryption: fallbackSmtpConfig.encryption,
       channels: { channels: [], mode: "restrict", override: false },
+      customVariables: {},
       events: messageEventTypes.map((eventType) => ({
         active: true,
         eventType,

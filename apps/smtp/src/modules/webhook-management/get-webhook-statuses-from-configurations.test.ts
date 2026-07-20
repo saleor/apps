@@ -16,6 +16,7 @@ export const nonActiveSmtpConfiguration: SmtpConfiguration = {
     channels: [],
     mode: "restrict",
   },
+  customVariables: {},
   events: [
     {
       active: false,

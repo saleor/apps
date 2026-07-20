@@ -8,6 +8,7 @@ import { appUrls } from "../../../modules/app-configuration/urls";
 import { SmtpBasicInformationSection } from "../../../modules/smtp/ui/smtp-basic-information-section";
 import { SmtpBrandingSection } from "../../../modules/smtp/ui/smtp-branding-section";
 import { SmtpChannelsSection } from "../../../modules/smtp/ui/smtp-channels-section";
+import { SmtpCustomVariablesSection } from "../../../modules/smtp/ui/smtp-custom-variables-section";
 import { SmtpDangerousSection } from "../../../modules/smtp/ui/smtp-dangerous-section";
 import { SmtpEventsSection } from "../../../modules/smtp/ui/smtp-events-section";
 import { SmtpSection } from "../../../modules/smtp/ui/smtp-section";
@@ -94,6 +95,7 @@ const EditSmtpConfigurationPage: NextPage = () => {
       <SmtpSection configuration={configuration} />
       <SmtpSenderSection configuration={configuration} />
       <SmtpBrandingSection configuration={configuration} />
+      <SmtpCustomVariablesSection configuration={configuration} />
       <SmtpEventsSection configuration={configuration} />
       <SmtpChannelsSection configuration={configuration} />
       <SmtpDangerousSection configuration={configuration} />
