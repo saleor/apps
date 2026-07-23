@@ -1,0 +1,10 @@
+query ProductTaxClass($id: ID!) {
+  product(id: $id) {
+    id
+    name
+    taxClass {
+      id
+      name
+    }
+  }
+}
