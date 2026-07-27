@@ -1,5 +1,5 @@
 import { actions, useAppBridge, useWidgetAutoResize } from "@saleor/app-sdk/app-bridge";
-import { Box, Spinner, Text } from "@saleor/macaw-ui";
+import { Box, ExternalLinkIcon, Spinner, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import React from "react";
 import { useQuery } from "urql";
@@ -70,10 +70,14 @@ const ProductDetailsWidget = () => {
         <>
           <Row label="Tax class">{resolution.taxClassName}</Row>
           <Row label="AvaTax tax code">
-            <Text
+            <Box
               as="span"
-              color="info1"
+              className="avatax-tax-code-link"
+              display="inline-flex"
+              alignItems="center"
+              gap={1}
               cursor="pointer"
+              color="accent1"
               onClick={() =>
                 appBridge?.dispatch(
                   actions.Redirect({
@@ -83,11 +87,14 @@ const ProductDetailsWidget = () => {
                 )
               }
             >
-              {resolution.avataxTaxCode}
-            </Text>
+              <Text as="span" fontWeight="bold" color="accent1">
+                {resolution.avataxTaxCode}
+              </Text>
+              <ExternalLinkIcon size="small" />
+            </Box>
           </Row>
-          <Text size={2} color="success1">
-            This product is taxed with the mapped AvaTax code.
+          <Text size={2} color="default2">
+            ✓ Taxed with the mapped AvaTax code.
           </Text>
         </>
       )}
