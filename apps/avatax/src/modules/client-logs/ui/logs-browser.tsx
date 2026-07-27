@@ -86,13 +86,13 @@ const LogsPagiation = ({
         <Button
           onClick={onBackwardButtonClick}
           disabled={isBackwardButtonDisabled}
-          icon={<ChevronLeft size={20} />}
+          icon={<ChevronLeft size={16} />}
           variant="secondary"
         />
         <Button
           onClick={onForwardButtonClick}
           disabled={isForwardButtonDisabled}
-          icon={<ChevronRight size={20} />}
+          icon={<ChevronRight size={16} />}
           variant="secondary"
         />
       </Box>

@@ -117,7 +117,7 @@ export const BulkSyncView = ({
           <Breadcrumbs.Item key="connection-name">
             <Box display="flex" gap={2} alignItems="center">
               {connection.channelSlug}
-              <ArrowRight size={20} /> {configuration.configName}
+              <ArrowRight size={16} /> {configuration.configName}
             </Box>
           </Breadcrumbs.Item>,
         ]}

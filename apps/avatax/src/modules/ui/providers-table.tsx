@@ -30,7 +30,7 @@ export const ProvidersTable = () => {
               <Box display={"flex"} justifyContent={"flex-end"} gap={2}>
                 <Button
                   onClick={() => editClickHandler(item)}
-                  icon={<Pencil size={20} />}
+                  icon={<Pencil size={16} />}
                   data-testid="provider-edit-button"
                   variant="secondary"
                 >

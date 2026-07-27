@@ -64,7 +64,7 @@ export const WelcomePageOnboarding = () => {
                 size="small"
                 data-test-id="onboarding-accordion-trigger"
               >
-                <ChevronDown size={20} />
+                <ChevronDown size={16} />
               </Button>
             </Accordion.Trigger>
           </DashboardCard.Header>

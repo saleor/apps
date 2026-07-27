@@ -66,7 +66,7 @@ export const AddConnectionForm = (props: {
             })) ?? []
           }
         />
-        <ArrowRight size={20} />
+        <ArrowRight size={16} />
         <Select
           required
           size="small"

@@ -70,7 +70,7 @@ export const ConfigsList = ({
                   disabled={isLoading}
                   marginLeft={4}
                   display="block"
-                  icon={<Trash2 size={20} />}
+                  icon={<Trash2 size={16} />}
                   variant="secondary"
                   onClick={() => setConfigIdContext(config.id)}
                 />

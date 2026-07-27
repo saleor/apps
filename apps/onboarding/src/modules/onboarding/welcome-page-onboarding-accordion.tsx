@@ -58,7 +58,7 @@ export const WelcomePageOnboardingAccordion = () => {
                 transition="ease"
                 __transform={`${extendedStepId === step.id ? "rotate(180deg)" : "none"}`}
               >
-                <ChevronDown size={20} />
+                <ChevronDown size={16} />
               </Box>
             </Box>
           </Accordion.Trigger>

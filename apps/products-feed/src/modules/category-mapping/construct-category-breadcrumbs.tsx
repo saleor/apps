@@ -21,7 +21,7 @@ export const CategoryBreadcrumbs = (props: { category: CategoryWithMappingFragme
             <Text size={4} fontWeight={isLast ? "bold" : "regular"}>
               {category}
             </Text>
-            {!isLast && <ChevronRight size={20} />}
+            {!isLast && <ChevronRight size={16} />}
           </Box>
         );
       })}
