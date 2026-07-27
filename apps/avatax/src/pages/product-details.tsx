@@ -77,7 +77,7 @@ const ProductDetailsWidget = () => {
               alignItems="center"
               gap={1}
               cursor="pointer"
-              color="accent1"
+              color="default1"
               onClick={() =>
                 appBridge?.dispatch(
                   actions.Redirect({
@@ -87,7 +87,7 @@ const ProductDetailsWidget = () => {
                 )
               }
             >
-              <Text as="span" fontWeight="bold" color="accent1">
+              <Text as="span" fontWeight="bold" color="default1">
                 {resolution.avataxTaxCode}
               </Text>
               <ExternalLinkIcon size="small" />
