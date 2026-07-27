@@ -1,14 +1,5 @@
-import {
-  Box,
-  Button,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  Input,
-  RangeInput,
-  Skeleton,
-  Switch,
-  Text,
-} from "@saleor/macaw-ui";
+import { Box, Button, Input, RangeInput, Skeleton, Switch, Text } from "@saleor/macaw-ui";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
 import { type ClientLogValue } from "@/modules/client-logs/client-log";
@@ -95,13 +86,13 @@ const LogsPagiation = ({
         <Button
           onClick={onBackwardButtonClick}
           disabled={isBackwardButtonDisabled}
-          icon={<ChevronLeftIcon />}
+          icon={<ChevronLeft size={20} />}
           variant="secondary"
         />
         <Button
           onClick={onForwardButtonClick}
           disabled={isForwardButtonDisabled}
-          icon={<ChevronRightIcon />}
+          icon={<ChevronRight size={20} />}
           variant="secondary"
         />
       </Box>

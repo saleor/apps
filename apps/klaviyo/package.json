@@ -44,6 +44,7 @@
     "dynamodb-toolbox": "catalog:",
     "graphql": "catalog:",
     "graphql-tag": "catalog:",
+    "lucide-react": "catalog:",
     "next": "catalog:",
     "node-fetch": "3.2.6",
     "react": "catalog:",

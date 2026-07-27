@@ -1,4 +1,5 @@
-import { Box, Button, CloseIcon, Modal, Text } from "@saleor/macaw-ui";
+import { Box, Button, Modal, Text } from "@saleor/macaw-ui";
+import { X } from "lucide-react";
 
 export const DeleteConfigurationModalContent = (props: { onDeleteClick: () => void }) => {
   return (
@@ -22,7 +23,7 @@ export const DeleteConfigurationModalContent = (props: { onDeleteClick: () => vo
             Delete configuration
           </Text>
           <Modal.Close>
-            <Button variant="tertiary" icon={<CloseIcon />} size="small" />
+            <Button variant="tertiary" icon={<X size={20} />} size="small" />
           </Modal.Close>
         </Box>
         <Text>Are you sure you want to delete this configuration?</Text>

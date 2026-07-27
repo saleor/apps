@@ -1,6 +1,7 @@
 "use client";
 
-import { Accordion, Box, ChervonDownIcon, Skeleton, Text } from "@saleor/macaw-ui";
+import { Accordion, Box, Skeleton, Text } from "@saleor/macaw-ui";
+import { ChevronDown } from "lucide-react";
 
 import { StepIcon } from "./components/step-icon";
 import { useOnboardingData } from "./hooks/use-onboarding-data";
@@ -57,7 +58,7 @@ export const WelcomePageOnboardingAccordion = () => {
                 transition="ease"
                 __transform={`${extendedStepId === step.id ? "rotate(180deg)" : "none"}`}
               >
-                <ChervonDownIcon />
+                <ChevronDown size={20} />
               </Box>
             </Box>
           </Accordion.Trigger>

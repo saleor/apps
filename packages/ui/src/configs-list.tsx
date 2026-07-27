@@ -1,5 +1,6 @@
-import { Box, Button, Modal, Text, TrashBinIcon } from "@saleor/macaw-ui";
-import { ReactNode, useState } from "react";
+import { Box, Button, Modal, Text } from "@saleor/macaw-ui";
+import { Trash2 } from "lucide-react";
+import { type ReactNode, useState } from "react";
 
 import { DeleteConfigurationModalContent } from "./delete-configuration-modal-content";
 import { Layout } from "./layout";
@@ -69,7 +70,7 @@ export const ConfigsList = ({
                   disabled={isLoading}
                   marginLeft={4}
                   display="block"
-                  icon={<TrashBinIcon />}
+                  icon={<Trash2 size={20} />}
                   variant="secondary"
                   onClick={() => setConfigIdContext(config.id)}
                 />

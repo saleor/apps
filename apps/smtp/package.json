@@ -63,6 +63,7 @@
     "handlebars-helpers": "0.10.0",
     "html-to-text": "9.0.3",
     "jsdom": "catalog:",
+    "lucide-react": "catalog:",
     "mjml": "4.15.3",
     "modern-errors": "catalog:",
     "modern-errors-serialize": "catalog:",

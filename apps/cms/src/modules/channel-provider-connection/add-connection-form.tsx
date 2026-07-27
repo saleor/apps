@@ -1,7 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRightIcon, Box, Text } from "@saleor/macaw-ui";
+import { Box, Text } from "@saleor/macaw-ui";
 import { Select } from "@saleor/react-hook-form-macaw";
 import { type TRPCError } from "@trpc/server";
+import { ArrowRight } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 import { ChannelProviderConnectionConfig } from "../configuration";
@@ -65,7 +66,7 @@ export const AddConnectionForm = (props: {
             })) ?? []
           }
         />
-        <ArrowRightIcon />
+        <ArrowRight size={20} />
         <Select
           required
           size="small"

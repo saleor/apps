@@ -1,4 +1,5 @@
-import { Box, ChevronRightIcon, Text } from "@saleor/macaw-ui";
+import { Box, Text } from "@saleor/macaw-ui";
+import { ChevronRight } from "lucide-react";
 
 import { type CategoryWithMappingFragmentFragment } from "../../../generated/graphql";
 
@@ -20,7 +21,7 @@ export const CategoryBreadcrumbs = (props: { category: CategoryWithMappingFragme
             <Text size={4} fontWeight={isLast ? "bold" : "regular"}>
               {category}
             </Text>
-            {!isLast && <ChevronRightIcon />}
+            {!isLast && <ChevronRight size={20} />}
           </Box>
         );
       })}

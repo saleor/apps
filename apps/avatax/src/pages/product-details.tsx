@@ -1,5 +1,6 @@
 import { actions, useAppBridge, useWidgetAutoResize } from "@saleor/app-sdk/app-bridge";
-import { Box, ExternalLinkIcon, Spinner, Text } from "@saleor/macaw-ui";
+import { Box, Spinner, Text } from "@saleor/macaw-ui";
+import { ExternalLink } from "lucide-react";
 import { useRouter } from "next/router";
 import React from "react";
 import { useQuery } from "urql";
@@ -90,7 +91,7 @@ const ProductDetailsWidget = () => {
               <Text as="span" fontWeight="bold" color="default1">
                 {resolution.avataxTaxCode}
               </Text>
-              <ExternalLinkIcon size="small" />
+              <ExternalLink size={16} />
             </Box>
           </Row>
           <Text size={2} color="default2">

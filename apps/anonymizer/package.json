@@ -36,6 +36,7 @@
     "dotenv": "catalog:",
     "graphql": "catalog:",
     "graphql-tag": "catalog:",
+    "lucide-react": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

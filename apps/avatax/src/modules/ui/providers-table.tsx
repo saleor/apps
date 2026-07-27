@@ -1,4 +1,5 @@
-import { Box, Button, EditIcon } from "@saleor/macaw-ui";
+import { Box, Button } from "@saleor/macaw-ui";
+import { Pencil } from "lucide-react";
 import { useRouter } from "next/router";
 
 import { type ProviderConnection } from "../provider-connections/provider-connections";
@@ -29,7 +30,7 @@ export const ProvidersTable = () => {
               <Box display={"flex"} justifyContent={"flex-end"} gap={2}>
                 <Button
                   onClick={() => editClickHandler(item)}
-                  icon={<EditIcon />}
+                  icon={<Pencil size={20} />}
                   data-testid="provider-edit-button"
                   variant="secondary"
                 >

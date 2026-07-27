@@ -61,6 +61,7 @@
     "handlebars": "4.7.9",
     "handlebars-helpers": "0.10.0",
     "jsdom": "catalog:",
+    "lucide-react": "catalog:",
     "neverthrow": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
