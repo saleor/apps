@@ -1,5 +1,11 @@
 # saleor-app-smtp
 
+## 2.7.1
+
+### Patch Changes
+
+- 546b559: Updated Macaw UI to v2. Icons that used to come from Macaw UI (close, trash, edit, chevrons, arrows, copy, external link, and others) now come from Lucide, so a few icons look slightly different but keep the same meaning and placement.
+
 ## 2.7.0
 
 ### Minor Changes

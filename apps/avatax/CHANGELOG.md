@@ -1,5 +1,17 @@
 # saleor-app-avatax
 
+## 1.24.0
+
+### Minor Changes
+
+- b5f7b66: Added a "AvaTax tax code" widget to the product details page in the Dashboard. It shows the product's tax class and the AvaTax tax code it maps to, and warns when a product has no tax class or its tax class isn't mapped (so AvaTax's default code would be used). Requires Saleor 3.22+.
+
+  This adds the `MANAGE_PRODUCTS` permission to the app (needed to read a product's tax class), so the app will ask for approval of the new permission.
+
+### Patch Changes
+
+- 546b559: Updated Macaw UI to v2. Icons that used to come from Macaw UI (close, trash, edit, chevrons, arrows, copy, external link, and others) now come from Lucide, so a few icons look slightly different but keep the same meaning and placement.
+
 ## 1.23.0
 
 ### Minor Changes
