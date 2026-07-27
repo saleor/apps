@@ -69,6 +69,7 @@
     "currency-codes": "2.2.0",
     "currency.js": "2.0.4",
     "dynamodb-toolbox": "catalog:",
+    "lucide-react": "catalog:",
     "modern-errors": "catalog:",
     "modern-errors-serialize": "catalog:",
     "neverthrow": "catalog:",

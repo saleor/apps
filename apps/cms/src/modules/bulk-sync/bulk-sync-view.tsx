@@ -1,6 +1,7 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Breadcrumbs, ButtonsBox, Layout } from "@saleor/apps-ui";
-import { ArrowRightIcon, Box, Button, Text } from "@saleor/macaw-ui";
+import { Box, Button, Text } from "@saleor/macaw-ui";
+import { ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { type ChannelProviderConnectionConfig, type ProvidersConfig } from "../configuration";
@@ -116,7 +117,7 @@ export const BulkSyncView = ({
           <Breadcrumbs.Item key="connection-name">
             <Box display="flex" gap={2} alignItems="center">
               {connection.channelSlug}
-              <ArrowRightIcon /> {configuration.configName}
+              <ArrowRight size={20} /> {configuration.configName}
             </Box>
           </Breadcrumbs.Item>,
         ]}

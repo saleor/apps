@@ -1,17 +1,6 @@
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import {
-  ArrowRightIcon,
-  Box,
-  Button,
-  Checkbox,
-  Combobox,
-  ExternalLinkIcon,
-  Input,
-  List,
-  Text,
-  Toggle,
-  TrashBinIcon,
-} from "@saleor/macaw-ui";
+import { Box, Button, Checkbox, Combobox, Input, List, Text, Toggle } from "@saleor/macaw-ui";
+import { ArrowRight, ExternalLink, Trash2 } from "lucide-react";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -409,7 +398,7 @@ const CheckoutPage = () => {
                   </Box>
                   <Button
                     variant="tertiary"
-                    icon={<TrashBinIcon />}
+                    icon={<Trash2 size={20} />}
                     disabled={isBusy}
                     onClick={() => handleRemoveLine(index)}
                   />
@@ -435,21 +424,21 @@ const CheckoutPage = () => {
           >
             Create checkout
           </Button>
-          <ArrowRightIcon />
+          <ArrowRight size={20} />
           <Button
             onClick={() => handleExecuteDeliveryUpdate()}
             disabled={!createdCheckout || isBusy}
           >
             Set delivery
           </Button>
-          <ArrowRightIcon />
+          <ArrowRight size={20} />
           <Button
             disabled={!createdCheckout || isBusy}
             onClick={() => handleExecuteInitializeTransaction()}
           >
             Initialize transaction
           </Button>
-          <ArrowRightIcon />
+          <ArrowRight size={20} />
           <Button
             disabled={!createdCheckout || !deliveryUpdateResult.data || isBusy}
             onClick={() => handleExecuteCompleteCheckout()}
@@ -578,7 +567,7 @@ const CheckoutPage = () => {
                   gap={2}
                   alignItems="center"
                 >
-                  <ExternalLinkIcon />
+                  <ExternalLink size={20} />
                   <Text fontWeight="bold" color="accent1">
                     Report changes on transaction
                   </Text>
@@ -598,7 +587,7 @@ const CheckoutPage = () => {
               gap={2}
               alignItems="center"
             >
-              <ExternalLinkIcon />
+              <ExternalLink size={20} />
               <Text fontWeight="bold" color="accent1">
                 Created order{" "}
                 {completeCheckoutResult.data.checkoutComplete?.order?.number ?? "Error"}

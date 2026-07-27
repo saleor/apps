@@ -63,6 +63,7 @@
     "@vercel/otel": "catalog:",
     "dynamodb-toolbox": "catalog:",
     "jp-zipcode-lookup": "0.3.5",
+    "lucide-react": "catalog:",
     "modern-errors": "catalog:",
     "modern-errors-serialize": "catalog:",
     "neverthrow": "catalog:",

@@ -59,6 +59,7 @@
     "graphql": "catalog:",
     "graphql-tag": "catalog:",
     "jsdom": "catalog:",
+    "lucide-react": "catalog:",
     "neverthrow": "catalog:",
     "next": "catalog:",
     "p-ratelimit": "1.0.1",

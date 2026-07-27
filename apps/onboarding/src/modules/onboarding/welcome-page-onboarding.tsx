@@ -1,6 +1,7 @@
 "use client";
 
-import { Accordion, Box, Button, ChervonDownIcon, Text } from "@saleor/macaw-ui";
+import { Accordion, Box, Button, Text } from "@saleor/macaw-ui";
+import { ChevronDown } from "lucide-react";
 
 import { DashboardCard } from "./components/dashboard-card";
 import { useOnboarding } from "./onboarding-context/onboarding-context";
@@ -63,7 +64,7 @@ export const WelcomePageOnboarding = () => {
                 size="small"
                 data-test-id="onboarding-accordion-trigger"
               >
-                <ChervonDownIcon />
+                <ChevronDown size={20} />
               </Button>
             </Accordion.Trigger>
           </DashboardCard.Header>

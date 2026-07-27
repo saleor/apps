@@ -53,7 +53,7 @@
     "dynamodb-toolbox": "catalog:",
     "graphql": "catalog:",
     "graphql-tag": "catalog:",
-    "lucide-react": "0.577.0",
+    "lucide-react": "catalog:",
     "modern-errors": "catalog:",
     "modern-errors-serialize": "catalog:",
     "next": "catalog:",

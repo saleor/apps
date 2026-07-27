@@ -1,6 +1,7 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
-import { Box, CopyIcon, Text } from "@saleor/macaw-ui";
+import { Box, Text } from "@saleor/macaw-ui";
+import { Copy } from "lucide-react";
 import { type PropsWithChildren } from "react";
 import { Provider } from "urql";
 
@@ -80,7 +81,7 @@ function NotConnectedError() {
               display="flex"
               alignItems="center"
             >
-              <CopyIcon color="default2" />
+              <Copy size={20} />
             </Box>
           </Box>
         </Box>

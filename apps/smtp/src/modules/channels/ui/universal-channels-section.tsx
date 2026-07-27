@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Button, ProductsIcons, Switch, TableEditIcon, Text } from "@saleor/macaw-ui";
+import { Box, Button, Switch, Text } from "@saleor/macaw-ui";
 import { Multiselect } from "@saleor/react-hook-form-macaw";
+import { Pencil, Tag } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 
 import { BoxFooter } from "../../../components/box-footer";
@@ -94,13 +95,13 @@ export const UniversalChannelsSection = ({
                   >
                     <Switch.Item id="1" value="restrict">
                       <Box display="flex" alignItems="center" gap={1}>
-                        <TableEditIcon size="medium" />
+                        <Pencil size={20} />
                         <Text>Include</Text>
                       </Box>
                     </Switch.Item>
                     <Switch.Item id="2" value="exclude">
                       <Box display="flex" alignItems="center" gap={1}>
-                        <ProductsIcons size="medium" />
+                        <Tag size={20} />
                         <Text>Exclude</Text>
                       </Box>
                     </Switch.Item>
