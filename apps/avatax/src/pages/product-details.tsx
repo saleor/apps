@@ -1,4 +1,4 @@
-import { useWidgetAutoResize } from "@saleor/app-sdk/app-bridge";
+import { actions, useAppBridge, useWidgetAutoResize } from "@saleor/app-sdk/app-bridge";
 import { Box, Spinner, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import React from "react";
@@ -19,8 +19,11 @@ const Row = ({ label, children }: { label: string; children: React.ReactNode }) 
   </Box>
 );
 
+const AVALARA_TAX_CODE_SEARCH_URL = "https://taxcode.avatax.avalara.com/search?q=";
+
 const ProductDetailsWidget = () => {
   const router = useRouter();
+  const { appBridge } = useAppBridge();
   const rootRef = React.useRef<HTMLDivElement>(null);
 
   useWidgetAutoResize(rootRef);
@@ -53,7 +56,7 @@ const ProductDetailsWidget = () => {
 
   if ((fetching && !data) || matchesLoading) {
     return (
-      <Box ref={rootRef} display="flex" justifyContent="center" padding={4}>
+      <Box ref={rootRef} display="flex" justifyContent="center">
         <Spinner />
       </Box>
     );
@@ -63,14 +66,26 @@ const ProductDetailsWidget = () => {
 
   return (
     <Box ref={rootRef} display="grid" gap={3}>
-      <Text size={4} fontWeight="bold">
-        AvaTax tax code
-      </Text>
-
       {resolution.status === "assigned" && (
         <>
           <Row label="Tax class">{resolution.taxClassName}</Row>
-          <Row label="AvaTax tax code">{resolution.avataxTaxCode}</Row>
+          <Row label="AvaTax tax code">
+            <Text
+              as="span"
+              color="info1"
+              cursor="pointer"
+              onClick={() =>
+                appBridge?.dispatch(
+                  actions.Redirect({
+                    to: AVALARA_TAX_CODE_SEARCH_URL + encodeURIComponent(resolution.avataxTaxCode),
+                    newContext: true,
+                  }),
+                )
+              }
+            >
+              {resolution.avataxTaxCode}
+            </Text>
+          </Row>
           <Text size={2} color="success1">
             This product is taxed with the mapped AvaTax code.
           </Text>
