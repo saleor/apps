@@ -2641,7 +2641,7 @@ export type AttributeCreated = Event & {
 /**
  * Deletes an attribute.
  *
- * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
+ * Requires one of the following permissions, depending on the attribute type: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes.
  *
  * Triggers the following webhook events:
  * - ATTRIBUTE_DELETED (async): An attribute was deleted.
@@ -2890,7 +2890,7 @@ export type AttributeTypeEnumFilterInput = {
 /**
  * Updates attribute.
  *
- * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
+ * Requires one of the following permissions, depending on the attribute type: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes.
  *
  * Triggers the following webhook events:
  * - ATTRIBUTE_UPDATED (async): An attribute was updated.
@@ -12558,7 +12558,7 @@ export type Mutation = {
   /**
    * Deletes an attribute.
    *
-   * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
+   * Requires one of the following permissions, depending on the attribute type: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes.
    *
    * Triggers the following webhook events:
    * - ATTRIBUTE_DELETED (async): An attribute was deleted.
@@ -12583,7 +12583,7 @@ export type Mutation = {
   /**
    * Updates attribute.
    *
-   * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
+   * Requires one of the following permissions, depending on the attribute type: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes.
    *
    * Triggers the following webhook events:
    * - ATTRIBUTE_UPDATED (async): An attribute was updated.

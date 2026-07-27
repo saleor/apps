@@ -336,7 +336,11 @@ export class StripeWebhookUseCase {
     }
 
     if (!config.value) {
-      this.logger.error("Config for given webhook is missing");
+      /*
+       * Not an app error - Stripe may keep sending events for a deleted config (orphaned webhook).
+       * Surfaced to the user via AppProblems below instead of alerting us.
+       */
+      this.logger.warn("Config for given webhook is missing");
 
       after(() => problemReporter.reportConfigMissing(webhookParams.configurationId));
 
