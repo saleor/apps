@@ -398,7 +398,7 @@ const CheckoutPage = () => {
                   </Box>
                   <Button
                     variant="tertiary"
-                    icon={<Trash2 size={20} />}
+                    icon={<Trash2 size={16} />}
                     disabled={isBusy}
                     onClick={() => handleRemoveLine(index)}
                   />
@@ -424,21 +424,21 @@ const CheckoutPage = () => {
           >
             Create checkout
           </Button>
-          <ArrowRight size={20} />
+          <ArrowRight size={16} />
           <Button
             onClick={() => handleExecuteDeliveryUpdate()}
             disabled={!createdCheckout || isBusy}
           >
             Set delivery
           </Button>
-          <ArrowRight size={20} />
+          <ArrowRight size={16} />
           <Button
             disabled={!createdCheckout || isBusy}
             onClick={() => handleExecuteInitializeTransaction()}
           >
             Initialize transaction
           </Button>
-          <ArrowRight size={20} />
+          <ArrowRight size={16} />
           <Button
             disabled={!createdCheckout || !deliveryUpdateResult.data || isBusy}
             onClick={() => handleExecuteCompleteCheckout()}
@@ -567,7 +567,7 @@ const CheckoutPage = () => {
                   gap={2}
                   alignItems="center"
                 >
-                  <ExternalLink size={20} />
+                  <ExternalLink size={16} />
                   <Text fontWeight="bold" color="accent1">
                     Report changes on transaction
                   </Text>
@@ -587,7 +587,7 @@ const CheckoutPage = () => {
               gap={2}
               alignItems="center"
             >
-              <ExternalLink size={20} />
+              <ExternalLink size={16} />
               <Text fontWeight="bold" color="accent1">
                 Created order{" "}
                 {completeCheckoutResult.data.checkoutComplete?.order?.number ?? "Error"}

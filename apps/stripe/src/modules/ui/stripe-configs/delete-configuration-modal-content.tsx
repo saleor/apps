@@ -24,7 +24,7 @@ export const DeleteConfigurationModalContent = (props: { onDeleteClick: () => vo
             Delete configuration
           </Text>
           <Modal.Close>
-            <Button variant="tertiary" icon={<X size={20} />} size="small" />
+            <Button variant="tertiary" icon={<X size={16} />} size="small" />
           </Modal.Close>
         </Box>
         <Text>Are you sure you want to delete this configuration?</Text>

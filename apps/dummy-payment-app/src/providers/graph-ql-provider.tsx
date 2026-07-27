@@ -81,7 +81,7 @@ function NotConnectedError() {
               display="flex"
               alignItems="center"
             >
-              <Copy size={20} />
+              <Copy size={16} />
             </Box>
           </Box>
         </Box>

@@ -95,13 +95,13 @@ export const UniversalChannelsSection = ({
                   >
                     <Switch.Item id="1" value="restrict">
                       <Box display="flex" alignItems="center" gap={1}>
-                        <Pencil size={20} />
+                        <Pencil size={16} />
                         <Text>Include</Text>
                       </Box>
                     </Switch.Item>
                     <Switch.Item id="2" value="exclude">
                       <Box display="flex" alignItems="center" gap={1}>
-                        <Tag size={20} />
+                        <Tag size={16} />
                         <Text>Exclude</Text>
                       </Box>
                     </Switch.Item>

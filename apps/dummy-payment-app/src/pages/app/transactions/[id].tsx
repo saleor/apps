@@ -1,6 +1,6 @@
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Box, Button, Spinner, Text } from "@saleor/macaw-ui";
-import { ShoppingBag } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/router";
 
 import { SectionWithDescription } from "@/components/section-with-description";
@@ -71,7 +71,7 @@ const EventReporterPage = () => {
         </Box>
         {orderId && (
           <Button variant="secondary" onClick={() => navigateToOrder(orderId)}>
-            <ShoppingBag size={20} />
+            <ShoppingCart size={16} />
             Open order
           </Button>
         )}
