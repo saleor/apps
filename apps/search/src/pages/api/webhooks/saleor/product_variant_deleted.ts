@@ -8,6 +8,7 @@ import { loggerContext } from "../../../../lib/logger-context";
 import { type ProductVariantDeleted } from "../../../../lib/webhook-event-types";
 import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookProductVariantDeleted } from "../../../../webhooks/definitions/product-variant-deleted";
+import { handleAlgoliaWebhookError } from "../../../../webhooks/handle-algolia-webhook-error";
 import { handleInvalidAppIdError } from "../../../../webhooks/handle-invalid-app-id-error";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
@@ -63,12 +64,13 @@ export const handler: NextJsWebhookHandler<ProductVariantDeleted> = async (req, 
         return;
       }
 
-      logger.error(
-        "Failed to execute product_variant_deleted webhook (algoliaClient.deleteProductVariant)",
-        { error: e },
-      );
-
-      return res.status(500).send("Operation failed due to error");
+      return handleAlgoliaWebhookError({
+        error: e,
+        logger,
+        message:
+          "Failed to execute product_variant_deleted webhook (algoliaClient.deleteProductVariant)",
+        res,
+      });
     }
   } catch (e) {
     logger.error("Failed to execute product_variant_deleted webhook (createWebhookContext)", {

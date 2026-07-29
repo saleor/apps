@@ -11,6 +11,7 @@ import { loggerContext } from "../../../../lib/logger-context";
 import { type PageCreated } from "../../../../lib/webhook-event-types";
 import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookPageCreated } from "../../../../webhooks/definitions/page-created";
+import { handleAlgoliaWebhookError } from "../../../../webhooks/handle-algolia-webhook-error";
 import { handleInvalidAppIdError } from "../../../../webhooks/handle-invalid-app-id-error";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
@@ -98,11 +99,12 @@ export const handler: NextJsWebhookHandler<PageCreated> = async (req, res, conte
         return;
       }
 
-      logger.error("Failed to execute page_created webhook (algoliaClient.createPage)", {
+      return handleAlgoliaWebhookError({
         error: e,
+        logger,
+        message: "Failed to execute page_created webhook (algoliaClient.createPage)",
+        res,
       });
-
-      return res.status(500).send("Operation failed due to error");
     }
   } catch (e) {
     logger.error("Failed to execute page_created webhook (createWebhookContext)", { error: e });

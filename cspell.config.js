@@ -84,7 +84,7 @@ export default {
     "Neue",
     "Segoe",
     "Undiscounted",
-    "OIDC", "oidc", "CANCELATION", "saleors", "GTIN"
+    "OIDC", "oidc", "CANCELATION", "saleors", "GTIN", "algoliasearch", "tslog"
   ],
   language: "en-US",
   useGitignore: true,
