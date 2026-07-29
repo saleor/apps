@@ -64,6 +64,15 @@ export const createRecordSizeErrorMessage = (
 };
 
 export const AlgoliaErrorParser = {
+  /**
+   * Algolia SDK throws ApiError with status + message for every non-2xx response.
+   * Returns null if the error didn't come from the Algolia API.
+   */
+  getStatusCode: (error: unknown): number | null => {
+    const parsed = shape.safeParse(error);
+
+    return parsed.success ? parsed.data.status : null;
+  },
   isAuthError: (error: unknown) => {
     const parsed = shape.safeParse(error);
 

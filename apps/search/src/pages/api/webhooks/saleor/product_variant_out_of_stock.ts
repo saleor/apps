@@ -8,6 +8,7 @@ import { loggerContext } from "../../../../lib/logger-context";
 import { type ProductVariantOutOfStock } from "../../../../lib/webhook-event-types";
 import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookProductVariantOutOfStock } from "../../../../webhooks/definitions/product-variant-out-of-stock";
+import { handleAlgoliaWebhookError } from "../../../../webhooks/handle-algolia-webhook-error";
 import { handleInvalidAppIdError } from "../../../../webhooks/handle-invalid-app-id-error";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
@@ -67,12 +68,13 @@ export const handler: NextJsWebhookHandler<ProductVariantOutOfStock> = async (
         return;
       }
 
-      logger.error(
-        "Failed to execute product_variant_out_of_stock webhook (algoliaClient.updateProductVariant)",
-        { error: e },
-      );
-
-      return res.status(500).send("Operation failed due to error");
+      return handleAlgoliaWebhookError({
+        error: e,
+        logger,
+        message:
+          "Failed to execute product_variant_out_of_stock webhook (algoliaClient.updateProductVariant)",
+        res,
+      });
     }
   } catch (e) {
     logger.error("Failed to execute product_variant_out_of_stock webhook (createWebhookContext)", {

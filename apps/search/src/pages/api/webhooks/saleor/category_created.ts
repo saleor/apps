@@ -11,6 +11,7 @@ import { loggerContext } from "../../../../lib/logger-context";
 import { type CategoryCreated } from "../../../../lib/webhook-event-types";
 import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookCategoryCreated } from "../../../../webhooks/definitions/category-created";
+import { handleAlgoliaWebhookError } from "../../../../webhooks/handle-algolia-webhook-error";
 import { handleInvalidAppIdError } from "../../../../webhooks/handle-invalid-app-id-error";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
@@ -82,11 +83,12 @@ export const handler: NextJsWebhookHandler<CategoryCreated> = async (req, res, c
         return;
       }
 
-      logger.error("Failed to execute category_created webhook (algoliaClient.createCategory)", {
+      return handleAlgoliaWebhookError({
         error: e,
+        logger,
+        message: "Failed to execute category_created webhook (algoliaClient.createCategory)",
+        res,
       });
-
-      return res.status(500).send("Operation failed due to error");
     }
   } catch (e) {
     logger.error("Failed to execute category_created webhook (createWebhookContext)", { error: e });

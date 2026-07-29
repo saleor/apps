@@ -8,6 +8,7 @@ import { loggerContext } from "../../../../lib/logger-context";
 import { type CategoryDeleted } from "../../../../lib/webhook-event-types";
 import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookCategoryDeleted } from "../../../../webhooks/definitions/category-deleted";
+import { handleAlgoliaWebhookError } from "../../../../webhooks/handle-algolia-webhook-error";
 import { handleInvalidAppIdError } from "../../../../webhooks/handle-invalid-app-id-error";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
@@ -65,11 +66,12 @@ export const handler: NextJsWebhookHandler<CategoryDeleted> = async (req, res, c
         return;
       }
 
-      logger.error("Failed to execute category_deleted webhook (algoliaClient.deleteCategory)", {
+      return handleAlgoliaWebhookError({
         error: e,
+        logger,
+        message: "Failed to execute category_deleted webhook (algoliaClient.deleteCategory)",
+        res,
       });
-
-      return res.status(500).send("Operation failed due to error");
     }
   } catch (e) {
     logger.error("Failed to execute category_deleted webhook (createWebhookContext)", { error: e });
