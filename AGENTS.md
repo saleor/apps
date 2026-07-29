@@ -4,8 +4,8 @@
 
 **Monorepo Architecture**: This is a Turborepo-managed monorepo containing Saleor Apps built with Next.js, TypeScript, and modern development tooling.
 
-- `/apps/` - Individual Saleor applications (AvaTax, CMS, Klaviyo, Products Feed, Search, Segment, SMTP, Stripe, NP Atobarai)
-- `/packages/` - Shared libraries and utilities (domain, errors, logger, otel, UI components, etc.)
+- `/apps/` - Individual Saleor applications - see [Directory Map](#directory-map-where-to-look) to pick the right one
+- `/packages/` - Shared libraries and utilities - see [Directory Map](#directory-map-where-to-look)
 - `/templates/` - App templates for new development
 - Uses PNPM workspaces with workspace dependencies via `workspace:*`
 
@@ -118,12 +118,48 @@ static ValidationError = BaseError.subclass("ValidationError", {
     - If many changes applied in single commit, create multiple changesets
     - Ensure changeset has a good value, describing what was the actual change. It should be less technical than the commit. Best if it has before/after described.
 
-## App-Specific Notes
+## Directory Map (where to look)
 
-- **AvaTax**: Tax calculation service with comprehensive E2E testing suite
-- **Stripe**: Payment processing with transaction handling use cases
-- **Search**: Algolia integration with webhook-driven product indexing
-- **SMTP**: Email service with template management
-- **CMS**: Content management system integration with bulk sync capabilities
+Requests often name a vendor, protocol or feature instead of a directory. Match the keyword to the
+directory below before searching the whole repo.
+
+### Apps
+
+| Directory                | Package name                     | Keywords                                                                                                                       |
+| ------------------------ | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `apps/anonymizer`        | `saleor-app-anonymizer`          | anonymize, GDPR, PII, customer data scrubbing                                                                                    |
+| `apps/avatax`            | `saleor-app-avatax`              | AvaTax, Avalara, tax, tax calculation, tax codes, address validation, `CALCULATE_TAXES`, ORDER_CONFIRMED taxes, entity use code   |
+| `apps/cms`               | `saleor-app-cms`                 | CMS, Contentful, DatoCMS, Strapi, Builder.io, Payload CMS, product sync to CMS, bulk sync, field mapping                          |
+| `apps/dummy-payment-app` | `saleor-app-payment-dummy`       | dummy payment, test payment gateway, transaction flow sandbox                                                                    |
+| `apps/klaviyo`           | `saleor-app-klaviyo`             | Klaviyo, marketing events, customer events                                                                                       |
+| `apps/np-atobarai`       | `saleor-app-payment-np-atobarai` | NP Atobarai, Net Protections, Japan, deferred payment, zip code lookup, 後払い                                                     |
+| `apps/onboarding`        | `saleor-app-onboarding`          | onboarding, welcome widget, Dashboard home page widget                                                                           |
+| `apps/products-feed`     | `saleor-app-products-feed`       | Google Merchant Center, product feed, XML feed, S3 upload, feed template, Handlebars feed attributes                              |
+| `apps/search`            | `saleor-app-search`              | Algolia, search, indexing, index products, `algoliasearch`, webhook-driven product indexing                                      |
+| `apps/segment`           | `saleor-app-segment`             | Segment, Twilio Segment, analytics tracking, track events                                                                        |
+| `apps/smtp`              | `saleor-app-smtp`                | SMTP, email, nodemailer, MJML, email templates, Monaco editor, notification emails, sendgrid-era templates                        |
+| `apps/stripe`            | `saleor-app-payment-stripe`      | Stripe, payment, payment intent, checkout session, refund, transaction, `TRANSACTION_*` webhooks, Stripe webhook signature        |
+
+### Packages
+
+| Directory                          | Package name                      | Keywords                                                                       |
+| ---------------------------------- | --------------------------------- | ------------------------------------------------------------------------------ |
+| `packages/app-problems`            | `@saleor/app-problems`            | app problems, health checks, version compatibility, semver checks               |
+| `packages/domain`                  | `@saleor/apps-domain`             | branded types, `SaleorApiUrl`, `AppId`, shared value objects                    |
+| `packages/dynamo-config-repository` | `@saleor/dynamo-config-repository` | DynamoDB, config repository, entity mapping, `dynamodb-toolbox`               |
+| `packages/errors`                  | `@saleor/errors`                  | `BaseError`, `BaseError.subclass`, error classes, modern-errors                 |
+| `packages/eslint-config`           | `@saleor/eslint-config-apps`      | ESLint rules, lint config                                                       |
+| `packages/handlebars`              | `@saleor/handlebars`              | Handlebars, template compilation, template helpers                              |
+| `packages/logger`                  | `@saleor/apps-logger`             | logger, tslog, structured logging, log context                                  |
+| `packages/otel`                    | `@saleor/apps-otel`               | OpenTelemetry, traces, metrics, spans, instrumentation, OTLP exporter           |
+| `packages/react-hook-form-macaw`   | `@saleor/react-hook-form-macaw`   | form inputs, React Hook Form + Macaw bindings                                   |
+| `packages/sentry-utils`            | `@saleor/sentry-utils`            | Sentry, error reporting, exception capture                                      |
+| `packages/shared`                  | `@saleor/apps-shared`             | urql client, auth exchange, misc shared helpers                                 |
+| `packages/trpc`                    | `@saleor/apps-trpc`               | tRPC setup, protected procedures, context, middleware                           |
+| `packages/typescript-config`       | `@saleor/typescript-config-apps`  | tsconfig, compiler options                                                      |
+| `packages/ui`                      | `@saleor/apps-ui`                 | shared React components, Macaw UI wrappers, layout                              |
+| `packages/webhook-utils`           | `@saleor/webhook-utils`           | webhook migration, webhook registration, webhook manager                        |
+
+If a request names a vendor not listed here, grep `apps/*/package.json` for the dependency first.
 
 Run commands from the root directory for global operations, or from individual app directories for app-specific tasks.
