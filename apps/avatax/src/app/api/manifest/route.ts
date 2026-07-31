@@ -41,12 +41,33 @@ const handler = createManifestHandler({
       permissions: ["MANAGE_PRODUCTS"],
     };
 
+    /*
+     * Surfaces the same product-details view in the Dashboard command palette (Cmd+K).
+     * Scoped to PRODUCT_DETAILS, so the Dashboard appends the current `productId` -
+     * the very param the page already reads when rendered as a widget.
+     */
+    const productTaxCodeSearchAction: AppExtension = {
+      target: "POPUP",
+      mount: "SEARCH_ACTION",
+      options: {
+        views: ["PRODUCT_DETAILS"],
+      },
+      label: "Show AvaTax tax code",
+      url: iframeBaseUrl + "/product-details",
+      permissions: ["MANAGE_PRODUCTS"],
+    };
+
     const extensions: AppExtension[] = [];
 
     const saleorMinor = schemaVersion && schemaVersion[1];
 
     if (saleorMinor && saleorMinor >= 22) {
       extensions.push(orderDetailsExtension, productDetailsExtension);
+    }
+
+    // SEARCH_ACTION mount was added in Saleor 3.23.
+    if (saleorMinor && saleorMinor >= 23) {
+      extensions.push(productTaxCodeSearchAction);
     }
 
     const manifest: AppManifest = {
