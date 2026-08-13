@@ -11,7 +11,7 @@ const handler = createManifestHandler({
 
     const manifest: AppManifest = {
       about:
-        "Saleor Onboarding App — guides new users through the first steps of using Saleor Dashboard. App mounts itself on the Dashboard home page and do not provide dedicated UI in the extension view.",
+        "Saleor Onboarding App — Store Readiness guide on the Dashboard home page. Walks new merchants through sales channel setup, first product, payments, and an optional test order. Builder tools (GraphQL, extensions, staff) stay secondary.",
       author: "Saleor Commerce",
       brand: {
         logo: {
@@ -21,7 +21,7 @@ const handler = createManifestHandler({
       dataPrivacyUrl: "https://saleor.io/legal/privacy/",
       extensions: [
         {
-          label: "Welcome to Saleor Dashboard",
+          label: "Get ready to sell",
           mount: "HOMEPAGE_WIDGETS",
           target: "WIDGET",
           url: new URL("/", iframeBaseUrl).toString(),

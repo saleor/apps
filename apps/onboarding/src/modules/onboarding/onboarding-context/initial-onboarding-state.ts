@@ -1,20 +1,29 @@
-import { type OnboardingState, type OnboardingStep } from "./types";
-
-// We store state in metadata for all steps even those that are not shown to the user.
-export const initialOnboardingSteps: OnboardingStep[] = [
-  { id: "get-started", completed: false, expanded: undefined },
-  { id: "create-product", completed: false, expanded: undefined },
-  { id: "explore-orders", completed: false, expanded: undefined },
-  { id: "graphql-playground", completed: false, expanded: undefined },
-  { id: "view-extensions", completed: false, expanded: undefined },
-  { id: "invite-staff", completed: false, expanded: undefined },
-];
-
-// Onboarding is complete once every rendered step is done.
-export const TOTAL_STEPS_COUNT = initialOnboardingSteps.length;
+import { type OnboardingState } from "./types";
 
 export const getInitialOnboardingState = (): OnboardingState => ({
   onboardingExpanded: true,
+  builderExpanded: false,
   stepsCompleted: [],
   stepsExpanded: {},
 });
+
+/** Normalize legacy metadata shapes into the current Store Readiness state. */
+export const normalizeOnboardingState = (raw: unknown): OnboardingState => {
+  const initial = getInitialOnboardingState();
+
+  if (!raw || typeof raw !== "object") {
+    return initial;
+  }
+
+  const value = raw as Partial<OnboardingState>;
+
+  return {
+    onboardingExpanded: true,
+    builderExpanded: Boolean(value.builderExpanded),
+    stepsCompleted: Array.isArray(value.stepsCompleted) ? [...value.stepsCompleted] : [],
+    stepsExpanded:
+      value.stepsExpanded && typeof value.stepsExpanded === "object"
+        ? { ...value.stepsExpanded }
+        : {},
+  };
+};

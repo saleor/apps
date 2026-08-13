@@ -1,11 +1,25 @@
 # Saleor Onboarding App
 
-Saleor App that provides a "Welcome / Onboarding" widget on the Dashboard home page. It guides
-users through first-run tasks (creating a product, exploring orders, opening the GraphQL
-playground, browsing extensions, inviting staff).
+Saleor App that mounts a **Store Readiness** guide on the Dashboard home page
+(`HOMEPAGE_WIDGETS`). It walks new merchants through first-run commerce setup:
 
-The app is a port of the Dashboard's built-in `WelcomePageOnboarding` widget into a standalone
-Saleor App so onboarding can ship independently of Dashboard releases.
+1. Set up your sales channel (warehouse + shipping)
+2. Add your first product
+3. Connect payments
+4. Place a test order (optional)
+
+Secondary tracks (not in required progress):
+
+- **Before you go live** — SMTP customer email + template review
+- **Connect Paper storefront** — deploy/configure Paper (wide screens: sibling card on the right with Paper logo)
+
+Builder tools (GraphiQL shortcut, custom app / API token, invite staff) live under
+“Building with the API?” — not in the primary checklist.
+
+Completion for commerce steps is **derived from live GraphQL** (channel stock /
+shipping, products, payment apps, orders). UI preferences (builder open) persist
+in user metadata under the `onboarding` key. Expanded checklist rows stay
+in local React state only (not metadata — avoids loading flicker on save).
 
 ## Tech overview
 
@@ -15,8 +29,8 @@ Saleor App so onboarding can ship independently of Dashboard releases.
   comes from AppBridge automatically).
 - **Client-only**: all GraphQL calls run in the browser using the user's JWT issued by AppBridge.
   No webhooks and no APL — the app only exposes the manifest endpoint.
-- **State persistence**: completion state is stored under user metadata key `onboarding`
-  (drop-in compatible with the Dashboard widget's existing key) via `updateMetadata`.
+- **Home panel layout**: fills the Dashboard home panel (no WidgetResize — that fought
+  layout sizing and contributed to loading flicker).
 
 ## Local development
 

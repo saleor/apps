@@ -1,0 +1,37 @@
+query StoreReadiness {
+  channels {
+    id
+    name
+    warehouses {
+      id
+    }
+  }
+  shippingZones(first: 100) {
+    edges {
+      node {
+        channels {
+          id
+        }
+      }
+    }
+  }
+  products {
+    totalCount
+  }
+  apps(first: 100, filter: { isActive: true, type: THIRDPARTY }) {
+    edges {
+      node {
+        id
+        identifier
+        type
+        isActive
+        permissions {
+          code
+        }
+      }
+    }
+  }
+  orders {
+    totalCount
+  }
+}
