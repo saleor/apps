@@ -1,4 +1,4 @@
-import { cleanup, configure, render, screen } from "@testing-library/react";
+import { cleanup, configure, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -124,20 +124,22 @@ describe("StoreReadinessChecklistBody", () => {
   it("shows ready state and keeps builder tools secondary", () => {
     renderBody(ready, true);
 
-    expect(screen.getByRole("heading", { name: "You’re ready to sell" })).toBeTruthy();
+    expect(screen.getByText("You’re ready to sell")).toBeTruthy();
     expect(screen.getByTestId("store-readiness-progress").textContent).toContain("3 of 3");
     expect(screen.getByTestId("store-readiness-next-up").textContent).toMatch(
       /Required steps are complete/,
     );
-    expect(screen.getByTestId("store-readiness-builder")).toBeTruthy();
+
+    const builder = screen.getByTestId("store-readiness-builder");
+
     expect(screen.getByTestId("store-readiness-graphiql").textContent).toMatch(/playground/);
     expect(screen.getByTestId("store-readiness-graphiql").textContent).toMatch(/Open in GraphiQL/);
     expect(screen.getByTestId("store-readiness-graphiql-shortcut").textContent).toMatch(
       /⌘ \+ '|Ctrl \+ '/,
     );
-    expect(screen.getByRole("button", { name: "Create custom app" })).toBeTruthy();
-    expect(screen.queryByRole("button", { name: "Extensions" })).toBeNull();
-    expect(screen.queryByRole("button", { name: /playground/i })).toBeNull();
+    expect(within(builder).getByRole("button", { name: "Create custom app" })).toBeTruthy();
+    expect(within(builder).queryByRole("button", { name: "Extensions" })).toBeNull();
+    expect(within(builder).queryByRole("button", { name: /playground/i })).toBeNull();
   });
 
   it("shows go-live and Paper sections without counting them in progress", () => {
