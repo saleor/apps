@@ -11,7 +11,7 @@ const handler = createManifestHandler({
 
     const manifest: AppManifest = {
       about:
-        "Saleor Onboarding App — Store Readiness guide on the Dashboard home page. Walks new merchants through sales channel setup, first product, payments, and an optional test order. Builder tools (GraphQL, extensions, staff) stay secondary.",
+        "Saleor Onboarding App — Store Readiness guide on the Dashboard home page. Walks new merchants through sales channel setup, first product, payments, and an optional test order. Optional tracks cover customer email (SMTP) and connecting a Paper storefront. Builder tools (GraphiQL, custom app token, invite staff) stay secondary.",
       author: "Saleor Commerce",
       brand: {
         logo: {

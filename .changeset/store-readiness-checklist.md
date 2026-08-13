@@ -2,4 +2,6 @@
 "saleor-app-onboarding": minor
 ---
 
-Replace the developer “Let’s Get Started” accordion with a Store Readiness checklist on the Dashboard home page. Merchants now work through sales channel → first product → payments (optional test order), with progress auto-derived from live store data instead of “Mark as done.” Builder tools (GraphQL, Extensions, Invite staff) stay secondary under “Building with the API?”. Home tab label is “Get ready to sell.”
+You can now follow a Store Readiness checklist instead of the old “Let’s Get Started” tour. Finish sales channel, first product, and payments so the store can take orders; a test order is optional. Progress comes from your live store, not “Mark as done.”
+
+Optional sections cover customer email (SMTP) and connecting a Paper storefront. Building with the API (GraphiQL, custom app token, invite staff) stays under “Building with the API?”. The home tab is labeled “Get ready to sell.” Uninstall the app if you want the guide gone.
