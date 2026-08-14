@@ -4,6 +4,7 @@ import { useMutation, useQuery } from "urql";
 
 import { MeDocument, UpdateUserMetadataDocument } from "@/generated/graphql";
 
+import { normalizeOnboardingState } from "./initial-onboarding-state";
 import { type OnboardingState, type StorageService } from "./types";
 import { METADATA_KEY, type MetadataInput } from "./utils";
 
@@ -23,7 +24,6 @@ export const useUserData = (): { user: OnboardingUser | null; isUserLoading: boo
   const hasToken = Boolean(appBridgeState?.token);
   const [{ data, fetching }] = useQuery({ query: MeDocument, pause: !hasToken });
 
-  // Memoize so the user reference is stable across renders when the underlying data hasn't changed.
   const user = useMemo<OnboardingUser | null>(() => {
     if (!data?.me) return null;
 
@@ -33,17 +33,16 @@ export const useUserData = (): { user: OnboardingUser | null; isUserLoading: boo
     };
   }, [data?.me]);
 
-  // Report loading until the token is available so the provider waits for the authenticated user.
-  return { user, isUserLoading: !hasToken || fetching };
+  /*
+   * Only the initial Me fetch should block hydration. Refetch after metadata
+   * writes must not flip the whole guide back to a loading skeleton.
+   */
+  return { user, isUserLoading: !hasToken || (fetching && !data) };
 };
 
 export const useOnboardingStorage = (user: OnboardingUser | null): StorageService => {
   const [, saveMetadata] = useMutation(UpdateUserMetadataDocument);
 
-  /*
-   * Keep the latest user/saveMetadata accessible from a single, stable debounced fn
-   * so re-renders don't spawn parallel timers.
-   */
   const userRef = useRef(user);
   const saveMetadataRef = useRef(saveMetadata);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -66,7 +65,7 @@ export const useOnboardingStorage = (user: OnboardingUser | null): StorageServic
 
       if (!metadata) return undefined;
 
-      return JSON.parse(metadata.value) as OnboardingState;
+      return normalizeOnboardingState(JSON.parse(metadata.value));
     } catch {
       return undefined;
     }
@@ -81,26 +80,15 @@ export const useOnboardingStorage = (user: OnboardingUser | null): StorageServic
 
         if (!currentUser) return;
 
-        /*
-         * Send only the onboarding key. updateMetadata applies partial key updates, so sending
-         * the whole metadata array would overwrite unrelated keys with values that were stale as
-         * of the last Me fetch if another dashboard/app path changed them in the meantime.
-         */
         const onboardingMetadata: MetadataInput[] = [
           { key: METADATA_KEY, value: JSON.stringify(onboardingState) },
         ];
 
-        /*
-         * Self-metadata writes can fail for staff without MANAGE_STAFF; widget keeps working
-         * in-memory but state will not persist for those users. urql resolves (does not reject)
-         * on network/GraphQL errors and on mutation payload errors, so check the result too.
-         * Failures are intentionally swallowed — the widget continues without persistence.
-         */
         saveMetadataRef
           .current({ id: currentUser.id, input: onboardingMetadata })
           .then((result) => {
             if (result.error || result.data?.updateMetadata?.errors?.length) {
-              // persistence failed — nothing actionable for the user, keep working in-memory
+              // persistence failed — keep working in-memory
             }
           })
           .catch(() => {

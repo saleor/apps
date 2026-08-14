@@ -60,6 +60,7 @@ export default {
     "pryce",
     "quickstart",
     "saleor",
+    "GraphiQL",
     "sendgrid",
     "shopx",
     "serviceworker",

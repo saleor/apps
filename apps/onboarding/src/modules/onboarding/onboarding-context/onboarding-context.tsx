@@ -1,107 +1,69 @@
 "use client";
 
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 
-import {
-  getInitialOnboardingState,
-  initialOnboardingSteps,
-  TOTAL_STEPS_COUNT,
-} from "./initial-onboarding-state";
+import { getIframeSaleorApiUrl, readHomeSnapshot } from "../readiness/home-snapshot";
+import { getInitialOnboardingState, normalizeOnboardingState } from "./initial-onboarding-state";
 import {
   type OnboardingContextType,
   type OnboardingProviderProps,
   type OnboardingState,
-  type OnboardingStepsIDs,
 } from "./types";
-import { useExpandedOnboardingId } from "./use-expanded-onboarding-id";
 import { useOnboardingStorage, useUserData } from "./use-onboarding-storage";
-import { handleStateChangeAfterStepCompleted, handleStateChangeAfterToggle } from "./utils";
+import { withBuilderExpanded } from "./utils";
 
 const OnboardingContext = createContext<OnboardingContextType | null>(null);
 
+const readSnapshotPrefs = () => readHomeSnapshot(getIframeSaleorApiUrl())?.prefs;
+
 export const OnboardingProvider = ({ children }: OnboardingProviderProps) => {
-  const [onboardingState, setOnboardingState] = useState<OnboardingState>({
-    onboardingExpanded: true,
-    stepsCompleted: [],
-    stepsExpanded: {},
-  });
-  const loaded = useRef(false);
+  const [onboardingState, setOnboardingState] = useState<OnboardingState>(
+    () => readSnapshotPrefs() ?? getInitialOnboardingState(),
+  );
+  const [hydrated, setHydrated] = useState(() => Boolean(readSnapshotPrefs()));
   const { user, isUserLoading } = useUserData();
   const storageService = useOnboardingStorage(user);
+  const skipNextSave = useRef(true);
+  const appliedMetadata = useRef(false);
 
   useEffect(() => {
-    if (loaded.current || isUserLoading) return;
+    if (isUserLoading || appliedMetadata.current) return;
 
+    appliedMetadata.current = true;
     const stateFromMetadata = storageService.getOnboardingState();
 
-    if (!stateFromMetadata) {
+    if (stateFromMetadata) {
+      skipNextSave.current = true;
+      setOnboardingState(normalizeOnboardingState(stateFromMetadata));
+    } else if (!hydrated) {
       setOnboardingState(getInitialOnboardingState());
-    } else {
-      setOnboardingState(stateFromMetadata);
     }
 
-    loaded.current = true;
-  }, [isUserLoading, storageService]);
+    setHydrated(true);
+  }, [hydrated, isUserLoading, storageService]);
 
   useEffect(() => {
-    if (loaded.current) {
-      storageService.saveOnboardingState(onboardingState);
+    if (!hydrated) return;
+
+    if (skipNextSave.current) {
+      skipNextSave.current = false;
+
+      return;
     }
-  }, [onboardingState, storageService]);
 
-  const validCompletedStepsCount = onboardingState.stepsCompleted.length;
-  const isOnboardingCompleted = validCompletedStepsCount >= TOTAL_STEPS_COUNT;
+    storageService.saveOnboardingState(onboardingState);
+  }, [hydrated, onboardingState, storageService]);
 
-  const extendedStepId = useExpandedOnboardingId(
-    onboardingState,
-    loaded.current,
-    initialOnboardingSteps,
-  );
-
-  const markOnboardingStepAsCompleted = (id: OnboardingStepsIDs) => {
-    if (onboardingState.stepsCompleted.includes(id)) return;
-
-    setOnboardingState((prev) => handleStateChangeAfterStepCompleted(prev, id));
-  };
-
-  const markAllAsCompleted = () => {
-    setOnboardingState((prev) => ({
-      ...prev,
-      stepsCompleted: initialOnboardingSteps.map((step) => step.id),
-      stepsExpanded: {},
-    }));
-  };
-
-  /*
-   * When the accordion is collapsed we get an empty string as id; we still need the previously
-   * expanded id so we know which step to toggle off.
-   */
-  const toggleExpandedOnboardingStep = (id: string, currentExpandedId: OnboardingStepsIDs | "") => {
-    const expandedId = id || currentExpandedId;
-
-    setOnboardingState((prev) =>
-      handleStateChangeAfterToggle(prev, expandedId as OnboardingStepsIDs, id),
-    );
-  };
-
-  const toggleOnboarding = (value: boolean) => {
-    // The persistence effect above saves on every onboardingState change.
-    setOnboardingState((prev) => ({ ...prev, onboardingExpanded: value }));
-  };
+  const setBuilderExpanded = useCallback((expanded: boolean) => {
+    setOnboardingState((prev) => withBuilderExpanded(prev, expanded));
+  }, []);
 
   return (
     <OnboardingContext.Provider
       value={{
-        isOnboardingCompleted,
+        loading: !hydrated,
         onboardingState,
-        extendedStepId,
-        loading: isUserLoading || !loaded.current,
-        markOnboardingStepAsCompleted,
-        markAllAsCompleted,
-        toggleExpandedOnboardingStep,
-        toggleOnboarding,
-        validCompletedStepsCount,
-        visibleSteps: initialOnboardingSteps,
+        setBuilderExpanded,
       }}
     >
       {children}

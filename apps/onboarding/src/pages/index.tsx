@@ -1,12 +1,12 @@
 import { type NextPage } from "next";
 
 import { OnboardingProvider } from "@/modules/onboarding/onboarding-context/onboarding-context";
-import { WelcomePageOnboarding } from "@/modules/onboarding/welcome-page-onboarding";
+import { StoreReadinessChecklist } from "@/modules/onboarding/store-readiness-checklist";
 
 const IndexPage: NextPage = () => {
   return (
     <OnboardingProvider>
-      <WelcomePageOnboarding />
+      <StoreReadinessChecklist />
     </OnboardingProvider>
   );
 };
