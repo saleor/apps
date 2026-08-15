@@ -9,4 +9,7 @@
 - Apps mount inside Dashboard’s iframe and already get Dashboard chrome (extension nav).
   This header is a **title + actions** bar only — no back-to-list destination icons from
   Dashboard `TopNav`.
-- Optional `href` / `hrefTitle` for in-app breadcrumbs-style back links when needed.
+- Optional `href` / `hrefTitle` for in-app breadcrumbs-style back links when needed. The link
+  renders as a real anchor but navigates through `next/router`: a document load inside
+  Dashboard’s iframe drops the AppBridge params from the frame URL, and the app then renders
+  its “no permission” state instead of the page.

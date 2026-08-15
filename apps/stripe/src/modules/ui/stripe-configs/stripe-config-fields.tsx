@@ -3,6 +3,8 @@ import { Input } from "@saleor/react-hook-form-macaw";
 import { type ReactNode } from "react";
 import { type Control, type FieldErrors } from "react-hook-form";
 
+import { KeyPrefix } from "../key-prefix";
+
 export type StripeConfigFormShape = {
   name: string;
   publishableKey: string;
@@ -23,6 +25,19 @@ const RequiredInputLabel = ({ labelText }: { labelText: string }) => (
 const OptionalInputLabel = ({ labelText }: { labelText: string }) => (
   <Text size={2} color="default2">
     {labelText}
+  </Text>
+);
+
+/**
+ * Hint that opens with the field name, so the copy still says what the value is when read
+ * on its own — the label above is easy to skip past when pasting keys.
+ */
+export const FieldHint = ({ term, children }: { term: string; children: ReactNode }) => (
+  <Text size={2} color="default2">
+    <Text size={2} fontWeight="medium">
+      {term}
+    </Text>{" "}
+    {children}
   </Text>
 );
 
@@ -54,8 +69,11 @@ export const StripeConfigFields = ({
       control={control}
       disabled={disabled}
       helperText={
-        errors.name?.message ??
-        "Friendly name of your configuration. For example 'Live' or 'UK Live'."
+        errors.name?.message ?? (
+          <FieldHint term="Configuration name">
+            is shown in Saleor only, for example “Live” or “UK Live”.
+          </FieldHint>
+        )
       }
       error={!!errors.name}
     />
@@ -65,7 +83,12 @@ export const StripeConfigFields = ({
       control={control}
       disabled={disabled}
       helperText={
-        errors.publishableKey?.message ?? "Publishable key generated in Stripe dashboard."
+        errors.publishableKey?.message ?? (
+          <FieldHint term="Publishable key">
+            generated in Stripe Dashboard (starting with <KeyPrefix size={2}>pk_live</KeyPrefix> or{" "}
+            <KeyPrefix size={2}>pk_test</KeyPrefix>).
+          </FieldHint>
+        )
       }
       error={!!errors.publishableKey}
     />
@@ -83,8 +106,12 @@ export const StripeConfigFields = ({
       disabled={disabled}
       helperText={
         errors.restrictedKey?.message ??
-        restrictedKey.helperText ??
-        "Restricted key generated in Stripe dashboard."
+        restrictedKey.helperText ?? (
+          <FieldHint term="Restricted key">
+            generated in Stripe Dashboard (starting with <KeyPrefix size={2}>rk_live</KeyPrefix> or{" "}
+            <KeyPrefix size={2}>rk_test</KeyPrefix>). Not the secret key.
+          </FieldHint>
+        )
       }
       error={!!errors.restrictedKey}
     />

@@ -24,6 +24,23 @@
   overflow: hidden;
 }
 
+/*
+ * Elevated emphasis, same smooth-shadow-ring as SetupChecklist: the 1px hairline is the last
+ * shadow layer, so the border has to go or the card gets a double edge.
+ */
+.cardElevated {
+  border: none;
+  --smooth-ring-color: rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    0 0 0 1px var(--smooth-ring-color);
+}
+
+.cardElevatedDark {
+  --smooth-ring-color: rgba(255, 255, 255, 0.18);
+}
+
 .cardHeader {
   display: flex;
   align-items: center;
@@ -86,4 +103,16 @@
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+/* Keeps the per-row assign control from collapsing next to long channel names. */
+.assignSelect {
+  flex-shrink: 0;
+  width: 12.5rem;
+}
+
+.moveNotice {
+  display: grid;
+  gap: var(--mu-spacing-1);
+  padding-top: var(--mu-spacing-1);
 }

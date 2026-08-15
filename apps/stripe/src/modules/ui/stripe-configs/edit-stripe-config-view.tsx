@@ -19,8 +19,10 @@ import {
   type StripeFrontendConfigSerializedFields,
 } from "@/modules/app-config/domain/stripe-config";
 import { trpcClient } from "@/modules/trpc/trpc-client";
+import { KeyPrefix } from "@/modules/ui/key-prefix";
 import { editStripeConfigFormSchema } from "@/modules/ui/stripe-configs/edit-stripe-config-form-schema";
 import {
+  FieldHint,
   StripeConfigFields,
   type StripeConfigFormShape,
 } from "@/modules/ui/stripe-configs/stripe-config-fields";
@@ -140,10 +142,13 @@ export const EditStripeConfigView = ({
                   disabled={isBusy}
                   restrictedKey={{
                     optional: true,
-                    helperText: `Saved key ends with ${config.restrictedKey.replace(
-                      /^\.+/,
-                      "",
-                    )}. Leave empty to keep it, or paste a new key to replace it.`,
+                    helperText: (
+                      <FieldHint term="Restricted key">
+                        is already saved and ends with{" "}
+                        <KeyPrefix size={2}>{config.restrictedKey.replace(/^\.+/, "")}</KeyPrefix>.
+                        Leave empty to keep it, or paste a new key to replace it.
+                      </FieldHint>
+                    ),
                   }}
                 />
               </SettingsFieldStack>

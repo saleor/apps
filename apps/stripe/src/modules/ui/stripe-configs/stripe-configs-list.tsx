@@ -8,6 +8,7 @@ import { type ConfigChannelFragment } from "@/generated/graphql";
 import { type StripeFrontendConfigSerializedFields } from "@/modules/app-config/domain/stripe-config";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 
+import { AssignChannelSelect } from "./assign-channel-select";
 import {
   type ChannelAssignmentUpdate,
   type ChannelMapping,
@@ -92,6 +93,19 @@ export const StripeConfigsList = ({ configs, channels, mapping }: Props) => {
     }
   };
 
+  /** Single-channel path from the unassigned fold: no other configuration loses a channel. */
+  const handleAssignSingleChannel = async (channelId: string, configId: string) => {
+    try {
+      await mappingUpdate.mutateAsync({ channelId, configId });
+      notifySuccess("Channel assigned");
+      await mappingsQuery.refetch();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unknown error";
+
+      notifyError("Error assigning channel", message);
+    }
+  };
+
   const handleDisconnectChannel = async (channelId: string) => {
     try {
       await mappingUpdate.mutateAsync({
@@ -167,6 +181,16 @@ export const StripeConfigsList = ({ configs, channels, mapping }: Props) => {
                 currencyCode={channel.currencyCode}
                 statusType={channelActiveToStatus(channel.isActive)}
                 showDivider={index < unassignedChannels.length - 1}
+                endAdornment={
+                  configs.length > 0 ? (
+                    <AssignChannelSelect
+                      channelName={channel.name}
+                      configs={configs}
+                      disabled={mappingUpdate.isLoading}
+                      onAssign={(configId) => void handleAssignSingleChannel(channel.id, configId)}
+                    />
+                  ) : undefined
+                }
               />
             ))}
           </Box>

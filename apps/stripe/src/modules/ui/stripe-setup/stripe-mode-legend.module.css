@@ -44,14 +44,6 @@
   padding-left: calc(10px + var(--mu-spacing-2));
 }
 
-.prefix {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-}
-
 .foldContent {
   display: flex;
   flex-direction: column;

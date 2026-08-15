@@ -1,6 +1,6 @@
 import { TextLink } from "@saleor/apps-ui";
 import { IconButton, iconSize, iconStrokeWidthBySize } from "@saleor/apps-ui-next";
-import { Box, Button, Multiselect, Text } from "@saleor/macaw-ui";
+import { Box, Button, Multiselect, Text, useTheme } from "@saleor/macaw-ui";
 import { Plug, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 
@@ -15,9 +15,12 @@ import {
   type ChannelAssignmentUpdate,
   type ChannelMapping,
 } from "./build-channel-assignment-updates";
+import { buildChannelMovePlan } from "./build-channel-move-plan";
 import { ConfigCardChannelList } from "./config-card-channel-list";
+import { ConfirmChannelMoveModal } from "./confirm-channel-move-modal";
 import styles from "./stripe-config-cards.module.css";
 import { StripeEnvBadge } from "./stripe-env-badge";
+import { stripeEnvLabel } from "./stripe-env-label";
 
 type ChannelOption = { label: string; value: string };
 
@@ -61,8 +64,17 @@ export const StripeConfigCard = ({
   onDisconnectChannel,
 }: Props) => {
   const [editing, setEditing] = useState(false);
+  const { theme } = useTheme();
   const configInstance = StripeFrontendConfig.createFromSerializedFields(config);
   const envValue = configInstance.getStripeEnvValue();
+
+  const cardClassName = [
+    styles.card,
+    styles.cardElevated,
+    theme === "defaultDark" && styles.cardElevatedDark,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   const options = useMemo(
     () => toOptions(channels, mapping, config.id),
@@ -70,11 +82,26 @@ export const StripeConfigCard = ({
   );
 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isMoveConfirmOpen, setIsMoveConfirmOpen] = useState(false);
 
   const value = useMemo(
     () => options.filter((option) => selectedIds.includes(option.value)),
     [options, selectedIds],
   );
+
+  /** Channels the selection would take away from another configuration. */
+  const moves = useMemo(
+    () =>
+      buildChannelMovePlan({
+        channels,
+        mapping,
+        targetConfig: config,
+        selectedChannelIds: new Set(selectedIds),
+      }),
+    [channels, mapping, config, selectedIds],
+  );
+
+  const envChangingMoves = useMemo(() => moves.filter((move) => move.changesEnv), [moves]);
 
   const webhookStatusInfo =
     configInstance.webhookStatus === "disabled" ? (
@@ -97,7 +124,7 @@ export const StripeConfigCard = ({
   };
   const cancelEditing = () => setEditing(false);
 
-  const handleSave = async () => {
+  const saveAssignments = async () => {
     const updates = buildChannelAssignmentUpdates({
       channels,
       mapping,
@@ -106,11 +133,37 @@ export const StripeConfigCard = ({
     });
 
     await onSaveAssignments(updates);
+    setIsMoveConfirmOpen(false);
     setEditing(false);
   };
 
+  /**
+   * Moving a channel between configurations of the same mode only reroutes it, but moving it
+   * across sandbox and live changes whether it takes real money — that one is worth a stop.
+   */
+  const handleSave = async () => {
+    if (envChangingMoves.length > 0) {
+      setIsMoveConfirmOpen(true);
+
+      return;
+    }
+
+    await saveAssignments();
+  };
+
   return (
-    <Box className={styles.card} data-test-id={`stripe-config-card-${configInstance.id}`}>
+    <Box className={cardClassName} data-test-id={`stripe-config-card-${configInstance.id}`}>
+      {isMoveConfirmOpen ? (
+        <ConfirmChannelMoveModal
+          moves={envChangingMoves}
+          targetConfigName={configInstance.name}
+          targetEnv={envValue}
+          isSaving={isSaving}
+          onConfirm={() => void saveAssignments()}
+          onClose={() => setIsMoveConfirmOpen(false)}
+        />
+      ) : null}
+
       <Box className={styles.cardHeader}>
         <Box
           className={styles.cardTitle}
@@ -193,8 +246,7 @@ export const StripeConfigCard = ({
           ) : (
             <Box display="flex" flexDirection="column" gap={3}>
               <Text size={1} color="default2">
-                Select channels for this configuration. Channels already on another configuration
-                will move here.
+                Select channels for this configuration.
               </Text>
               <Multiselect
                 label="Channels"
@@ -208,6 +260,30 @@ export const StripeConfigCard = ({
                   setSelectedIds(optionsNext.map((option) => option.value));
                 }}
               />
+              {moves.length > 0 ? (
+                <Box
+                  className={styles.moveNotice}
+                  data-test-id={`assign-channels-moves-${configInstance.id}`}
+                >
+                  <Text size={1} color={envChangingMoves.length > 0 ? "warning1" : "default2"}>
+                    {moves.length === 1
+                      ? "1 channel will leave its current configuration:"
+                      : `${moves.length} channels will leave their current configuration:`}
+                  </Text>
+                  {moves.map((move) => (
+                    <Text key={move.channelId} size={1} color="default2">
+                      {move.channelName} — now on {move.fromConfigName} (
+                      {stripeEnvLabel(move.fromEnv)})
+                      {move.changesEnv ? (
+                        <Text size={1} color="warning1">
+                          {" "}
+                          · switches to {stripeEnvLabel(envValue)} keys
+                        </Text>
+                      ) : null}
+                    </Text>
+                  ))}
+                </Box>
+              ) : null}
             </Box>
           )}
         </Box>

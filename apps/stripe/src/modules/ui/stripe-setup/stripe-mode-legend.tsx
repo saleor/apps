@@ -2,6 +2,7 @@ import { TextLink } from "@saleor/apps-ui";
 import { AsideInfoCard } from "@saleor/apps-ui-next";
 import { Box, Text } from "@saleor/macaw-ui";
 
+import { KeyPrefix } from "../key-prefix";
 import styles from "./stripe-mode-legend.module.css";
 
 const STRIPE_API_KEYS_URL = "https://dashboard.stripe.com/apikeys";
@@ -119,15 +120,8 @@ export const StripeModeLegend = () => (
             </Text>
           </Box>
           <Text size={1} color="default2" className={styles.modeDescription}>
-            Keys start with{" "}
-            <Text as="span" className={styles.prefix} color="default1">
-              pk_test
-            </Text>{" "}
-            /{" "}
-            <Text as="span" className={styles.prefix} color="default1">
-              rk_test
-            </Text>
-            . Use for development and staging — no real charges.
+            Keys start with <KeyPrefix>pk_test</KeyPrefix> / <KeyPrefix>rk_test</KeyPrefix>. Use for
+            development and staging — no real charges.
           </Text>
         </Box>
         <Box as="li" className={styles.mode}>
@@ -138,15 +132,8 @@ export const StripeModeLegend = () => (
             </Text>
           </Box>
           <Text size={1} color="default2" className={styles.modeDescription}>
-            Keys start with{" "}
-            <Text as="span" className={styles.prefix} color="default1">
-              pk_live
-            </Text>{" "}
-            /{" "}
-            <Text as="span" className={styles.prefix} color="default1">
-              rk_live
-            </Text>
-            . Real money — production only.
+            Keys start with <KeyPrefix>pk_live</KeyPrefix> / <KeyPrefix>rk_live</KeyPrefix>. Real
+            money — production only.
           </Text>
         </Box>
       </Box>

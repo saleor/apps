@@ -3,6 +3,7 @@ import { Text } from "@saleor/macaw-ui";
 import { type StripeEnv } from "@/modules/stripe/stripe-env";
 
 import styles from "./stripe-env-badge.module.css";
+import { stripeEnvLabel } from "./stripe-env-label";
 
 type Props = {
   env: StripeEnv;
@@ -31,7 +32,7 @@ export const StripeEnvBadge = ({ env, "data-test-id": dataTestId }: Props): JSX.
         dataTestId ?? (isSandbox ? "stripe-env-badge-sandbox" : "stripe-env-badge-live")
       }
     >
-      {isSandbox ? "Sandbox" : "Live"}
+      {stripeEnvLabel(env)}
     </Text>
   );
 };
