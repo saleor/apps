@@ -11,33 +11,24 @@ export type StripeConfigFormShape = {
   restrictedKey: string;
 };
 
-const RequiredInputLabel = ({ labelText }: { labelText: string }) => (
-  <Box>
-    <Text size={2} color="default2">
-      {labelText}
-    </Text>{" "}
-    <Text size={2} color="critical2">
-      *
-    </Text>
-  </Box>
-);
-
-const OptionalInputLabel = ({ labelText }: { labelText: string }) => (
-  <Text size={2} color="default2">
-    {labelText}
+/**
+ * Required fields carry no mark. Optional ones append secondary “(optional)” — same pattern as
+ * Dashboard settings forms (asterisks are not used).
+ */
+const FieldLabel = ({ labelText, optional = false }: { labelText: string; optional?: boolean }) => (
+  <Text size={2} color="default2" as="span">
+    {optional ? `${labelText} (optional)` : labelText}
   </Text>
 );
 
 /**
- * Hint that opens with the field name, so the copy still says what the value is when read
- * on its own — the label above is easy to skip past when pasting keys.
+ * Hint that opens with the field name so the copy still reads when skimmed alone.
+ * The term stays the same weight as the rest of the hint — emphasis belongs on values the
+ * merchant must recognize while pasting (key prefixes, masked tails), not on restating the label.
  */
 export const FieldHint = ({ term, children }: { term: string; children: ReactNode }) => (
   <Text size={2} color="default2">
-    <Text size={2} fontWeight="medium">
-      {term}
-    </Text>{" "}
-    {children}
+    {term} {children}
   </Text>
 );
 
@@ -64,21 +55,18 @@ export const StripeConfigFields = ({
 }: Props) => (
   <Box display="flex" flexDirection="column" gap={6}>
     <Input
-      label={<RequiredInputLabel labelText="Configuration name" />}
+      label={<FieldLabel labelText="Configuration name" />}
       name="name"
       control={control}
       disabled={disabled}
       helperText={
-        errors.name?.message ?? (
-          <FieldHint term="Configuration name">
-            is shown in Saleor only, for example “Live” or “UK Live”.
-          </FieldHint>
-        )
+        errors.name?.message ??
+        "Configuration name is shown in Saleor only, for example “Live” or “UK Live”."
       }
       error={!!errors.name}
     />
     <Input
-      label={<RequiredInputLabel labelText="Publishable key" />}
+      label={<FieldLabel labelText="Publishable key" />}
       name="publishableKey"
       control={control}
       disabled={disabled}
@@ -93,13 +81,7 @@ export const StripeConfigFields = ({
       error={!!errors.publishableKey}
     />
     <Input
-      label={
-        restrictedKey.optional ? (
-          <OptionalInputLabel labelText="Restricted key" />
-        ) : (
-          <RequiredInputLabel labelText="Restricted key" />
-        )
-      }
+      label={<FieldLabel labelText="Restricted key" optional={restrictedKey.optional} />}
       name="restrictedKey"
       control={control}
       type="password"

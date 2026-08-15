@@ -7,7 +7,7 @@ import styles from "./detail-page-layout.module.css";
 interface DetailPageLayoutProps extends BoxProps {
   children: ReactNode;
   gridTemplateColumns?: Sprinkles["gridTemplateColumns"];
-  /** Reserve bottom space for a sticky `Savebar`. */
+  /** Reserve bottom space and fill the iframe height for a fixed `Savebar`. */
   withSavebar?: boolean;
   "data-test-id"?: string;
 }

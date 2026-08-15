@@ -39,7 +39,7 @@ import "@saleor/apps-ui-next/style";
 
 It resets the browser default `body { margin: 8px }` — which otherwise insets the whole
 frame and misaligns app content with Dashboard content — and gives `#__next` `height: 100%`
-so `DetailPageLayout`'s `min-height: 100%` resolves and a sticky `Savebar` sits at the
+so `DetailPageLayout`'s `min-height: 100%` resolves and a fixed `Savebar` can sit at the
 bottom of the frame instead of under the content.
 
 Never add page padding to `body` or a page-level wrapper; if content needs breathing room,
@@ -188,7 +188,7 @@ Token typings: `node_modules/@saleor/macaw-ui/dist/theme/contract.css.d.ts`
 | ---- | --- |
 | Page shell (iframe-mounted config) | `DetailPageLayout` + `.Content` / `.RightSidebar` |
 | Title / actions bar (not Dashboard TopNav) | `AppPageHeader` |
-| Sticky form actions | `Savebar` (sticky footer; no Radix portal required in iframe) |
+| Bottom form actions | `Savebar` (fixed to iframe bottom; no Radix portal — apps lack Dashboard’s footer slot) |
 | Configuration hub (left rail + forms) | `SettingsPageContent` (`1fr` / `3fr`) |
 | Settings card with Shop / Channel scope | `SettingsSection` + `ownership` |
 | Scope pill | `SettingsOwnershipChip` (`shop` \| `channel`) |
@@ -268,6 +268,26 @@ const guard = useUnsavedChangesGuard({ enabled: isDirty && !isSubmitSuccessful }
   `allow-modals`, so those are silently suppressed (and `confirm` returning `false` would block
   navigation outright). Navigation initiated by the app after a successful save must go through
   `guard.navigateWithoutGuard`.
+
+**Field labels — required vs optional:** Dashboard does **not** mark required fields with an
+asterisk. Required fields are a plain label; optional fields append secondary `(optional)` (or a
+localized equivalent) after the label. Same idea as `DetailSettingsCardTitle optional` on card
+titles — mark the exception, not the default.
+
+```tsx
+// ✅ Required — plain label, no asterisk
+<label>Publishable key</label>
+
+// ✅ Optional — secondary copy marks the exception
+<label>Restricted key (optional)</label>
+
+// ❌ Asterisk for required
+<label>Publishable key *</label>
+```
+
+Helper-text hints under inputs stay muted (`default2`). Do not bold the field name in a hint when
+it merely restates the label. Emphasis belongs on values the merchant must recognize while
+pasting — key prefixes (`pk_test`, `rk_live`) and masked key tails.
 
 ### Configuration hubs vs entity detail
 
@@ -609,6 +629,7 @@ When porting a component from `saleor-dashboard`:
 
 ## Anti-patterns
 
+- **No asterisks on required fields** — mark optional fields with secondary `(optional)` instead
 - **No inline `style={{}}`** — use Box props or CSS Modules
 - **No plain `.css` files** for components — use `.module.css`
 - **No hardcoded colors** — use `var(--mu-colors-*)` or Box color props

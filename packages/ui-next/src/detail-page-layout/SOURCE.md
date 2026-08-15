@@ -7,5 +7,7 @@
 ## Intentional divergences
 
 - Imports from `@saleor/macaw-ui` instead of `@saleor/macaw-ui-next`.
-- Height model adapted for iframe-mounted apps: default is flexible (`min-height: 100%`) rather than Dashboard’s `100vh - savebarHeight - borders` calc. Pass `withSavebar` only to reserve bottom padding for a sticky `Savebar`.
+- Height model adapted for iframe-mounted apps: default is flexible (`min-height: 100%`) rather
+  than Dashboard’s `100vh - savebarHeight - borders` calc. Pass `withSavebar` to give the layout
+  a definite `height: 100%` and bottom padding so Content scrolls above a fixed `Savebar`.
 - Does not depend on Dashboard `hide-scrollbar` / `mobile-full-height` global CSS classes; scrollbar hiding is optional via CSS module.

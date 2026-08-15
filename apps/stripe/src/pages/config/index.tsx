@@ -56,7 +56,11 @@ const ConfigPage: NextPage = () => {
       <AppPageHeader
         title="Configuration"
         actions={
-          <TextLink href="https://docs.saleor.io/developer/app-store/apps/stripe/overview" newTab>
+          <TextLink
+            href="https://docs.saleor.io/developer/app-store/apps/stripe/overview"
+            newTab
+            size={2}
+          >
             Documentation
           </TextLink>
         }

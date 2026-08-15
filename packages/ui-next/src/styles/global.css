@@ -18,7 +18,7 @@ body {
 /*
  * Next Pages Router wrapper. Macaw sets `html, body { height: 100% }`; without passing that
  * height on, `DetailPageLayout`'s `min-height: 100%` resolves against an auto-height parent
- * and a sticky `Savebar` lands under the content instead of at the bottom of the frame.
+ * and Content cannot fill the frame above a fixed `Savebar`.
  */
 #__next {
   height: 100%;

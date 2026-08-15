@@ -6,8 +6,11 @@
 
 ## Intentional divergences
 
-- Sticky footer inside the app iframe instead of `@radix-ui/react-portal` + `SavebarRefProvider`.
-  Dashboard portals into an app-layout anchor outside the page; apps do not have that chrome.
+- Fixed footer inside the app iframe instead of `@radix-ui/react-portal` + `SavebarRefProvider`.
+  Dashboard portals into an AppLayout anchor outside the page; apps do not have that chrome.
+  `position: sticky` is not enough: with a short form it sits under the content instead of at
+  the bottom of the iframe view, so the bar is `position: fixed` and `DetailPageLayout`'s
+  `withSavebar` reserves matching bottom padding.
 - Action button labels are required `children` (no `react-intl` defaults), so `errorLabel`
   defaults to a plain `"Try again"` string instead of a translated message.
 - `ConfirmButton` keeps Dashboard's transition-state behavior (`src/components/ConfirmButton/`):
