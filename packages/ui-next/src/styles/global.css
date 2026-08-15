@@ -1,0 +1,25 @@
+/**
+ * Document reset for Dashboard-aligned app pages. Import once per app, after
+ * `@saleor/macaw-ui/style`:
+ *
+ *   import "@saleor/apps-ui-next/style";
+ *
+ * Apps render inside a Dashboard iframe that already provides the outer chrome, so the
+ * document must be full bleed — page primitives (`AppPageHeader`, `DetailPageLayout`,
+ * `SettingsPageContent`) own every inset. The browser default `body { margin: 8px }`
+ * would inset the whole frame and misalign app content with Dashboard content.
+ */
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/*
+ * Next Pages Router wrapper. Macaw sets `html, body { height: 100% }`; without passing that
+ * height on, `DetailPageLayout`'s `min-height: 100%` resolves against an auto-height parent
+ * and a sticky `Savebar` lands under the content instead of at the bottom of the frame.
+ */
+#__next {
+  height: 100%;
+}
