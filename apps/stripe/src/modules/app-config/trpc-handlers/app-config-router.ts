@@ -4,6 +4,7 @@ import { GetStripeConfigsListTrpcHandler } from "@/modules/app-config/trpc-handl
 import { NewStripeConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/new-stripe-config-trpc-handler";
 import { RemoveStripeConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/remove-stripe-config-trpc-handler";
 import { UpdateMappingTrpcHandler } from "@/modules/app-config/trpc-handlers/update-mapping-trpc-handler";
+import { UpdateStripeConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/update-stripe-config-trpc-handler";
 import { ChannelsFetcher } from "@/modules/saleor/channel-fetcher";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { router } from "@/modules/trpc/trpc-server";
@@ -23,5 +24,6 @@ export const appConfigRouter = router({
   }).getTrpcProcedure(),
   channelsConfigsMapping: new GetStripeConfigsChannelsMappingTrpcHandler().getTrpcProcedure(),
   updateMapping: new UpdateMappingTrpcHandler().getTrpcProcedure(),
+  updateStripeConfig: new UpdateStripeConfigTrpcHandler({ webhookManager }).getTrpcProcedure(),
   removeStripeConfig: new RemoveStripeConfigTrpcHandler({ webhookManager }).getTrpcProcedure(),
 });

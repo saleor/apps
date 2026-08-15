@@ -26,6 +26,27 @@ menu, setup checklist), follow [Elevated surfaces](#elevated-surfaces) — never
 
 ---
 
+## Full-bleed document (required)
+
+The document must be full bleed: the app renders inside a Dashboard iframe that already
+provides the outer chrome, and the page primitives (`AppPageHeader`, `DetailPageLayout`,
+`SettingsPageContent`) own every inset. Import the reset once in `_app.tsx`, after Macaw:
+
+```tsx
+import "@saleor/macaw-ui/style";
+import "@saleor/apps-ui-next/style";
+```
+
+It resets the browser default `body { margin: 8px }` — which otherwise insets the whole
+frame and misaligns app content with Dashboard content — and gives `#__next` `height: 100%`
+so `DetailPageLayout`'s `min-height: 100%` resolves and a sticky `Savebar` sits at the
+bottom of the frame instead of under the content.
+
+Never add page padding to `body` or a page-level wrapper; if content needs breathing room,
+it belongs in the layout primitive that owns that region.
+
+---
+
 ## Strategy 1: Box inline props (simple styles)
 
 Use `<Box>` from `@saleor/macaw-ui` when you need a few CSS properties (layout,
@@ -177,6 +198,7 @@ Token typings: `node_modules/@saleor/macaw-ui/dist/theme/contract.css.d.ts`
 | Full-bleed fold inside a settings card | `DetailGroupBox` (`variant="flush"`) |
 | Guided setup with tasks + review rows | `SetupChecklist` |
 | Dismissed setup (parked restore) | `ParkedSetupChecklist` |
+| Unsaved-changes confirmation | `ExitFormDialog` (+ `useUnsavedChangesGuard` from `@saleor/apps-shared`) |
 
 ### App shell contract
 
@@ -205,6 +227,47 @@ Consuming Next apps must list `@saleor/apps-ui-next` in `transpilePackages` (CSS
 
 Do not mix legacy `@saleor/apps-ui` `Layout.AppSection` with these primitives on
 the same page.
+
+### Forms and the save bar
+
+Dashboard uses a bottom save bar on every create **and** edit page (products, variants,
+customers, warehouses, staff) and on settings hubs (`SiteSettingsPage`, `OrderSettingsPage`) —
+never a save button inside a card. Apps follow the same rule: **one page, one form, one save
+bar.** A page that lists several independently editable entities (e.g. per-config channel
+assignment) keeps its actions inside each card instead, because a page-level bar cannot express
+which card it would commit.
+
+The page owns `react-hook-form` and passes `control` down to presentational field components, so
+the save bar can read `formState.isDirty`:
+
+```tsx
+const { handleSubmit, control, formState: { errors, isDirty, isSubmitSuccessful } } = useForm({...});
+const guard = useUnsavedChangesGuard({ enabled: isDirty && !isSubmitSuccessful });
+
+<Savebar>
+  {/* Delete belongs to entity pages only — create pages omit it. */}
+  <Savebar.DeleteButton onClick={openDeleteModal}>Delete</Savebar.DeleteButton>
+  <Savebar.Spacer />
+  <Savebar.CancelButton onClick={() => guard.navigateWithoutGuard("/config")}>Cancel</Savebar.CancelButton>
+  <Savebar.ConfirmButton
+    form={FORM_ID}
+    disabled={!isDirty || isSaving}
+    transitionState={isSaving ? "loading" : isError ? "error" : "default"}
+  >
+    Save
+  </Savebar.ConfirmButton>
+</Savebar>
+<ExitFormDialog isOpen={guard.isBlocked} onClose={guard.keepEditing} onLeave={guard.leave} />
+```
+
+- Confirm stays visible but `disabled` until the form is dirty, matching Dashboard's
+  `isSaveDisabled`. Don't hide the bar and don't swap the label to "Saving…" — pass
+  `transitionState` and let the button render the spinner / checkmark.
+- Guard navigation with `useUnsavedChangesGuard` + `ExitFormDialog`. **Never** use
+  `window.confirm` or a `beforeunload` prompt: the Dashboard app iframe is sandboxed without
+  `allow-modals`, so those are silently suppressed (and `confirm` returning `false` would block
+  navigation outright). Navigation initiated by the app after a successful save must go through
+  `guard.navigateWithoutGuard`.
 
 ### Configuration hubs vs entity detail
 

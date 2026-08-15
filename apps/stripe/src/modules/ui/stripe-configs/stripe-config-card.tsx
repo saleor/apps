@@ -1,3 +1,4 @@
+import { TextLink } from "@saleor/apps-ui";
 import { IconButton, iconSize, iconStrokeWidthBySize } from "@saleor/apps-ui-next";
 import { Box, Button, Multiselect, Text } from "@saleor/macaw-ui";
 import { Plug, Trash2 } from "lucide-react";
@@ -118,9 +119,14 @@ export const StripeConfigCard = ({
           gap={2}
           flexWrap="wrap"
         >
-          <Text size={4} fontWeight="medium">
+          <TextLink
+            href={`/config/${configInstance.id}`}
+            size={4}
+            fontWeight="medium"
+            data-test-id={`edit-config-${configInstance.id}`}
+          >
             {configInstance.name}
-          </Text>
+          </TextLink>
           <StripeEnvBadge env={envValue} />
         </Box>
 

@@ -8,6 +8,10 @@
 
 - Sticky footer inside the app iframe instead of `@radix-ui/react-portal` + `SavebarRefProvider`.
   Dashboard portals into an app-layout anchor outside the page; apps do not have that chrome.
-- No `ConfirmButton` transition-state component — uses macaw `Button` with optional `disabled` /
-  loading left to the caller.
-- Action button labels are required `children` (no `react-intl` defaults).
+- Action button labels are required `children` (no `react-intl` defaults), so `errorLabel`
+  defaults to a plain `"Try again"` string instead of a translated message.
+- `ConfirmButton` keeps Dashboard's transition-state behavior (`src/components/ConfirmButton/`):
+  spinner while `loading`, checkmark held for 3s on `success`, error variant with a retry label,
+  pointer events blocked while locked, and `disabled` ignored while completed feedback shows so the
+  button color does not flicker. The spinner is `lucide-react`'s `Loader2` rather than Dashboard's
+  `SaleorThrobber`, which depends on vendored Saleor logo path geometry.

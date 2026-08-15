@@ -1,7 +1,10 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
+import { useUnsavedChangesGuard } from "@saleor/apps-shared/use-unsaved-changes-guard";
 import {
   AppPageHeader,
   DetailPageLayout,
+  ExitFormDialog,
   Savebar,
   SettingsFieldStack,
   SettingsPageContent,
@@ -9,35 +12,65 @@ import {
 } from "@saleor/apps-ui-next";
 import { Box, Text } from "@saleor/macaw-ui";
 import { type NextPage } from "next";
-import { useRouter } from "next/router";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
+import { newStripeConfigInputSchema } from "@/modules/app-config/trpc-handlers/new-stripe-config-input-schema";
 import { trpcClient } from "@/modules/trpc/trpc-client";
-import { NewStripeConfigForm } from "@/modules/ui/stripe-configs/new-stripe-config-form";
+import {
+  StripeConfigFields,
+  type StripeConfigFormShape,
+} from "@/modules/ui/stripe-configs/stripe-config-fields";
 import { StripeModeLegend } from "@/modules/ui/stripe-setup/stripe-mode-legend";
 import { useHasAppAccess } from "@/modules/ui/use-has-app-access";
 
 const FORM_ID = "new_stripe_config_form";
+const CONFIG_LIST_PATH = "/config";
 
 const NewConfiguration: NextPage = () => {
   const { haveAccessToApp } = useHasAppAccess();
-  const router = useRouter();
   const { notifyError, notifySuccess } = useDashboardNotification();
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors, isDirty },
+  } = useForm<StripeConfigFormShape>({
+    defaultValues: {
+      name: "",
+      publishableKey: "",
+      restrictedKey: "",
+    },
+    resolver: zodResolver(newStripeConfigInputSchema),
+  });
+
+  /**
+   * Submitting is not enough to drop the guard: react-hook-form reports a successful submit as
+   * soon as the mutation is fired, while the keys are only safe once the server accepted them.
+   */
+  const [isSaved, setIsSaved] = useState(false);
+
+  const guard = useUnsavedChangesGuard({ enabled: isDirty && !isSaved });
 
   /**
    * Saving creates a Stripe webhook, so a second submit would leave an orphaned
    * configuration behind — the savebar and inputs stay locked while it is in flight.
    */
-  const { mutate: saveConfig, isLoading: isSaving } =
-    trpcClient.appConfig.saveNewStripeConfig.useMutation({
-      onSuccess() {
-        notifySuccess("Configuration saved");
+  const {
+    mutate: saveConfig,
+    isLoading: isSaving,
+    isError: isSaveError,
+  } = trpcClient.appConfig.saveNewStripeConfig.useMutation({
+    onSuccess() {
+      notifySuccess("Configuration saved");
+      setIsSaved(true);
 
-        return router.push("/config");
-      },
-      onError(err) {
-        notifyError("Error saving config", err.message);
-      },
-    });
+      guard.navigateWithoutGuard(CONFIG_LIST_PATH);
+    },
+    onError(error) {
+      notifyError("Error saving config", error.message);
+    },
+  });
 
   if (!haveAccessToApp) {
     return (
@@ -49,7 +82,11 @@ const NewConfiguration: NextPage = () => {
 
   return (
     <DetailPageLayout withSavebar data-test-id="stripe-config-new-page">
-      <AppPageHeader title="New Stripe configuration" href="/config" hrefTitle="Configuration" />
+      <AppPageHeader
+        title="New Stripe configuration"
+        href={CONFIG_LIST_PATH}
+        hrefTitle="Configuration"
+      />
       <DetailPageLayout.Content>
         <SettingsPageContent
           description={
@@ -60,27 +97,42 @@ const NewConfiguration: NextPage = () => {
           }
           aside={<StripeModeLegend />}
         >
-          <SettingsSection
-            title="Stripe keys"
-            ownership="channel"
-            description="Keys are used by every channel you assign to this configuration."
-            data-test-id="stripe-new-config-card"
-          >
-            <SettingsFieldStack>
-              <NewStripeConfigForm formId={FORM_ID} disabled={isSaving} onSubmit={saveConfig} />
-            </SettingsFieldStack>
-          </SettingsSection>
+          <Box as="form" id={FORM_ID} onSubmit={handleSubmit((values) => saveConfig(values))}>
+            <SettingsSection
+              title="Stripe keys"
+              ownership="channel"
+              description="Keys are used by every channel you assign to this configuration."
+              data-test-id="stripe-new-config-card"
+            >
+              <SettingsFieldStack>
+                <StripeConfigFields control={control} errors={errors} disabled={isSaving} />
+              </SettingsFieldStack>
+            </SettingsSection>
+          </Box>
         </SettingsPageContent>
       </DetailPageLayout.Content>
       <Savebar>
         <Savebar.Spacer />
-        <Savebar.CancelButton disabled={isSaving} onClick={() => router.push("/config")}>
+        <Savebar.CancelButton
+          disabled={isSaving}
+          onClick={() => guard.navigateWithoutGuard(CONFIG_LIST_PATH)}
+        >
           Cancel
         </Savebar.CancelButton>
-        <Savebar.ConfirmButton form={FORM_ID} disabled={isSaving}>
-          {isSaving ? "Saving…" : "Save"}
+        <Savebar.ConfirmButton
+          form={FORM_ID}
+          disabled={!isDirty || isSaving}
+          transitionState={isSaving ? "loading" : isSaveError ? "error" : "default"}
+        >
+          Save
         </Savebar.ConfirmButton>
       </Savebar>
+      <ExitFormDialog
+        isOpen={guard.isBlocked}
+        onClose={guard.keepEditing}
+        onLeave={guard.leave}
+        description="The configuration has not been saved yet. Leaving now discards the keys you entered."
+      />
     </DetailPageLayout>
   );
 };
