@@ -59,7 +59,7 @@ describe("UpdateMappingTrpcHandler", () => {
         channelId: mockedSaleorChannelId,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `[TRPCError: Failed to create Stripe configuration. Data can't be saved.]`,
+      `[TRPCError: Failed to update channel mapping. Data can't be saved.]`,
     );
   });
 
@@ -85,5 +85,21 @@ describe("UpdateMappingTrpcHandler", () => {
         },
       ]
     `);
+  });
+
+  it("Calls repository to unassign channel when configId is null", async () => {
+    const { caller, mockedAppConfigRepo } = getTestCaller();
+
+    vi.spyOn(mockedAppConfigRepo, "updateMapping").mockImplementationOnce(async () => ok(null));
+
+    await caller.testProcedure({
+      configId: null,
+      channelId: mockedSaleorChannelId,
+    });
+
+    expect(vi.mocked(mockedAppConfigRepo.updateMapping).mock.calls[0][1]).toStrictEqual({
+      channelId: mockedSaleorChannelId,
+      configId: null,
+    });
   });
 });

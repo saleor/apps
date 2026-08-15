@@ -103,6 +103,28 @@ describe("getStoreReadiness", () => {
 
     expect(readiness.smtpAppId).toBe("QXBwOjQy");
   });
+
+  it("resolves Stripe payment app id when installed", () => {
+    const readiness = getStoreReadiness({
+      ...baseData,
+      apps: {
+        edges: [
+          {
+            node: {
+              id: "QXBwOlN0cmlwZQ==",
+              identifier: "saleor.app.payment.stripe",
+              type: "THIRDPARTY",
+              isActive: true,
+              permissions: [{ code: "HANDLE_PAYMENTS" }],
+            },
+          },
+        ],
+      },
+    });
+
+    expect(readiness.stripeAppId).toBe("QXBwOlN0cmlwZQ==");
+    expect(readiness.hasPaymentApp).toBe(true);
+  });
 });
 
 describe("getCommerceTasks", () => {

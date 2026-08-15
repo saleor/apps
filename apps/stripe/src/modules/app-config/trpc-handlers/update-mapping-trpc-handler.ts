@@ -16,7 +16,7 @@ export class UpdateMappingTrpcHandler {
     return this.baseProcedure
       .input(
         z.object({
-          configId: z.string().uuid(),
+          configId: z.string().uuid().nullable(),
           channelId: z.string(),
         }),
       )
@@ -65,7 +65,7 @@ export class UpdateMappingTrpcHandler {
           // TODO Handle exact errors
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to create Stripe configuration. Data can't be saved.",
+            message: "Failed to update channel mapping. Data can't be saved.",
           });
         }
       });

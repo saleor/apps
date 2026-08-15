@@ -2,6 +2,9 @@ import { type StoreReadinessQuery } from "@/generated/graphql";
 
 import { SMTP_APP_IDENTIFIER } from "./go-live-copy";
 
+/** Canonical Stripe payment app identifier from the app manifest. */
+export const STRIPE_APP_IDENTIFIER = "saleor.app.payment.stripe";
+
 export type CommerceTaskId = "sales-channel" | "first-product" | "payments" | "test-order";
 
 export type TaskStatus = "active" | "completed" | "locked" | "optional";
@@ -19,6 +22,8 @@ export type StoreReadiness = {
   hasOrder: boolean;
   /** Installed SMTP app GraphQL id, when `saleor.app.smtp` is active. */
   smtpAppId: string | null;
+  /** Installed Stripe payment app GraphQL id, when `saleor.app.payment.stripe` is active. */
+  stripeAppId: string | null;
   /** False when the corresponding field was missing (permission / error). */
   channelsKnown: boolean;
   shippingKnown: boolean;
@@ -67,6 +72,8 @@ export const getStoreReadiness = (data: StoreReadinessQuery | undefined): StoreR
   const hasPaymentApp = appEdges.some((edge) => isPaymentApp(edge.node));
   const smtpAppId =
     appEdges.find((edge) => edge.node.identifier === SMTP_APP_IDENTIFIER)?.node.id ?? null;
+  const stripeAppId =
+    appEdges.find((edge) => edge.node.identifier === STRIPE_APP_IDENTIFIER)?.node.id ?? null;
 
   return {
     channelId: primaryChannel?.id ?? null,
@@ -79,6 +86,7 @@ export const getStoreReadiness = (data: StoreReadinessQuery | undefined): StoreR
     hasPaymentApp,
     hasOrder: (data?.orders?.totalCount ?? 0) > 0,
     smtpAppId,
+    stripeAppId,
     channelsKnown,
     shippingKnown,
     productsKnown,

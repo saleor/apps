@@ -1,5 +1,5 @@
 query FetchChannels {
   channels {
-    ...Channel
+    ...ConfigChannel
   }
 }

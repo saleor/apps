@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
     "@saleor/apps-otel",
     "@saleor/apps-shared",
     "@saleor/apps-trpc",
+    "@saleor/apps-ui",
+    "@saleor/apps-ui-next",
+    "@saleor/react-hook-form-macaw",
   ],
   experimental: {
     optimizePackageImports: ["@sentry/nextjs", "@sentry/node"],

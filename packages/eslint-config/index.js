@@ -27,7 +27,7 @@ export const config = [
    * */
   {
     name: "@saleor/eslint-config-apps/ignores",
-    ignores: [".next/**/*", "coverage/**/*", "**/generated/**/*", "next-env.d.ts"],
+    ignores: [".next/**/*", ".tmp/**/*", "coverage/**/*", "**/generated/**/*", "next-env.d.ts"],
   },
   /**
    * Dependencies - suggests better alternatives for redundant packages

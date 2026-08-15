@@ -3,7 +3,7 @@ import { type Client } from "urql";
 
 import { BaseError } from "@/lib/errors";
 
-import { type ChannelFragment, FetchChannelsDocument } from "../../../generated/graphql";
+import { type ConfigChannelFragment, FetchChannelsDocument } from "../../../generated/graphql";
 
 /**
  * Shared with Avatax, consider moving common services to package
@@ -22,7 +22,7 @@ export class ChannelsFetcher {
   }
 
   async fetchChannels(): Promise<
-    Result<ChannelFragment[], InstanceType<typeof ChannelsFetcher.FetchError>>
+    Result<ConfigChannelFragment[], InstanceType<typeof ChannelsFetcher.FetchError>>
   > {
     const channelsResponse = await this.client.query(FetchChannelsDocument, {}).toPromise();
 

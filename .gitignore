@@ -31,6 +31,8 @@ yarn-error.log*
 .cspellcache
 *.tsbuildinfo
 .turbo
+# node compile cache / jiti transpile output (NODE_COMPILE_CACHE)
+.tmp/
 
 # env files
 .env

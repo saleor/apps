@@ -1,40 +1,33 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
-import { ConfigsList } from "@saleor/apps-ui";
-import { Chip, Text } from "@saleor/macaw-ui";
-import { useRouter } from "next/router";
+import { DeleteConfigurationModalContent } from "@saleor/apps-ui";
+import { channelActiveToStatus, ChannelListItem, DetailGroupBox } from "@saleor/apps-ui-next";
+import { Box, Modal, Text } from "@saleor/macaw-ui";
+import { useMemo, useState } from "react";
 
-import {
-  StripeFrontendConfig,
-  type StripeFrontendConfigSerializedFields,
-} from "@/modules/app-config/domain/stripe-config";
+import { type ConfigChannelFragment } from "@/generated/graphql";
+import { type StripeFrontendConfigSerializedFields } from "@/modules/app-config/domain/stripe-config";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 
+import {
+  type ChannelAssignmentUpdate,
+  type ChannelMapping,
+} from "./build-channel-assignment-updates";
+import { StripeConfigCard } from "./stripe-config-card";
+import styles from "./stripe-config-cards.module.css";
+
 type Props = {
-  configs: Array<StripeFrontendConfigSerializedFields>;
+  configs: StripeFrontendConfigSerializedFields[];
+  channels: ConfigChannelFragment[];
+  mapping: ChannelMapping;
 };
 
-const webhookDisabled = <Text color="warning1">Webhook disabled, app will not work properly</Text>;
-const webhookMissing = <Text color="critical1">Webhook missing, create config again</Text>;
-
-const testEnvChip = (
-  <Chip marginLeft="auto" __backgroundColor="#CC4B00" borderColor="transparent" size="large">
-    <Text __color={"#FFF"} size={1} whiteSpace="nowrap">
-      Stripe test mode
-    </Text>
-  </Chip>
-);
-const liveEnvChip = (
-  <Chip marginLeft={"auto"} size="large" whiteSpace="nowrap">
-    <Text size={1}>Stripe live mode</Text>
-  </Chip>
-);
-
-export const StripeConfigsList = ({ configs }: Props) => {
-  const router = useRouter();
+export const StripeConfigsList = ({ configs, channels, mapping }: Props) => {
   const { notifyError, notifySuccess } = useDashboardNotification();
   const configsList = trpcClient.appConfig.getStripeConfigsList.useQuery();
-  const mappings = trpcClient.appConfig.channelsConfigsMapping.useQuery();
-  const { mutate: removeStripeConfig, isLoading } =
+  const mappingsQuery = trpcClient.appConfig.channelsConfigsMapping.useQuery();
+  const [configIdToDelete, setConfigIdToDelete] = useState<string | null>(null);
+
+  const { mutate: removeStripeConfig, isLoading: isDeleting } =
     trpcClient.appConfig.removeStripeConfig.useMutation({
       onSuccess() {
         notifySuccess("Configuration deleted");
@@ -43,44 +36,142 @@ export const StripeConfigsList = ({ configs }: Props) => {
         notifyError("Error deleting config", err.message);
       },
       onSettled() {
-        mappings.refetch();
-        configsList.refetch();
+        void mappingsQuery.refetch();
+        void configsList.refetch();
       },
     });
 
+  const mappingUpdate = trpcClient.appConfig.updateMapping.useMutation();
+
+  const channelsByConfigId = useMemo(() => {
+    const result: Record<string, ConfigChannelFragment[]> = {};
+
+    for (const config of configs) {
+      result[config.id] = [];
+    }
+
+    for (const channel of channels) {
+      const assigned = mapping[channel.id];
+
+      if (assigned && result[assigned.id]) {
+        result[assigned.id].push(channel);
+      }
+    }
+
+    return result;
+  }, [configs, channels, mapping]);
+
+  const unassignedChannels = useMemo(
+    () => channels.filter((channel) => mapping[channel.id] === undefined),
+    [channels, mapping],
+  );
+
+  const closeDeleteModal = () => setConfigIdToDelete(null);
+
+  const handleAssignSave = async (updates: ChannelAssignmentUpdate[]) => {
+    if (updates.length === 0) {
+      return;
+    }
+
+    try {
+      await Promise.all(
+        updates.map((update) =>
+          mappingUpdate.mutateAsync({
+            channelId: update.channelId,
+            configId: update.configId,
+          }),
+        ),
+      );
+      notifySuccess("Channel assignment updated");
+      await mappingsQuery.refetch();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unknown error";
+
+      notifyError("Error updating channel assignment", message);
+      throw err;
+    }
+  };
+
+  const handleDisconnectChannel = async (channelId: string) => {
+    try {
+      await mappingUpdate.mutateAsync({
+        channelId,
+        configId: null,
+      });
+      notifySuccess("Channel disconnected");
+      await mappingsQuery.refetch();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unknown error";
+
+      notifyError("Error disconnecting channel", message);
+    }
+  };
+
   return (
-    <ConfigsList
-      onConfigDelete={(id) => {
-        removeStripeConfig({
-          configId: id,
-        });
-      }}
-      configs={configs.map((config) => {
-        const configInstance = StripeFrontendConfig.createFromSerializedFields(config);
-        const envValue = configInstance.getStripeEnvValue();
+    <>
+      {/* Padded body — sibling of flush fold so SettingsSection draws one top rule. */}
+      <Box className={styles.listBody}>
+        <Modal open={Boolean(configIdToDelete)} onChange={closeDeleteModal}>
+          <DeleteConfigurationModalContent
+            onDeleteClick={() => {
+              if (!configIdToDelete) {
+                throw new Error(
+                  "Invariant, modal should be open only when configIdToDelete is set",
+                );
+              }
 
-        const webhookStatusInfo =
-          configInstance.webhookStatus === "disabled"
-            ? webhookDisabled
-            : configInstance.webhookStatus === "missing"
-            ? webhookMissing
-            : null;
+              removeStripeConfig({ configId: configIdToDelete });
+              closeDeleteModal();
+            }}
+          />
+        </Modal>
 
-        return {
-          id: configInstance.id,
-          name: configInstance.name,
-          deleteButtonSlotLeft() {
-            return envValue === "TEST" ? testEnvChip : liveEnvChip;
-          },
-          deleteButtonSlotRight() {
-            return webhookStatusInfo;
-          },
-        };
-      })}
-      onNewConfigAdd={() => {
-        router.push("/config/new");
-      }}
-      isLoading={isLoading}
-    />
+        <Box className={styles.grid} data-test-id="stripe-config-cards-grid">
+          {configs.map((config) => (
+            <StripeConfigCard
+              key={config.id}
+              config={config}
+              channels={channels}
+              mapping={mapping}
+              assignedChannels={channelsByConfigId[config.id] ?? []}
+              isSaving={mappingUpdate.isLoading}
+              isDeleting={isDeleting}
+              onDelete={() => setConfigIdToDelete(config.id)}
+              onSaveAssignments={handleAssignSave}
+              onDisconnectChannel={handleDisconnectChannel}
+            />
+          ))}
+        </Box>
+      </Box>
+
+      {unassignedChannels.length > 0 ? (
+        <DetailGroupBox
+          groupId="unassigned-channels"
+          variant="flush"
+          marginTop={0}
+          dataTestId="unassigned-channels-callout"
+          triggerButtonTestId="unassigned-channels-toggle"
+          headerStart={
+            <Text size={2}>
+              {unassignedChannels.length === 1
+                ? "1 channel not assigned"
+                : `${unassignedChannels.length} channels not assigned`}
+            </Text>
+          }
+        >
+          <Box className={styles.unassignedList}>
+            {unassignedChannels.map((channel, index) => (
+              <ChannelListItem
+                key={channel.id}
+                name={channel.name}
+                currencyCode={channel.currencyCode}
+                statusType={channelActiveToStatus(channel.isActive)}
+                showDivider={index < unassignedChannels.length - 1}
+              />
+            ))}
+          </Box>
+        </DetailGroupBox>
+      ) : null}
+    </>
   );
 };

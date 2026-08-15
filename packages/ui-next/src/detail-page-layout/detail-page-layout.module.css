@@ -1,0 +1,36 @@
+.root {
+  min-height: 100%;
+  width: 100%;
+}
+
+.rootWithSavebar {
+  padding-bottom: var(--app-savebar-height, 64px);
+}
+
+.content {
+  height: 100%;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.contentHideScrollbar {
+  scrollbar-width: none;
+}
+
+.contentHideScrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.rightSidebar {
+  height: 100%;
+  overflow-y: auto;
+  min-width: 0;
+  border-left: 1px solid var(--mu-colors-border-default1);
+  padding-bottom: var(--mu-spacing-6);
+}
+
+@media (max-width: 768px) {
+  .rightSidebar {
+    border-left: none;
+  }
+}
