@@ -2,7 +2,7 @@ import { TextLink } from "@saleor/apps-ui";
 import { SettingsFieldStack, SettingsSection } from "@saleor/apps-ui-next";
 import { Button, Skeleton, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
-import { type ReactNode, useEffect } from "react";
+import { type ReactNode } from "react";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";
 import { StripeConfigsList } from "@/modules/ui/stripe-configs/stripe-configs-list";
@@ -28,22 +28,25 @@ const Section = ({
   </SettingsSection>
 );
 
-export const ChannelConfigSection = () => {
-  const configsQuery = trpcClient.appConfig.getStripeConfigsList.useQuery();
-  const channelsQuery = trpcClient.appConfig.fetchChannels.useQuery();
-  const mappingQuery = trpcClient.appConfig.channelsConfigsMapping.useQuery();
-  const router = useRouter();
+/*
+ * Queries opt out of `refetchOnMount` globally (see trpc-client), so returning from /config/new
+ * or /config/[configId] would otherwise render stale data. Opting back in refreshes cached data
+ * on mount without duplicating the request on the first render - unlike a refetch in an effect,
+ * which cancels the in-flight query and re-runs the Stripe webhook lookups behind it.
+ */
+const refreshOnMount = { refetchOnMount: true } as const;
 
-  /*
-   * Queries opt out of `refetchOnMount` globally (see trpc-client), so returning from
-   * /config/new would otherwise render stale data. Refetch once per mount.
-   */
-  useEffect(() => {
-    void configsQuery.refetch();
-    void channelsQuery.refetch();
-    void mappingQuery.refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+export const ChannelConfigSection = () => {
+  const configsQuery = trpcClient.appConfig.getStripeConfigsList.useQuery(
+    undefined,
+    refreshOnMount,
+  );
+  const channelsQuery = trpcClient.appConfig.fetchChannels.useQuery(undefined, refreshOnMount);
+  const mappingQuery = trpcClient.appConfig.channelsConfigsMapping.useQuery(
+    undefined,
+    refreshOnMount,
+  );
+  const router = useRouter();
 
   const description = (
     <>

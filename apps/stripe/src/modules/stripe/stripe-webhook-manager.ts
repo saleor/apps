@@ -38,9 +38,9 @@ const CantRemoveWebhookError = BaseError.subclass("CantRemoveWebhookError", {
   },
 });
 
-const CantFetchWebhookError = BaseError.subclass("CantRemoveWebhookError", {
+const CantFetchWebhookError = BaseError.subclass("CantFetchWebhookError", {
   props: {
-    _internalName: "StripeWebhookManagerErrors.CantRemoveWebhookError" as const,
+    _internalName: "StripeWebhookManagerErrors.CantFetchWebhookError" as const,
   },
 });
 

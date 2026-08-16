@@ -84,12 +84,14 @@ export const StripeConfigsList = ({ configs, channels, mapping }: Props) => {
         ),
       );
       notifySuccess("Channel assignment updated");
-      await mappingsQuery.refetch();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unknown error";
 
       notifyError("Error updating channel assignment", message);
       throw err;
+    } finally {
+      /** Updates are per channel, so a failure in the middle still leaves some of them applied. */
+      await mappingsQuery.refetch();
     }
   };
 

@@ -132,9 +132,13 @@ export const StripeConfigCard = ({
       selectedChannelIds: new Set(selectedIds),
     });
 
-    await onSaveAssignments(updates);
-    setIsMoveConfirmOpen(false);
-    setEditing(false);
+    try {
+      await onSaveAssignments(updates);
+      setIsMoveConfirmOpen(false);
+      setEditing(false);
+    } catch {
+      /** The list already notified the user - keep the editor open so the selection survives. */
+    }
   };
 
   /**
