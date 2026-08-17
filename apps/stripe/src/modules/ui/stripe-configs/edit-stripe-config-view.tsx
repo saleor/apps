@@ -12,15 +12,16 @@ import {
 } from "@saleor/apps-ui-next";
 import { Box, Modal } from "@saleor/macaw-ui";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
-import {
-  StripeFrontendConfig,
-  type StripeFrontendConfigSerializedFields,
-} from "@/modules/app-config/domain/stripe-config";
+import { type StripeFrontendConfigSerializedFields } from "@/modules/app-config/domain/stripe-config";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 import { KeyPrefix } from "@/modules/ui/key-prefix";
 import { editStripeConfigFormSchema } from "@/modules/ui/stripe-configs/edit-stripe-config-form-schema";
+import {
+  inferStripeEnvFromKeys,
+  stripeEnvFromKeyPrefix,
+} from "@/modules/ui/stripe-configs/infer-stripe-env-from-keys";
 import {
   FieldHint,
   StripeConfigFields,
@@ -40,8 +41,6 @@ export const EditStripeConfigView = ({
   const { notifyError, notifySuccess } = useDashboardNotification();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const configInstance = StripeFrontendConfig.createFromSerializedFields(config);
-
   const {
     handleSubmit,
     control,
@@ -54,6 +53,14 @@ export const EditStripeConfigView = ({
       restrictedKey: "",
     },
     resolver: zodResolver(editStripeConfigFormSchema),
+  });
+
+  const publishableKey = useWatch({ control, name: "publishableKey" });
+  const restrictedKey = useWatch({ control, name: "restrictedKey" });
+  const envHint = inferStripeEnvFromKeys({
+    publishableKey,
+    restrictedKey,
+    keptRestrictedKeyEnv: stripeEnvFromKeyPrefix(config.publishableKey),
   });
 
   /**
@@ -132,7 +139,7 @@ export const EditStripeConfigView = ({
               title="Stripe keys"
               ownership="channel"
               description="Keys are used by every channel assigned to this configuration."
-              headerEnd={<StripeEnvBadge env={configInstance.getStripeEnvValue()} />}
+              headerEnd={envHint ? <StripeEnvBadge env={envHint} /> : undefined}
               data-test-id="stripe-edit-config-card"
             >
               <SettingsFieldStack>

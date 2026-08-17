@@ -13,14 +13,16 @@ import {
 import { Box, Text } from "@saleor/macaw-ui";
 import { type NextPage } from "next";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 import { newStripeConfigInputSchema } from "@/modules/app-config/trpc-handlers/new-stripe-config-input-schema";
 import { trpcClient } from "@/modules/trpc/trpc-client";
+import { inferStripeEnvFromKeys } from "@/modules/ui/stripe-configs/infer-stripe-env-from-keys";
 import {
   StripeConfigFields,
   type StripeConfigFormShape,
 } from "@/modules/ui/stripe-configs/stripe-config-fields";
+import { StripeEnvBadge } from "@/modules/ui/stripe-configs/stripe-env-badge";
 import { StripeModeLegend } from "@/modules/ui/stripe-setup/stripe-mode-legend";
 import { useHasAppAccess } from "@/modules/ui/use-has-app-access";
 
@@ -43,6 +45,10 @@ const NewConfiguration: NextPage = () => {
     },
     resolver: zodResolver(newStripeConfigInputSchema),
   });
+
+  const publishableKey = useWatch({ control, name: "publishableKey" });
+  const restrictedKey = useWatch({ control, name: "restrictedKey" });
+  const envHint = inferStripeEnvFromKeys({ publishableKey, restrictedKey });
 
   /**
    * Submitting is not enough to drop the guard: react-hook-form reports a successful submit as
@@ -102,6 +108,7 @@ const NewConfiguration: NextPage = () => {
               title="Stripe keys"
               ownership="channel"
               description="Keys are used by every channel you assign to this configuration."
+              headerEnd={envHint ? <StripeEnvBadge env={envHint} /> : undefined}
               data-test-id="stripe-new-config-card"
             >
               <SettingsFieldStack>
