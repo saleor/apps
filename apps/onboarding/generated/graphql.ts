@@ -153,6 +153,24 @@ export type AccountChangeEmailRequested = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
+/**
+ * AccountConfirmMode set the account merging mode for anonymous objects.
+ *
+ *     This dictates the behavior of the `confirmAccount()` mutation for
+ *     password-based authentication when attempting to merge orders & giftcard
+ *     that aren't associated to a user account.
+ *
+ *     Modes:
+ *
+ *     - MERGE_DISABLED disables merging only when the authentication method
+ *       is password (i.e., when not using OIDC)
+ *     - REQUIRE_PASSWORD enables account merging who accounts that use password
+ *       authentication but it requires the user to enter their password
+ */
+export type AccountConfirmModeEnum =
+  | 'MERGE_DISABLED'
+  | 'REQUIRE_PASSWORD';
+
 /** Event sent when account confirmation requested. This event is always sent. enableAccountConfirmationByEmail flag set to True is not required. */
 export type AccountConfirmationRequested = Event & {
   /** The channel data. */
@@ -284,6 +302,12 @@ export type AccountEmailChanged = Event & {
 export type AccountError = {
   /** A type of address that causes the error. */
   readonly addressType?: Maybe<AddressTypeEnum>;
+  /**
+   * List of attributes IDs which causes the error.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** The error code. */
   readonly code: AccountErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -1094,6 +1118,7 @@ export type AppError = {
 
 export type AppErrorCode =
   | 'DUPLICATED_EXTENSION_IDENTIFIER'
+  | 'DUPLICATED_WEBHOOK_IDENTIFIER'
   | 'FORBIDDEN'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -2320,7 +2345,7 @@ export type AttributeBulkCreateResult = {
 /**
  * Deletes attributes.
  *
- * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
+ * Requires one of the following permissions, depending on the type of each attribute: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES for `CUSTOMER_TYPE` attributes.
  *
  * Triggers the following webhook events:
  * - ATTRIBUTE_DELETED (async): An attribute was deleted.
@@ -2539,7 +2564,7 @@ export type AttributeCreated = Event & {
 /**
  * Deletes an attribute.
  *
- * Requires one of the following permissions, depending on the attribute type: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes.
+ * Requires one of the following permissions, depending on the attribute type: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES for `CUSTOMER_TYPE` attributes.
  *
  * Triggers the following webhook events:
  * - ATTRIBUTE_DELETED (async): An attribute was deleted.
@@ -2673,7 +2698,7 @@ export type AttributeInputTypeEnumFilterInput = {
 /**
  * Reorder the values of an attribute.
  *
- * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
+ * Requires one of the following permissions, depending on the attribute type: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES for `CUSTOMER_TYPE` attributes.
  *
  * Triggers the following webhook events:
  * - ATTRIBUTE_VALUE_UPDATED (async): An attribute value was updated.
@@ -2768,6 +2793,7 @@ export type AttributeTranslation = Node & {
 };
 
 export type AttributeTypeEnum =
+  | 'CUSTOMER_TYPE'
   | 'PAGE_TYPE'
   | 'PRODUCT_TYPE';
 
@@ -2781,7 +2807,7 @@ export type AttributeTypeEnumFilterInput = {
 /**
  * Updates attribute.
  *
- * Requires one of the following permissions, depending on the attribute type: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes.
+ * Requires one of the following permissions, depending on the attribute type: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES for `CUSTOMER_TYPE` attributes.
  *
  * Triggers the following webhook events:
  * - ATTRIBUTE_UPDATED (async): An attribute was updated.
@@ -2904,7 +2930,7 @@ export type AttributeValueTranslationArgs = {
 /**
  * Deletes values of attributes.
  *
- * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
+ * Requires one of the following permissions, depending on the type of each value's attribute: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES for `CUSTOMER_TYPE` attributes.
  *
  * Triggers the following webhook events:
  * - ATTRIBUTE_VALUE_DELETED (async): An attribute value was deleted.
@@ -2976,7 +3002,7 @@ export type AttributeValueCountableEdge = {
 /**
  * Creates a value for an attribute.
  *
- * Requires one of the following permissions: MANAGE_PRODUCTS.
+ * Requires one of the following permissions, depending on the attribute type: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES for `CUSTOMER_TYPE` attributes.
  *
  * Triggers the following webhook events:
  * - ATTRIBUTE_VALUE_CREATED (async): An attribute value was created.
@@ -3033,7 +3059,7 @@ export type AttributeValueCreated = Event & {
 /**
  * Deletes a value of an attribute.
  *
- * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
+ * Requires one of the following permissions, depending on the type of the value's attribute: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES for `CUSTOMER_TYPE` attributes.
  *
  * Triggers the following webhook events:
  * - ATTRIBUTE_VALUE_DELETED (async): An attribute value was deleted.
@@ -3212,7 +3238,7 @@ export type AttributeValueTranslationInput = {
 /**
  * Updates value of an attribute.
  *
- * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
+ * Requires one of the following permissions, depending on the type of the value's attribute: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES for `CUSTOMER_TYPE` attributes.
  *
  * Triggers the following webhook events:
  * - ATTRIBUTE_VALUE_UPDATED (async): An attribute value was updated.
@@ -6697,6 +6723,12 @@ export type CustomerBulkUpdate = {
 };
 
 export type CustomerBulkUpdateError = {
+  /**
+   * List of attributes IDs which causes the error.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** The error code. */
   readonly code: CustomerBulkUpdateErrorCode;
   /** The error message. */
@@ -6838,6 +6870,18 @@ export type CustomerFilterInput = {
 };
 
 export type CustomerInput = {
+  /**
+   * List of attribute values to assign to the user. The attributes must belong to the customer type the user ends up with.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly attributes?: InputMaybe<ReadonlyArray<AttributeValueInput>>;
+  /**
+   * ID of the customer type to assign to the user. If not provided when creating a customer, the default customer type is assigned.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly customerType?: InputMaybe<Scalars['ID']['input']>;
   /** Billing address of the customer. */
   readonly defaultBillingAddress?: InputMaybe<AddressInput>;
   /** Shipping address of the customer. */
@@ -6943,6 +6987,409 @@ export type CustomerOrderWhereInput = {
 };
 
 /**
+ * Represents a type of customer. It allows to segment users and defines what attributes are available to users of this type.
+ *
+ * Added in Saleor 3.23.
+ */
+export type CustomerType = Node & ObjectWithMetadata & {
+  /** Customer attributes assigned to this customer type. Attributes that are not visible in the storefront require one of the following permissions to be included: MANAGE_USERS, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES. */
+  readonly attributes?: Maybe<ReadonlyArray<Attribute>>;
+  /**
+   * Customer attributes that can be assigned to the customer type.
+   *
+   * Requires one of the following permissions: MANAGE_USERS, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES.
+   */
+  readonly availableAttributes?: Maybe<AttributeCountableConnection>;
+  /** The ID of the customer type. */
+  readonly id: Scalars['ID']['output'];
+  /** Whether this is the default customer type. The default customer type is assigned to every newly created user and cannot be deleted. */
+  readonly isDefault: Scalars['Boolean']['output'];
+  /** List of public metadata items. Can be accessed without permissions. */
+  readonly metadata: ReadonlyArray<MetadataItem>;
+  /**
+   * A single key from public metadata.
+   *
+   * Tip: Use GraphQL aliases to fetch multiple keys.
+   */
+  readonly metafield?: Maybe<Scalars['String']['output']>;
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
+  readonly metafields?: Maybe<Scalars['Metadata']['output']>;
+  /** Name of the customer type. */
+  readonly name: Scalars['String']['output'];
+  /** List of private metadata items. Requires staff permissions to access. */
+  readonly privateMetadata: ReadonlyArray<MetadataItem>;
+  /**
+   * A single key from private metadata. Requires staff permissions to access.
+   *
+   * Tip: Use GraphQL aliases to fetch multiple keys.
+   */
+  readonly privateMetafield?: Maybe<Scalars['String']['output']>;
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
+  readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
+  /** Slug of the customer type. */
+  readonly slug: Scalars['String']['output'];
+};
+
+
+/**
+ * Represents a type of customer. It allows to segment users and defines what attributes are available to users of this type.
+ *
+ * Added in Saleor 3.23.
+ */
+export type CustomerTypeAvailableAttributesArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  where?: InputMaybe<AttributeWhereInput>;
+};
+
+
+/**
+ * Represents a type of customer. It allows to segment users and defines what attributes are available to users of this type.
+ *
+ * Added in Saleor 3.23.
+ */
+export type CustomerTypeMetafieldArgs = {
+  key: Scalars['String']['input'];
+};
+
+
+/**
+ * Represents a type of customer. It allows to segment users and defines what attributes are available to users of this type.
+ *
+ * Added in Saleor 3.23.
+ */
+export type CustomerTypeMetafieldsArgs = {
+  keys?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+/**
+ * Represents a type of customer. It allows to segment users and defines what attributes are available to users of this type.
+ *
+ * Added in Saleor 3.23.
+ */
+export type CustomerTypePrivateMetafieldArgs = {
+  key: Scalars['String']['input'];
+};
+
+
+/**
+ * Represents a type of customer. It allows to segment users and defines what attributes are available to users of this type.
+ *
+ * Added in Saleor 3.23.
+ */
+export type CustomerTypePrivateMetafieldsArgs = {
+  keys?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+/**
+ * Assign attributes to a given customer type.
+ *
+ * Added in Saleor 3.23.
+ *
+ * Requires one of the following permissions: MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES.
+ *
+ * Triggers the following webhook events:
+ * - CUSTOMER_TYPE_UPDATED (async): A customer type was updated.
+ */
+export type CustomerTypeAssignAttributes = {
+  /** The updated customer type. */
+  readonly customerType?: Maybe<CustomerType>;
+  readonly errors: ReadonlyArray<CustomerTypeAssignAttributesError>;
+};
+
+export type CustomerTypeAssignAttributesError = {
+  /** List of attributes IDs which causes the error. */
+  readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
+  /** The error code. */
+  readonly code: CustomerTypeAssignAttributesErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars['String']['output']>;
+};
+
+export type CustomerTypeAssignAttributesErrorCode =
+  | 'ATTRIBUTE_ALREADY_ASSIGNED'
+  | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'NOT_FOUND';
+
+export type CustomerTypeCountableConnection = {
+  readonly edges: ReadonlyArray<CustomerTypeCountableEdge>;
+  /** Pagination data for this connection. */
+  readonly pageInfo: PageInfo;
+  /** A total count of items in the collection. */
+  readonly totalCount?: Maybe<Scalars['Int']['output']>;
+};
+
+export type CustomerTypeCountableEdge = {
+  /** A cursor for use in pagination. */
+  readonly cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  readonly node: CustomerType;
+};
+
+/**
+ * Creates a new customer type.
+ *
+ * Added in Saleor 3.23.
+ *
+ * Requires one of the following permissions: MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES.
+ *
+ * Triggers the following webhook events:
+ * - CUSTOMER_TYPE_CREATED (async): A new customer type was created.
+ */
+export type CustomerTypeCreate = {
+  readonly customerType?: Maybe<CustomerType>;
+  readonly errors: ReadonlyArray<CustomerTypeCreateError>;
+};
+
+export type CustomerTypeCreateError = {
+  /** The error code. */
+  readonly code: CustomerTypeCreateErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars['String']['output']>;
+};
+
+export type CustomerTypeCreateErrorCode =
+  | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'NOT_FOUND'
+  | 'REQUIRED'
+  | 'UNIQUE';
+
+export type CustomerTypeCreateInput = {
+  /** Determines if the customer type should become the default one, assigned to every newly created user. Passing `true` clears the flag on the current default customer type - exactly one default customer type always exists. */
+  readonly isDefault?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Name of the customer type. */
+  readonly name?: InputMaybe<Scalars['String']['input']>;
+  /** Slug of the customer type. If not provided, it will be generated from the name. */
+  readonly slug?: InputMaybe<Scalars['String']['input']>;
+};
+
+/**
+ * Event sent when new customer type is created.
+ *
+ * Added in Saleor 3.23.
+ */
+export type CustomerTypeCreated = Event & {
+  /** The customer type the event relates to. */
+  readonly customerType?: Maybe<CustomerType>;
+  /** Time of the event. */
+  readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The application receiving the webhook. */
+  readonly recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  readonly version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Deletes a customer type. Users of the deleted customer type are reassigned to the default customer type.
+ *
+ * Added in Saleor 3.23.
+ *
+ * Requires one of the following permissions: MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES.
+ *
+ * Triggers the following webhook events:
+ * - CUSTOMER_TYPE_DELETED (async): A customer type was deleted.
+ */
+export type CustomerTypeDelete = {
+  readonly customerType?: Maybe<CustomerType>;
+  readonly errors: ReadonlyArray<CustomerTypeDeleteError>;
+};
+
+export type CustomerTypeDeleteError = {
+  /** The error code. */
+  readonly code: CustomerTypeDeleteErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars['String']['output']>;
+};
+
+export type CustomerTypeDeleteErrorCode =
+  | 'CANNOT_DELETE_DEFAULT'
+  | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'NOT_FOUND';
+
+/**
+ * Event sent when customer type is deleted.
+ *
+ * Added in Saleor 3.23.
+ */
+export type CustomerTypeDeleted = Event & {
+  /** The customer type the event relates to. */
+  readonly customerType?: Maybe<CustomerType>;
+  /** Time of the event. */
+  readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The application receiving the webhook. */
+  readonly recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  readonly version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Reorder the attributes of a customer type.
+ *
+ * Added in Saleor 3.23.
+ *
+ * Requires one of the following permissions: MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES.
+ *
+ * Triggers the following webhook events:
+ * - CUSTOMER_TYPE_UPDATED (async): A customer type was updated.
+ */
+export type CustomerTypeReorderAttributes = {
+  /** Customer type from which attributes are reordered. */
+  readonly customerType?: Maybe<CustomerType>;
+  readonly errors: ReadonlyArray<CustomerTypeReorderAttributesError>;
+};
+
+export type CustomerTypeReorderAttributesError = {
+  /** List of attributes IDs which causes the error. */
+  readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
+  /** The error code. */
+  readonly code: CustomerTypeReorderAttributesErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars['String']['output']>;
+};
+
+export type CustomerTypeReorderAttributesErrorCode =
+  | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'NOT_FOUND';
+
+export type CustomerTypeSortField =
+  /** Sort customer types by name. */
+  | 'NAME'
+  /** Sort customer types by slug. */
+  | 'SLUG';
+
+export type CustomerTypeSortingInput = {
+  /** Specifies the direction in which to sort customer types. */
+  readonly direction: OrderDirection;
+  /** Sort customer types by the selected field. */
+  readonly field: CustomerTypeSortField;
+};
+
+/**
+ * Unassign attributes from a given customer type. Values already assigned to users are kept in the database, but are hidden until the attribute is assigned to the user's customer type again.
+ *
+ * Added in Saleor 3.23.
+ *
+ * Requires one of the following permissions: MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES.
+ *
+ * Triggers the following webhook events:
+ * - CUSTOMER_TYPE_UPDATED (async): A customer type was updated.
+ */
+export type CustomerTypeUnassignAttributes = {
+  /** The updated customer type. */
+  readonly customerType?: Maybe<CustomerType>;
+  readonly errors: ReadonlyArray<CustomerTypeUnassignAttributesError>;
+};
+
+export type CustomerTypeUnassignAttributesError = {
+  /** The error code. */
+  readonly code: CustomerTypeUnassignAttributesErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars['String']['output']>;
+};
+
+export type CustomerTypeUnassignAttributesErrorCode =
+  | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'NOT_FOUND';
+
+/**
+ * Updates a customer type.
+ *
+ * Added in Saleor 3.23.
+ *
+ * Requires one of the following permissions: MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES.
+ *
+ * Triggers the following webhook events:
+ * - CUSTOMER_TYPE_UPDATED (async): A customer type was updated.
+ */
+export type CustomerTypeUpdate = {
+  readonly customerType?: Maybe<CustomerType>;
+  readonly errors: ReadonlyArray<CustomerTypeUpdateError>;
+};
+
+export type CustomerTypeUpdateError = {
+  /** The error code. */
+  readonly code: CustomerTypeUpdateErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars['String']['output']>;
+};
+
+export type CustomerTypeUpdateErrorCode =
+  | 'CANNOT_UNSET_DEFAULT'
+  | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'NOT_FOUND'
+  | 'REQUIRED'
+  | 'UNIQUE';
+
+export type CustomerTypeUpdateInput = {
+  /** Determines if the customer type should become the default one, assigned to every newly created user. Passing `true` clears the flag on the current default customer type - exactly one default customer type always exists. */
+  readonly isDefault?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Name of the customer type. */
+  readonly name?: InputMaybe<Scalars['String']['input']>;
+  /** Slug of the customer type. If not provided, it will be generated from the name. */
+  readonly slug?: InputMaybe<Scalars['String']['input']>;
+};
+
+/**
+ * Event sent when customer type is updated.
+ *
+ * Added in Saleor 3.23.
+ */
+export type CustomerTypeUpdated = Event & {
+  /** The customer type the event relates to. */
+  readonly customerType?: Maybe<CustomerType>;
+  /** Time of the event. */
+  readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The application receiving the webhook. */
+  readonly recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  readonly version?: Maybe<Scalars['String']['output']>;
+};
+
+export type CustomerTypeWhereInput = {
+  /** List of conditions that must be met. */
+  readonly AND?: InputMaybe<ReadonlyArray<CustomerTypeWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  readonly OR?: InputMaybe<ReadonlyArray<CustomerTypeWhereInput>>;
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  /** Filter by whether the customer type is the default one. */
+  readonly isDefault?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by metadata fields. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by customer type name. */
+  readonly name?: InputMaybe<StringFilterInput>;
+  /** Filter by customer type slug. */
+  readonly slug?: InputMaybe<StringFilterInput>;
+};
+
+/**
  * Updates an existing customer.
  *
  * Requires one of the following permissions: MANAGE_USERS.
@@ -6979,6 +7426,18 @@ export type CustomerWhereInput = {
   readonly OR?: InputMaybe<ReadonlyArray<CustomerWhereInput>>;
   /** Filter by addresses data associated with user. */
   readonly addresses?: InputMaybe<AddressFilterInput>;
+  /**
+   * Filter by attributes associated with the customer.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly attributes?: InputMaybe<ReadonlyArray<AssignedAttributeWhereInput>>;
+  /**
+   * Filter by customer type. Filtering by the default customer type also matches users without an explicitly assigned customer type.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly customerType?: InputMaybe<GlobalIdFilterInput>;
   /** Filter by date joined. */
   readonly dateJoined?: InputMaybe<DateTimeRangeInput>;
   /** Filter by email address. */
@@ -12148,7 +12607,7 @@ export type Mutation = {
   /**
    * Deletes attributes.
    *
-   * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
+   * Requires one of the following permissions, depending on the type of each attribute: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES for `CUSTOMER_TYPE` attributes.
    *
    * Triggers the following webhook events:
    * - ATTRIBUTE_DELETED (async): An attribute was deleted.
@@ -12179,7 +12638,7 @@ export type Mutation = {
   /**
    * Deletes an attribute.
    *
-   * Requires one of the following permissions, depending on the attribute type: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes.
+   * Requires one of the following permissions, depending on the attribute type: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES for `CUSTOMER_TYPE` attributes.
    *
    * Triggers the following webhook events:
    * - ATTRIBUTE_DELETED (async): An attribute was deleted.
@@ -12188,7 +12647,7 @@ export type Mutation = {
   /**
    * Reorder the values of an attribute.
    *
-   * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
+   * Requires one of the following permissions, depending on the attribute type: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES for `CUSTOMER_TYPE` attributes.
    *
    * Triggers the following webhook events:
    * - ATTRIBUTE_VALUE_UPDATED (async): An attribute value was updated.
@@ -12204,7 +12663,7 @@ export type Mutation = {
   /**
    * Updates attribute.
    *
-   * Requires one of the following permissions, depending on the attribute type: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes.
+   * Requires one of the following permissions, depending on the attribute type: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES for `CUSTOMER_TYPE` attributes.
    *
    * Triggers the following webhook events:
    * - ATTRIBUTE_UPDATED (async): An attribute was updated.
@@ -12213,7 +12672,7 @@ export type Mutation = {
   /**
    * Deletes values of attributes.
    *
-   * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
+   * Requires one of the following permissions, depending on the type of each value's attribute: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES for `CUSTOMER_TYPE` attributes.
    *
    * Triggers the following webhook events:
    * - ATTRIBUTE_VALUE_DELETED (async): An attribute value was deleted.
@@ -12229,7 +12688,7 @@ export type Mutation = {
   /**
    * Creates a value for an attribute.
    *
-   * Requires one of the following permissions: MANAGE_PRODUCTS.
+   * Requires one of the following permissions, depending on the attribute type: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES for `CUSTOMER_TYPE` attributes.
    *
    * Triggers the following webhook events:
    * - ATTRIBUTE_VALUE_CREATED (async): An attribute value was created.
@@ -12239,7 +12698,7 @@ export type Mutation = {
   /**
    * Deletes a value of an attribute.
    *
-   * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
+   * Requires one of the following permissions, depending on the type of the value's attribute: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES for `CUSTOMER_TYPE` attributes.
    *
    * Triggers the following webhook events:
    * - ATTRIBUTE_VALUE_DELETED (async): An attribute value was deleted.
@@ -12255,7 +12714,7 @@ export type Mutation = {
   /**
    * Updates value of an attribute.
    *
-   * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
+   * Requires one of the following permissions, depending on the type of the value's attribute: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES for `PRODUCT_TYPE` attributes, MANAGE_PAGE_TYPES_AND_ATTRIBUTES for `PAGE_TYPE` attributes, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES for `CUSTOMER_TYPE` attributes.
    *
    * Triggers the following webhook events:
    * - ATTRIBUTE_VALUE_UPDATED (async): An attribute value was updated.
@@ -12622,6 +13081,72 @@ export type Mutation = {
    * - CUSTOMER_DELETED (async): A customer account was deleted.
    */
   readonly customerDelete?: Maybe<CustomerDelete>;
+  /**
+   * Assign attributes to a given customer type.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES.
+   *
+   * Triggers the following webhook events:
+   * - CUSTOMER_TYPE_UPDATED (async): A customer type was updated.
+   */
+  readonly customerTypeAssignAttributes?: Maybe<CustomerTypeAssignAttributes>;
+  /**
+   * Creates a new customer type.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES.
+   *
+   * Triggers the following webhook events:
+   * - CUSTOMER_TYPE_CREATED (async): A new customer type was created.
+   */
+  readonly customerTypeCreate?: Maybe<CustomerTypeCreate>;
+  /**
+   * Deletes a customer type. Users of the deleted customer type are reassigned to the default customer type.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES.
+   *
+   * Triggers the following webhook events:
+   * - CUSTOMER_TYPE_DELETED (async): A customer type was deleted.
+   */
+  readonly customerTypeDelete?: Maybe<CustomerTypeDelete>;
+  /**
+   * Reorder the attributes of a customer type.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES.
+   *
+   * Triggers the following webhook events:
+   * - CUSTOMER_TYPE_UPDATED (async): A customer type was updated.
+   */
+  readonly customerTypeReorderAttributes?: Maybe<CustomerTypeReorderAttributes>;
+  /**
+   * Unassign attributes from a given customer type. Values already assigned to users are kept in the database, but are hidden until the attribute is assigned to the user's customer type again.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES.
+   *
+   * Triggers the following webhook events:
+   * - CUSTOMER_TYPE_UPDATED (async): A customer type was updated.
+   */
+  readonly customerTypeUnassignAttributes?: Maybe<CustomerTypeUnassignAttributes>;
+  /**
+   * Updates a customer type.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES.
+   *
+   * Triggers the following webhook events:
+   * - CUSTOMER_TYPE_UPDATED (async): A customer type was updated.
+   */
+  readonly customerTypeUpdate?: Maybe<CustomerTypeUpdate>;
   /**
    * Updates an existing customer.
    *
@@ -14878,6 +15403,7 @@ export type MutationCollectionUpdateArgs = {
 
 export type MutationConfirmAccountArgs = {
   email: Scalars['String']['input'];
+  password?: InputMaybe<Scalars['String']['input']>;
   token: Scalars['String']['input'];
 };
 
@@ -14912,6 +15438,40 @@ export type MutationCustomerCreateArgs = {
 export type MutationCustomerDeleteArgs = {
   externalReference?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type MutationCustomerTypeAssignAttributesArgs = {
+  attributeIds: ReadonlyArray<Scalars['ID']['input']>;
+  customerTypeId: Scalars['ID']['input'];
+};
+
+
+export type MutationCustomerTypeCreateArgs = {
+  input: CustomerTypeCreateInput;
+};
+
+
+export type MutationCustomerTypeDeleteArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationCustomerTypeReorderAttributesArgs = {
+  customerTypeId: Scalars['ID']['input'];
+  moves: ReadonlyArray<ReorderInput>;
+};
+
+
+export type MutationCustomerTypeUnassignAttributesArgs = {
+  attributeIds: ReadonlyArray<Scalars['ID']['input']>;
+  customerTypeId: Scalars['ID']['input'];
+};
+
+
+export type MutationCustomerTypeUpdateArgs = {
+  id: Scalars['ID']['input'];
+  input: CustomerTypeUpdateInput;
 };
 
 
@@ -20490,6 +21050,7 @@ export type PermissionEnum =
   | 'MANAGE_APPS'
   | 'MANAGE_CHANNELS'
   | 'MANAGE_CHECKOUTS'
+  | 'MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES'
   | 'MANAGE_DISCOUNTS'
   | 'MANAGE_GIFT_CARD'
   | 'MANAGE_MENUS'
@@ -24677,6 +25238,22 @@ export type Query = {
   /** List of the shop's collections. Requires one of the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS. */
   readonly collections?: Maybe<CollectionCountableConnection>;
   /**
+   * Look up a customer type by ID.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES, MANAGE_USERS.
+   */
+  readonly customerType?: Maybe<CustomerType>;
+  /**
+   * List of the customer types.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP, MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES, MANAGE_USERS.
+   */
+  readonly customerTypes?: Maybe<CustomerTypeCountableConnection>;
+  /**
    * List of the shop's customers. This list includes all users who registered through the accountRegister mutation. Additionally, staff users who have placed an order using their account will also appear in this list.
    *
    * Requires one of the following permissions: MANAGE_ORDERS, MANAGE_USERS.
@@ -25142,6 +25719,22 @@ export type QueryCollectionsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   sortBy?: InputMaybe<CollectionSortingInput>;
   where?: InputMaybe<CollectionWhereInput>;
+};
+
+
+export type QueryCustomerTypeArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryCustomerTypesArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sortBy?: InputMaybe<CustomerTypeSortingInput>;
+  where?: InputMaybe<CustomerTypeWhereInput>;
 };
 
 
@@ -27314,12 +27907,20 @@ export type ShippingZoneUpdatedShippingZoneArgs = {
 
 /** Represents a shop resource containing general shop data and configuration. */
 export type Shop = ObjectWithMetadata & {
+  /** Controls the method used for merging existing orders and giftcards when password-based authentication is used. Learn more at https://docs.saleor.io/upgrade-guides/core/migrate-account-merging */
+  readonly accountConfirmMergeMode: AccountConfirmModeEnum;
   /**
    * Determines if user can login without confirmation when `enableAccountConfirmation` is enabled.
    *
    * Requires one of the following permissions: MANAGE_SETTINGS.
    */
   readonly allowLoginWithoutConfirmation?: Maybe<Scalars['Boolean']['output']>;
+  /**
+   * Determines whether the GraphQL API accepts storefront requests (anonymous requests and authenticated non-staff customers). When disabled, only apps and staff users may call the API directly; all other requests are rejected with an HTTP 401 and the `STOREFRONT_TRAFFIC_NOT_ALLOWED` error code.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly allowStorefrontTraffic: Scalars['Boolean']['output'];
   /**
    * List of announcements for this shop.
    *
@@ -27628,8 +28229,16 @@ export type ShopMetadataUpdated = Event & {
 };
 
 export type ShopSettingsInput = {
+  /** Controls the method used for merging existing orders and giftcards when password-based authentication is used. Learn more at https://docs.saleor.io/upgrade-guides/core/migrate-account-merging */
+  readonly accountConfirmMergeMode?: InputMaybe<AccountConfirmModeEnum>;
   /** Enable possibility to login without account confirmation. */
   readonly allowLoginWithoutConfirmation?: InputMaybe<Scalars['Boolean']['input']>;
+  /**
+   * Determines whether the GraphQL API accepts storefront requests (anonymous requests and authenticated non-staff customers). When disabled, only apps and staff users may call the API directly; all other requests are rejected with an HTTP 401 and the `STOREFRONT_TRAFFIC_NOT_ALLOWED` error code.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly allowStorefrontTraffic?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Charge taxes on shipping.
    * @deprecated To enable taxes for a shipping method, assign a tax class to the shipping method with `shippingPriceCreate` or `shippingPriceUpdate` mutations.
@@ -27878,6 +28487,12 @@ export type StaffDeleted = Event & {
 export type StaffError = {
   /** A type of address that causes the error. */
   readonly addressType?: Maybe<AddressTypeEnum>;
+  /**
+   * List of attributes IDs which causes the error.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** The error code. */
   readonly code: AccountErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -30188,11 +30803,23 @@ export type UploadErrorCode =
   | 'UNSUPPORTED_MIME_TYPE';
 
 /** Represents user data. */
-export type User = Node & ObjectWithMetadata & {
+export type User = Node & ObjectWithAttributes & ObjectWithMetadata & {
   /** List of channels the user has access to. The sum of channels from all user groups. If at least one group has `restrictedAccessToChannels` set to False - all channels are returned. */
   readonly accessibleChannels?: Maybe<ReadonlyArray<Channel>>;
   /** List of all user's addresses. */
   readonly addresses: ReadonlyArray<Address>;
+  /**
+   * Get a single attribute assigned to the user by attribute slug. The attribute is looked up among the attributes of the user's customer type. Requires one of the following permissions: MANAGE_USERS, OWNER. The owner can access only attributes that are visible in the storefront.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly assignedAttribute?: Maybe<AssignedAttribute>;
+  /**
+   * List of attributes assigned to the user through the user's customer type. Requires one of the following permissions: MANAGE_USERS, OWNER. The owner can access only attributes that are visible in the storefront.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly assignedAttributes: ReadonlyArray<AssignedAttribute>;
   /** The avatar of the user. */
   readonly avatar?: Maybe<Image>;
   /**
@@ -30209,6 +30836,12 @@ export type User = Node & ObjectWithMetadata & {
   readonly checkoutTokens?: Maybe<ReadonlyArray<Scalars['UUID']['output']>>;
   /** Returns checkouts assigned to this user. The query will not initiate any external requests, including fetching external shipping methods, filtering available shipping methods, or performing external tax calculations. */
   readonly checkouts?: Maybe<CheckoutCountableConnection>;
+  /**
+   * The customer type assigned to the user. Requires one of the following permissions: MANAGE_USERS, OWNER.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly customerType?: Maybe<CustomerType>;
   /** The data when the user create account. */
   readonly dateJoined: Scalars['DateTime']['output'];
   /** The default billing address of the user. */
@@ -30288,6 +30921,18 @@ export type User = Node & ObjectWithMetadata & {
   readonly updatedAt: Scalars['DateTime']['output'];
   /** List of user's permissions. */
   readonly userPermissions?: Maybe<ReadonlyArray<UserPermission>>;
+};
+
+
+/** Represents user data. */
+export type UserAssignedAttributeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+/** Represents user data. */
+export type UserAssignedAttributesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
 };
 
 
@@ -30429,8 +31074,20 @@ export type UserCountableEdge = {
 };
 
 export type UserCreateInput = {
+  /**
+   * List of attribute values to assign to the user. The attributes must belong to the customer type the user ends up with.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly attributes?: InputMaybe<ReadonlyArray<AttributeValueInput>>;
   /** Slug of a channel which will be used for notify user. Optional when only one channel exists. */
   readonly channel?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of the customer type to assign to the user. If not provided when creating a customer, the default customer type is assigned.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly customerType?: InputMaybe<Scalars['ID']['input']>;
   /** Billing address of the customer. */
   readonly defaultBillingAddress?: InputMaybe<AddressInput>;
   /** Shipping address of the customer. */
@@ -31648,6 +32305,12 @@ export type Webhook = Node & {
   readonly events: ReadonlyArray<WebhookEvent>;
   /** The ID of webhook. */
   readonly id: Scalars['ID']['output'];
+  /**
+   * The unique identifier of the webhook, set by the app. Unique per app, null when not set.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly identifier?: Maybe<Scalars['String']['output']>;
   /** Informs if webhook is activated. */
   readonly isActive: Scalars['Boolean']['output'];
   /** The name of webhook. */
@@ -31700,6 +32363,12 @@ export type WebhookCreateInput = {
    * @deprecated Use `asyncEvents` or `syncEvents` instead.
    */
   readonly events?: InputMaybe<ReadonlyArray<WebhookEventTypeEnum>>;
+  /**
+   * The unique identifier of the webhook, set by the app. Unique per app. Maximum length is 256 characters.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly identifier?: InputMaybe<Scalars['String']['input']>;
   /** Determine if webhook will be set active or not. */
   readonly isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /** The name of the webhook. */
@@ -31899,6 +32568,24 @@ export type WebhookEventTypeAsyncEnum =
   | 'CUSTOMER_DELETED'
   /** A customer account metadata is updated. */
   | 'CUSTOMER_METADATA_UPDATED'
+  /**
+   * A new customer type is created.
+   *
+   * Added in Saleor 3.23.
+   */
+  | 'CUSTOMER_TYPE_CREATED'
+  /**
+   * A customer type is deleted.
+   *
+   * Added in Saleor 3.23.
+   */
+  | 'CUSTOMER_TYPE_DELETED'
+  /**
+   * A customer type is updated.
+   *
+   * Added in Saleor 3.23.
+   */
+  | 'CUSTOMER_TYPE_UPDATED'
   /** A customer account is updated. */
   | 'CUSTOMER_UPDATED'
   /** A draft order is created. */
@@ -32226,6 +32913,24 @@ export type WebhookEventTypeEnum =
   | 'CUSTOMER_DELETED'
   /** A customer account metadata is updated. */
   | 'CUSTOMER_METADATA_UPDATED'
+  /**
+   * A new customer type is created.
+   *
+   * Added in Saleor 3.23.
+   */
+  | 'CUSTOMER_TYPE_CREATED'
+  /**
+   * A customer type is deleted.
+   *
+   * Added in Saleor 3.23.
+   */
+  | 'CUSTOMER_TYPE_DELETED'
+  /**
+   * A customer type is updated.
+   *
+   * Added in Saleor 3.23.
+   */
+  | 'CUSTOMER_TYPE_UPDATED'
   /** A customer account is updated. */
   | 'CUSTOMER_UPDATED'
   /** A draft order is created. */
@@ -32573,6 +33278,9 @@ export type WebhookSampleEventTypeEnum =
   | 'CUSTOMER_CREATED'
   | 'CUSTOMER_DELETED'
   | 'CUSTOMER_METADATA_UPDATED'
+  | 'CUSTOMER_TYPE_CREATED'
+  | 'CUSTOMER_TYPE_DELETED'
+  | 'CUSTOMER_TYPE_UPDATED'
   | 'CUSTOMER_UPDATED'
   | 'DRAFT_ORDER_CREATED'
   | 'DRAFT_ORDER_DELETED'
@@ -32736,6 +33444,12 @@ export type WebhookUpdateInput = {
    * @deprecated Use `asyncEvents` or `syncEvents` instead.
    */
   readonly events?: InputMaybe<ReadonlyArray<WebhookEventTypeEnum>>;
+  /**
+   * The unique identifier of the webhook, set by the app. Unique per app. Maximum length is 256 characters. Pass a blank value to clear it.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly identifier?: InputMaybe<Scalars['String']['input']>;
   /** Determine if webhook will be set active or not. */
   readonly isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /** The new name of the webhook. */
