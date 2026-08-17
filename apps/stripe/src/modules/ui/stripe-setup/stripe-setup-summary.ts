@@ -17,22 +17,9 @@ export const buildStripeSetupTasks = ({
 }): SetupChecklistTask[] => {
   const hasConfig = configs.length > 0;
   const hasMapping = Object.keys(mapping).length > 0;
-  const webhookOk =
-    hasConfig &&
-    configs.every((c) => c.webhookStatus === "active" || c.webhookStatus === undefined);
-  const webhookProblem =
-    hasConfig &&
-    configs.some((c) => c.webhookStatus === "missing" || c.webhookStatus === "disabled");
 
   const addStatus = hasConfig ? "completed" : "active";
   const mapStatus = !hasConfig ? "locked" : hasMapping ? "completed" : "active";
-  const webhookStatus = !hasConfig
-    ? "locked"
-    : webhookOk
-    ? "completed"
-    : webhookProblem
-    ? "active"
-    : "pending";
 
   return [
     {
@@ -52,16 +39,6 @@ export const buildStripeSetupTasks = ({
       requirement: !hasConfig ? "Requires a configuration" : undefined,
       details:
         "Multiple channels can share one configuration. Channels without an assignment cannot take Stripe payments.",
-    },
-    {
-      id: "webhook",
-      title: "Confirm Stripe webhooks are live",
-      description: "The app creates webhooks when you save a configuration.",
-      status: webhookStatus,
-      requirement: !hasConfig ? "Requires a configuration" : undefined,
-      details: webhookProblem
-        ? "A webhook is missing or disabled. Delete and recreate the configuration, or fix it in the Stripe Dashboard."
-        : "Webhooks keep Saleor transactions in sync with Stripe Payment Intents.",
     },
   ];
 };

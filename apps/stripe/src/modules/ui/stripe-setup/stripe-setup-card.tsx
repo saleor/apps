@@ -72,7 +72,7 @@ export const StripeSetupCard = ({ configs, mapping, onDismiss }: Props) => {
         .join(" ")}
       data-test-id="stripe-setup-card"
       title="Finish Stripe setup"
-      subtitle="Connect Stripe, assign channels on a configuration card, and confirm webhooks before taking payments."
+      subtitle="Connect Stripe and assign channels on a configuration card before taking payments."
       progress={progress}
       tasksSection={{ title: "Required for payments" }}
       tasks={tasks}
