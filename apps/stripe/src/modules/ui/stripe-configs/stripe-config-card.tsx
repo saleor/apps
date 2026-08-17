@@ -1,7 +1,7 @@
 import { TextLink } from "@saleor/apps-ui";
 import { IconButton, iconSize, iconStrokeWidthBySize } from "@saleor/apps-ui-next";
 import { Box, Button, Multiselect, Text, useTheme } from "@saleor/macaw-ui";
-import { Plug, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { type ConfigChannelFragment } from "@/generated/graphql";
@@ -204,20 +204,16 @@ export const StripeConfigCard = ({
             </>
           ) : (
             <>
-              <IconButton
-                aria-label={`Assign channels to ${configInstance.name}`}
-                title={`Assign channels to ${configInstance.name}`}
+              <Button
+                variant="secondary"
+                size="small"
                 disabled={isSaving}
                 onClick={startEditing}
                 data-test-id={`assign-channels-${configInstance.id}`}
-                icon={
-                  <Plug
-                    size={iconSize.small}
-                    strokeWidth={iconStrokeWidthBySize.small}
-                    aria-hidden
-                  />
-                }
-              />
+                aria-label={`Assign channels to ${configInstance.name}`}
+              >
+                Assign channels
+              </Button>
               <IconButton
                 aria-label={`Delete ${configInstance.name}`}
                 title={`Delete ${configInstance.name}`}
