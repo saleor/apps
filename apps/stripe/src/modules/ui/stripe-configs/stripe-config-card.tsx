@@ -1,7 +1,6 @@
 import { TextLink } from "@saleor/apps-ui";
-import { IconButton, iconSize, iconStrokeWidthBySize } from "@saleor/apps-ui-next";
 import { Box, Button, Multiselect, Text, useTheme } from "@saleor/macaw-ui";
-import { Trash2 } from "lucide-react";
+import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 
 import { type ConfigChannelFragment } from "@/generated/graphql";
@@ -18,6 +17,7 @@ import {
 import { buildChannelMovePlan } from "./build-channel-move-plan";
 import { ConfigCardChannelList } from "./config-card-channel-list";
 import { ConfirmChannelMoveModal } from "./confirm-channel-move-modal";
+import { StripeConfigActionsMenu } from "./stripe-config-actions-menu";
 import styles from "./stripe-config-cards.module.css";
 import { StripeEnvBadge } from "./stripe-env-badge";
 import { stripeEnvLabel } from "./stripe-env-label";
@@ -64,6 +64,7 @@ export const StripeConfigCard = ({
   onDisconnectChannel,
 }: Props) => {
   const [editing, setEditing] = useState(false);
+  const router = useRouter();
   const { theme } = useTheme();
   const configInstance = StripeFrontendConfig.createFromSerializedFields(config);
   const envValue = configInstance.getStripeEnvValue();
@@ -214,18 +215,14 @@ export const StripeConfigCard = ({
               >
                 Assign channels
               </Button>
-              <IconButton
-                aria-label={`Delete ${configInstance.name}`}
-                title={`Delete ${configInstance.name}`}
+              <StripeConfigActionsMenu
+                configId={configInstance.id}
+                configName={configInstance.name}
                 disabled={isDeleting}
-                onClick={onDelete}
-                icon={
-                  <Trash2
-                    size={iconSize.small}
-                    strokeWidth={iconStrokeWidthBySize.small}
-                    aria-hidden
-                  />
-                }
+                onEdit={() => {
+                  void router.push(`/config/${configInstance.id}`);
+                }}
+                onDelete={onDelete}
               />
             </>
           )}
