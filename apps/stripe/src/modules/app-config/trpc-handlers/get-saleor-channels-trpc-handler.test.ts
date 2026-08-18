@@ -6,7 +6,7 @@ import { mockedAppToken, mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
-import { type ChannelFragment } from "@/generated/graphql";
+import { type ConfigChannelFragment } from "@/generated/graphql";
 import { GetSaleorChannelsTrpcHandler } from "@/modules/app-config/trpc-handlers/get-saleor-channels-trpc-handler";
 import { ChannelsFetcher } from "@/modules/saleor/channel-fetcher";
 import { router } from "@/modules/trpc/trpc-server";
@@ -64,14 +64,20 @@ describe("GetStripeConfigTrpcHandler", () => {
     const { caller, channelsFetcher } = getTestCaller();
 
     vi.mocked(channelsFetcher.fetchChannels).mockImplementationOnce(async () => {
-      const channels: ChannelFragment[] = [
+      const channels: ConfigChannelFragment[] = [
         {
-          slug: "slug-1",
           id: "id-1",
+          name: "slug-1",
+          slug: "slug-1",
+          isActive: true,
+          currencyCode: "USD",
         },
         {
-          slug: "slug-2",
           id: "id-2",
+          name: "slug-2",
+          slug: "slug-2",
+          isActive: true,
+          currencyCode: "USD",
         },
       ];
 
@@ -82,12 +88,18 @@ describe("GetStripeConfigTrpcHandler", () => {
 
     expect(result).toStrictEqual([
       {
-        slug: "slug-1",
         id: "id-1",
+        name: "slug-1",
+        slug: "slug-1",
+        isActive: true,
+        currencyCode: "USD",
       },
       {
-        slug: "slug-2",
         id: "id-2",
+        name: "slug-2",
+        slug: "slug-2",
+        isActive: true,
+        currencyCode: "USD",
       },
     ]);
   });

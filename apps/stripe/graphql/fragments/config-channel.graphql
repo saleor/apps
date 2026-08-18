@@ -1,0 +1,9 @@
+# Configuration UI only. Kept separate from the `Channel` fragment, which is embedded in
+# every transaction webhook subscription and must stay minimal.
+fragment ConfigChannel on Channel {
+  id
+  name
+  slug
+  isActive
+  currencyCode
+}

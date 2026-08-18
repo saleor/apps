@@ -1,4 +1,4 @@
-import { Box, PropsWithBox, Text } from "@saleor/macaw-ui";
+import { Box, type PropsWithBox, Text } from "@saleor/macaw-ui";
 import Link from "next/link";
 import React from "react";
 

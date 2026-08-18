@@ -1,4 +1,6 @@
 import "@saleor/macaw-ui/style";
+import "@saleor/apps-ui-next/style";
+import "@/styles/globals.css";
 
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
@@ -7,7 +9,7 @@ import { IframeProtectedFallback } from "@saleor/apps-shared/iframe-protected-fa
 import { IframeProtectedWrapper } from "@saleor/apps-shared/iframe-protected-wrapper";
 import { NoSSRWrapper } from "@saleor/apps-shared/no-ssr-wrapper";
 import { ThemeSynchronizer } from "@saleor/apps-shared/theme-synchronizer";
-import { Box, ThemeProvider } from "@saleor/macaw-ui";
+import { ThemeProvider } from "@saleor/macaw-ui";
 import { type AppProps } from "next/app";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";
@@ -30,9 +32,7 @@ function NextApp({ Component, pageProps }: AppProps) {
             <GraphQLProvider>
               <ThemeSynchronizer />
               <RoutePropagator />
-              <Box padding={10}>
-                <Component {...pageProps} />
-              </Box>
+              <Component {...pageProps} />
             </GraphQLProvider>
           </AppBridgeProvider>
         </IframeProtectedWrapper>

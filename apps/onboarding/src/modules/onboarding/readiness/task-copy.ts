@@ -160,6 +160,10 @@ export const getTaskHref = (id: CommerceTaskId, readiness: StoreReadiness): stri
     case "first-product":
       return "/products/add";
     case "payments":
+      if (readiness.stripeAppId) {
+        return `/extensions/app/${encodeURIComponent(readiness.stripeAppId)}`;
+      }
+
       return "/extensions/installed";
     case "test-order":
       return "/orders/";

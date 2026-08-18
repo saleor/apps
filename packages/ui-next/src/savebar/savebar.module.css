@@ -1,0 +1,74 @@
+.savebar {
+  /*
+   * Fixed to the iframe viewport — sticky would only pin while scrolling and otherwise sit
+   * under the form. Dashboard portals into an AppLayout footer; apps have no such chrome.
+   */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--mu-spacing-3);
+  height: var(--app-savebar-height, 64px);
+  padding-inline: var(--mu-spacing-6);
+  background-color: var(--mu-colors-background-default1);
+  border-top: 1px solid var(--mu-colors-border-default1);
+}
+
+.spacer {
+  flex: 1;
+}
+
+/*
+ * While saving, showing success, or disabled, the button keeps its variant appearance:
+ * blocking pointer events stops hover/active styles from shifting the color and stops
+ * repeated clicks without the washed-out disabled look.
+ */
+.noInteraction {
+  pointer-events: none;
+}
+
+/* Status icon sits on top of the label so the button keeps its width mid-transition. */
+.confirmContent {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirmStatus {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirmLabel {
+  transition: opacity 0.2s ease;
+}
+
+.confirmLabelHidden {
+  opacity: 0;
+}
+
+.spinner {
+  animation: savebar-spin 1s linear infinite;
+}
+
+@keyframes savebar-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2.4s;
+  }
+}

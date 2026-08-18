@@ -1,4 +1,11 @@
-import { BoxProps, Chip, ChipProps, convertSizeToScale, Text, TextProps } from "@saleor/macaw-ui";
+import {
+  type BoxProps,
+  Chip,
+  type ChipProps,
+  convertSizeToScale,
+  Text,
+  type TextProps,
+} from "@saleor/macaw-ui";
 
 type ChipVariant = "default" | "warning" | "error" | "success";
 

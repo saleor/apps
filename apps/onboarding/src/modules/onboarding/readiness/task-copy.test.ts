@@ -14,6 +14,7 @@ const readyChannel: StoreReadiness = {
   hasPaymentApp: false,
   hasOrder: false,
   smtpAppId: null,
+  stripeAppId: null,
   channelsKnown: true,
   shippingKnown: true,
   productsKnown: true,
@@ -80,6 +81,13 @@ describe("getTaskHref / getTaskPermission", () => {
     );
     expect(getTaskHref("sales-channel", readyChannel)).toBe(
       `/channels/${encodeURIComponent("Q2hhbm5lbDox")}`,
+    );
+  });
+
+  it("deep-links payments to Stripe app when installed", () => {
+    expect(getTaskHref("payments", readyChannel)).toBe("/extensions/installed");
+    expect(getTaskHref("payments", { ...readyChannel, stripeAppId: "QXBwOlN0cmlwZQ==" })).toBe(
+      `/extensions/app/${encodeURIComponent("QXBwOlN0cmlwZQ==")}`,
     );
   });
 

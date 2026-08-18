@@ -22,6 +22,7 @@ const readiness: StoreReadiness = {
   hasPaymentApp: false,
   hasOrder: false,
   smtpAppId: null,
+  stripeAppId: null,
   channelsKnown: true,
   shippingKnown: true,
   productsKnown: true,

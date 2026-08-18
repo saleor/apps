@@ -16,10 +16,97 @@ describe("StripeWebhookManager", () => {
   beforeEach(() => {
     vi.spyOn(stripeSdkMock.webhookEndpoints, "create");
     vi.spyOn(stripeSdkMock.webhookEndpoints, "del");
+    vi.spyOn(stripeSdkMock.webhookEndpoints, "retrieve");
+    vi.spyOn(stripeSdkMock.webhookEndpoints, "update");
 
     vi.spyOn(StripeClient, "createFromRestrictedKey").mockImplementation(
       () => new StripeClient(stripeSdkMock),
     );
+  });
+
+  describe("isWebhookReachableWithKey", () => {
+    it("Returns true when Stripe can retrieve the webhook", async () => {
+      vi.mocked(stripeSdkMock.webhookEndpoints.retrieve).mockResolvedValueOnce({
+        id: "we_123",
+      } as unknown as Stripe.Response<Stripe.WebhookEndpoint>);
+
+      const result = await instance.isWebhookReachableWithKey({
+        webhookId: "we_123",
+        restrictedKey: mockedStripeRestrictedKey,
+      });
+
+      expect(result._unsafeUnwrap()).toBe(true);
+      expect(stripeSdkMock.webhookEndpoints.retrieve).toHaveBeenCalledWith("we_123");
+    });
+
+    it("Returns false when the webhook is missing for that key (other account or mode)", async () => {
+      vi.mocked(stripeSdkMock.webhookEndpoints.retrieve).mockRejectedValueOnce(
+        new Stripe.errors.StripeInvalidRequestError({
+          message: "No such webhook endpoint",
+          type: "invalid_request_error",
+          code: "resource_missing",
+        }),
+      );
+
+      const result = await instance.isWebhookReachableWithKey({
+        webhookId: "we_123",
+        restrictedKey: mockedStripeRestrictedKey,
+      });
+
+      expect(result._unsafeUnwrap()).toBe(false);
+    });
+
+    it("Returns CantFetchWebhookError on any other Stripe failure", async () => {
+      vi.mocked(stripeSdkMock.webhookEndpoints.retrieve).mockRejectedValueOnce(
+        new Error("Stripe is down"),
+      );
+
+      const result = await instance.isWebhookReachableWithKey({
+        webhookId: "we_123",
+        restrictedKey: mockedStripeRestrictedKey,
+      });
+
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+        [CantFetchWebhookError: Stripe is down
+        Error retrieving webhook]
+      `);
+    });
+  });
+
+  describe("updateWebhookDescription", () => {
+    it("Updates the endpoint description from the configuration name", async () => {
+      vi.mocked(stripeSdkMock.webhookEndpoints.update).mockResolvedValueOnce({
+        id: "we_123",
+      } as unknown as Stripe.Response<Stripe.WebhookEndpoint>);
+
+      const result = await instance.updateWebhookDescription({
+        webhookId: "we_123",
+        restrictedKey: mockedStripeRestrictedKey,
+        configName: "UK Live",
+      });
+
+      expect(result.isOk()).toBe(true);
+      expect(stripeSdkMock.webhookEndpoints.update).toHaveBeenCalledWith("we_123", {
+        description: "Created by Saleor App Payment Stripe, config name: UK Live",
+      });
+    });
+
+    it("Returns CantUpdateWebhookError when Stripe rejects the update", async () => {
+      vi.mocked(stripeSdkMock.webhookEndpoints.update).mockRejectedValueOnce(
+        new Error("Test error"),
+      );
+
+      const result = await instance.updateWebhookDescription({
+        webhookId: "we_123",
+        restrictedKey: mockedStripeRestrictedKey,
+        configName: "UK Live",
+      });
+
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+        [CantUpdateWebhookError: Test error
+        Error updating webhook]
+      `);
+    });
   });
 
   describe("error cases", () => {

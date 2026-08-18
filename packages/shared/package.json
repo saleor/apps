@@ -18,6 +18,7 @@
     "./saleor-version-compatibility-validator": "./src/saleor-version-compatibility-validator.ts",
     "./theme-synchronizer": "./src/theme-synchronizer.tsx",
     "./use-dashboard-notification": "./src/use-dashboard-notification.ts",
+    "./use-unsaved-changes-guard": "./src/use-unsaved-changes-guard.ts",
     "./encryptor": "./src/encryptor.ts",
     "./key-rotation/rotating-decrypt-callback": "./src/key-rotation/rotating-decrypt-callback.ts",
     "./key-rotation/rotating-encryptor": "./src/key-rotation/rotating-encryptor.ts",
