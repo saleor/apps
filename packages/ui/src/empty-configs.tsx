@@ -1,4 +1,4 @@
-import { Box, BoxProps, Button, Text } from "@saleor/macaw-ui";
+import { Box, type BoxProps, Button, Text } from "@saleor/macaw-ui";
 
 import { Layout } from "./layout";
 

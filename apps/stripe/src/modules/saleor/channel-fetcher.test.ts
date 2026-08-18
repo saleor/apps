@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
-import { type ChannelFragment } from "@/generated/graphql";
+import { type ConfigChannelFragment } from "@/generated/graphql";
 import { ChannelsFetcher } from "@/modules/saleor/channel-fetcher";
 
 describe("ChannelFetcher", () => {
@@ -59,14 +59,20 @@ describe("ChannelFetcher", () => {
   it("Returns channels fragments returned from graphql", async () => {
     const instance = new ChannelsFetcher(mockedGraphqlClient);
 
-    const channels: ChannelFragment[] = [
+    const channels: ConfigChannelFragment[] = [
       {
-        slug: "default-channel",
         id: "1",
+        name: "default-channel",
+        slug: "default-channel",
+        isActive: true,
+        currencyCode: "USD",
       },
       {
-        slug: "another-channel",
         id: "2",
+        name: "another-channel",
+        slug: "another-channel",
+        isActive: true,
+        currencyCode: "USD",
       },
     ];
 

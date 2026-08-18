@@ -1665,6 +1665,7 @@ export type PermissionEnum =
   | 'MANAGE_APPS'
   | 'MANAGE_CHANNELS'
   | 'MANAGE_CHECKOUTS'
+  | 'MANAGE_CUSTOMER_TYPES_AND_ATTRIBUTES'
   | 'MANAGE_DISCOUNTS'
   | 'MANAGE_GIFT_CARD'
   | 'MANAGE_MENUS'
@@ -1695,6 +1696,12 @@ export type WebhookCreateInput = {
    * @deprecated Use `asyncEvents` or `syncEvents` instead.
    */
   readonly events?: InputMaybe<ReadonlyArray<WebhookEventTypeEnum>>;
+  /**
+   * The unique identifier of the webhook, set by the app. Unique per app. Maximum length is 256 characters.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly identifier?: InputMaybe<Scalars['String']['input']>;
   /** Determine if webhook will be set active or not. */
   readonly isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /** The name of the webhook. */
@@ -1804,6 +1811,24 @@ export type WebhookEventTypeAsyncEnum =
   | 'CUSTOMER_DELETED'
   /** A customer account metadata is updated. */
   | 'CUSTOMER_METADATA_UPDATED'
+  /**
+   * A new customer type is created.
+   *
+   * Added in Saleor 3.23.
+   */
+  | 'CUSTOMER_TYPE_CREATED'
+  /**
+   * A customer type is deleted.
+   *
+   * Added in Saleor 3.23.
+   */
+  | 'CUSTOMER_TYPE_DELETED'
+  /**
+   * A customer type is updated.
+   *
+   * Added in Saleor 3.23.
+   */
+  | 'CUSTOMER_TYPE_UPDATED'
   /** A customer account is updated. */
   | 'CUSTOMER_UPDATED'
   /** A draft order is created. */
@@ -2131,6 +2156,24 @@ export type WebhookEventTypeEnum =
   | 'CUSTOMER_DELETED'
   /** A customer account metadata is updated. */
   | 'CUSTOMER_METADATA_UPDATED'
+  /**
+   * A new customer type is created.
+   *
+   * Added in Saleor 3.23.
+   */
+  | 'CUSTOMER_TYPE_CREATED'
+  /**
+   * A customer type is deleted.
+   *
+   * Added in Saleor 3.23.
+   */
+  | 'CUSTOMER_TYPE_DELETED'
+  /**
+   * A customer type is updated.
+   *
+   * Added in Saleor 3.23.
+   */
+  | 'CUSTOMER_TYPE_UPDATED'
   /** A customer account is updated. */
   | 'CUSTOMER_UPDATED'
   /** A draft order is created. */

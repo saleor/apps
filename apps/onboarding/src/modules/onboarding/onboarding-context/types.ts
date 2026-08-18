@@ -1,23 +1,27 @@
 import type * as React from "react";
 
-export type OnboardingStepsIDs =
-  | "get-started"
-  | "create-product"
-  | "explore-orders"
-  | "graphql-playground"
-  | "view-extensions"
-  | "invite-staff";
-
-export type OnboardingStep = {
-  id: OnboardingStepsIDs;
-  completed: boolean;
-  expanded: boolean | undefined;
-};
-
+/**
+ * Persisted UI preferences for the home Store Readiness guide.
+ * Commerce step completion is derived from live GraphQL — not stored here.
+ *
+ * `expandedTaskId` is intentionally NOT persisted — writing it on every expand
+ * caused metadata saves → Me refetch → loading flash loops.
+ *
+ * Legacy fields (`stepsCompleted`, `stepsExpanded`) are still accepted when
+ * reading metadata so older clients don't crash; they are ignored for commerce.
+ */
 export type OnboardingState = {
-  stepsCompleted: OnboardingStepsIDs[];
-  stepsExpanded: Partial<Record<OnboardingStepsIDs, boolean>>;
+  /**
+   * @deprecated Hide/dismiss was removed — the guide is always shown.
+   * Kept so older metadata still parses.
+   */
   onboardingExpanded: boolean;
+  /** Secondary "Building with the API?" section. */
+  builderExpanded: boolean;
+  /** @deprecated Kept for metadata compatibility with older onboarding widgets. */
+  stepsCompleted: string[];
+  /** @deprecated Kept for metadata compatibility with older onboarding widgets. */
+  stepsExpanded: Record<string, boolean>;
 };
 
 export interface StorageService {
@@ -26,16 +30,9 @@ export interface StorageService {
 }
 
 export interface OnboardingContextType {
-  isOnboardingCompleted: boolean;
   loading: boolean;
-  extendedStepId: OnboardingStepsIDs | "";
   onboardingState: OnboardingState;
-  markOnboardingStepAsCompleted: (id: OnboardingStepsIDs) => void;
-  markAllAsCompleted: () => void;
-  toggleExpandedOnboardingStep: (id: string, currentExpandedId: OnboardingStepsIDs | "") => void;
-  toggleOnboarding: (value: boolean) => void;
-  validCompletedStepsCount: number;
-  visibleSteps: OnboardingStep[];
+  setBuilderExpanded: (expanded: boolean) => void;
 }
 
 export interface OnboardingProviderProps {

@@ -1,0 +1,35 @@
+.section {
+  box-shadow: none;
+  position: relative;
+}
+
+.header {
+  border-bottom: 1px solid var(--mu-colors-border-default1);
+  background-color: var(--mu-colors-background-default1);
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mu-spacing-3);
+  flex-wrap: wrap;
+}
+
+.titleStart {
+  display: flex;
+  align-items: center;
+  gap: var(--mu-spacing-2);
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.description {
+  /* Keep intro copy from spanning the full header (esp. beside headerEnd actions). */
+  max-width: 75%;
+  line-height: 1.45;
+}
+
+.body > * + * {
+  border-top: 1px solid var(--mu-colors-border-default1);
+}

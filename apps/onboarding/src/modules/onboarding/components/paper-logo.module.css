@@ -1,0 +1,13 @@
+/* Fixed slot so the Paper card header doesn't jump before/without the mark. */
+.logoSlot {
+  display: inline-flex;
+  align-items: center;
+  min-width: 100px;
+  min-height: 23px;
+}
+
+.logoImage {
+  display: block;
+  width: 100px;
+  height: 23px;
+}

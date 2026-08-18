@@ -1,0 +1,23 @@
+.pill {
+  /* Geist / Vercel status pill: tight Y, ~10px X so rounded caps don’t pinch the label. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 20px;
+  padding: 0 10px;
+  border-radius: 9999px;
+  border: none;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.sandbox {
+  background-color: var(--stripe-color-sandbox);
+  color: var(--stripe-color-on-brand);
+}
+
+.live {
+  background-color: var(--stripe-color-live);
+  color: var(--stripe-color-on-brand);
+}

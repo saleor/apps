@@ -1,69 +1,83 @@
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { Text, TextProps } from "@saleor/macaw-ui";
+import { Text, type TextProps } from "@saleor/macaw-ui";
+import { ExternalLink } from "lucide-react";
 import { useRouter } from "next/router";
+
+import styles from "./text-link.module.css";
 
 export interface TextLinkProps extends TextProps {
   href: string;
   newTab?: boolean;
 }
 
-const BaseTextLink = (props: TextLinkProps) => {
-  return (
-    <Text target="_blank" as={"a"} textDecoration={"none"} rel="noopener noreferrer" {...props}>
-      <Text transition={"ease"} size={props.size} color="info1">
-        {props.children}
-      </Text>
-    </Text>
-  );
-};
-
-export const TextLink = ({ href, newTab = false, children, ...props }: TextLinkProps) => {
+/**
+ * In-product text link.
+ * Default: primary text color (`default1`), underline on hover.
+ * Pass `color` only as an intentional exemption (e.g. marketing emphasis).
+ * External (`newTab`) links get a Lucide `ExternalLink` icon sized to `1em`.
+ *
+ * Typography: omit `size` to inherit the surrounding text (required for inline
+ * links inside descriptions). Pass `size` only for standalone links that are not
+ * nested in sized copy.
+ */
+export const TextLink = ({
+  href,
+  newTab = false,
+  children,
+  color = "default1",
+  size,
+  className,
+  onClick,
+  ...props
+}: TextLinkProps) => {
   const { appBridge } = useAppBridge();
   const { push } = useRouter();
 
-  const onNewTabClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     event.preventDefault();
 
-    if (!appBridge) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        "App bridge is not initialized, TextLink cannot be used with external links without it.",
+    if (newTab) {
+      if (!appBridge) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          "App bridge is not initialized, TextLink cannot be used with external links without it.",
+        );
+      }
+
+      appBridge?.dispatch(
+        actions.Redirect({
+          to: href,
+          newContext: true,
+        }),
       );
+    } else {
+      push(href);
     }
 
-    appBridge?.dispatch(
-      actions.Redirect({
-        to: href,
-        newContext: true,
-      }),
-    );
-
-    if (props.onClick) {
-      props.onClick(event);
-    }
+    onClick?.(event);
   };
 
-  const onInternalClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    event.preventDefault();
+  const inheritTypography = size === undefined;
 
-    push(href);
-
-    if (props.onClick) {
-      props.onClick(event);
-    }
-  };
-
-  if (newTab) {
-    return (
-      <BaseTextLink href={href} onClick={onNewTabClick} {...props}>
-        {children}
-      </BaseTextLink>
-    );
-  } else {
-    return (
-      <BaseTextLink href={href} onClick={onInternalClick} {...props}>
-        {children}
-      </BaseTextLink>
-    );
-  }
+  return (
+    <Text
+      as="a"
+      href={href}
+      rel={newTab ? "noopener noreferrer" : undefined}
+      color={color}
+      size={size}
+      className={[
+        styles.link,
+        inheritTypography ? styles.matchSurroundingText : undefined,
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      onClick={handleClick}
+      {...props}
+    >
+      {children}
+      {newTab ? <ExternalLink className={styles.externalIcon} aria-hidden strokeWidth={2} /> : null}
+    </Text>
+  );
 };

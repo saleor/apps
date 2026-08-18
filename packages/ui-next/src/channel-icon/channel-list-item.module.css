@@ -1,0 +1,71 @@
+/* Full-bleed inside bordered cards — horizontal padding lives on the row. */
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--mu-spacing-2);
+  /* Same box model for every row: always reserve 1px bottom border. */
+  box-sizing: border-box;
+  min-height: 40px;
+  /* Keep left inset aligned with card header text; tighter right so the
+     disconnect control doesn’t float inward. */
+  padding: var(--mu-spacing-1) var(--mu-spacing-2) var(--mu-spacing-1) var(--mu-spacing-4);
+  border-bottom: 1px solid var(--mu-colors-border-default1);
+  background-color: var(--mu-colors-background-default1);
+  min-width: 0;
+}
+
+.row[data-show-divider="false"] {
+  border-bottom-color: transparent;
+}
+
+.start {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--mu-spacing-2);
+  min-width: 0;
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Compact pill — fixed height so rounding never changes row size. */
+.currency {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background-color: var(--mu-colors-background-default2);
+  line-height: 1;
+}
+
+/* Keep layout stable; reveal on hover or focus. Always show on touch. */
+.rowAction {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  /* Match IconButton footprint so rows with/without disconnect stay equal height. */
+  width: 32px;
+  height: 32px;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.row:hover .rowAction,
+.rowAction:focus-within {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .rowAction {
+    opacity: 1;
+  }
+}

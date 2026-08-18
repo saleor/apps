@@ -1,4 +1,9 @@
-import { Box, BoxProps, Skeleton as MacawSkeleton, SkeletonProps } from "@saleor/macaw-ui";
+import {
+  Box,
+  type BoxProps,
+  Skeleton as MacawSkeleton,
+  type SkeletonProps,
+} from "@saleor/macaw-ui";
 
 const Section = (props: BoxProps) => {
   return (
