@@ -51,6 +51,13 @@ const handler = createManifestHandler({
       mount: "SEARCH_ACTION",
       options: {
         views: ["PRODUCT_DETAILS"],
+        /*
+         * The palette already matches the label and the app name, so "avatax" and
+         * "tax code" need no alias. These are the terms merchants use that appear
+         * in neither: the vendor's company name, and the Saleor concept the popup
+         * actually resolves the code from.
+         */
+        aliases: ["avalara", "tax class"],
       },
       label: "Show AvaTax tax code",
       url: iframeBaseUrl + "/product-details",
