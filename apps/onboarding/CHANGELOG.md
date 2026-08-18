@@ -1,5 +1,14 @@
 # saleor-app-onboarding
 
+## 0.1.1
+
+### Patch Changes
+
+- d78dcb0: The go-live checklist "payments" task now opens the Stripe app configuration directly when the
+  Stripe app is installed, instead of always sending merchants to the installed-apps list.
+- Updated dependencies [d78dcb0]
+  - @saleor/apps-shared@1.15.0
+
 ## 0.1.0
 
 ### Minor Changes

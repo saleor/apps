@@ -1,5 +1,14 @@
 # saleor-app-products-feed
 
+## 3.1.4
+
+### Patch Changes
+
+- Updated dependencies [d78dcb0]
+- Updated dependencies [d78dcb0]
+  - @saleor/apps-shared@1.15.0
+  - @saleor/apps-ui@1.4.0
+
 ## 3.1.3
 
 ### Patch Changes
