@@ -385,4 +385,130 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
       );
     }
   }
+
+  async getAllConfigs(
+    access: BaseAccessPattern,
+  ): Promise<
+    Result<StripeConfig[], InstanceType<typeof AppConfigRepoError.FailureFetchingConfig>>
+  > {
+    const query = this.stripeConfigEntity.table
+      .build(QueryCommand)
+      .entities(this.stripeConfigEntity)
+      .query({
+        range: {
+          beginsWith: DynamoDbStripeConfig.accessPattern.getSKforAllItems(),
+        },
+        partition: DynamoDbStripeConfig.accessPattern.getPK(access),
+      })
+      .options({ maxPages: Infinity });
+
+    try {
+      const result = await query.send();
+
+      const configs = (result.Items ?? []).map((item) =>
+        this.mapRawDynamoConfigItemToConfigOrThrow(item),
+      );
+
+      return ok(configs);
+    } catch (e) {
+      this.logger.error("Failed to fetch all configs from DynamoDB", { cause: e });
+
+      return err(
+        new AppConfigRepoError.FailureFetchingConfig("Failed to fetch all configs from DynamoDB", {
+          cause: e,
+        }),
+      );
+    }
+  }
+
+  async removeAllConfigs(
+    access: BaseAccessPattern,
+  ): Promise<Result<null, InstanceType<typeof AppConfigRepoError.FailureRemovingConfig>>> {
+    const query = this.stripeConfigEntity.table
+      .build(QueryCommand)
+      .entities(this.stripeConfigEntity)
+      .query({
+        range: {
+          beginsWith: DynamoDbStripeConfig.accessPattern.getSKforAllItems(),
+        },
+        partition: DynamoDbStripeConfig.accessPattern.getPK(access),
+      })
+      .options({ maxPages: Infinity });
+
+    try {
+      const result = await query.send();
+      const items = result.Items ?? [];
+
+      await Promise.all(
+        items.map((item) =>
+          this.stripeConfigEntity.build(DeleteItemCommand).key({ PK: item.PK, SK: item.SK }).send(),
+        ),
+      );
+
+      this.logger.info("Removed all StripeConfig items for app", {
+        ...access,
+        removedCount: items.length,
+      });
+
+      return ok(null);
+    } catch (e) {
+      this.logger.error("Failed to remove all configs from DynamoDB", { cause: e, ...access });
+
+      return err(
+        new AppConfigRepoError.FailureRemovingConfig("Failed to remove all configs from DynamoDB", {
+          cause: e,
+        }),
+      );
+    }
+  }
+
+  async removeAllChannelMappings(
+    access: BaseAccessPattern,
+  ): Promise<Result<null, InstanceType<typeof AppConfigRepoError.FailureRemovingConfig>>> {
+    const query = this.channelConfigMappingEntity.table
+      .build(QueryCommand)
+      .entities(this.channelConfigMappingEntity)
+      .query({
+        range: {
+          beginsWith: DynamoDbChannelConfigMapping.accessPattern.getSKforAllChannels(),
+        },
+        partition: DynamoDbChannelConfigMapping.accessPattern.getPK(access),
+      })
+      .options({ maxPages: Infinity });
+
+    try {
+      const result = await query.send();
+      const items = result.Items ?? [];
+
+      await Promise.all(
+        items.map((item) =>
+          this.channelConfigMappingEntity
+            .build(DeleteItemCommand)
+            .key({ PK: item.PK, SK: item.SK })
+            .send(),
+        ),
+      );
+
+      this.logger.info("Removed all ChannelConfigMapping items for app", {
+        ...access,
+        removedCount: items.length,
+      });
+
+      return ok(null);
+    } catch (e) {
+      this.logger.error("Failed to remove all channel mappings from DynamoDB", {
+        cause: e,
+        ...access,
+      });
+
+      return err(
+        new AppConfigRepoError.FailureRemovingConfig(
+          "Failed to remove all channel mappings from DynamoDB",
+          {
+            cause: e,
+          },
+        ),
+      );
+    }
+  }
 }
