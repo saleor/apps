@@ -1,6 +1,5 @@
 import { actions, useAppBridge, useWidgetAutoResize } from "@saleor/app-sdk/app-bridge";
 import { Box, Button, Spinner, Text } from "@saleor/macaw-ui";
-import { ExternalLink } from "lucide-react";
 import { useRouter } from "next/router";
 import React from "react";
 import { useQuery } from "urql";
@@ -25,130 +24,85 @@ const Row = ({ label, children }: { label: string; children: React.ReactNode }) 
   </Box>
 );
 
-const AVALARA_TAX_CODE_SEARCH_URL = "https://taxcode.avatax.avalara.com/search?q=";
-
 /**
- * Read-only summary shown in the product detail sidebar. Stays compact: the
- * Dashboard renders it inline and sizes the iframe to its content.
+ * Tax class and the AvaTax code it maps to. The code is editable, but only once
+ * AvaTax credentials exist - the combobox searches codes through the configured
+ * connection, so without one it is an empty box that cannot be typed into.
  */
-const WidgetView = ({ resolution }: { resolution: ProductTaxCodeResolution }) => {
-  const { appBridge } = useAppBridge();
+const TaxCodeFields = ({
+  resolution,
+  isConfigured,
+}: {
+  resolution: ProductTaxCodeResolution;
+  isConfigured: boolean;
+}) => {
+  if (resolution.status === "no-tax-class") {
+    return (
+      <>
+        <Row label="Tax class">None</Row>
+        <Text size={2} color="warning1">
+          This product has no tax class, so AvaTax&apos;s default code will be used. Assign it a tax
+          class before mapping a code.
+        </Text>
+      </>
+    );
+  }
+
+  if (!isConfigured) {
+    return (
+      <>
+        <Row label="Tax class">{resolution.taxClassName}</Row>
+        <Row label="AvaTax tax code">
+          {resolution.status === "assigned" ? resolution.avataxTaxCode : "Not mapped"}
+        </Row>
+        <Text size={2} color="warning1">
+          Connect AvaTax credentials in the app configuration to change this mapping.
+        </Text>
+      </>
+    );
+  }
 
   return (
-    <Box display="grid" gap={3}>
-      {resolution.status === "assigned" && (
-        <>
-          <Row label="Tax class">{resolution.taxClassName}</Row>
-          <Row label="AvaTax tax code">
-            <Box
-              as="span"
-              className="avatax-tax-code-link"
-              display="inline-flex"
-              alignItems="center"
-              gap={1}
-              cursor="pointer"
-              color="default1"
-              onClick={() =>
-                appBridge?.dispatch(
-                  actions.Redirect({
-                    to: AVALARA_TAX_CODE_SEARCH_URL + encodeURIComponent(resolution.avataxTaxCode),
-                    newContext: true,
-                  }),
-                )
-              }
-            >
-              <Text as="span" fontWeight="bold" color="default1">
-                {resolution.avataxTaxCode}
-              </Text>
-              <ExternalLink size={16} />
-            </Box>
-          </Row>
-          <Text size={2} color="default2">
-            ✓ Taxed with the mapped AvaTax code.
-          </Text>
-        </>
-      )}
-
-      {resolution.status === "unmapped" && (
-        <>
-          <Row label="Tax class">{resolution.taxClassName}</Row>
-          <Row label="AvaTax tax code">Not mapped</Row>
-          <Text size={2} color="warning1">
-            This tax class has no AvaTax code mapped, so AvaTax&apos;s default code will be used.
-            Map it in the app configuration to control taxation.
-          </Text>
-        </>
-      )}
-
-      {resolution.status === "no-tax-class" && (
-        <>
-          <Row label="Tax class">None</Row>
-          <Text size={2} color="warning1">
-            This product has no tax class, so AvaTax&apos;s default code will be used.
-          </Text>
-        </>
-      )}
-    </Box>
+    <>
+      <Row label="Tax class">{resolution.taxClassName}</Row>
+      <Box display="grid" gap={2}>
+        <Text as="span" color="default2">
+          AvaTax tax code
+        </Text>
+        <TaxCodeCombobox
+          taxClassId={resolution.taxClassId}
+          initialValue={
+            resolution.status === "assigned"
+              ? { label: resolution.avataxTaxCode, value: resolution.avataxTaxCode }
+              : null
+          }
+        />
+        <Text size={2} color="default2">
+          Mapping is per tax class, so this applies to every product in {resolution.taxClassName} -
+          not only this one.
+        </Text>
+      </Box>
+    </>
   );
 };
 
-/**
- * Command palette popup. Unlike the sidebar widget this is a modal with room to
- * act, so the tax code is editable here instead of sending the merchant off to
- * the matcher page to change one mapping.
- */
-const PopupView = ({ resolution }: { resolution: ProductTaxCodeResolution }) => {
+const OpenAppButton = () => {
   const { appBridge, appBridgeState } = useAppBridge();
   const appId = appBridgeState?.id;
 
   return (
-    <Box display="grid" gap={5}>
-      <AppCard display="grid" gap={5}>
-        {resolution.status === "no-tax-class" ? (
-          <>
-            <Row label="Tax class">None</Row>
-            <Text size={2} color="warning1">
-              This product has no tax class, so AvaTax&apos;s default code will be used. Assign it a
-              tax class before mapping a code.
-            </Text>
-          </>
-        ) : (
-          <>
-            <Row label="Tax class">{resolution.taxClassName}</Row>
-            <Box display="grid" gap={2}>
-              <Text as="span" color="default2">
-                AvaTax tax code
-              </Text>
-              <TaxCodeCombobox
-                taxClassId={resolution.taxClassId}
-                initialValue={
-                  resolution.status === "assigned"
-                    ? { label: resolution.avataxTaxCode, value: resolution.avataxTaxCode }
-                    : null
-                }
-              />
-              <Text size={2} color="default2">
-                Mapping is per tax class, so this applies to every product in{" "}
-                {resolution.taxClassName} - not only this one.
-              </Text>
-            </Box>
-          </>
-        )}
-      </AppCard>
-
-      <Box display="flex" justifyContent="flex-end">
-        <Button
-          variant="secondary"
-          disabled={!appId}
-          onClick={() =>
-            appBridge?.dispatch(
-              actions.Redirect({ to: `/extensions/app/${encodeURIComponent(appId!)}` }),
-            )
-          }
-        >
-          Open app
-        </Button>
-      </Box>
+    <Box display="flex" justifyContent="flex-end">
+      <Button
+        variant="secondary"
+        disabled={!appId}
+        onClick={() =>
+          appBridge?.dispatch(
+            actions.Redirect({ to: `/extensions/app/${encodeURIComponent(appId!)}` }),
+          )
+        }
+      >
+        Open app
+      </Button>
     </Box>
   );
 };
@@ -163,8 +117,17 @@ const ProductDetailsWidget = () => {
    */
   const isPopup = router.query.mode === "popup";
 
-  // Only widgets are resized to their content; the popup is a fixed-size modal.
-  useWidgetAutoResize(rootRef, !isPopup);
+  /*
+   * Widget iframes are sized by the height this reports; the popup iframe is already
+   * `height: 100%` of the Dashboard's modal and must be left alone.
+   *
+   * Waiting for `router.isReady` matters as much as the mode check: query params are
+   * empty on the first render of a statically optimized page, so enabling this any
+   * earlier reports the height of the pre-hydration state as an inline style - which
+   * overrides the popup's `height: 100%` and never gets corrected once the hook is
+   * disabled, leaving the modal clipped.
+   */
+  useWidgetAutoResize(rootRef, router.isReady && !isPopup);
 
   const productId = router.query.productId as string | undefined;
 
@@ -177,10 +140,21 @@ const ProductDetailsWidget = () => {
   const { data: matches, isLoading: matchesLoading } = trpcClient.avataxMatches.getAll.useQuery();
 
   /*
-   * The Dashboard pads widget iframes for us but gives the popup a full-bleed
-   * frame, so the modal has to inset its own content.
+   * The combobox resolves tax codes through the first AvaTax connection, so with no
+   * connection configured it renders but can never return an option.
+   */
+  const { data: providers, isLoading: providersLoading } =
+    trpcClient.providersConfiguration.getAll.useQuery();
+
+  /*
+   * The Dashboard pads widget iframes for us but gives the popup a full-bleed frame,
+   * so the modal has to inset its own content.
    */
   const padding = isPopup ? 6 : 0;
+
+  if (!router.isReady) {
+    return <Box ref={rootRef} padding={padding} />;
+  }
 
   if (!productId) {
     return (
@@ -198,7 +172,7 @@ const ProductDetailsWidget = () => {
     );
   }
 
-  if ((fetching && !data) || matchesLoading) {
+  if ((fetching && !data) || matchesLoading || providersLoading) {
     return (
       <Box ref={rootRef} padding={padding} display="flex" justifyContent="center">
         <Spinner />
@@ -207,10 +181,22 @@ const ProductDetailsWidget = () => {
   }
 
   const resolution = resolveProductTaxCode(data?.product?.taxClass, matches ?? []);
+  const isConfigured = (providers?.length ?? 0) > 0;
+
+  if (!isPopup) {
+    return (
+      <Box ref={rootRef} display="grid" gap={3}>
+        <TaxCodeFields resolution={resolution} isConfigured={isConfigured} />
+      </Box>
+    );
+  }
 
   return (
-    <Box ref={rootRef} padding={padding}>
-      {isPopup ? <PopupView resolution={resolution} /> : <WidgetView resolution={resolution} />}
+    <Box ref={rootRef} padding={padding} display="grid" gap={5}>
+      <AppCard display="grid" gap={5}>
+        <TaxCodeFields resolution={resolution} isConfigured={isConfigured} />
+      </AppCard>
+      <OpenAppButton />
     </Box>
   );
 };

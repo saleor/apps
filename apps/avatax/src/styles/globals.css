@@ -6,10 +6,6 @@ body {
   margin: 0;
 }
 
-.avatax-tax-code-link:hover {
-  text-decoration: underline;
-}
-
 code {
   background: #f6f8fa;
   border: 1px solid #eaeaea;
