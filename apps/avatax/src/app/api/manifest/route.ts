@@ -60,7 +60,11 @@ const handler = createManifestHandler({
         aliases: ["avalara", "tax class"],
       },
       label: "Show AvaTax tax code",
-      url: iframeBaseUrl + "/product-details",
+      /*
+       * Same route as the widget - `mode=popup` is what tells it to render the
+       * roomier, editable modal instead of the compact sidebar summary.
+       */
+      url: iframeBaseUrl + "/product-details?mode=popup",
       permissions: ["MANAGE_PRODUCTS"],
     };
 
