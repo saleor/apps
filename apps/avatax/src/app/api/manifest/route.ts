@@ -6,6 +6,7 @@ import { compose } from "@saleor/apps-shared/compose";
 import { env } from "@/env";
 import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { withLoggerContext } from "@/logger-context";
+import { PRODUCT_TAX_CODE_POPUP_IDENTIFIER } from "@/modules/avatax/tax-code/product-tax-code-popup";
 
 import packageJson from "../../../../package.json";
 import { appWebhooks } from "../../../../webhooks";
@@ -68,6 +69,22 @@ const handler = createManifestHandler({
       permissions: ["MANAGE_PRODUCTS"],
     };
 
+    /*
+     * The same modal, reachable from the product page's "..." menu - and, more to the
+     * point, the extension the sidebar widget's "Edit tax code" button opens through
+     * `actions.OpenPopup`. The Dashboard only resolves popups registered on the
+     * current page, and the command palette is unmounted while closed, so the
+     * SEARCH_ACTION above cannot serve as that target.
+     */
+    const productTaxCodePopup: AppExtension = {
+      target: "POPUP",
+      mount: "PRODUCT_DETAILS_MORE_ACTIONS",
+      identifier: PRODUCT_TAX_CODE_POPUP_IDENTIFIER,
+      label: "Edit AvaTax tax code",
+      url: iframeBaseUrl + "/product-details?mode=popup",
+      permissions: ["MANAGE_PRODUCTS"],
+    };
+
     const extensions: AppExtension[] = [];
 
     const saleorMinor = schemaVersion && schemaVersion[1];
@@ -76,9 +93,12 @@ const handler = createManifestHandler({
       extensions.push(orderDetailsExtension, productDetailsExtension);
     }
 
-    // SEARCH_ACTION mount was added in Saleor 3.23.
+    /*
+     * SEARCH_ACTION landed in 3.23, as did `identifier` and the `openPopup` action the
+     * widget button relies on - so the popup pair is gated together.
+     */
     if (saleorMinor && saleorMinor >= 23) {
-      extensions.push(productTaxCodeSearchAction);
+      extensions.push(productTaxCodeSearchAction, productTaxCodePopup);
     }
 
     const manifest: AppManifest = {
