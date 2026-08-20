@@ -192,6 +192,16 @@ const PopupView = ({
                       ? { label: resolution.avataxTaxCode, value: resolution.avataxTaxCode }
                       : null
                   }
+                  /*
+                   * The product behind this modal still shows the old code - in its own
+                   * tax section and in the sidebar widget - so ask the Dashboard to
+                   * reload the entity rather than leaving it stale until a manual
+                   * refresh. Fire-and-forget: the mapping is already saved, so a
+                   * Dashboard that does not handle the action must not surface an error.
+                   */
+                  onSaved={() => {
+                    appBridge?.dispatch(actions.RefreshEntity()).catch(() => {});
+                  }}
                 />
                 <Text size={2} color="default2">
                   Mapping is per tax class, so this applies to every product in{" "}
