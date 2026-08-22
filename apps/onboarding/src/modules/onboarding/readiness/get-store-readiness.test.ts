@@ -83,7 +83,7 @@ describe("getStoreReadiness", () => {
     expect(readiness.hasPaymentApp).toBe(false);
   });
 
-  it("resolves the installed SMTP app id by identifier", () => {
+  it("detects the installed SMTP app by identifier", () => {
     const readiness = getStoreReadiness({
       ...baseData,
       apps: {
@@ -101,10 +101,10 @@ describe("getStoreReadiness", () => {
       },
     });
 
-    expect(readiness.smtpAppId).toBe("QXBwOjQy");
+    expect(readiness.hasSmtpApp).toBe(true);
   });
 
-  it("resolves Stripe payment app id when installed", () => {
+  it("detects the installed Stripe payment app by identifier", () => {
     const readiness = getStoreReadiness({
       ...baseData,
       apps: {
@@ -122,7 +122,7 @@ describe("getStoreReadiness", () => {
       },
     });
 
-    expect(readiness.stripeAppId).toBe("QXBwOlN0cmlwZQ==");
+    expect(readiness.hasStripeApp).toBe(true);
     expect(readiness.hasPaymentApp).toBe(true);
   });
 });
