@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 
+import { STRIPE_APP_IDENTIFIER } from "./app-identifiers";
 import { type StoreReadiness } from "./get-store-readiness";
-import { getTaskCopy, getTaskHref, getTaskPermission } from "./task-copy";
+import { INSTALLED_APPS_PATH } from "./redirect-target";
+import { getTaskCopy, getTaskCta, getTaskPermission } from "./task-copy";
 
 const readyChannel: StoreReadiness = {
   channelId: "Q2hhbm5lbDox",
@@ -13,8 +15,8 @@ const readyChannel: StoreReadiness = {
   hasProduct: false,
   hasPaymentApp: false,
   hasOrder: false,
-  smtpAppId: null,
-  stripeAppId: null,
+  hasSmtpApp: false,
+  hasStripeApp: false,
   channelsKnown: true,
   shippingKnown: true,
   productsKnown: true,
@@ -74,21 +76,28 @@ describe("getTaskCopy", () => {
   });
 });
 
-describe("getTaskHref / getTaskPermission", () => {
+describe("getTaskCta / getTaskPermission", () => {
   it("deep-links channel create vs detail", () => {
-    expect(getTaskHref("sales-channel", { ...readyChannel, channelId: null })).toBe(
-      "/channels/?action=create",
-    );
-    expect(getTaskHref("sales-channel", readyChannel)).toBe(
-      `/channels/${encodeURIComponent("Q2hhbm5lbDox")}`,
-    );
+    expect(getTaskCta("sales-channel", { ...readyChannel, channelId: null })).toStrictEqual({
+      kind: "dashboard",
+      to: "/channels/?action=create",
+    });
+    expect(getTaskCta("sales-channel", readyChannel)).toStrictEqual({
+      kind: "dashboard",
+      to: `/channels/${encodeURIComponent("Q2hhbm5lbDox")}`,
+    });
   });
 
-  it("deep-links payments to Stripe app when installed", () => {
-    expect(getTaskHref("payments", readyChannel)).toBe("/extensions/installed");
-    expect(getTaskHref("payments", { ...readyChannel, stripeAppId: "QXBwOlN0cmlwZQ==" })).toBe(
-      `/extensions/app/${encodeURIComponent("QXBwOlN0cmlwZQ==")}`,
-    );
+  it("opens Stripe via RedirectToApp when that payment app is installed", () => {
+    expect(getTaskCta("payments", readyChannel)).toStrictEqual({
+      kind: "dashboard",
+      to: INSTALLED_APPS_PATH,
+    });
+    expect(getTaskCta("payments", { ...readyChannel, hasStripeApp: true })).toStrictEqual({
+      kind: "app",
+      appIdentifier: STRIPE_APP_IDENTIFIER,
+      fallbackTo: INSTALLED_APPS_PATH,
+    });
   });
 
   it("gates commerce CTAs on the matching Dashboard permission", () => {

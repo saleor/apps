@@ -1,11 +1,12 @@
+import { SMTP_APP_IDENTIFIER } from "./app-identifiers";
+import { type CtaTarget, INSTALLED_APPS_PATH } from "./redirect-target";
+
 /**
  * Secondary go-live guidance (SMTP, email templates, Paper storefront).
  * These rows never count toward required Store Readiness progress.
  */
 
-export type GuidanceCtaTarget =
-  | { kind: "dashboard"; href: string; permission?: string }
-  | { kind: "external"; href: string };
+export type GuidanceCtaTarget = CtaTarget & { permission?: string };
 
 export type GuidanceRow = {
   id: string;
@@ -17,9 +18,6 @@ export type GuidanceRow = {
 };
 
 export const SMTP_DOCS_URL = "https://docs.saleor.io/developer/app-store/apps/smtp/overview";
-
-/** Canonical SMTP app identifier from the app manifest. */
-export const SMTP_APP_IDENTIFIER = "saleor.app.smtp";
 
 /** Hosted SMTP app manifest (Saleor Cloud / App Store install). */
 export const SMTP_MANIFEST_URL = "https://smtp.saleor.app/api/manifest";
@@ -45,25 +43,25 @@ export const PAPER_SECTION = {
   subtitle: "Saleor is headless — deploy a storefront when you’re ready to sell online",
 } as const;
 
+const SMTP_INSTALL_PATH = `/extensions/app/install?manifestUrl=${encodeURIComponent(
+  SMTP_MANIFEST_URL,
+)}`;
+
 /**
- * Open the installed SMTP app, or the Dashboard install flow when it isn’t present yet.
+ * Open the installed SMTP app via Dashboard (`RedirectToApp`), or the install flow when it isn’t present.
  */
-export const resolveSmtpAppHref = (smtpAppId: string | null): string => {
-  if (smtpAppId) {
-    return `/extensions/app/${encodeURIComponent(smtpAppId)}`;
-  }
-
-  return `/extensions/app/install?manifestUrl=${encodeURIComponent(SMTP_MANIFEST_URL)}`;
-};
-
-const smtpDashboardCta = (smtpAppId: string | null): GuidanceCtaTarget => ({
-  kind: "dashboard",
-  href: resolveSmtpAppHref(smtpAppId),
-  permission: "MANAGE_APPS",
-});
+export const resolveSmtpAppCta = (hasSmtpApp: boolean): GuidanceCtaTarget =>
+  hasSmtpApp
+    ? {
+        kind: "app",
+        appIdentifier: SMTP_APP_IDENTIFIER,
+        fallbackTo: INSTALLED_APPS_PATH,
+        permission: "MANAGE_APPS",
+      }
+    : { kind: "dashboard", to: SMTP_INSTALL_PATH, permission: "MANAGE_APPS" };
 
 /** Go-live rows with SMTP CTAs resolved against the live install (if any). */
-export const getGoLiveRows = (smtpAppId: string | null): GuidanceRow[] => [
+export const getGoLiveRows = (hasSmtpApp: boolean): GuidanceRow[] => [
   {
     id: "customer-email",
     title: "Connect customer email",
@@ -72,7 +70,7 @@ export const getGoLiveRows = (smtpAppId: string | null): GuidanceRow[] => [
     details:
       "Use the SMTP extension (similar to a Shopify notification app) so customers get order confirmations and account messages. Open the SMTP app to configure your host, or install it if it isn’t present yet.",
     ctaLabel: "Set up SMTP",
-    cta: smtpDashboardCta(smtpAppId),
+    cta: resolveSmtpAppCta(hasSmtpApp),
   },
   {
     id: "email-templates",
@@ -81,12 +79,12 @@ export const getGoLiveRows = (smtpAppId: string | null): GuidanceRow[] => [
     details:
       "After SMTP is connected, open the app and review MJML templates (order confirmation, password reset, and related events). Adjust branding and wording so production mail matches your store.",
     ctaLabel: "Open SMTP",
-    cta: smtpDashboardCta(smtpAppId),
+    cta: resolveSmtpAppCta(hasSmtpApp),
   },
 ];
 
-/** Fallback rows when the SMTP install id isn’t known yet (install CTA). */
-export const GO_LIVE_ROWS: GuidanceRow[] = getGoLiveRows(null);
+/** Fallback rows when it isn’t known yet whether SMTP is installed (install CTA). */
+export const GO_LIVE_ROWS: GuidanceRow[] = getGoLiveRows(false);
 
 export const PAPER_ROWS: GuidanceRow[] = [
   {
