@@ -22,6 +22,26 @@ describe("useHasAppAccess", () => {
     expect(result.current.haveAccessToApp).toBe(false);
   });
 
+  it("is not ready before the Dashboard handshake delivers the user", () => {
+    vi.mocked(useAppBridge).mockImplementationOnce(() => ({
+      appBridgeState: {
+        user: undefined,
+        id: "",
+        ready: false,
+        path: "/",
+        theme: "light",
+        locale: "en",
+        saleorApiUrl: "",
+        formContext: {},
+      },
+      appBridge: undefined,
+    }));
+
+    const { result } = renderHook(() => useHasAppAccess());
+
+    expect(result.current.isReady).toBe(false);
+  });
+
   it("returns false when user does not have all required permissions", () => {
     vi.mocked(useAppBridge).mockImplementationOnce(() => ({
       appBridgeState: {
@@ -43,6 +63,7 @@ describe("useHasAppAccess", () => {
     const { result } = renderHook(() => useHasAppAccess());
 
     expect(result.current.haveAccessToApp).toBe(false);
+    expect(result.current.isReady).toBe(true);
   });
 
   it("returns true when user has all required permissions", () => {

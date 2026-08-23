@@ -28,6 +28,18 @@ const Section = ({
   </SettingsSection>
 );
 
+/**
+ * Section body before any data is in hand. Also rendered at `/` while the app redirects to
+ * `/config`, so the two routes cannot drift apart on title, ownership or test id.
+ */
+export const ChannelConfigSectionSkeleton = () => (
+  <Section>
+    <SettingsFieldStack>
+      <Skeleton />
+    </SettingsFieldStack>
+  </Section>
+);
+
 /*
  * Queries opt out of `refetchOnMount` globally (see trpc-client), so returning from /config/new
  * or /config/[configId] would otherwise render stale data. Opting back in refreshes cached data
@@ -104,13 +116,7 @@ export const ChannelConfigSection = () => {
   }
 
   if (anythingLoading) {
-    return (
-      <Section>
-        <SettingsFieldStack>
-          <Skeleton />
-        </SettingsFieldStack>
-      </Section>
-    );
+    return <ChannelConfigSectionSkeleton />;
   }
 
   if (configsQuery.data && configsQuery.data.length === 0) {
@@ -138,11 +144,5 @@ export const ChannelConfigSection = () => {
     );
   }
 
-  return (
-    <Section>
-      <SettingsFieldStack>
-        <Skeleton />
-      </SettingsFieldStack>
-    </Section>
-  );
+  return <ChannelConfigSectionSkeleton />;
 };
