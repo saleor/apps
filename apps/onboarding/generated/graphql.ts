@@ -2161,7 +2161,7 @@ export type AssignedVariantAttribute = {
 export type Attribute = Node & ObjectWithMetadata & {
   /**
    * Whether the attribute can be displayed in the admin product list. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
-   * @deprecated Field no longer supported
+   * @deprecated This flag is not used by Saleor. Keep the logic in the storefront or use `Attribute` metadata instead.
    */
   readonly availableInGrid: Scalars['Boolean']['output'];
   /** A list of predefined attribute choices available for selection. Available only for attributes with predefined choices. */
@@ -2170,11 +2170,14 @@ export type Attribute = Node & ObjectWithMetadata & {
   readonly entityType?: Maybe<AttributeEntityTypeEnum>;
   /** External ID of this attribute. */
   readonly externalReference?: Maybe<Scalars['String']['output']>;
-  /** Whether the attribute can be filtered in dashboard. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES. */
+  /**
+   * Whether the attribute can be filtered in dashboard. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
+   * @deprecated This flag is not used by Saleor. Keep the logic in the dashboard or use `Attribute` metadata instead.
+   */
   readonly filterableInDashboard: Scalars['Boolean']['output'];
   /**
    * Whether the attribute can be filtered in storefront. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
-   * @deprecated Field no longer supported
+   * @deprecated This flag is not used by Saleor. Keep the logic in the storefront or use `Attribute` metadata instead.
    */
   readonly filterableInStorefront: Scalars['Boolean']['output'];
   /** The ID of the attribute. */
@@ -2217,7 +2220,7 @@ export type Attribute = Node & ObjectWithMetadata & {
   readonly slug: Scalars['String']['output'];
   /**
    * The position of the attribute in the storefront navigation (0 by default). Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
-   * @deprecated Field no longer supported
+   * @deprecated This flag is not used by Saleor. Keep the logic in the storefront or use `Attribute` metadata instead.
    */
   readonly storefrontSearchPosition: Scalars['Int']['output'];
   /** Returns translated attribute fields for the given language code. */
@@ -2500,18 +2503,21 @@ export type AttributeCreate = {
 export type AttributeCreateInput = {
   /**
    * Whether the attribute can be displayed in the admin product list.
-   * @deprecated Field no longer supported
+   * @deprecated This flag is not used by Saleor. Keep the logic in the storefront or use `Attribute` metadata instead.
    */
   readonly availableInGrid?: InputMaybe<Scalars['Boolean']['input']>;
   /** The entity type which can be used as a reference. */
   readonly entityType?: InputMaybe<AttributeEntityTypeEnum>;
   /** External ID of this attribute. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
-  /** Whether the attribute can be filtered in dashboard. */
+  /**
+   * Whether the attribute can be filtered in dashboard.
+   * @deprecated This flag is not used by Saleor. Keep the logic in the dashboard or use `Attribute` metadata instead.
+   */
   readonly filterableInDashboard?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Whether the attribute can be filtered in storefront.
-   * @deprecated Field no longer supported
+   * @deprecated This flag is not used by Saleor. Keep the logic in the storefront or use `Attribute` metadata instead.
    */
   readonly filterableInStorefront?: InputMaybe<Scalars['Boolean']['input']>;
   /** The input type to use for entering attribute values in the dashboard. */
@@ -2532,7 +2538,7 @@ export type AttributeCreateInput = {
   readonly slug?: InputMaybe<Scalars['String']['input']>;
   /**
    * The position of the attribute in the storefront navigation (0 by default).
-   * @deprecated Field no longer supported
+   * @deprecated This flag is not used by Saleor. Keep the logic in the storefront or use `Attribute` metadata instead.
    */
   readonly storefrontSearchPosition?: InputMaybe<Scalars['Int']['input']>;
   /** The attribute type. */
@@ -2622,13 +2628,25 @@ export type AttributeErrorCode =
   | 'UNIQUE';
 
 export type AttributeFilterInput = {
+  /**
+   * Whether the attribute can be displayed in the admin product list.
+   * @deprecated This flag is not used by Saleor. Keep the logic in the storefront or use `Attribute` metadata instead.
+   */
   readonly availableInGrid?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Specifies the channel by which the data should be filtered.
    * @deprecated Use root-level channel argument instead.
    */
   readonly channel?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Whether the attribute can be filtered in dashboard.
+   * @deprecated This flag is not used by Saleor. Keep the logic in the dashboard or use `Attribute` metadata instead.
+   */
   readonly filterableInDashboard?: InputMaybe<Scalars['Boolean']['input']>;
+  /**
+   * Whether the attribute can be filtered in storefront.
+   * @deprecated This flag is not used by Saleor. Keep the logic in the storefront or use `Attribute` metadata instead.
+   */
   readonly filterableInStorefront?: InputMaybe<Scalars['Boolean']['input']>;
   readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   readonly inCategory?: InputMaybe<Scalars['ID']['input']>;
@@ -2830,16 +2848,19 @@ export type AttributeUpdateInput = {
   readonly addValues?: InputMaybe<ReadonlyArray<AttributeValueUpdateInput>>;
   /**
    * Whether the attribute can be displayed in the admin product list.
-   * @deprecated Field no longer supported
+   * @deprecated This flag is not used by Saleor. Keep the logic in the storefront or use `Attribute` metadata instead.
    */
   readonly availableInGrid?: InputMaybe<Scalars['Boolean']['input']>;
   /** External ID of this product. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
-  /** Whether the attribute can be filtered in dashboard. */
+  /**
+   * Whether the attribute can be filtered in dashboard.
+   * @deprecated This flag is not used by Saleor. Keep the logic in the dashboard or use `Attribute` metadata instead.
+   */
   readonly filterableInDashboard?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Whether the attribute can be filtered in storefront.
-   * @deprecated Field no longer supported
+   * @deprecated This flag is not used by Saleor. Keep the logic in the storefront or use `Attribute` metadata instead.
    */
   readonly filterableInStorefront?: InputMaybe<Scalars['Boolean']['input']>;
   /** Whether the attribute is for variants only. */
@@ -2860,7 +2881,7 @@ export type AttributeUpdateInput = {
   readonly slug?: InputMaybe<Scalars['String']['input']>;
   /**
    * The position of the attribute in the storefront navigation (0 by default).
-   * @deprecated Field no longer supported
+   * @deprecated This flag is not used by Saleor. Keep the logic in the storefront or use `Attribute` metadata instead.
    */
   readonly storefrontSearchPosition?: InputMaybe<Scalars['Int']['input']>;
   /** The unit of attribute values. */
@@ -3310,6 +3331,10 @@ export type AttributeWhereInput = {
   /** A list of conditions of which at least one must be met. */
   readonly OR?: InputMaybe<ReadonlyArray<AttributeWhereInput>>;
   readonly entityType?: InputMaybe<AttributeEntityTypeEnumFilterInput>;
+  /**
+   * Whether the attribute can be filtered in dashboard.
+   * @deprecated This flag is not used by Saleor. Keep the logic in the dashboard or use `Attribute` metadata instead.
+   */
   readonly filterableInDashboard?: InputMaybe<Scalars['Boolean']['input']>;
   readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   readonly inCategory?: InputMaybe<Scalars['ID']['input']>;
@@ -4180,7 +4205,10 @@ export type ChannelListingUpdateInput = {
   readonly channelListing: Scalars['ID']['input'];
   /** Cost price of the variant in channel. */
   readonly costPrice?: InputMaybe<Scalars['PositiveDecimal']['input']>;
-  /** The threshold for preorder variant in channel. */
+  /**
+   * The threshold for preorder variant in channel.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+   */
   readonly preorderThreshold?: InputMaybe<Scalars['Int']['input']>;
   /** Price of the particular variant in channel. */
   readonly price?: InputMaybe<Scalars['PositiveDecimal']['input']>;
@@ -9284,9 +9312,16 @@ export type GiftCardEventsEnum =
   | 'UPDATED'
   | 'USED_IN_ORDER';
 
-/** Event sent when gift card export is completed. */
+/**
+ * Event sent when gift card export is completed.
+ *
+ * Export functionality is deprecated and will be removed. All data can be fetched via the GraphQL API and parsed into the desired format by apps or external tools.
+ */
 export type GiftCardExportCompleted = Event & {
-  /** The export file for gift cards. */
+  /**
+   * The export file for gift cards.
+   * @deprecated Export functionality is deprecated and will be removed. All data can be fetched via the GraphQL API and parsed into the desired format by apps or external tools.
+   */
   readonly export?: Maybe<ExportFile>;
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -14139,7 +14174,10 @@ export type Mutation = {
   /**
    * Deactivates product variant preorder. It changes all preorder allocation into regular allocation.
    *
+   * DEPRECATED: Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+   *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
    */
   readonly productVariantPreorderDeactivate?: Maybe<ProductVariantPreorderDeactivate>;
   /**
@@ -16848,7 +16886,8 @@ export type MutationWebhookCreateArgs = {
 
 
 export type MutationWebhookDeleteArgs = {
-  id: Scalars['ID']['input'];
+  id?: InputMaybe<Scalars['ID']['input']>;
+  identifier?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -16865,7 +16904,8 @@ export type MutationWebhookTriggerArgs = {
 
 
 export type MutationWebhookUpdateArgs = {
-  id: Scalars['ID']['input'];
+  id?: InputMaybe<Scalars['ID']['input']>;
+  identifier?: InputMaybe<Scalars['String']['input']>;
   input: WebhookUpdateInput;
 };
 
@@ -18154,6 +18194,10 @@ export type OrderFilterInput = {
   readonly giftCardUsed?: InputMaybe<Scalars['Boolean']['input']>;
   readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   readonly isClickAndCollect?: InputMaybe<Scalars['Boolean']['input']>;
+  /**
+   * Filter by orders containing a variant that is currently in preorder.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+   */
   readonly isPreorder?: InputMaybe<Scalars['Boolean']['input']>;
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataFilter>>;
   readonly numbers?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
@@ -21336,36 +21380,66 @@ export type PostalCodeRuleInclusionTypeEnum =
   | 'EXCLUDE'
   | 'INCLUDE';
 
-/** Represents preorder settings for product variant. */
+/**
+ * Represents preorder settings for product variant.
+ *
+ * DEPRECATED: Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+ */
 export type PreorderData = {
-  /** Preorder end date. */
+  /**
+   * Preorder end date.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+   */
   readonly endDate?: Maybe<Scalars['DateTime']['output']>;
   /**
    * Total number of sold product variant during preorder.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
    */
   readonly globalSoldUnits: Scalars['Int']['output'];
   /**
    * The global preorder threshold for product variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
    */
   readonly globalThreshold?: Maybe<Scalars['Int']['output']>;
 };
 
+/**
+ * Preorder settings for a product variant.
+ *
+ * DEPRECATED: Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+ */
 export type PreorderSettingsInput = {
-  /** The end date for preorder. */
+  /**
+   * The end date for preorder.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+   */
   readonly endDate?: InputMaybe<Scalars['DateTime']['input']>;
-  /** The global threshold for preorder variant. */
+  /**
+   * The global threshold for preorder variant.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+   */
   readonly globalThreshold?: InputMaybe<Scalars['Int']['input']>;
 };
 
-/** Represents preorder variant data for channel. */
+/**
+ * Represents preorder variant data for channel.
+ *
+ * DEPRECATED: Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+ */
 export type PreorderThreshold = {
-  /** Preorder threshold for product variant in this channel. */
+  /**
+   * Preorder threshold for product variant in this channel.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+   */
   readonly quantity?: Maybe<Scalars['Int']['output']>;
-  /** Number of sold product variant in this channel. */
+  /**
+   * Number of sold product variant in this channel.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+   */
   readonly soldUnits: Scalars['Int']['output'];
 };
 
@@ -22176,9 +22250,16 @@ export type ProductErrorCode =
   | 'UNSUPPORTED_MEDIA_PROVIDER'
   | 'UNSUPPORTED_MIME_TYPE';
 
-/** Event sent when product export is completed. */
+/**
+ * Event sent when product export is completed.
+ *
+ * Export functionality is deprecated and will be removed. All data can be fetched via the GraphQL API and parsed into the desired format by apps or external tools.
+ */
 export type ProductExportCompleted = Event & {
-  /** The export file for products. */
+  /**
+   * The export file for products.
+   * @deprecated Export functionality is deprecated and will be removed. All data can be fetched via the GraphQL API and parsed into the desired format by apps or external tools.
+   */
   readonly export?: Maybe<ExportFile>;
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -22218,6 +22299,10 @@ export type ProductFilterInput = {
   /** Filter on whether product is a gift card or not. */
   readonly giftCard?: InputMaybe<Scalars['Boolean']['input']>;
   readonly hasCategory?: InputMaybe<Scalars['Boolean']['input']>;
+  /**
+   * Filter by product with preordered variants.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+   */
   readonly hasPreorderedVariants?: InputMaybe<Scalars['Boolean']['input']>;
   readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** Filter by availability for purchase. */
@@ -23124,7 +23209,10 @@ export type ProductVariant = Node & ObjectWithAttributes & ObjectWithMetadata & 
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** The name of the product variant. */
   readonly name: Scalars['String']['output'];
-  /** Preorder data for product variant. */
+  /**
+   * Preorder data for product variant.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+   */
   readonly preorder?: Maybe<PreorderData>;
   /** Lists the storefront variant's pricing, the current price and discounts, only meant for displaying. */
   readonly pricing?: Maybe<VariantPricingInfo>;
@@ -23346,7 +23434,10 @@ export type ProductVariantBulkCreateInput = {
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Variant name. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
-  /** Determines if variant is in preorder. */
+  /**
+   * Determines if variant is in preorder.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+   */
   readonly preorder?: InputMaybe<PreorderSettingsInput>;
   /**
    * Fields required to update the product variant private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
@@ -23499,7 +23590,10 @@ export type ProductVariantBulkUpdateInput = {
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Variant name. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
-  /** Determines if variant is in preorder. */
+  /**
+   * Determines if variant is in preorder.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+   */
   readonly preorder?: InputMaybe<PreorderSettingsInput>;
   /**
    * Fields required to update the product variant private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
@@ -23533,7 +23627,10 @@ export type ProductVariantChannelListing = Node & {
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
   readonly margin?: Maybe<Scalars['Int']['output']>;
-  /** Preorder variant data. */
+  /**
+   * Preorder variant data.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+   */
   readonly preorderThreshold?: Maybe<PreorderThreshold>;
   /** The price of the variant. */
   readonly price?: Maybe<Money>;
@@ -23552,7 +23649,10 @@ export type ProductVariantChannelListingAddInput = {
   readonly channelId: Scalars['ID']['input'];
   /** Cost price of the variant in channel. */
   readonly costPrice?: InputMaybe<Scalars['PositiveDecimal']['input']>;
-  /** The threshold for preorder variant in channel. */
+  /**
+   * The threshold for preorder variant in channel.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+   */
   readonly preorderThreshold?: InputMaybe<Scalars['Int']['input']>;
   /** Price of the particular variant in channel. */
   readonly price: Scalars['PositiveDecimal']['input'];
@@ -23626,7 +23726,10 @@ export type ProductVariantCreateInput = {
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Variant name. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
-  /** Determines if variant is in preorder. */
+  /**
+   * Determines if variant is in preorder.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+   */
   readonly preorder?: InputMaybe<PreorderSettingsInput>;
   /**
    * Fields required to update the product variant private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
@@ -23725,6 +23828,10 @@ export type ProductVariantDiscountedPriceUpdated = Event & {
 };
 
 export type ProductVariantFilterInput = {
+  /**
+   * Filter by variants that are currently in preorder.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+   */
   readonly isPreorder?: InputMaybe<Scalars['Boolean']['input']>;
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataFilter>>;
   readonly search?: InputMaybe<Scalars['String']['input']>;
@@ -23745,7 +23852,10 @@ export type ProductVariantInput = {
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Variant name. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
-  /** Determines if variant is in preorder. */
+  /**
+   * Determines if variant is in preorder.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+   */
   readonly preorder?: InputMaybe<PreorderSettingsInput>;
   /**
    * Fields required to update the product variant private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
@@ -23851,6 +23961,8 @@ export type ProductVariantOutOfStockInChannel = Event & {
 
 /**
  * Deactivates product variant preorder. It changes all preorder allocation into regular allocation.
+ *
+ * DEPRECATED: Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -24136,7 +24248,10 @@ export type ProductWhereInput = {
   readonly giftCard?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by product with category assigned. */
   readonly hasCategory?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Filter by product with preordered variants. */
+  /**
+   * Filter by product with preordered variants.
+   * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
+   */
   readonly hasPreorderedVariants?: InputMaybe<Scalars['Boolean']['input']>;
   readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** Filter by availability for purchase. */
@@ -31595,9 +31710,14 @@ export type VoucherCodeCountableEdge = {
  * Event sent when voucher code export is completed.
  *
  * Added in Saleor 3.18.
+ *
+ * Export functionality is deprecated and will be removed. All data can be fetched via the GraphQL API and parsed into the desired format by apps or external tools.
  */
 export type VoucherCodeExportCompleted = Event & {
-  /** The export file for voucher codes. */
+  /**
+   * The export file for voucher codes.
+   * @deprecated Export functionality is deprecated and will be removed. All data can be fetched via the GraphQL API and parsed into the desired format by apps or external tools.
+   */
   readonly export?: Maybe<ExportFile>;
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
