@@ -1,5 +1,12 @@
 # saleor-app-payment-dummy
 
+## 1.1.2
+
+### Patch Changes
+
+- Updated dependencies [d78dcb0]
+  - @saleor/apps-shared@1.15.0
+
 ## 1.1.1
 
 ### Patch Changes

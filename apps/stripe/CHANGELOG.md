@@ -1,5 +1,49 @@
 # saleor-app-payment-stripe
 
+## 2.7.0
+
+### Minor Changes
+
+- d78dcb0: Rebuilt the configuration screens to match Saleor Dashboard settings pages. Before: a single
+  list of configurations with a separate channel-mapping section and no guidance. Now: each
+  configuration is a card that shows the channels using it, with a Sandbox/Live badge, a
+  connected-channel count, per-channel disconnect, and a fold at the bottom of the card listing
+  channels that are not assigned yet. Each card’s overflow menu has Edit and Delete, instead of a
+  standalone remove control. A "Finish Stripe setup" checklist walks through adding keys and
+  assigning channels, and stays reachable as a compact summary row after
+  being dismissed. Saving a new configuration now locks the form and save bar while it is in
+  flight, so a double click can no longer create a duplicate configuration. Key fields also name
+  the value they expect and the prefix it starts with, so pasting a secret key instead of a
+  restricted one is easier to catch before saving. After a key is pasted, a Sandbox or Live
+  pill appears in the form header so the environment is visible before save.
+- d78dcb0: Stripe configurations can now be edited. Before: a configuration was read-only once created, so
+  fixing a typo in its name or rotating leaked Stripe keys meant deleting it and creating a new one,
+  which also lost every channel assignment. Now: clicking a configuration name opens its own page
+  where the name and keys can be changed and the configuration can be deleted, while its channels
+  stay assigned. Pasting a new restricted key is optional — leaving the field empty keeps the saved
+  one. Switching a configuration to another Stripe account or between sandbox and live re-creates
+  its Stripe webhook automatically, and rotating keys clears any credential problems the app
+  reported for that configuration.
+- d78dcb0: Assigning one channel to a Stripe configuration is quicker, and taking a channel from another
+  configuration is now spelled out. Before: the only way to connect a channel was to open a
+  configuration card and pick channels from a multiselect, and a channel silently disappeared from
+  whichever configuration held it before. Now: every channel in the "channels not assigned" list has
+  its own "Assign to…" select that names each configuration together with its Sandbox or Live mode, so
+  a single channel can be connected in one click. When a card's multiselect pulls channels away from
+  other configurations, the card lists which channels move and where they come from before saving, and
+  a move that swaps sandbox keys for live ones (or the other way round) asks for confirmation first,
+  since it decides whether that channel takes real payments.
+
+### Patch Changes
+
+- Updated dependencies [d78dcb0]
+- Updated dependencies [d78dcb0]
+- Updated dependencies [d78dcb0]
+  - @saleor/apps-ui-next@0.1.0
+  - @saleor/apps-shared@1.15.0
+  - @saleor/apps-ui@1.4.0
+  - @saleor/apps-trpc@4.0.5
+
 ## 2.6.10
 
 ### Patch Changes
