@@ -9,16 +9,17 @@ minimumReleaseAgeExclude:
   # Security fix for CVE-2026-33938
   - "handlebars@4.7.9"
   # Security fixes (https://vercel.com/changelog/next-js-may-2026-security-release)
-  - "next@15.5.18"
-  - "@next/env@15.5.18"
-  - "@next/swc-linux-arm64-gnu@15.5.18"
-  - "@next/swc-linux-arm64-musl@15.5.18"
-  - "@next/swc-linux-x64-musl@15.5.18"
-  - "@next/swc-linux-x64-gnu@15.5.18"
-  - "@next/swc-darwin-x64@15.5.18"
-  - "@next/swc-darwin-arm64@15.5.18"
-  - "@next/swc-win32-x64-msvc@15.5.18"
-  - "@next/swc-win32-arm64-msvc@15.5.18"
+  - "next@15.5.24"
+  - "@next/env@15.5.24"
+  - "@next/bundle-analyzer@15.5.24"
+  - "@next/swc-linux-arm64-gnu@15.5.24"
+  - "@next/swc-linux-arm64-musl@15.5.24"
+  - "@next/swc-linux-x64-musl@15.5.24"
+  - "@next/swc-linux-x64-gnu@15.5.24"
+  - "@next/swc-darwin-x64@15.5.24"
+  - "@next/swc-darwin-arm64@15.5.24"
+  - "@next/swc-win32-x64-msvc@15.5.24"
+  - "@next/swc-win32-arm64-msvc@15.5.24"
   # protobufjs 7.5.6 and 8.0.2 fix CVE-2026-41242, CVE-2026-44290,
   # CVE-2026-44291, CVE-2026-44292, CVE-2026-44293, CVE-2026-44294,
   # CVE-2026-44295, CVE-2026-45740
@@ -92,7 +93,7 @@ catalog:
   eslint: 9.23.0
   "@saleor/app-sdk": 1.11.0
   urql: 4.0.4
-  next: 15.5.18
+  next: 15.5.24
   react: 18.2.0
   react-dom: 18.2.0
   "@saleor/macaw-ui": 2.0.0
