@@ -1,5 +1,11 @@
 # saleor-app-avatax
 
+## 1.24.2
+
+### Patch Changes
+
+- a558369: Upgraded next.js to 15.5.24
+
 ## 1.24.1
 
 ### Patch Changes
