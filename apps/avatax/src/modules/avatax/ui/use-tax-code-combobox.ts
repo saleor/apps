@@ -18,9 +18,16 @@ const generateLabel = (taxCode: string, description: string) => `${taxCode} - ${
 export const useTaxCodeCombobox = ({
   taxClassId,
   initialValue,
+  onSaved,
 }: {
   taxClassId: string;
   initialValue: Option | null;
+  /**
+   * Called after a match is persisted. Opt-in rather than built in, because what
+   * should happen next depends on where the combobox is: the matcher page has no
+   * Dashboard entity to react to, the product popup does.
+   */
+  onSaved?: () => void;
 }): UseTaxCodeComboboxReturn => {
   const [filter, setFilter] = useState("");
   const [value, setValue] = useState<Option | null>(initialValue);
@@ -53,7 +60,10 @@ export const useTaxCodeCombobox = ({
 
   const { mutate: upsertTaxCode, isLoading: isUpsertingLoading } =
     trpcClient.avataxMatches.upsert.useMutation({
-      onSuccess: () => notifySuccess("Success", "Updated AvaTax tax code match"),
+      onSuccess: () => {
+        notifySuccess("Success", "Updated AvaTax tax code match");
+        onSaved?.();
+      },
       onError: (error) => notifyError("Error", error.message),
     });
 

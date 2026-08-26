@@ -5,14 +5,18 @@ import { useTaxCodeCombobox } from "./use-tax-code-combobox";
 export const TaxCodeCombobox = ({
   taxClassId,
   initialValue,
+  onSaved,
 }: {
   taxClassId: string;
   initialValue: Option | null;
+  /** Called once the new match is persisted. */
+  onSaved?: () => void;
 }) => {
   const { options, loading, value, onChange, onInputValueChange, errorMessage } =
     useTaxCodeCombobox({
       taxClassId,
       initialValue,
+      onSaved,
     });
 
   return (
