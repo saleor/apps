@@ -91,7 +91,7 @@
     "@graphql-codegen/typescript-operations": "catalog:",
     "@graphql-codegen/typescript-urql": "catalog:",
     "@graphql-typed-document-node/core": "catalog:",
-    "@next/bundle-analyzer": "15.2.4",
+    "@next/bundle-analyzer": "15.5.24",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@testing-library/dom": "10.4.0",
