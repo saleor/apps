@@ -159,10 +159,18 @@ export function productAndVariantToAlgolia({
   variant,
   channel,
   enabledKeys,
+  quantityAvailable,
 }: {
   variant: ProductVariantWebhookPayloadFragment;
   channel: string;
   enabledKeys: string[];
+  /**
+   * Channel-scoped quantity, fetched separately for webhooks. Falls back to the payload value,
+   * which is only correct when the source query was channel-scoped (bulk sync).
+   *
+   * @see createVariantsAvailabilityFetcher
+   */
+  quantityAvailable?: number | null;
 }) {
   const product = variant.product;
   const loggingContext = { productId: product.id, variantId: variant.id };
@@ -195,7 +203,13 @@ export function productAndVariantToAlgolia({
 
   const listing = variant.channelListings?.find((l) => l.channel.slug === channel);
 
-  const inStock = !!variant.quantityAvailable;
+  /**
+   * When inventory is not tracked, the variant can always be bought, and Saleor resolves
+   * quantityAvailable to the global checkout limit - which is null unless configured.
+   */
+  const inStock = variant.trackInventory
+    ? !!(quantityAvailable === undefined ? variant.quantityAvailable : quantityAvailable)
+    : true;
 
   const media = variant.product.media?.map((m) => ({ url: m.url, type: m.type })) || [];
 

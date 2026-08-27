@@ -22,6 +22,7 @@ import {
 } from "./algoliaUtils";
 import { categoryToAlgolia, categoryToAlgoliaIndexId } from "./categoryAlgoliaUtils";
 import { pageToAlgolia, pageToAlgoliaIndexId } from "./pageAlgoliaUtils";
+import { type FetchVariantsAvailability, type VariantsAvailability } from "./variants-availability";
 
 const algoliaRetryErrorShape = z.object({
   name: z.literal("RetryError"),
@@ -47,6 +48,12 @@ export interface AlgoliaSearchProviderOptions {
   channels?: Array<{ slug: string; currencyCode: string }>;
   enabledKeys: string[];
   pageEnabledKeys: string[];
+  /**
+   * Required to index `inStock` from webhooks - their payloads have no channel context, so
+   * `quantityAvailable` has to be fetched per channel. Not needed for bulk sync, which already
+   * queries per channel.
+   */
+  fetchVariantsAvailability?: FetchVariantsAvailability;
 }
 
 const logger = createLogger("AlgoliaSearchProvider");
@@ -59,6 +66,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
   #pageIndexName: string;
   #enabledKeys: string[];
   #pageEnabledKeys: string[];
+  #fetchVariantsAvailability: FetchVariantsAvailability | undefined;
 
   #traceSaveObjects = createTraceEffect({
     name: "Algolia saveObjects",
@@ -84,6 +92,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
     channels,
     enabledKeys,
     pageEnabledKeys,
+    fetchVariantsAvailability,
   }: AlgoliaSearchProviderOptions) {
     this.#algolia = Algoliasearch(appId, apiKey); // cspell:disable-line
     this.#indexNamePrefix = indexNamePrefix;
@@ -94,6 +103,22 @@ export class AlgoliaSearchProvider implements SearchProvider {
     this.#pageIndexName = pageToAlgoliaIndexId(this.#indexNamePrefix);
     this.#enabledKeys = enabledKeys;
     this.#pageEnabledKeys = pageEnabledKeys;
+    this.#fetchVariantsAvailability = fetchVariantsAvailability;
+  }
+
+  async #getVariantsAvailability(
+    variants: ProductVariantWebhookPayloadFragment[],
+  ): Promise<VariantsAvailability | undefined> {
+    if (!this.#fetchVariantsAvailability || !this.#enabledKeys.includes("inStock")) {
+      return undefined;
+    }
+
+    return this.#fetchVariantsAvailability({
+      variantIds: variants.map((variant) => variant.id),
+      channelSlugs: variants.flatMap(
+        (variant) => variant.channelListings?.map((listing) => listing.channel.slug) ?? [],
+      ),
+    });
   }
 
   private async saveGroupedByIndex(groupedByIndex: GroupedByIndex) {
@@ -212,7 +237,12 @@ export class AlgoliaSearchProvider implements SearchProvider {
 
       return;
     }
-    await Promise.all(product.variants.map((variant) => this.updateProductVariant(variant)));
+
+    const availability = await this.#getVariantsAvailability(product.variants);
+
+    await Promise.all(
+      product.variants.map((variant) => this.#saveProductVariant(variant, availability)),
+    );
   }
 
   async deleteProduct(product: Pick<ProductWebhookPayloadFragment, "id">) {
@@ -243,10 +273,21 @@ export class AlgoliaSearchProvider implements SearchProvider {
   async updateProductVariant(productVariant: ProductVariantWebhookPayloadFragment) {
     logger.debug(`updateProductVariant called`);
 
+    await this.#saveProductVariant(
+      productVariant,
+      await this.#getVariantsAvailability([productVariant]),
+    );
+  }
+
+  async #saveProductVariant(
+    productVariant: ProductVariantWebhookPayloadFragment,
+    availability: VariantsAvailability | undefined,
+  ) {
     const groupedByIndexToSave = groupVariantByIndexName(productVariant, {
       visibleInListings: true,
       indexNamePrefix: this.#indexNamePrefix,
       enabledKeys: this.#enabledKeys,
+      availability,
     });
 
     if (groupedByIndexToSave && !!Object.keys(groupedByIndexToSave).length) {
@@ -382,10 +423,12 @@ const groupVariantByIndexName = (
     visibleInListings,
     indexNamePrefix,
     enabledKeys,
+    availability,
   }: {
     visibleInListings: true | false | null;
     indexNamePrefix: string | undefined;
     enabledKeys: string[];
+    availability?: VariantsAvailability | undefined;
   },
 ) => {
   logger.debug("Grouping variants per index name");
@@ -421,6 +464,7 @@ const groupVariantByIndexName = (
         variant: productVariant,
         channel: channelListing.channel.slug,
         enabledKeys,
+        quantityAvailable: availability?.[channelListing.channel.slug]?.[productVariant.id],
       });
 
       return {

@@ -33,6 +33,7 @@ fragment ProductVariantData on ProductVariant {
     }
   }
   quantityAvailable
+  trackInventory
   channelListings {
     id
     channel {
