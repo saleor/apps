@@ -10,13 +10,14 @@ import {
   SettingsPageContent,
   SettingsSection,
 } from "@saleor/apps-ui-next";
-import { Box, Text } from "@saleor/macaw-ui";
+import { Box } from "@saleor/macaw-ui";
 import { type NextPage } from "next";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 import { newStripeConfigInputSchema } from "@/modules/app-config/trpc-handlers/new-stripe-config-input-schema";
 import { trpcClient } from "@/modules/trpc/trpc-client";
+import { MissingAppAccess } from "@/modules/ui/missing-app-access";
 import { inferStripeEnvFromKeys } from "@/modules/ui/stripe-configs/infer-stripe-env-from-keys";
 import {
   StripeConfigFields,
@@ -30,7 +31,7 @@ const FORM_ID = "new_stripe_config_form";
 const CONFIG_LIST_PATH = "/config";
 
 const NewConfiguration: NextPage = () => {
-  const { haveAccessToApp } = useHasAppAccess();
+  const { haveAccessToApp, isReady } = useHasAppAccess();
   const { notifyError, notifySuccess } = useDashboardNotification();
 
   const {
@@ -78,12 +79,12 @@ const NewConfiguration: NextPage = () => {
     },
   });
 
-  if (!haveAccessToApp) {
-    return (
-      <Box padding={6}>
-        <Text>You do not have permission to access this page.</Text>
-      </Box>
-    );
+  /*
+   * The empty form is safe to show while AppBridge handshakes - Save stays disabled until the
+   * user types. Only claim missing access once permissions are actually known.
+   */
+  if (isReady && !haveAccessToApp) {
+    return <MissingAppAccess />;
   }
 
   return (

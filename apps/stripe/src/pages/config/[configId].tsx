@@ -5,12 +5,13 @@ import {
   SettingsPageContent,
   SettingsSection,
 } from "@saleor/apps-ui-next";
-import { Box, Skeleton, Text } from "@saleor/macaw-ui";
+import { Skeleton, Text } from "@saleor/macaw-ui";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
 import { type ReactNode } from "react";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";
+import { MissingAppAccess } from "@/modules/ui/missing-app-access";
 import { EditStripeConfigView } from "@/modules/ui/stripe-configs/edit-stripe-config-view";
 import { useHasAppAccess } from "@/modules/ui/use-has-app-access";
 
@@ -27,7 +28,7 @@ const Placeholder = ({ children }: { children: ReactNode }) => (
 );
 
 const EditConfiguration: NextPage = () => {
-  const { haveAccessToApp } = useHasAppAccess();
+  const { haveAccessToApp, isReady } = useHasAppAccess();
   const router = useRouter();
   const configId = typeof router.query.configId === "string" ? router.query.configId : null;
 
@@ -38,12 +39,8 @@ const EditConfiguration: NextPage = () => {
 
   const config = configsQuery.data?.find((item) => item.id === configId);
 
-  if (!haveAccessToApp) {
-    return (
-      <Box padding={6}>
-        <Text>You do not have permission to access this page.</Text>
-      </Box>
-    );
+  if (isReady && !haveAccessToApp) {
+    return <MissingAppAccess />;
   }
 
   return (
@@ -53,7 +50,7 @@ const EditConfiguration: NextPage = () => {
         href={CONFIG_LIST_PATH}
         hrefTitle="Configuration"
       />
-      {configsQuery.isLoading || !configId ? (
+      {!isReady || configsQuery.isLoading || !configId ? (
         <Placeholder>
           <Skeleton />
         </Placeholder>

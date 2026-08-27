@@ -5,6 +5,9 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
 
+import { ChannelConfigSectionSkeleton } from "@/modules/ui/stripe-configs/channel-config-section";
+import { ConfigPageShell } from "@/modules/ui/stripe-configs/config-page-shell";
+
 const IndexPage: NextPage = () => {
   const { appBridgeState } = useAppBridge();
   const isMounted = useIsMounted();
@@ -17,7 +20,11 @@ const IndexPage: NextPage = () => {
   }, [isMounted, appBridgeState?.ready, replace]);
 
   if (isInIframe()) {
-    return <span>Loading...</span>;
+    return (
+      <ConfigPageShell>
+        <ChannelConfigSectionSkeleton />
+      </ConfigPageShell>
+    );
   }
 
   return (

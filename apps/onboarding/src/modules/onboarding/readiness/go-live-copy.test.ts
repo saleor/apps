@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { SMTP_APP_IDENTIFIER } from "./app-identifiers";
 import {
   getGoLiveRows,
   GO_LIVE_ROWS,
@@ -7,10 +8,11 @@ import {
   PAPER_PRODUCTION_CHECKLIST_URL,
   PAPER_ROWS,
   PAPER_VERCEL_DEPLOY_URL,
-  resolveSmtpAppHref,
+  resolveSmtpAppCta,
   SMTP_DOCS_URL,
   SMTP_MANIFEST_URL,
 } from "./go-live-copy";
+import { INSTALLED_APPS_PATH } from "./redirect-target";
 
 describe("go-live-copy", () => {
   it("keeps go-live and Paper as guidance-only rows with CTAs", () => {
@@ -25,25 +27,27 @@ describe("go-live-copy", () => {
     expect(PAPER_ROWS.some((row) => row.id === "paper-api")).toBe(false);
   });
 
-  it("opens the installed SMTP app when present", () => {
-    const appId = "QXBwOjQy";
-    const rows = getGoLiveRows(appId);
+  it("opens the installed SMTP app via RedirectToApp when present", () => {
+    const rows = getGoLiveRows(true);
     const email = rows.find((row) => row.id === "customer-email");
 
-    expect(email?.cta).toStrictEqual({
-      kind: "dashboard",
-      href: `/extensions/app/${encodeURIComponent(appId)}`,
+    const expected = {
+      kind: "app",
+      appIdentifier: SMTP_APP_IDENTIFIER,
+      fallbackTo: INSTALLED_APPS_PATH,
       permission: "MANAGE_APPS",
-    });
-    expect(resolveSmtpAppHref(appId)).toBe(`/extensions/app/${encodeURIComponent(appId)}`);
+    };
+
+    expect(email?.cta).toStrictEqual(expected);
+    expect(resolveSmtpAppCta(true)).toStrictEqual(expected);
   });
 
   it("falls back to SMTP install when the app is missing", () => {
-    const email = getGoLiveRows(null).find((row) => row.id === "customer-email");
+    const email = getGoLiveRows(false).find((row) => row.id === "customer-email");
 
     expect(email?.cta).toStrictEqual({
       kind: "dashboard",
-      href: `/extensions/app/install?manifestUrl=${encodeURIComponent(SMTP_MANIFEST_URL)}`,
+      to: `/extensions/app/install?manifestUrl=${encodeURIComponent(SMTP_MANIFEST_URL)}`,
       permission: "MANAGE_APPS",
     });
     expect(SMTP_DOCS_URL).toMatch(/smtp/i);

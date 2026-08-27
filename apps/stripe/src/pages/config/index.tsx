@@ -1,17 +1,14 @@
-import { TextLink } from "@saleor/apps-ui";
-import {
-  AppPageHeader,
-  DetailPageLayout,
-  ParkedSetupChecklist,
-  SettingsPageContent,
-} from "@saleor/apps-ui-next";
-import { Box, Text } from "@saleor/macaw-ui";
+import { ParkedSetupChecklist } from "@saleor/apps-ui-next";
 import { type NextPage } from "next";
 import { useMemo } from "react";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";
-import { ChannelConfigSection } from "@/modules/ui/stripe-configs/channel-config-section";
-import { StripeModeLegend } from "@/modules/ui/stripe-setup/stripe-mode-legend";
+import { MissingAppAccess } from "@/modules/ui/missing-app-access";
+import {
+  ChannelConfigSection,
+  ChannelConfigSectionSkeleton,
+} from "@/modules/ui/stripe-configs/channel-config-section";
+import { ConfigPageShell } from "@/modules/ui/stripe-configs/config-page-shell";
 import { StripeSetupCard } from "@/modules/ui/stripe-setup/stripe-setup-card";
 import {
   buildStripeSetupTasks,
@@ -21,7 +18,7 @@ import { useStripeSetupCardDismiss } from "@/modules/ui/stripe-setup/use-stripe-
 import { useHasAppAccess } from "@/modules/ui/use-has-app-access";
 
 const ConfigPage: NextPage = () => {
-  const { haveAccessToApp } = useHasAppAccess();
+  const { haveAccessToApp, isReady } = useHasAppAccess();
   const { dismissed, dismiss, restore } = useStripeSetupCardDismiss();
   const configsQuery = trpcClient.appConfig.getStripeConfigsList.useQuery();
   const mappingQuery = trpcClient.appConfig.channelsConfigsMapping.useQuery();
@@ -39,12 +36,16 @@ const ConfigPage: NextPage = () => {
     );
   }, [configsQuery.data, mappingQuery.data]);
 
-  if (!haveAccessToApp) {
+  if (!isReady) {
     return (
-      <Box padding={6}>
-        <Text>You do not have permission to access this page.</Text>
-      </Box>
+      <ConfigPageShell>
+        <ChannelConfigSectionSkeleton />
+      </ConfigPageShell>
     );
+  }
+
+  if (!haveAccessToApp) {
+    return <MissingAppAccess />;
   }
 
   const dataReady = configsQuery.data !== undefined && mappingQuery.data !== undefined;
@@ -52,49 +53,25 @@ const ConfigPage: NextPage = () => {
   const showParked = dismissed && dataReady && parkedSummary !== null;
 
   return (
-    <DetailPageLayout data-test-id="stripe-config-page">
-      <AppPageHeader
-        title="Configuration"
-        actions={
-          <TextLink
-            href="https://docs.saleor.io/developer/app-store/apps/stripe/overview"
-            newTab
-            size={2}
-          >
-            Documentation
-          </TextLink>
-        }
-      />
-      <DetailPageLayout.Content>
-        <SettingsPageContent
-          description={
-            <>
-              Create Stripe configurations, then assign which Saleor channels use each one. Checkout
-              uses the configuration mapped to that channel.
-            </>
-          }
-          aside={<StripeModeLegend />}
-        >
-          {showSetup ? (
-            <StripeSetupCard
-              configs={configsQuery.data}
-              mapping={mappingQuery.data}
-              onDismiss={dismiss}
-            />
-          ) : null}
-          {showParked && parkedSummary ? (
-            <ParkedSetupChecklist
-              title="Finish Stripe setup"
-              progress={parkedSummary.progress}
-              nextUp={parkedSummary.nextUp}
-              onReveal={restore}
-              data-test-id="stripe-parked-setup-checklist"
-            />
-          ) : null}
-          <ChannelConfigSection />
-        </SettingsPageContent>
-      </DetailPageLayout.Content>
-    </DetailPageLayout>
+    <ConfigPageShell>
+      {showSetup ? (
+        <StripeSetupCard
+          configs={configsQuery.data}
+          mapping={mappingQuery.data}
+          onDismiss={dismiss}
+        />
+      ) : null}
+      {showParked && parkedSummary ? (
+        <ParkedSetupChecklist
+          title="Finish Stripe setup"
+          progress={parkedSummary.progress}
+          nextUp={parkedSummary.nextUp}
+          onReveal={restore}
+          data-test-id="stripe-parked-setup-checklist"
+        />
+      ) : null}
+      <ChannelConfigSection />
+    </ConfigPageShell>
   );
 };
 

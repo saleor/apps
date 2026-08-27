@@ -1,4 +1,6 @@
+import { STRIPE_APP_IDENTIFIER } from "./app-identifiers";
 import { type CommerceTaskId, type StoreReadiness } from "./get-store-readiness";
+import { type AppRedirectTarget, INSTALLED_APPS_PATH } from "./redirect-target";
 
 export type TaskCopy = {
   title: string;
@@ -149,24 +151,28 @@ export const getTaskCopy = (id: CommerceTaskId, readiness: StoreReadiness): Task
   }
 };
 
-export const getTaskHref = (id: CommerceTaskId, readiness: StoreReadiness): string => {
+export const getTaskCta = (id: CommerceTaskId, readiness: StoreReadiness): AppRedirectTarget => {
   switch (id) {
     case "sales-channel":
       if (readiness.channelId) {
-        return `/channels/${encodeURIComponent(readiness.channelId)}`;
+        return { kind: "dashboard", to: `/channels/${encodeURIComponent(readiness.channelId)}` };
       }
 
-      return "/channels/?action=create";
+      return { kind: "dashboard", to: "/channels/?action=create" };
     case "first-product":
-      return "/products/add";
+      return { kind: "dashboard", to: "/products/add" };
     case "payments":
-      if (readiness.stripeAppId) {
-        return `/extensions/app/${encodeURIComponent(readiness.stripeAppId)}`;
+      if (readiness.hasStripeApp) {
+        return {
+          kind: "app",
+          appIdentifier: STRIPE_APP_IDENTIFIER,
+          fallbackTo: INSTALLED_APPS_PATH,
+        };
       }
 
-      return "/extensions/installed";
+      return { kind: "dashboard", to: INSTALLED_APPS_PATH };
     case "test-order":
-      return "/orders/";
+      return { kind: "dashboard", to: "/orders/" };
   }
 };
 

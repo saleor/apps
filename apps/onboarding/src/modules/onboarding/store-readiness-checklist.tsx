@@ -50,7 +50,8 @@ import {
   PAPER_SECTION,
 } from "./readiness/go-live-copy";
 import { getIframeSaleorApiUrl, writeHomeSnapshot } from "./readiness/home-snapshot";
-import { getTaskCopy, getTaskHref, getTaskPermission } from "./readiness/task-copy";
+import { type CtaTarget } from "./readiness/redirect-target";
+import { getTaskCopy, getTaskCta, getTaskPermission } from "./readiness/task-copy";
 import styles from "./store-readiness-checklist.module.css";
 import { StoreReadinessSkeleton } from "./store-readiness-skeleton";
 
@@ -112,23 +113,22 @@ const StatusIcon = ({ status }: { status: TaskStatus }) => {
 
 const CtaButton = ({
   label,
-  href,
+  target,
   permission,
   variant = "primary",
   testId = "store-readiness-cta",
-  external = false,
 }: {
   label: string;
-  href: string;
+  target: CtaTarget;
   permission?: string;
   variant?: "primary" | "secondary";
   testId?: string;
-  external?: boolean;
 }) => {
   const { appBridgeState } = useAppBridge();
   const redirect = useAppRedirect();
   const hasPermission =
     !permission || Boolean(appBridgeState?.user?.permissions.includes(permission));
+  const external = target.kind === "external";
 
   if (!hasPermission) {
     return (
@@ -142,10 +142,10 @@ const CtaButton = ({
     <Button
       variant={variant}
       onClick={() => {
-        if (external) {
-          window.open(href, "_blank", "noopener,noreferrer");
+        if (target.kind === "external") {
+          window.open(target.href, "_blank", "noopener,noreferrer");
         } else {
-          redirect(href);
+          redirect(target);
         }
       }}
       data-test-id={testId}
@@ -249,11 +249,10 @@ const GuidanceRows = ({
               >
                 <CtaButton
                   label={row.ctaLabel}
-                  href={row.cta.href}
-                  permission={row.cta.kind === "dashboard" ? row.cta.permission : undefined}
+                  target={row.cta}
+                  permission={row.cta.permission}
                   variant="secondary"
                   testId="store-readiness-guidance-cta"
-                  external={row.cta.kind === "external"}
                 />
               </Box>
             ) : null}
@@ -307,7 +306,7 @@ export const StoreReadinessChecklistBody = ({
     [tasks, activeTaskId],
   );
   const nextUpCopy = nextUpTask ? getTaskCopy(nextUpTask.id, readiness) : null;
-  const goLiveRows = useMemo(() => getGoLiveRows(readiness.smtpAppId), [readiness.smtpAppId]);
+  const goLiveRows = useMemo(() => getGoLiveRows(readiness.hasSmtpApp), [readiness.hasSmtpApp]);
 
   return (
     <div className={styles.layout} data-test-id="store-readiness-checklist" aria-live="polite">
@@ -412,7 +411,7 @@ export const StoreReadinessChecklistBody = ({
                     >
                       <CtaButton
                         label={copy.ctaLabel}
-                        href={getTaskHref(task.id, readiness)}
+                        target={getTaskCta(task.id, readiness)}
                         permission={getTaskPermission(task.id)}
                       />
                     </Box>

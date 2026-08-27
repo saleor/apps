@@ -1,9 +1,6 @@
 import { type StoreReadinessQuery } from "@/generated/graphql";
 
-import { SMTP_APP_IDENTIFIER } from "./go-live-copy";
-
-/** Canonical Stripe payment app identifier from the app manifest. */
-export const STRIPE_APP_IDENTIFIER = "saleor.app.payment.stripe";
+import { SMTP_APP_IDENTIFIER, STRIPE_APP_IDENTIFIER } from "./app-identifiers";
 
 export type CommerceTaskId = "sales-channel" | "first-product" | "payments" | "test-order";
 
@@ -20,10 +17,10 @@ export type StoreReadiness = {
   hasProduct: boolean;
   hasPaymentApp: boolean;
   hasOrder: boolean;
-  /** Installed SMTP app GraphQL id, when `saleor.app.smtp` is active. */
-  smtpAppId: string | null;
-  /** Installed Stripe payment app GraphQL id, when `saleor.app.payment.stripe` is active. */
-  stripeAppId: string | null;
+  /** True when the SMTP app (`saleor.app.smtp`) is installed and active. */
+  hasSmtpApp: boolean;
+  /** True when the Stripe payment app (`saleor.app.payment.stripe`) is installed and active. */
+  hasStripeApp: boolean;
   /** False when the corresponding field was missing (permission / error). */
   channelsKnown: boolean;
   shippingKnown: boolean;
@@ -70,10 +67,8 @@ export const getStoreReadiness = (data: StoreReadinessQuery | undefined): StoreR
 
   const appEdges = data?.apps?.edges ?? [];
   const hasPaymentApp = appEdges.some((edge) => isPaymentApp(edge.node));
-  const smtpAppId =
-    appEdges.find((edge) => edge.node.identifier === SMTP_APP_IDENTIFIER)?.node.id ?? null;
-  const stripeAppId =
-    appEdges.find((edge) => edge.node.identifier === STRIPE_APP_IDENTIFIER)?.node.id ?? null;
+  const hasIdentifier = (identifier: string) =>
+    appEdges.some((edge) => edge.node.identifier === identifier);
 
   return {
     channelId: primaryChannel?.id ?? null,
@@ -85,8 +80,8 @@ export const getStoreReadiness = (data: StoreReadinessQuery | undefined): StoreR
     hasProduct: (data?.products?.totalCount ?? 0) > 0,
     hasPaymentApp,
     hasOrder: (data?.orders?.totalCount ?? 0) > 0,
-    smtpAppId,
-    stripeAppId,
+    hasSmtpApp: hasIdentifier(SMTP_APP_IDENTIFIER),
+    hasStripeApp: hasIdentifier(STRIPE_APP_IDENTIFIER),
     channelsKnown,
     shippingKnown,
     productsKnown,
