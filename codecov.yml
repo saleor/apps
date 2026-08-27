@@ -30,6 +30,8 @@ coverage:
         flags: [np-atobarai]
       app-payment-dummy:
         flags: [dummy-payment-app]
+      app-extensions-explorer:
+        flags: [extensions-explorer]
       packages-app-problems:
         flags: [app-problems]
       packages-domain:
@@ -93,6 +95,9 @@ flags:
   dummy-payment-app:
     paths:
       - apps/dummy-payment-app/
+  extensions-explorer:
+    paths:
+      - apps/extensions-explorer/
   app-problems:
     paths:
       - packages/app-problems/
