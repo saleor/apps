@@ -1,0 +1,11 @@
+query FetchDeliveryMethodForCheckout($checkoutId: ID!) {
+  checkout(id: $checkoutId) {
+    id
+    deliveryMethod {
+      ... on ShippingMethod {
+        id
+        name
+      }
+    }
+  }
+}

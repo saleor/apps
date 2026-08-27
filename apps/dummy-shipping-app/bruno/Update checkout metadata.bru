@@ -1,0 +1,41 @@
+meta {
+  name: Update checkout metadata
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{API_URL}}
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  mutation UpdateMetadata($id: ID!, $input: [MetadataInput!]!) {
+    updateMetadata(id: $id, input: $input) {
+      errors {
+        field
+        message
+      }
+      item {
+        ... on Checkout {
+          id
+        }
+      }
+    }
+  }
+  
+  
+}
+
+body:graphql:vars {
+  {
+    "id": "{{checkoutId}}",
+    "input": [
+      {
+        "key": "has_external_shipping",
+        "value": "true"
+      }
+    ]
+  }
+}
