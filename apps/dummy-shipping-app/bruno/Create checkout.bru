@@ -1,0 +1,77 @@
+meta {
+  name: Create checkout
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{API_URL}}
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  mutation CheckoutCreate($input: CheckoutCreateInput!) {
+    checkoutCreate(
+      input: $input
+    ) {
+      checkout {
+        id
+        shippingMethods {
+          id
+          name
+          active
+          price {
+            amount
+            currency
+          }
+        }
+      }
+      errors {
+        field
+        message
+        code
+      }
+    }
+  }
+}
+
+body:graphql:vars {
+  {
+    "input": {
+      "email": "test@test.com",
+      "channel": "{{channelSlug}}",
+      "shippingAddress": {
+        "firstName": "Jonathan",
+        "lastName": "Doe",
+        "companyName": "Saleor Commerce",
+        "streetAddress1": "Tęczowa 7",
+        "city": "Wrocław",
+        "postalCode": "53-601",
+        "country": "PL",
+        "phone": "123123123"
+      },
+      "billingAddress": {
+        "firstName": "Jonathan",
+        "lastName": "Doe",
+        "companyName": "Saleor Commerce",
+        "streetAddress1": "Tęczowa 7",
+        "city": "Wrocław",
+        "postalCode": "53-601",
+        "country": "PL",
+        "phone": "123123123"
+      },
+      "lines": [
+        {
+          "variantId": "{{variantId}}",
+          "quantity": 1
+        }
+      ]
+    }
+  }
+}
+
+vars:post-response {
+  checkoutId: res.body.data.checkoutCreate.checkout.id
+  selectedShippingMethodId: res.body.data.checkoutCreate.checkout.shippingMethods[0].id
+}

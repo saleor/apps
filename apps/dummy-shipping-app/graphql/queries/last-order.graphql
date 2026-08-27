@@ -1,0 +1,23 @@
+query LastOrder {
+  orders(first: 1) {
+    edges {
+      node {
+        id
+        number
+        deliveryMethod {
+          ... on ShippingMethod {
+            id
+            name
+          }
+        }
+        shippingAddress {
+          streetAddress1
+          postalCode
+          country {
+            country
+          }
+        }
+      }
+    }
+  }
+}

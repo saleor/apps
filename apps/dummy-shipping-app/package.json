@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "saleor-app-shipping-dummy",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "next build",
+    "check-types": "tsc",
+    "dev": "NODE_OPTIONS='--inspect' next dev",
+    "generate": "graphql-codegen",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
+    "@saleor/apps-shared": "workspace:*",
+    "@saleor/errors": "workspace:*",
+    "@saleor/macaw-ui": "catalog:",
+    "@t3-oss/env-nextjs": "catalog:",
+    "graphql": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "urql": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "catalog:",
+    "@graphql-codegen/typed-document-node": "catalog:",
+    "@graphql-codegen/typescript": "catalog:",
+    "@graphql-codegen/typescript-operations": "catalog:",
+    "@graphql-typed-document-node/core": "catalog:",
+    "@saleor/eslint-config-apps": "workspace:*",
+    "@saleor/typescript-config-apps": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "18.2.5",
+    "@types/react-dom": "18.2.5",
+    "eslint": "catalog:",
+    "eslint-plugin-n": "catalog:",
+    "graphql-config": "5.0.3",
+    "typescript": "catalog:"
+  }
+}
