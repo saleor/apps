@@ -131,6 +131,7 @@ directory below before searching the whole repo.
 | `apps/avatax`            | `saleor-app-avatax`              | AvaTax, Avalara, tax, tax calculation, tax codes, address validation, `CALCULATE_TAXES`, ORDER_CONFIRMED taxes, entity use code   |
 | `apps/cms`               | `saleor-app-cms`                 | CMS, Contentful, DatoCMS, Strapi, Builder.io, Payload CMS, product sync to CMS, bulk sync, field mapping                          |
 | `apps/dummy-payment-app` | `saleor-app-payment-dummy`       | dummy payment, test payment gateway, transaction flow sandbox                                                                    |
+| `apps/extensions-explorer` | `saleor-app-extensions-explorer` | extensions explorer, Dashboard extensions playground, manifest builder, extension mounts/targets, placeholder extensions |
 | `apps/klaviyo`           | `saleor-app-klaviyo`             | Klaviyo, marketing events, customer events                                                                                       |
 | `apps/np-atobarai`       | `saleor-app-payment-np-atobarai` | NP Atobarai, Net Protections, Japan, deferred payment, zip code lookup, 後払い                                                     |
 | `apps/onboarding`        | `saleor-app-onboarding`          | onboarding, welcome widget, Dashboard home page widget                                                                           |

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "saleor-app-extensions-explorer",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "next build",
+    "check-types": "tsc",
+    "dev": "NODE_OPTIONS='--inspect' next dev",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "start": "next start",
+    "test": "vitest",
+    "test:ci": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
+    "@saleor/apps-shared": "workspace:*",
+    "@saleor/macaw-ui": "catalog:",
+    "@t3-oss/env-nextjs": "catalog:",
+    "lucide-react": "catalog:",
+    "next": "catalog:",
+    "prismjs": "1.30.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-simple-code-editor": "0.14.1",
+    "zod": "catalog:",
+    "zod-validation-error": "catalog:"
+  },
+  "devDependencies": {
+    "@saleor/eslint-config-apps": "workspace:*",
+    "@saleor/typescript-config-apps": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/prismjs": "1.26.6",
+    "@types/react": "18.2.5",
+    "@types/react-dom": "18.2.5",
+    "@vitejs/plugin-react": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "eslint": "catalog:",
+    "eslint-plugin-n": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-tsconfig-paths": "catalog:",
+    "vitest": "catalog:"
+  }
+}

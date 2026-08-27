@@ -43,6 +43,7 @@ export default {
     "zipcode",
     "tseslint",
     "contentful",
+    "configurator",
     "corepack",
     "claude",
     "datocms",

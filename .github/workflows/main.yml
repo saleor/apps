@@ -102,6 +102,8 @@ jobs:
             path: apps/np-atobarai
           - name: dummy-payment-app
             path: apps/dummy-payment-app
+          - name: extensions-explorer
+            path: apps/extensions-explorer
           - name: app-problems
             path: packages/app-problems
           - name: domain
