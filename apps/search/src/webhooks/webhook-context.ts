@@ -3,6 +3,7 @@ import { type AuthData } from "@saleor/app-sdk/APL";
 import { ChannelsDocument } from "../../generated/graphql";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { getAlgoliaConfiguration } from "../lib/algolia/getAlgoliaConfiguration";
+import { createVariantsAvailabilityFetcher } from "../lib/algolia/variants-availability";
 import { AlgoliaPageFieldsKeys } from "../lib/algolia-fields";
 import { createInstrumentedGraphqlClient } from "../lib/create-instrumented-graphql-client";
 import { createTraceEffect } from "../lib/trace-effect";
@@ -50,6 +51,7 @@ export const createWebhookContext = async ({ authData }: { authData: AuthData })
     channels,
     enabledKeys: settings.fieldsMapping.enabledAlgoliaFields,
     pageEnabledKeys: settings.pageFieldsMapping?.enabledAlgoliaFields ?? [...AlgoliaPageFieldsKeys],
+    fetchVariantsAvailability: createVariantsAvailabilityFetcher(apiClient),
   });
 
   return {

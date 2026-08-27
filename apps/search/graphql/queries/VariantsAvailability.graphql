@@ -1,0 +1,10 @@
+query VariantsAvailability($ids: [ID!], $channel: String!, $first: Int!) {
+  productVariants(ids: $ids, channel: $channel, first: $first) {
+    edges {
+      node {
+        id
+        quantityAvailable
+      }
+    }
+  }
+}

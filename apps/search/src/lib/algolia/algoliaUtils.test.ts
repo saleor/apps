@@ -58,6 +58,7 @@ describe("algoliaUtils", function () {
         enabledKeys: ["attributes"],
         variant: {
           id: "id",
+          trackInventory: true,
           attributes: [
             {
               attribute: {
@@ -145,6 +146,7 @@ describe("algoliaUtils", function () {
         enabledKeys: ["attributes"],
         variant: {
           id: "id",
+          trackInventory: true,
           attributes: [
             {
               attribute: {
@@ -190,6 +192,7 @@ describe("algoliaUtils", function () {
         enabledKeys: ["attributes"],
         variant: {
           id: "id",
+          trackInventory: true,
           attributes: [
             {
               attribute: { name: "width" },
@@ -237,6 +240,7 @@ describe("algoliaUtils", function () {
         enabledKeys: ["attributes"],
         variant: {
           id: "id",
+          trackInventory: true,
           attributes: [
             {
               attribute: { name: "width" },
@@ -284,6 +288,7 @@ describe("algoliaUtils", function () {
         enabledKeys: ["attributes"],
         variant: {
           id: "id",
+          trackInventory: true,
           attributes: [
             {
               attribute: { name: "width" },
@@ -333,6 +338,7 @@ describe("algoliaUtils", function () {
         enabledKeys: [],
         variant: {
           id: "id",
+          trackInventory: true,
           attributes: [],
           name: "product name",
           metadata: [],
@@ -365,6 +371,7 @@ describe("algoliaUtils", function () {
         enabledKeys: [],
         variant: {
           id: "id",
+          trackInventory: true,
           attributes: [],
           name: "product name",
           metadata: [],
@@ -397,6 +404,7 @@ describe("algoliaUtils", function () {
         enabledKeys: ["attributes"],
         variant: {
           id: "id",
+          trackInventory: true,
           attributes: [
             {
               attribute: {
@@ -455,6 +463,7 @@ describe("algoliaUtils", function () {
         enabledKeys: ["otherVariants"],
         variant: {
           id: "variant-1",
+          trackInventory: true,
           attributes: [],
           name: "Variant 1",
           metadata: [],
@@ -550,6 +559,78 @@ describe("algoliaUtils", function () {
       expect(mappedEntity.otherVariants).not.toContain("variant-1");
       expect(mappedEntity.otherVariants).not.toContain("variant-3");
       expect(mappedEntity.otherVariants).not.toContain("variant-4");
+    });
+    describe("inStock", () => {
+      const variant = (
+        overrides: Partial<Parameters<typeof productAndVariantToAlgolia>[0]["variant"]>,
+      ) =>
+        ({
+          id: "variant-1",
+          trackInventory: true,
+          attributes: [],
+          name: "Variant 1",
+          metadata: [],
+          product: {
+            __typename: undefined,
+            id: "product-1",
+            name: "Product 1",
+            description: undefined,
+            slug: "product-1",
+            productType: { id: "pt-1", name: "Default", slug: "default" },
+            variants: undefined,
+            category: undefined,
+            thumbnail: undefined,
+            media: undefined,
+            attributes: [],
+            channelListings: undefined,
+            collections: undefined,
+            metadata: [],
+          },
+          ...overrides,
+        }) satisfies Parameters<typeof productAndVariantToAlgolia>[0]["variant"];
+
+      it("Prefers channel-scoped quantityAvailable over the (channel-less) webhook payload value", () => {
+        const mappedEntity = productAndVariantToAlgolia({
+          channel: "test",
+          enabledKeys: ["inStock"],
+          variant: variant({ quantityAvailable: 0 }),
+          quantityAvailable: 5,
+        });
+
+        expect(mappedEntity.inStock).toBe(true);
+      });
+
+      it("Is false when the channel-scoped quantity is 0, even if payload says otherwise", () => {
+        const mappedEntity = productAndVariantToAlgolia({
+          channel: "test",
+          enabledKeys: ["inStock"],
+          variant: variant({ quantityAvailable: 10 }),
+          quantityAvailable: 0,
+        });
+
+        expect(mappedEntity.inStock).toBe(false);
+      });
+
+      it("Falls back to the payload value when no channel-scoped quantity is given (bulk sync)", () => {
+        const mappedEntity = productAndVariantToAlgolia({
+          channel: "test",
+          enabledKeys: ["inStock"],
+          variant: variant({ quantityAvailable: 3 }),
+        });
+
+        expect(mappedEntity.inStock).toBe(true);
+      });
+
+      it("Is true when inventory is not tracked, regardless of quantity", () => {
+        const mappedEntity = productAndVariantToAlgolia({
+          channel: "test",
+          enabledKeys: ["inStock"],
+          variant: variant({ trackInventory: false, quantityAvailable: null }),
+          quantityAvailable: null,
+        });
+
+        expect(mappedEntity.inStock).toBe(true);
+      });
     });
   });
 });
