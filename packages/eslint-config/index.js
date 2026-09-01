@@ -93,6 +93,7 @@ export const config = [
     rules: {
       ...nextPlugin.configs.recommended.rules,
       ...tseslint.configs.eslintRecommended.rules,
+      complexity: "warn",
       "max-params": "off",
       "@typescript-eslint/max-params": ["error", { max: 3 }],
       "turbo/no-undeclared-env-vars": "error",
