@@ -6,9 +6,9 @@ import { type SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
-import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 
 import { saleorApp } from "../../../saleor-app";
+import { createSaleorGraphqlClient } from "../../lib/graphql-client";
 import { createSettingsManager } from "../../lib/metadata";
 import { createLogger } from "../../logger";
 import { loggerContext } from "../../logger-context";
@@ -59,7 +59,7 @@ const handler: NextJsProtectedApiHandler = async (request, res, ctx) => {
 
   logger.info("Configuration handler called");
 
-  const client = createGraphQLClient({
+  const client = createSaleorGraphqlClient({
     saleorApiUrl,
     token,
   });

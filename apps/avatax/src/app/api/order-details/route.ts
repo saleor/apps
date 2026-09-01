@@ -1,10 +1,10 @@
 import { verifyJWT } from "@saleor/app-sdk/auth";
 import { type ExtensionPOSTAttributes } from "@saleor/app-sdk/types";
-import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { type TransactionModel } from "avatax/lib/models/TransactionModel";
 import { type NextRequest } from "next/server";
 
 import { metadataCache } from "@/lib/app-metadata-cache";
+import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 import { createLogger } from "@/logger";
 import { createSettingsManager } from "@/modules/app/metadata-manager";
 import { type AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
@@ -86,7 +86,10 @@ const orderDetailsHandler = async (req: NextRequest) => {
     });
   }
 
-  const client = createGraphQLClient({ token: authData.token, saleorApiUrl: saleorApiUrl });
+  const client = createInstrumentedGraphqlClient({
+    token: authData.token,
+    saleorApiUrl: saleorApiUrl,
+  });
 
   const orderMetadata = await client.query(OrderAvataxIdDocument, {
     id: orderId,

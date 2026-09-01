@@ -4,13 +4,15 @@ import {
   type CreateGraphQLClientArgs,
 } from "@saleor/apps-shared/create-graphql-client";
 
+import packageJson from "../../package.json";
 import { appInternalTracer } from "./otel/tracing";
 
-type CreateGraphQLClientProps = Omit<CreateGraphQLClientArgs, "opts">;
+type CreateGraphQLClientProps = Omit<CreateGraphQLClientArgs, "opts" | "userAgent">;
 
 export const createInstrumentedGraphqlClient = (props: CreateGraphQLClientProps) =>
   createGraphQLClient({
     ...props,
+    userAgent: `${packageJson.name}/${packageJson.version}`,
     opts: {
       prependingFetchExchanges: [createOtelUrqlExchange({ tracer: appInternalTracer })],
     },

@@ -1,9 +1,21 @@
 import { authExchange } from "@urql/exchange-auth";
-import { cacheExchange, createClient as urqlCreateClient, Exchange, fetchExchange } from "urql";
+import {
+  cacheExchange,
+  createClient as urqlCreateClient,
+  type Exchange,
+  fetchExchange,
+} from "urql";
 
 export interface CreateGraphQLClientArgs {
   saleorApiUrl: string;
   token?: string;
+  /**
+   * Identifies the calling app in Saleor's access logs. Apps should pass
+   * `${packageJson.name}/${packageJson.version}`.
+   *
+   * Browsers forbid overriding User-Agent, so this only takes effect server-side.
+   */
+  userAgent?: string;
   opts?: {
     prependingFetchExchanges?: Exchange[];
   };
@@ -20,7 +32,12 @@ export interface CreateGraphQLClientArgs {
  *
  * In the context of developing Apps, the two first options are recommended.
  */
-export const createGraphQLClient = ({ saleorApiUrl, token, opts }: CreateGraphQLClientArgs) => {
+export const createGraphQLClient = ({
+  saleorApiUrl,
+  token,
+  userAgent,
+  opts,
+}: CreateGraphQLClientArgs) => {
   const beforeFetch = [];
 
   if (opts?.prependingFetchExchanges) {
@@ -29,6 +46,7 @@ export const createGraphQLClient = ({ saleorApiUrl, token, opts }: CreateGraphQL
 
   return urqlCreateClient({
     url: saleorApiUrl,
+    fetchOptions: userAgent ? { headers: { "User-Agent": userAgent } } : undefined,
     exchanges: [
       cacheExchange,
       authExchange(async (utils) => {
