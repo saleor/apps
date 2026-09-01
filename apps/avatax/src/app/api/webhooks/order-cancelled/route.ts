@@ -2,7 +2,6 @@ import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
-import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { captureException, setTag } from "@sentry/nextjs";
 import { after } from "next/server";
 
@@ -10,6 +9,7 @@ import { AppConfig } from "@/lib/app-config";
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
+import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
 import { appExternalTracer } from "@/lib/otel/tracing";
 import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
@@ -50,7 +50,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
       const { payload } = ctx;
 
       const logWriter = logsWriterFactory.createWriter(ctx.authData);
-      const client = createGraphQLClient({
+      const client = createInstrumentedGraphqlClient({
         saleorApiUrl: ctx.authData.saleorApiUrl,
         token: ctx.authData.token,
       });

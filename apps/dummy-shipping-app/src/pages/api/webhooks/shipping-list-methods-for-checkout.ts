@@ -7,6 +7,7 @@ import {
   type ShippingListMethodsPayloadFragment,
 } from "@/generated/graphql";
 import { DummyExternalShippingAPI } from "@/lib/dummy-shipping";
+import packageJson from "@/package.json";
 import { saleorApp } from "@/saleor-app";
 
 const ShippingListMethodsPayload = gql`
@@ -58,6 +59,7 @@ export default shippingListMethodsForCheckoutWebhook.createHandler(async (_req, 
   const client = createGraphQLClient({
     saleorApiUrl: authData.saleorApiUrl,
     token: authData.token,
+    userAgent: `${packageJson.name}/${packageJson.version}`,
   });
 
   await client

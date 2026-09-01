@@ -2,7 +2,6 @@ import { type NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/h
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
-import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { gql } from "urql";
 
 import {
@@ -10,6 +9,7 @@ import {
   UntypedCustomerCreatedDocument,
 } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
+import { createSaleorGraphqlClient } from "../../../lib/graphql-client";
 import { Klaviyo } from "../../../lib/klaviyo";
 import { createSettingsManager } from "../../../lib/metadata";
 import { createLogger } from "../../../logger";
@@ -78,7 +78,7 @@ const handler: NextJsWebhookHandler<CustomerCreatedWebhookPayloadFragment> = asy
 
   logger.info("customerCreatedWebhook handler called");
 
-  const client = createGraphQLClient({
+  const client = createSaleorGraphqlClient({
     saleorApiUrl,
     token,
   });
