@@ -277,6 +277,39 @@ describe("WebhooksProcessorsDelegator", () => {
       expect(mockReporter.reportProviderAuthError).toHaveBeenCalled();
     });
 
+    it("preserves payload of non-Error rejections (e.g. strapi-sdk-js) instead of [object Object]", async () => {
+      const appConfig = prepareFilledAppConfig();
+      const mockReporter = createMockProblemReporter();
+
+      const failingProcessor: ProductWebhooksProcessor = {
+        onProductUpdated: vi.fn(),
+        onProductVariantCreated: vi.fn(),
+        onProductVariantDeleted: vi.fn(),
+        onProductVariantUpdated: vi.fn().mockRejectedValue({
+          data: null,
+          error: { status: 401, name: "UnauthorizedError", message: "Missing or invalid token" },
+        }),
+      };
+
+      const delegator = new WebhooksProcessorsDelegator({
+        injectProcessorFactory: () => failingProcessor,
+        problemReporter: mockReporter,
+        context: {
+          connections: appConfig.connections
+            .getConnections()
+            .filter((c) => c.channelSlug === "test"),
+          providers: appConfig.providers.getProviders(),
+        },
+      });
+
+      await expect(
+        delegator.delegateVariantUpdatedOperations(getMockProductVariantWebhookFragment()),
+      ).rejects.toThrow(/Missing or invalid token/);
+
+      // payload is readable, so the 401 is classified as auth instead of generic sync failure
+      expect(mockReporter.reportProviderAuthError).toHaveBeenCalled();
+    });
+
     it("clears problems on successful processing", async () => {
       const appConfig = prepareFilledAppConfig();
       const mockReporter = createMockProblemReporter();

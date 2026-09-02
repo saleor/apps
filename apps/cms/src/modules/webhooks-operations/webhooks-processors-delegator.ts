@@ -1,3 +1,5 @@
+import { inspect } from "node:util";
+
 import { createLogger } from "@/logger";
 import { type CmsProblemReporter } from "@/modules/app-problems/cms-problem-reporter";
 
@@ -99,8 +101,15 @@ export class WebhooksProcessorsDelegator {
       involvedProviderIds.add(providerConfig.id);
 
       if (result.status === "rejected") {
+        /**
+         * Some SDKs reject with plain objects instead of Errors (e.g. strapi-sdk-js throws
+         * `{ data, error: { status, message } }`). String() would turn them into "[object Object]",
+         * losing the payload in Sentry and breaking error classification.
+         */
         const error =
-          result.reason instanceof Error ? result.reason : new Error(String(result.reason));
+          result.reason instanceof Error
+            ? result.reason
+            : new Error(inspect(result.reason, { depth: 5 }), { cause: result.reason });
 
         errors.push(error);
 
