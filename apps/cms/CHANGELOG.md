@@ -1,5 +1,17 @@
 # saleor-app-cms
 
+## 2.17.3
+
+### Patch Changes
+
+- 238a85b: Fixed error reporting when a CMS provider fails with a non-standard error. Previously such failures were logged as `Error: [object Object]`, hiding the actual reason (for example an expired Strapi token) and causing them to be reported as generic sync failures. Now the original error payload is preserved, so the message is visible and authentication problems are correctly reported as auth errors.
+- 40321e5: Apps now identify themselves when they call the Saleor GraphQL API. Before, requests
+  went out with the runtime's default `User-Agent`, so it was impossible to tell from
+  Saleor's access logs which app produced them. Now every server-side request carries
+  `User-Agent: <app-package-name>/<app-version>`, e.g. `saleor-app-avatax/3.1.0`.
+- Updated dependencies [40321e5]
+  - @saleor/apps-shared@1.16.0
+
 ## 2.17.2
 
 ### Patch Changes

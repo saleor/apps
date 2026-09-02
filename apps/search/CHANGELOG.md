@@ -1,5 +1,22 @@
 # saleor-app-search
 
+## 1.31.4
+
+### Patch Changes
+
+- 40321e5: Apps now identify themselves when they call the Saleor GraphQL API. Before, requests
+  went out with the runtime's default `User-Agent`, so it was impossible to tell from
+  Saleor's access logs which app produced them. Now every server-side request carries
+  `User-Agent: <app-package-name>/<app-version>`, e.g. `saleor-app-avatax/3.1.0`.
+- 030db35: Fixed `inStock` still being indexed as `false` in Algolia after stock was restored in Saleor.
+
+  Before: the previous fix fetched stock availability per channel, but only when `inStock` was listed among the app's enabled fields. `inStock` is always indexed and cannot be turned off in the app UI, so it never appeared on that list - the extra fetch was skipped on every webhook and the app fell back to the channel-less value from the webhook payload, which Saleor always resolves to 0. Setting stock to 0 looked correct, but restoring it left the product marked as out of stock until the next full index.
+
+  After: stock availability is always fetched per channel when a webhook arrives, so restoring stock in Saleor marks the product as in stock in Algolia straight away.
+
+- Updated dependencies [40321e5]
+  - @saleor/apps-shared@1.16.0
+
 ## 1.31.3
 
 ### Patch Changes

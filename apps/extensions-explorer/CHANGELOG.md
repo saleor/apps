@@ -1,5 +1,12 @@
 # saleor-app-extensions-explorer
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [40321e5]
+  - @saleor/apps-shared@1.16.0
+
 ## 0.1.0
 
 ### Minor Changes

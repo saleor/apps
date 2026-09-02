@@ -1,5 +1,12 @@
 # saleor-app-onboarding
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [40321e5]
+  - @saleor/apps-shared@1.16.0
+
 ## 0.1.2
 
 ### Patch Changes
