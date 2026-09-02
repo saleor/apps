@@ -106,10 +106,14 @@ export class AlgoliaSearchProvider implements SearchProvider {
     this.#fetchVariantsAvailability = fetchVariantsAvailability;
   }
 
+  /**
+   * `inStock` is always indexed - it is not part of `AlgoliaRootFieldsKeys`, so it can never appear
+   * in `enabledKeys` and must not be guarded by it.
+   */
   async #getVariantsAvailability(
     variants: ProductVariantWebhookPayloadFragment[],
   ): Promise<VariantsAvailability | undefined> {
-    if (!this.#fetchVariantsAvailability || !this.#enabledKeys.includes("inStock")) {
+    if (!this.#fetchVariantsAvailability) {
       return undefined;
     }
 
