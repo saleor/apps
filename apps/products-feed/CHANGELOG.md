@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 3.2.0
+
+### Minor Changes
+
+- b7efe3b: Dropped support for Saleor 3.21. Before, these apps could be installed on Saleor 3.21 and newer. Now, the minimum supported version is 3.22 - installing on an older Saleor will be rejected by the Dashboard. Saleor 3.21 users should stay on the previous app release until they upgrade their Saleor instance.
+
 ## 3.1.5
 
 ### Patch Changes
