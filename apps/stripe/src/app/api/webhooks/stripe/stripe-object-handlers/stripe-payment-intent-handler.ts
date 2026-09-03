@@ -51,6 +51,10 @@ type PossibleErrors =
  * Minimum Saleor version required for payment method details support.
  * Saleor 3.22 introduced the `paymentMethodDetails` field in the Transaction API.
  * See: https://github.com/saleor/saleor/releases/tag/3.22.0
+ *
+ * TODO: dead gate - app manifest now requires Saleor >=3.22, so this always passes.
+ * Remove the check and always fetch payment method details. Kept until stored
+ * transactions recorded on <3.22 are no longer in play.
  */
 const PAYMENT_METHOD_DETAILS_MIN_VERSION = "3.22";
 

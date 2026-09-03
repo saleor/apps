@@ -19,7 +19,10 @@ export const ManagePermissionsTextLink = ({
   const { appBridgeState, appBridge } = useAppBridge();
   const dashboardVersion = appBridgeState?.dashboardVersion;
 
-  // Editing app permissions has been introduced in Saleor Dashboard 3.15
+  /*
+   * Editing app permissions has been introduced in Saleor Dashboard 3.15
+   * TODO: dead gate - app requires Saleor >=3.22, so any matching Dashboard supports this.
+   */
   const isPermissionManagementAvailable = dashboardVersion
     ? new SaleorVersionCompatibilityValidator(">=3.15").isValid(dashboardVersion)
     : false;

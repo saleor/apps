@@ -8,6 +8,10 @@ interface getEventFormStatusArgs {
   appPermissions?: PermissionEnum[];
 }
 
+/*
+ * TODO: `requiredSaleorVersion` branches are dead - app requires Saleor >=3.22,
+ * so ORDER_REFUNDED (>=3.14) and GIFT_CARD_SENT (>=3.13) are always supported.
+ */
 export const getEventFormStatus = ({
   eventType,
   featureFlags,

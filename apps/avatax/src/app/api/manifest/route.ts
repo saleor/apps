@@ -63,7 +63,7 @@ const handler = createManifestHandler({
       id: env.MANIFEST_APP_ID,
       name: "AvaTax",
       permissions: ["HANDLE_TAXES", "MANAGE_ORDERS", "MANAGE_PRODUCTS"],
-      requiredSaleorVersion: ">=3.21 <4",
+      requiredSaleorVersion: ">=3.22 <4",
       supportUrl: "https://github.com/saleor/apps/discussions",
       tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
