@@ -13,6 +13,9 @@ interface GetFeatureFlagsArgs {
 /*
  * Returns list of feature flags based on Saleor version.
  * `saleorVersion` is expected to be in Semver format, e.g. "3.13.0"
+ *
+ * TODO: dead flags - app requires Saleor >=3.22, so both are always true.
+ * Remove the feature-flag service along with getEventFormStatus's version branches.
  */
 export const getFeatureFlags = ({ saleorVersion }: GetFeatureFlagsArgs): FeatureFlagsState => {
   return {
