@@ -39,6 +39,14 @@ export const TransactionRecorderError = {
       },
     },
   ),
+  FailedRemovingTransactionsError: BaseError.subclass(
+    "TransactionRecorderRepo.FailedRemovingTransactionsError",
+    {
+      props: {
+        _internalName: "TransactionRecorderRepo.FailedRemovingTransactionsError",
+      },
+    },
+  ),
 };
 
 export type TransactionRecorderError = InstanceType<
@@ -46,6 +54,7 @@ export type TransactionRecorderError = InstanceType<
   | typeof TransactionRecorderError.TransactionMissingError
   | typeof TransactionRecorderError.FailedWritingTransactionError
   | typeof TransactionRecorderError.FailedFetchingTransactionError
+  | typeof TransactionRecorderError.FailedRemovingTransactionsError
 >;
 
 export type TransactionRecorderRepoAccess = {
@@ -63,4 +72,8 @@ export interface TransactionRecorderRepo {
     accessPattern: TransactionRecorderRepoAccess,
     id: StripePaymentIntentId,
   ): Promise<Result<RecordedTransaction, TransactionRecorderError>>;
+
+  removeAllForApp(
+    accessPattern: TransactionRecorderRepoAccess,
+  ): Promise<Result<null, TransactionRecorderError>>;
 }
