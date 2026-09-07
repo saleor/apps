@@ -32,6 +32,7 @@ describe("GoogleFeedSettingsFetcher", () => {
         attributeMapping: null,
         titleTemplate: "{{ variant.name }}",
         imageSize: 1024,
+        outOfStockBehavior: "markOutOfStock",
       });
 
       return appConfig.serialize();
@@ -57,6 +58,7 @@ describe("GoogleFeedSettingsFetcher", () => {
       attributeMapping: null,
       titleTemplate: "{{ variant.name }}",
       imageSize: 1024,
+      outOfStockBehavior: "markOutOfStock",
     });
   });
 });

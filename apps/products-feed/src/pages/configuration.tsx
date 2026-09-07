@@ -9,6 +9,7 @@ import { useChannelsExistenceChecking } from "../modules/app-configuration/chann
 import { ChannelsConfigAccordion } from "../modules/app-configuration/channels-config-accordion";
 import { ConnectedImageConfigurationForm } from "../modules/app-configuration/image-configuration-form";
 import { ConnectedS3ConfigurationForm } from "../modules/app-configuration/s3-configuration-form";
+import { ConnectedStockConfigurationForm } from "../modules/app-configuration/stock-configuration-form";
 import { ConnectedTitleFormattingForm } from "../modules/app-configuration/title-formatting-form";
 import { CategoryMappingPreview } from "../modules/category-mapping/ui/category-mapping-preview";
 import { AppSection } from "../modules/ui/app-section";
@@ -249,6 +250,33 @@ const ConfigurationPage: NextPage = () => {
               <li>
                 <TextLink href="https://support.google.com/merchants/answer/6324504" newTab>
                   Shipping Label
+                </TextLink>
+              </li>
+            </ul>
+          </Box>
+        }
+      />
+
+      <AppSection
+        data-testid={"stock-configuration-section"}
+        __marginBottom="100px"
+        includePadding
+        heading={"Stock availability"}
+        mainContent={<ConnectedStockConfigurationForm />}
+        sideContent={
+          <Box>
+            <Paragraph size={3}>
+              Decide what happens to variants that have no stock available. They can either stay in
+              the feed marked as <code>out_of_stock</code>, or be excluded from it entirely.
+            </Paragraph>
+            <Paragraph size={3}>
+              Products that are unpublished, hidden from listings or not available for purchase in
+              the channel are always excluded.
+            </Paragraph>
+            <ul>
+              <li>
+                <TextLink href="https://support.google.com/merchants/answer/6324448" newTab>
+                  Availability specification
                 </TextLink>
               </li>
             </ul>

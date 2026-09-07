@@ -16,7 +16,10 @@ import { uploadFile } from "@/modules/file-storage/s3/upload-file";
 import { FeedXmlBuilder } from "@/modules/google-feed/feed-xml-builder";
 import { fetchVariants } from "@/modules/google-feed/fetch-product-data";
 import { type GoogleFeedSettingsFetcher } from "@/modules/google-feed/get-google-feed-settings";
-import { productVariantToProxy } from "@/modules/google-feed/product-variant-to-proxy";
+import {
+  isVariantInStock,
+  productVariantToProxy,
+} from "@/modules/google-feed/product-variant-to-proxy";
 
 type ConfiguredChannelSettings = Awaited<
   ReturnType<typeof GoogleFeedSettingsFetcher.prototype.fetch>
@@ -66,7 +69,12 @@ const handler: NextApiHandler = async (req, res) => {
     problemReporter,
   });
 
-  const productProxies = productVariants.map((v) =>
+  const feedVariants =
+    channelSettings.outOfStockBehavior === "exclude"
+      ? productVariants.filter(isVariantInStock)
+      : productVariants;
+
+  const productProxies = feedVariants.map((v) =>
     productVariantToProxy({
       variant: v,
       attributeMapping: channelSettings.attributeMapping,
