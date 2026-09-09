@@ -35,7 +35,7 @@ export const getTaskCopy = (id: CommerceTaskId, readiness: StoreReadiness): Task
           description:
             "Create a sales channel — where you sell — with currency, stock, and shipping.",
           details:
-            "A sales channel is where you sell. You’ll add a stock location and shipping next on the channel page so customers can check out.",
+            "A sales channel is where you sell (Saleor’s equivalent of a Shopify market/store). You’ll add a stock location and shipping next on the channel page so customers can check out.",
           ctaLabel: "Create channel",
         };
       }
