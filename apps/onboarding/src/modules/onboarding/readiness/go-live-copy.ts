@@ -70,7 +70,7 @@ export const getGoLiveRows = (hasCustomerEmailsApp: boolean): GuidanceRow[] => {
       description:
         "Saleor doesn’t send order emails by itself — install Customer Emails and connect your mail server.",
       details:
-        "Use the Customer Emails extension (similar to a Shopify notification app) so customers get order confirmations and account messages. Open the app to add an SMTP connection, or install it if it isn’t present yet.",
+        "Customers get order confirmations and account messages through this extension. Open it to add an SMTP connection, or install it if it isn’t present yet.",
       ctaLabel,
       cta,
     },

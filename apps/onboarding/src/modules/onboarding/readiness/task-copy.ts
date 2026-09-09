@@ -35,7 +35,7 @@ export const getTaskCopy = (id: CommerceTaskId, readiness: StoreReadiness): Task
           description:
             "Create a sales channel — where you sell — with currency, stock, and shipping.",
           details:
-            "A sales channel is where you sell (Saleor’s equivalent of a Shopify market/store). You’ll add a stock location and shipping next on the channel page so customers can check out.",
+            "A sales channel is where you sell. You’ll add a stock location and shipping next on the channel page so customers can check out.",
           ctaLabel: "Create channel",
         };
       }
@@ -133,7 +133,7 @@ export const getTaskCopy = (id: CommerceTaskId, readiness: StoreReadiness): Task
           ? "A payment app is installed and active."
           : "Install Dummy Payment to test checkout, or a real payment app for live charges.",
         details:
-          "Saleor processes payments through extensions — similar to Shopify apps. On Cloud and local dev, Dummy Payment is the fastest way to simulate checkouts; switch to a PSP before going live.",
+          "Saleor processes payments through extensions. On Cloud and local dev, Dummy Payment is the fastest way to simulate checkouts; switch to a PSP before going live.",
         ctaLabel: "Set up payments",
         requirement: !readiness.hasProduct ? "Requires a product" : undefined,
       };
