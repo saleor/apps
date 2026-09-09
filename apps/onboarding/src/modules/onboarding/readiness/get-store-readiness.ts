@@ -1,6 +1,6 @@
 import { type StoreReadinessQuery } from "@/generated/graphql";
 
-import { SMTP_APP_IDENTIFIER, STRIPE_APP_IDENTIFIER } from "./app-identifiers";
+import { CUSTOMER_EMAILS_APP_IDENTIFIER, STRIPE_APP_IDENTIFIER } from "./app-identifiers";
 
 export type CommerceTaskId = "sales-channel" | "first-product" | "payments" | "test-order";
 
@@ -17,8 +17,8 @@ export type StoreReadiness = {
   hasProduct: boolean;
   hasPaymentApp: boolean;
   hasOrder: boolean;
-  /** True when the SMTP app (`saleor.app.smtp`) is installed and active. */
-  hasSmtpApp: boolean;
+  /** True when Customer Emails (`saleor.app.customer-emails`) is installed. */
+  hasCustomerEmailsApp: boolean;
   /** True when the Stripe payment app (`saleor.app.payment.stripe`) is installed and active. */
   hasStripeApp: boolean;
   /** False when the corresponding field was missing (permission / error). */
@@ -80,7 +80,7 @@ export const getStoreReadiness = (data: StoreReadinessQuery | undefined): StoreR
     hasProduct: (data?.products?.totalCount ?? 0) > 0,
     hasPaymentApp,
     hasOrder: (data?.orders?.totalCount ?? 0) > 0,
-    hasSmtpApp: hasIdentifier(SMTP_APP_IDENTIFIER),
+    hasCustomerEmailsApp: hasIdentifier(CUSTOMER_EMAILS_APP_IDENTIFIER),
     hasStripeApp: hasIdentifier(STRIPE_APP_IDENTIFIER),
     channelsKnown,
     shippingKnown,

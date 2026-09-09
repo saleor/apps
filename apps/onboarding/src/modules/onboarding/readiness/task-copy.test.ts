@@ -15,7 +15,7 @@ const readyChannel: StoreReadiness = {
   hasProduct: false,
   hasPaymentApp: false,
   hasOrder: false,
-  hasSmtpApp: false,
+  hasCustomerEmailsApp: false,
   hasStripeApp: false,
   channelsKnown: true,
   shippingKnown: true,

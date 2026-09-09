@@ -18,8 +18,8 @@ vi.mock("@saleor/app-sdk/app-bridge", () => ({
 
 const appTarget = {
   kind: "app",
-  appIdentifier: "saleor.app.smtp",
-  path: "/templates",
+  appIdentifier: "saleor.app.example",
+  path: "/settings",
   fallbackTo: "/extensions/installed",
 } as const;
 
@@ -56,7 +56,7 @@ describe("useAppRedirect", () => {
 
     expect(dispatch).toHaveBeenCalledWith({
       type: "redirectToApp",
-      payload: { appIdentifier: "saleor.app.smtp", path: "/templates" },
+      payload: { appIdentifier: "saleor.app.example", path: "/settings" },
     });
   });
 

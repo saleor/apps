@@ -306,7 +306,10 @@ export const StoreReadinessChecklistBody = ({
     [tasks, activeTaskId],
   );
   const nextUpCopy = nextUpTask ? getTaskCopy(nextUpTask.id, readiness) : null;
-  const goLiveRows = useMemo(() => getGoLiveRows(readiness.hasSmtpApp), [readiness.hasSmtpApp]);
+  const goLiveRows = useMemo(
+    () => getGoLiveRows(readiness.hasCustomerEmailsApp),
+    [readiness.hasCustomerEmailsApp],
+  );
 
   return (
     <div className={styles.layout} data-test-id="store-readiness-checklist" aria-live="polite">

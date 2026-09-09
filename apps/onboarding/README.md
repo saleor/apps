@@ -10,7 +10,7 @@ Saleor App that mounts a **Store Readiness** guide on the Dashboard home page
 
 Secondary tracks (not in required progress):
 
-- **Before you go live** — SMTP customer email + template review
+- **Before you go live** — Customer Emails + template review
 - **Connect Paper storefront** — deploy/configure Paper (wide screens: sibling card on the right with Paper logo)
 
 Builder tools (GraphiQL shortcut, custom app / API token, invite staff) live under

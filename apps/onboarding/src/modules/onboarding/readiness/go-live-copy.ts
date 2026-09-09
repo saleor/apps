@@ -1,8 +1,8 @@
-import { SMTP_APP_IDENTIFIER } from "./app-identifiers";
+import { CUSTOMER_EMAILS_APP_IDENTIFIER } from "./app-identifiers";
 import { type CtaTarget, INSTALLED_APPS_PATH } from "./redirect-target";
 
 /**
- * Secondary go-live guidance (SMTP, email templates, Paper storefront).
+ * Secondary go-live guidance (Customer Emails, email templates, Paper storefront).
  * These rows never count toward required Store Readiness progress.
  */
 
@@ -17,10 +17,8 @@ export type GuidanceRow = {
   cta?: GuidanceCtaTarget;
 };
 
-export const SMTP_DOCS_URL = "https://docs.saleor.io/developer/app-store/apps/smtp/overview";
-
-/** Hosted SMTP app manifest (Saleor Cloud / App Store install). */
-export const SMTP_MANIFEST_URL = "https://smtp.saleor.app/api/manifest";
+/** Hosted Customer Emails app manifest (Saleor Cloud / App Store install). */
+export const CUSTOMER_EMAILS_MANIFEST_URL = "https://customer-emails.saleor.app/api/manifest";
 
 /** Live Paper demo storefront. */
 export const PAPER_DEMO_URL = "https://demo.saleor.io";
@@ -43,47 +41,52 @@ export const PAPER_SECTION = {
   subtitle: "Saleor is headless — deploy a storefront when you’re ready to sell online",
 } as const;
 
-const SMTP_INSTALL_PATH = `/extensions/app/install?manifestUrl=${encodeURIComponent(
-  SMTP_MANIFEST_URL,
+const CUSTOMER_EMAILS_INSTALL_PATH = `/extensions/app/install?manifestUrl=${encodeURIComponent(
+  CUSTOMER_EMAILS_MANIFEST_URL,
 )}`;
 
 /**
- * Open the installed SMTP app via Dashboard (`RedirectToApp`), or the install flow when it isn’t present.
+ * Open the installed Customer Emails app via Dashboard (`RedirectToApp`), or the install flow when it isn’t present.
  */
-export const resolveSmtpAppCta = (hasSmtpApp: boolean): GuidanceCtaTarget =>
-  hasSmtpApp
+export const resolveCustomerEmailsAppCta = (hasCustomerEmailsApp: boolean): GuidanceCtaTarget =>
+  hasCustomerEmailsApp
     ? {
         kind: "app",
-        appIdentifier: SMTP_APP_IDENTIFIER,
+        appIdentifier: CUSTOMER_EMAILS_APP_IDENTIFIER,
         fallbackTo: INSTALLED_APPS_PATH,
         permission: "MANAGE_APPS",
       }
-    : { kind: "dashboard", to: SMTP_INSTALL_PATH, permission: "MANAGE_APPS" };
+    : { kind: "dashboard", to: CUSTOMER_EMAILS_INSTALL_PATH, permission: "MANAGE_APPS" };
 
-/** Go-live rows with SMTP CTAs resolved against the live install (if any). */
-export const getGoLiveRows = (hasSmtpApp: boolean): GuidanceRow[] => [
-  {
-    id: "customer-email",
-    title: "Connect customer email",
-    description:
-      "Saleor doesn’t send order emails by itself — install the SMTP app and point it at your mail server.",
-    details:
-      "Use the SMTP extension (similar to a Shopify notification app) so customers get order confirmations and account messages. Open the SMTP app to configure your host, or install it if it isn’t present yet.",
-    ctaLabel: "Set up SMTP",
-    cta: resolveSmtpAppCta(hasSmtpApp),
-  },
-  {
-    id: "email-templates",
-    title: "Review email templates",
-    description: "Check order and account emails before real customers receive them.",
-    details:
-      "After SMTP is connected, open the app and review MJML templates (order confirmation, password reset, and related events). Adjust branding and wording so production mail matches your store.",
-    ctaLabel: "Open SMTP",
-    cta: resolveSmtpAppCta(hasSmtpApp),
-  },
-];
+/** Go-live rows with Customer Emails CTAs resolved against the live install (if any). */
+export const getGoLiveRows = (hasCustomerEmailsApp: boolean): GuidanceRow[] => {
+  const cta = resolveCustomerEmailsAppCta(hasCustomerEmailsApp);
+  const ctaLabel = hasCustomerEmailsApp ? "Open Customer Emails" : "Set up Customer Emails";
 
-/** Fallback rows when it isn’t known yet whether SMTP is installed (install CTA). */
+  return [
+    {
+      id: "customer-email",
+      title: "Connect customer email",
+      description:
+        "Saleor doesn’t send order emails by itself — install Customer Emails and connect your mail server.",
+      details:
+        "Use the Customer Emails extension (similar to a Shopify notification app) so customers get order confirmations and account messages. Open the app to add an SMTP connection, or install it if it isn’t present yet.",
+      ctaLabel,
+      cta,
+    },
+    {
+      id: "email-templates",
+      title: "Review email templates",
+      description: "Check order and account emails before real customers receive them.",
+      details:
+        "After Customer Emails is connected, open the app and review notifications (order confirmation, password reset, and related events). Adjust branding and wording so production mail matches your store.",
+      ctaLabel,
+      cta,
+    },
+  ];
+};
+
+/** Fallback rows when it isn’t known yet whether Customer Emails is installed (install CTA). */
 export const GO_LIVE_ROWS: GuidanceRow[] = getGoLiveRows(false);
 
 export const PAPER_ROWS: GuidanceRow[] = [

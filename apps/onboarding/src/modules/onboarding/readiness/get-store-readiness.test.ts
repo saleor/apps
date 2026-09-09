@@ -83,7 +83,7 @@ describe("getStoreReadiness", () => {
     expect(readiness.hasPaymentApp).toBe(false);
   });
 
-  it("detects the installed SMTP app by identifier", () => {
+  it("detects the installed Customer Emails app by identifier", () => {
     const readiness = getStoreReadiness({
       ...baseData,
       apps: {
@@ -91,6 +91,27 @@ describe("getStoreReadiness", () => {
           {
             node: {
               id: "QXBwOjQy",
+              identifier: "saleor.app.customer-emails",
+              type: "THIRDPARTY",
+              isActive: true,
+              permissions: [{ code: "MANAGE_USERS" }],
+            },
+          },
+        ],
+      },
+    });
+
+    expect(readiness.hasCustomerEmailsApp).toBe(true);
+  });
+
+  it("does not treat the legacy SMTP app as Customer Emails", () => {
+    const readiness = getStoreReadiness({
+      ...baseData,
+      apps: {
+        edges: [
+          {
+            node: {
+              id: "QXBwOlNtdHA=",
               identifier: "saleor.app.smtp",
               type: "THIRDPARTY",
               isActive: true,
@@ -101,7 +122,7 @@ describe("getStoreReadiness", () => {
       },
     });
 
-    expect(readiness.hasSmtpApp).toBe(true);
+    expect(readiness.hasCustomerEmailsApp).toBe(false);
   });
 
   it("detects the installed Stripe payment app by identifier", () => {
