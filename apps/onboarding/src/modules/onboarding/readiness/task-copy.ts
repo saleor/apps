@@ -133,7 +133,7 @@ export const getTaskCopy = (id: CommerceTaskId, readiness: StoreReadiness): Task
           ? "A payment app is installed and active."
           : "Install Dummy Payment to test checkout, or a real payment app for live charges.",
         details:
-          "Saleor processes payments through extensions — similar to Shopify apps. On Cloud and local dev, Dummy Payment is the fastest way to simulate checkouts; switch to a PSP before going live.",
+          "Saleor processes payments through extensions. On Cloud and local dev, Dummy Payment is the fastest way to simulate checkouts; switch to a PSP before going live.",
         ctaLabel: "Set up payments",
         requirement: !readiness.hasProduct ? "Requires a product" : undefined,
       };

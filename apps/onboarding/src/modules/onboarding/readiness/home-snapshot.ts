@@ -20,7 +20,7 @@ const isStoreReadiness = (value: unknown): value is StoreReadiness => {
   return (
     isNullableString(row.channelId) &&
     isNullableString(row.channelName) &&
-    typeof row.hasSmtpApp === "boolean" &&
+    typeof row.hasCustomerEmailsApp === "boolean" &&
     typeof row.hasStripeApp === "boolean" &&
     typeof row.hasChannels === "boolean" &&
     typeof row.hasWarehouse === "boolean" &&
