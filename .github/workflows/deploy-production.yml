@@ -1,0 +1,136 @@
+name: Deploy production
+
+# Triggered by the release tags that Changesets pushes after the release PR is merged
+# (one run per released app). Package tags are "@saleor/…" and never match this glob.
+#
+# The job waits for approval on the "production" environment, then asks Vercel to build
+# the tagged commit with target=production. Vercel runs the project's own build command
+# (`deploy.ts` = build + webhook migrations) with production env vars and assigns the
+# production domains on success — the same thing the "Promote" button does, minus the
+# manual click. Nothing is built on the runner, so no app secrets ever land here.
+on:
+  push:
+    tags:
+      - "saleor-app-*"
+
+permissions:
+  contents: read
+
+env:
+  # Package name -> Vercel project name. Doubles as the allowlist: an app missing from
+  # here fails the release loudly rather than silently not shipping.
+  PROJECTS: |
+    {
+      "saleor-app-anonymizer": "saleor-app-anonymizer",
+      "saleor-app-avatax": "saleor-app-avatax",
+      "saleor-app-cms": "saleor-app-cms",
+      "saleor-app-klaviyo": "saleor-app-klaviyo",
+      "saleor-app-onboarding": "saleor-app-onboarding",
+      "saleor-app-payment-dummy": "dummy-payment-app",
+      "saleor-app-payment-np-atobarai": "saleor-app-payment-np-atobarai",
+      "saleor-app-payment-stripe": "saleor-app-payment-stripe",
+      "saleor-app-products-feed": "saleor-app-products-feed",
+      "saleor-app-search": "saleor-app-search",
+      "saleor-app-segment": "saleor-app-segment",
+      "saleor-app-smtp": "saleor-app-smtp"
+    }
+
+jobs:
+  deploy:
+    name: Deploy ${{ github.ref_name }}
+    runs-on: ubuntu-latest
+    environment: production
+    # Environment-scoped vars only resolve for jobs that reference the environment,
+    # so this belongs here rather than in the workflow-level env block.
+    env:
+      VERCEL_TEAM: ${{ vars.VERCEL_TEAM }}
+    steps:
+      - name: Resolve Vercel project from tag
+        id: resolve
+        run: |
+          set -euo pipefail
+
+          if [ -z "${VERCEL_TEAM:-}" ]; then
+            echo "::error::VERCEL_TEAM is not set on the 'production' environment. Without it the API call falls back to the token's default scope."
+            exit 1
+          fi
+
+          app="${GITHUB_REF_NAME%@*}"
+          project="$(jq -r --arg k "$app" '.[$k] // ""' <<<"$PROJECTS")"
+
+          if [ -z "$project" ]; then
+            echo "::error::'$app' has no Vercel project in the PROJECTS map of this workflow. Add it, then re-run."
+            exit 1
+          fi
+
+          echo "project=$project" >> "$GITHUB_OUTPUT"
+          echo "Deploying $app ($GITHUB_SHA) to Vercel project $project"
+
+      - name: Trigger production build
+        id: trigger
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          PROJECT: ${{ steps.resolve.outputs.project }}
+        run: |
+          set -euo pipefail
+          # gitSource cannot be combined with `files`, so Vercel pulls the commit from the
+          # connected repo instead of us uploading a build. forceNew bypasses deduplication
+          # so re-running this job after a failure actually rebuilds.
+          response="$(curl -sS -X POST \
+            "https://api.vercel.com/v13/deployments?slug=${VERCEL_TEAM}&forceNew=1&skipAutoDetectionConfirmation=1" \
+            -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n --arg p "$PROJECT" --arg sha "$GITHUB_SHA" \
+                  '{name: $p, target: "production", gitSource: {type: "vercel", sha: $sha}}')")"
+
+          id="$(jq -r '.id // ""' <<<"$response")"
+
+          if [ -z "$id" ]; then
+            echo "::error::Vercel rejected the deployment request: $response"
+            exit 1
+          fi
+
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+          echo "Inspect: $(jq -r '.inspectorUrl // "n/a"' <<<"$response")"
+
+      - name: Wait for build and domain assignment
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          DEPLOYMENT_ID: ${{ steps.trigger.outputs.id }}
+        # Vercel builds for this monorepo run well under this; the timeout is a backstop.
+        timeout-minutes: 40
+        run: |
+          set -euo pipefail
+          while true; do
+            deployment="$(curl -sS \
+              "https://api.vercel.com/v13/deployments/${DEPLOYMENT_ID}?slug=${VERCEL_TEAM}" \
+              -H "Authorization: Bearer ${VERCEL_TOKEN}")"
+
+            state="$(jq -r '.readyState // "UNKNOWN"' <<<"$deployment")"
+            alias_assigned="$(jq -r 'if .aliasAssigned then "true" else "false" end' <<<"$deployment")"
+            alias_error="$(jq -r '.aliasError.message // ""' <<<"$deployment")"
+
+            echo "readyState=$state aliasAssigned=$alias_assigned"
+
+            case "$state" in
+              READY)
+                # A production build only counts as released once it holds the domains.
+                # Vercel turns off auto-assignment after an Instant Rollback, so without
+                # this check a rolled-back app would migrate webhooks and serve nothing new.
+                if [ -n "$alias_error" ]; then
+                  echo "::error::Domain assignment failed: $alias_error"
+                  exit 1
+                fi
+                if [ "$alias_assigned" = "true" ]; then
+                  echo "Released $GITHUB_REF_NAME"
+                  exit 0
+                fi
+                ;;
+              ERROR | CANCELED)
+                echo "::error::Deployment finished in state $state"
+                exit 1
+                ;;
+            esac
+
+            sleep 15
+          done
