@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { type RootConfig } from "../app-configuration/app-config";
 import { type ProductVariant } from "./fetch-product-data";
-import { productVariantToProxy } from "./product-variant-to-proxy";
+import { isVariantInStock, productVariantToProxy } from "./product-variant-to-proxy";
 
 const productBase: ProductVariant["product"] = {
   name: "Product",
@@ -142,4 +142,19 @@ describe("productVariantToProxy — GTIN resolution", () => {
 
     expect(findGtin(result.item)).toBeUndefined();
   });
+});
+
+describe("isVariantInStock", () => {
+  it.each([
+    { quantityAvailable: 5, expected: true },
+    { quantityAvailable: 0, expected: false },
+    // Saleor returns null when it can't resolve the quantity - treat it as no stock
+    { quantityAvailable: null, expected: false },
+    { quantityAvailable: undefined, expected: false },
+  ])(
+    "Returns $expected for quantityAvailable $quantityAvailable",
+    ({ quantityAvailable, expected }) => {
+      expect(isVariantInStock({ quantityAvailable })).toBe(expected);
+    },
+  );
 });

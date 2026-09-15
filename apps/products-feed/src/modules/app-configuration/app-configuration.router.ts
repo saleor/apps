@@ -8,7 +8,12 @@ import { createS3ClientFromConfiguration } from "../file-storage/s3/create-s3-cl
 import { renderHandlebarsTemplate } from "../handlebarsTemplates/render-handlebars-template";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
-import { AppConfigSchema, imageSizeInputSchema, titleTemplateInputSchema } from "./app-config";
+import {
+  AppConfigSchema,
+  imageSizeInputSchema,
+  outOfStockBehaviorInputSchema,
+  titleTemplateInputSchema,
+} from "./app-config";
 import { AttributeFetcher } from "./attribute-fetcher";
 import { prepareExampleVariantData } from "./prepare-example-variant-data";
 
@@ -185,6 +190,25 @@ export const appConfigurationRouter = router({
       await appConfigMetadataManager.set(config.serialize());
 
       logger.info("image size set");
+
+      return null;
+    }),
+
+  setOutOfStockBehavior: protectedClientProcedure
+    .input(outOfStockBehaviorInputSchema)
+    .mutation(async ({ ctx: { getConfig, appConfigMetadataManager }, input }) => {
+      const logger = createLogger("appConfigurationRouter.setOutOfStockBehavior");
+
+      logger.debug("Setting out of stock behavior", {
+        outOfStockBehavior: input.outOfStockBehavior,
+      });
+      const config = await getConfig();
+
+      config.setOutOfStockBehavior(input.outOfStockBehavior);
+
+      await appConfigMetadataManager.set(config.serialize());
+
+      logger.info("Out of stock behavior set");
 
       return null;
     }),

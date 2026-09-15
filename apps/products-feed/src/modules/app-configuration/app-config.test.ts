@@ -40,6 +40,7 @@ const exampleConfiguration: RootConfig = {
   attributeMapping: exampleAttributeMappingConfig,
   titleTemplate: exampleTitleTemplate,
   imageSize: exampleImageSize,
+  outOfStockBehavior: "markOutOfStock",
 };
 
 describe("AppConfig", function () {
@@ -62,6 +63,7 @@ describe("AppConfig", function () {
         },
         titleTemplate: "{{variant.product.name}} - {{variant.name}}",
         imageSize: 1024,
+        outOfStockBehavior: "markOutOfStock",
       });
     });
 
@@ -97,6 +99,7 @@ describe("AppConfig", function () {
         },
         titleTemplate: "{{variant.product.name}} - {{variant.name}}",
         imageSize: 1024,
+        outOfStockBehavior: "markOutOfStock",
       });
     });
 
@@ -131,6 +134,7 @@ describe("AppConfig", function () {
         },
         titleTemplate: "{{ variant.name }}",
         imageSize: 1024,
+        outOfStockBehavior: "markOutOfStock",
       });
 
       const serialized = instance1.serialize();
@@ -157,6 +161,7 @@ describe("AppConfig", function () {
         },
         titleTemplate: "{{ variant.name }}",
         imageSize: 1024,
+        outOfStockBehavior: "markOutOfStock",
       });
     });
   });
@@ -189,6 +194,7 @@ describe("AppConfig", function () {
       },
       titleTemplate: "{{ variant.product.name }} - {{ variant.name }}",
       imageSize: 1024,
+      outOfStockBehavior: "markOutOfStock",
     });
 
     it("getRootConfig returns root config data", () => {
@@ -219,6 +225,7 @@ describe("AppConfig", function () {
         },
         titleTemplate: "{{ variant.product.name }} - {{ variant.name }}",
         imageSize: 1024,
+        outOfStockBehavior: "markOutOfStock",
       });
     });
 
@@ -250,6 +257,7 @@ describe("AppConfig", function () {
         },
         titleTemplate: "{{ variant.product.name }} - {{ variant.name }}",
         imageSize: 1024,
+        outOfStockBehavior: "markOutOfStock",
       });
     });
 

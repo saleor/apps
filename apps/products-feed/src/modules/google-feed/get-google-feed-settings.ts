@@ -56,6 +56,7 @@ export class GoogleFeedSettingsFetcher {
       attributeMapping: appConfig.getAttributeMapping(),
       titleTemplate: appConfig.getTitleTemplate(),
       imageSize: appConfig.getImageSize(),
+      outOfStockBehavior: appConfig.getOutOfStockBehavior(),
     };
 
     this.logger.debug("Google Feed settings fetched successfully", { settings });

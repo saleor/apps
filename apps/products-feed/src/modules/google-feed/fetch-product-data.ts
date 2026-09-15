@@ -120,6 +120,7 @@ export const fetchVariants = async ({
   const relatedProductsData = await client
     .query(FetchRelatedProductsDataDocument, {
       ids: productIds,
+      channel,
       imageSize,
     })
     .toPromise();
@@ -139,38 +140,34 @@ export const fetchVariants = async ({
 
   const variantEdges = productVariantsData.data?.productVariants?.edges || [];
 
-  try {
-    const productVariants = variantEdges
-      .map((e) => {
-        const relatedProductEdge = relatedProductsData.data?.products?.edges.find(
-          (product) => product.node.id === e.node.product.id,
-        );
+  const productVariants = variantEdges
+    .map((e): ProductVariant | null => {
+      const relatedProductEdge = relatedProductsData.data?.products?.edges.find(
+        (product) => product.node.id === e.node.product.id,
+      );
 
-        const product = relatedProductEdge?.node;
+      const product = relatedProductEdge?.node;
 
-        if (!product) {
-          // TODO: migrate to modern errors
-          throw new Error("Product not found for variant");
-        }
+      /**
+       * Product was filtered out by FetchRelatedProductsData - it is unpublished, hidden from
+       * listings or not available for purchase in this channel. Its variants must not be fed.
+       */
+      if (!product) {
+        return null;
+      }
 
-        return {
-          ...e.node,
-          product,
-        };
-      })
-      .filter((e) => e !== null);
+      return {
+        ...e.node,
+        product,
+      };
+    })
+    .filter((e) => e !== null);
 
-    logger.debug("Product variants fetched successfully", {
-      first: productVariants[0],
-      totalLength: productVariants.length,
-    });
+  logger.debug("Product variants fetched successfully", {
+    first: productVariants[0],
+    totalLength: productVariants.length,
+    skippedCount: variantEdges.length - productVariants.length,
+  });
 
-    return productVariants;
-  } catch (error) {
-    logger.error("Error during the product variants mapping", {
-      error: error instanceof Error ? error.message : error,
-    });
-
-    return [];
-  }
+  return productVariants;
 };

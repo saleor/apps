@@ -18,6 +18,25 @@ export const titleTemplateInputSchema = z.object({
 
 export type TitleTemplateInput = z.infer<typeof titleTemplateInputSchema>;
 
+/**
+ * What to do with variants that have no stock available:
+ * - markOutOfStock: keep them in the feed with `g:availability: out_of_stock` (Google default)
+ * - exclude: don't publish them at all
+ *
+ * Both are valid strategies, so the merchant decides.
+ */
+const outOfStockBehaviorFieldSchema = z
+  .enum(["markOutOfStock", "exclude"])
+  .default("markOutOfStock");
+
+export type OutOfStockBehavior = z.infer<typeof outOfStockBehaviorFieldSchema>;
+
+export const outOfStockBehaviorInputSchema = z.object({
+  outOfStockBehavior: outOfStockBehaviorFieldSchema,
+});
+
+export type OutOfStockBehaviorInput = z.infer<typeof outOfStockBehaviorInputSchema>;
+
 const attributeMappingSchema = z.object({
   brandAttributeIds: z.array(z.string()).default([]),
   colorAttributeIds: z.array(z.string()).default([]),
@@ -47,6 +66,7 @@ const rootAppConfigSchema = z.object({
     .optional()
     .default(titleTemplateFieldSchema.parse(undefined)),
   imageSize: imageSizeFieldSchema.default(imageSizeFieldSchema.parse(undefined)),
+  outOfStockBehavior: outOfStockBehaviorFieldSchema,
   attributeMapping: attributeMappingSchema
     .nullable()
     .optional()
@@ -74,6 +94,7 @@ export class AppConfig {
     attributeMapping: attributeMappingSchema.parse({}),
     titleTemplate: titleTemplateFieldSchema.parse(undefined),
     imageSize: imageSizeFieldSchema.parse(undefined),
+    outOfStockBehavior: outOfStockBehaviorFieldSchema.parse(undefined),
   };
 
   constructor(initialData?: RootConfig) {
@@ -179,5 +200,15 @@ export class AppConfig {
 
   getImageSize() {
     return this.rootData.imageSize;
+  }
+
+  setOutOfStockBehavior(outOfStockBehavior: OutOfStockBehavior) {
+    this.rootData.outOfStockBehavior = outOfStockBehavior;
+
+    return this;
+  }
+
+  getOutOfStockBehavior() {
+    return this.rootData.outOfStockBehavior;
   }
 }

@@ -9,6 +9,13 @@ import { getWeightAttributeValue } from "./get-weight-attribute-value";
 import { priceMapping } from "./price-mapping";
 import { productToProxy } from "./product-to-proxy";
 
+/**
+ * Single source of truth for stock availability - used both to render `g:availability` and to
+ * decide whether the variant should be excluded from the feed entirely.
+ */
+export const isVariantInStock = (variant: Pick<ProductVariant, "quantityAvailable">) =>
+  Boolean(variant.quantityAvailable && variant.quantityAvailable > 0);
+
 export const productVariantToProxy = ({
   variant,
   productStorefrontUrl,
@@ -77,8 +84,7 @@ export const productVariantToProxy = ({
       description: variant.product.description,
       seoDescription: variant.product.seoDescription,
     }),
-    availability:
-      variant.quantityAvailable && variant.quantityAvailable > 0 ? "in_stock" : "out_of_stock",
+    availability: isVariantInStock(variant) ? "in_stock" : "out_of_stock",
     category: variant.product.category?.name || "unknown",
     googleProductCategory: variant.product.category?.googleCategoryId || "",
     imageUrl: thumbnailUrl,

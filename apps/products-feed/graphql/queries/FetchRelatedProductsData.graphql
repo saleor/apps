@@ -1,5 +1,12 @@
-query FetchRelatedProductsData($ids: [ID!], $imageSize: Int = 1024){
-  products(filter: { ids: $ids }, first: 100){
+# Publication filters are channel-scoped, hence the `channel` argument. Products that are
+# unpublished, hidden from listings or not available for purchase are dropped here, so their
+# variants never reach the feed.
+query FetchRelatedProductsData($ids: [ID!], $channel: String!, $imageSize: Int = 1024) {
+  products(
+    channel: $channel
+    where: { ids: $ids, isPublished: true, isVisibleInListing: true, isAvailable: true }
+    first: 100
+  ) {
     edges {
       node {
         ...RelatedProducts
