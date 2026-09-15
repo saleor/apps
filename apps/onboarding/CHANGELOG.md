@@ -1,5 +1,11 @@
 # saleor-app-onboarding
 
+## 0.1.4
+
+### Patch Changes
+
+- 2ec9252: The go-live checklist now points you to the Customer Emails app instead of SMTP. If Customer Emails is already installed, those steps open it; if not, they start the Cloud install.
+
 ## 0.1.3
 
 ### Patch Changes
