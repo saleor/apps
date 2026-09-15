@@ -13,6 +13,10 @@ class AccessPattern {
   static getSKforSpecificItem({ paymentIntentId }: { paymentIntentId: StripePaymentIntentId }) {
     return `TRANSACTION#${paymentIntentId}` as const;
   }
+
+  static getSKforAllItems() {
+    return `TRANSACTION#` as const;
+  }
 }
 
 const Schema = item({
@@ -56,6 +60,7 @@ export const DynamoDbRecordedTransaction = {
   accessPattern: {
     getPK: AccessPattern.getPK,
     getSKforSpecificItem: AccessPattern.getSKforSpecificItem,
+    getSKforAllItems: AccessPattern.getSKforAllItems,
   },
   entitySchema: Schema,
   createEntity,

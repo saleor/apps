@@ -63,11 +63,22 @@ export interface AppConfigRepo {
   ) => Promise<
     Result<AppRootConfig, InstanceType<typeof AppConfigRepoError.FailureFetchingConfig>>
   >;
+  getAllConfigs: (
+    access: BaseAccessPattern,
+  ) => Promise<
+    Result<StripeConfig[], InstanceType<typeof AppConfigRepoError.FailureFetchingConfig>>
+  >;
   removeConfig: (
     access: BaseAccessPattern,
     data: {
       configId: string;
     },
+  ) => Promise<Result<null, InstanceType<typeof AppConfigRepoError.FailureRemovingConfig>>>;
+  removeAllConfigs: (
+    access: BaseAccessPattern,
+  ) => Promise<Result<null, InstanceType<typeof AppConfigRepoError.FailureRemovingConfig>>>;
+  removeAllChannelMappings: (
+    access: BaseAccessPattern,
   ) => Promise<Result<null, InstanceType<typeof AppConfigRepoError.FailureRemovingConfig>>>;
   updateMapping: (
     access: BaseAccessPattern,

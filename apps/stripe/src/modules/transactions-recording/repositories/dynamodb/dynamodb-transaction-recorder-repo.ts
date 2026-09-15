@@ -1,5 +1,6 @@
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
-import { GetItemCommand, PutItemCommand } from "dynamodb-toolbox";
+import { DeleteItemCommand, GetItemCommand, PutItemCommand } from "dynamodb-toolbox";
+import { QueryCommand } from "dynamodb-toolbox/table/actions/query";
 import { err, ok, type Result } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
@@ -177,6 +178,53 @@ export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo 
       return err(
         new TransactionRecorderError.FailedFetchingTransactionError(
           "Failed to fetch transaction from DynamoDB",
+          {
+            cause: e,
+          },
+        ),
+      );
+    }
+  }
+
+  async removeAllForApp(
+    accessPattern: TransactionRecorderRepoAccess,
+  ): Promise<Result<null, TransactionRecorderError>> {
+    const query = this.entity.table
+      .build(QueryCommand)
+      .entities(this.entity)
+      .query({
+        range: {
+          beginsWith: DynamoDbRecordedTransaction.accessPattern.getSKforAllItems(),
+        },
+        partition: DynamoDbRecordedTransaction.accessPattern.getPK(accessPattern),
+      })
+      .options({ maxPages: Infinity });
+
+    try {
+      const result = await query.send();
+      const items = result.Items ?? [];
+
+      await Promise.all(
+        items.map((item) =>
+          this.entity.build(DeleteItemCommand).key({ PK: item.PK, SK: item.SK }).send(),
+        ),
+      );
+
+      this.logger.info("Removed all RecordedTransaction items for app", {
+        ...accessPattern,
+        removedCount: items.length,
+      });
+
+      return ok(null);
+    } catch (e) {
+      this.logger.error("Failed to remove all transactions from DynamoDB", {
+        error: e,
+        ...accessPattern,
+      });
+
+      return err(
+        new TransactionRecorderError.FailedRemovingTransactionsError(
+          "Failed to remove all transactions from DynamoDB",
           {
             cause: e,
           },

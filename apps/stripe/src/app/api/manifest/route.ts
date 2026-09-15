@@ -7,6 +7,7 @@ import { env } from "@/lib/env";
 import { withLoggerContext } from "@/lib/logger-context";
 import packageJson from "@/package.json";
 
+import { appDeletedWebhookDefinition } from "../webhooks/app-deleted/webhook-definition";
 import { paymentGatewayInitializeSessionWebhookDefinition } from "../webhooks/saleor/payment-gateway-initialize-session/webhook-definition";
 import { transactionCancelationRequestedWebhookDefinition } from "../webhooks/saleor/transaction-cancelation-requested/webhook-definition";
 import { transactionChargeRequestedWebhookDefinition } from "../webhooks/saleor/transaction-charge-requested/webhook-definition";
@@ -49,6 +50,7 @@ const handler = createManifestHandler({
         transactionChargeRequestedWebhookDefinition.getWebhookManifest(apiBaseUrl),
         transactionCancelationRequestedWebhookDefinition.getWebhookManifest(apiBaseUrl),
         transactionRefundRequestedWebhookDefinition.getWebhookManifest(apiBaseUrl),
+        appDeletedWebhookDefinition.getWebhookManifest(apiBaseUrl),
       ],
     };
 

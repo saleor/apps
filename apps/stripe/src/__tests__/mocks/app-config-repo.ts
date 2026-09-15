@@ -6,6 +6,9 @@ export const mockedAppConfigRepo = {
   getStripeConfig: vi.fn(),
   saveStripeConfig: vi.fn(),
   getRootConfig: vi.fn(),
+  getAllConfigs: vi.fn(),
   updateMapping: vi.fn(),
   removeConfig: vi.fn(),
+  removeAllConfigs: vi.fn(),
+  removeAllChannelMappings: vi.fn(),
 } satisfies AppConfigRepo;

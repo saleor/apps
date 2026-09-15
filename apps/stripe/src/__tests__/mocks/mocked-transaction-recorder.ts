@@ -33,6 +33,14 @@ export class MockedTransactionRecorder implements TransactionRecorderRepo {
     }
   }
 
+  async removeAllForApp(
+    _accessPattern: TransactionRecorderRepoAccess,
+  ): Promise<Result<null, TransactionRecorderError>> {
+    this.transactions = {};
+
+    return ok(null);
+  }
+
   reset() {
     this.transactions = {};
   }
