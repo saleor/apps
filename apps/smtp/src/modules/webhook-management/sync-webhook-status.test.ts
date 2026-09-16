@@ -32,7 +32,6 @@ describe("syncWebhookStatus", function () {
       configurations: [],
       useSaleorSmtpFallback: false,
     },
-    featureFlagService: createMockedFeatureFlagService(),
   });
 
   afterEach(() => {

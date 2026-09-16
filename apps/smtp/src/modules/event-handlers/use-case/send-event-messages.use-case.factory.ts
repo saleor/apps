@@ -2,7 +2,6 @@ import { type AuthData } from "@saleor/app-sdk/APL";
 
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
 import { createSettingsManager } from "../../../lib/metadata-manager";
-import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
 import { SmtpConfigurationService } from "../../smtp/configuration/smtp-configuration.service";
 import { SmtpMetadataManager } from "../../smtp/configuration/smtp-metadata-manager";
 import { EmailCompiler } from "../../smtp/services/email-compiler";
@@ -27,7 +26,6 @@ export class SendEventMessagesUseCaseFactory {
         new MjmlCompiler(),
       ),
       configService: new SmtpConfigurationService({
-        featureFlagService: new FeatureFlagService({ client }),
         metadataManager: new SmtpMetadataManager(
           createSettingsManager(client, authData.appId),
           authData.saleorApiUrl,

@@ -1,4 +1,6 @@
-import { ILogObj, ILogObjMeta, Logger } from "tslog";
+import { type ILogObj, type ILogObjMeta, type Logger } from "tslog";
+
+import { errorJsonReplacer } from "./error-json-replacer";
 
 export const attachLoggerConsoleTransport = (logger: Logger<ILogObj>) => {
   logger.attachTransport((log) => {
@@ -16,7 +18,7 @@ export const attachLoggerConsoleTransport = (logger: Logger<ILogObj>) => {
     const formattedDate = date.toISOString();
 
     const logAttributes =
-      Object.keys(attributes).length === 0 ? "" : JSON.stringify(attributes, null, 2);
+      Object.keys(attributes).length === 0 ? "" : JSON.stringify(attributes, errorJsonReplacer, 2);
 
     console.log(`\x1b[2m ${formattedDate} ${formattedName}\x1b[0m \t${message}`, logAttributes);
   });

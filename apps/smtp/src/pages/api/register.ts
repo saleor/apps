@@ -126,7 +126,6 @@ export default wrapWithLoggerContext(
 
           const featureFlagService = new FeatureFlagService({ client });
           const smtpConfigurationService = new SmtpConfigurationService({
-            featureFlagService,
             metadataManager: new SmtpMetadataManager(
               createSettingsManager(client, authData.appId),
               authData.saleorApiUrl,

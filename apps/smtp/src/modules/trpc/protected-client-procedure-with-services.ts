@@ -32,13 +32,11 @@ export const protectedWithConfigurationServices = protectedClientProcedure.use(
         createSettingsManager(ctx.apiClient, ctx.appId!),
         ctx.saleorApiUrl,
       ),
-      featureFlagService,
     });
 
     const result = await next({
       ctx: {
         smtpConfigurationService,
-        featureFlagService,
       },
     });
 

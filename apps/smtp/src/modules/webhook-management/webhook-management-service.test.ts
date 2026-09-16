@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { invoiceSentWebhook } from "../../pages/api/webhooks/invoice-sent";
 import { orderCancelledWebhook } from "../../pages/api/webhooks/order-cancelled";
+import { orderCreatedWebhook } from "../../pages/api/webhooks/order-created";
 import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
 import * as operationExports from "./api-operations";
 import { WebhookManagementService } from "./webhook-management-service";
@@ -116,23 +117,38 @@ describe("WebhookManagementService", function () {
     });
   });
 
-  it("Should throw error, when attempting to create gift card sent webhook in unsupported environment", async () => {
-    const webhookManagementService = new WebhookManagementService({
-      client: mockedClient,
-      appBaseUrl: "https://example.com",
-      featureFlagService: new FeatureFlagService({
-        client: {} as Client,
-        saleorVersion: "3.12.0", // Gift card sent webhook is supported from 3.13.0
-      }),
-    });
-
-    await expect(
-      async () =>
-        await webhookManagementService.createWebhook({
-          webhook: "giftCardSentWebhook",
+  it.each([
+    { saleorVersion: "3.22.0", isSupported: false },
+    { saleorVersion: "3.23.0", isSupported: true },
+  ])(
+    "Registered query should $#include GiftCardPaymentMethodDetails on Saleor $saleorVersion",
+    async ({ saleorVersion, isSupported }) => {
+      const webhookManagementService = new WebhookManagementService({
+        client: mockedClient,
+        appBaseUrl: "https://example.com",
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion,
         }),
-    ).rejects.toThrow("Gift card event is not supported in this environment");
-  });
+      });
+
+      const createAppWebhookMock = vi
+        .spyOn(operationExports, "createAppWebhook")
+        .mockResolvedValue({
+          id: "1",
+          isActive: true,
+          name: orderCreatedWebhook.name,
+          asyncEvents: [{ eventType: "ORDER_CREATED", name: "Order created" }],
+        });
+
+      await webhookManagementService.createWebhook({ webhook: "orderCreatedWebhook" });
+
+      const { query } = createAppWebhookMock.mock.calls[0][0].variables;
+
+      expect(query).toContain("CardPaymentMethodDetails");
+      expect(query?.includes("GiftCardPaymentMethodDetails")).toBe(isSupported);
+    },
+  );
 
   it("Webhook should be deleted using the API, when requested", async () => {
     const webhookManagementService = new WebhookManagementService({

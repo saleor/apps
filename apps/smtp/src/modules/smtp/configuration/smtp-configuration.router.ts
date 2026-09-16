@@ -67,13 +67,6 @@ export const throwTrpcErrorFromConfigurationServiceError = (
           cause: error,
         });
 
-      case SmtpConfigurationService.WrongSaleorVersionError:
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Feature you are trying to use is not supported in this version of Saleor.",
-          cause: error,
-        });
-
       case SmtpConfigurationService.TemplateValidationError:
         throw new TRPCError({
           code: "BAD_REQUEST",

@@ -1,52 +1,34 @@
 import { type PermissionEnum } from "../../generated/graphql";
 import { type MessageEventTypes } from "../modules/event-handlers/message-event-types";
-import { type FeatureFlagsState } from "../modules/feature-flag-service/get-feature-flags";
 
 interface getEventFormStatusArgs {
   eventType: MessageEventTypes;
-  featureFlags?: FeatureFlagsState;
   appPermissions?: PermissionEnum[];
 }
 
-/*
- * TODO: `requiredSaleorVersion` branches are dead - app requires Saleor >=3.22,
- * so ORDER_REFUNDED (>=3.14) and GIFT_CARD_SENT (>=3.13) are always supported.
- */
 export const getEventFormStatus = ({
   eventType,
-  featureFlags,
   appPermissions,
 }: getEventFormStatusArgs): {
   missingPermission: PermissionEnum | undefined;
   isDisabled: boolean;
-  requiredSaleorVersion: string | undefined;
 } => {
   switch (eventType) {
     case "ORDER_REFUNDED": {
-      const isUnsupported = !featureFlags?.orderRefundedEvent;
-
       const hasPermission = (appPermissions || []).includes("MANAGE_ORDERS");
 
-      const isDisabled = isUnsupported || !hasPermission;
-
       return {
-        isDisabled,
+        isDisabled: !hasPermission,
         missingPermission: hasPermission ? undefined : "MANAGE_ORDERS",
-        requiredSaleorVersion: isUnsupported ? ">=3.14" : undefined,
       };
     }
 
     case "GIFT_CARD_SENT": {
-      const isUnsupported = !featureFlags?.giftCardSentEvent;
-
       const hasPermission = (appPermissions || []).includes("MANAGE_GIFT_CARD");
 
-      const isDisabled = isUnsupported || !hasPermission;
-
       return {
-        isDisabled,
+        isDisabled: !hasPermission,
         missingPermission: hasPermission ? undefined : "MANAGE_GIFT_CARD",
-        requiredSaleorVersion: isUnsupported ? ">=3.13" : undefined,
       };
     }
 
@@ -54,7 +36,6 @@ export const getEventFormStatus = ({
       return {
         isDisabled: false,
         missingPermission: undefined,
-        requiredSaleorVersion: undefined,
       };
   }
 };

@@ -1,4 +1,4 @@
-import { err, errAsync, fromAsyncThrowable, ok, okAsync, type ResultAsync } from "neverthrow";
+import { err, errAsync, ok, okAsync, type ResultAsync } from "neverthrow";
 
 import { BaseError } from "../../../errors";
 import { generateRandomId } from "../../../lib/generate-random-id";
@@ -6,7 +6,6 @@ import { createLogger } from "../../../logger";
 import { filterConfigurations } from "../../app-configuration/filter-configurations";
 import { examplePayloads } from "../../event-handlers/default-payloads";
 import { type MessageEventTypes } from "../../event-handlers/message-event-types";
-import { type FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
 import { EmailCompiler, type ErrorContext } from "../services/email-compiler";
 import { HandlebarsTemplateCompiler } from "../services/handlebars-template-compiler";
 import { HtmlToTextCompiler } from "../services/html-to-text-compiler";
@@ -55,8 +54,6 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFall
     "EventConfigNotFoundError",
   );
   static CantFetchConfigError = this.SmtpConfigurationServiceError.subclass("CantFetchConfigError");
-  static WrongSaleorVersionError =
-    this.SmtpConfigurationServiceError.subclass("WrongSaleorVersionError");
   static TemplateValidationError = this.SmtpConfigurationServiceError.subclass(
     "TemplateValidationError",
     {
@@ -66,21 +63,14 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFall
 
   private configurationData?: SmtpConfig;
   private metadataConfigurator: SmtpMetadataManager;
-  private featureFlagService: FeatureFlagService;
   private emailCompiler: EmailCompiler;
 
-  constructor(args: {
-    metadataManager: SmtpMetadataManager;
-    initialData?: SmtpConfig;
-    featureFlagService: FeatureFlagService;
-  }) {
+  constructor(args: { metadataManager: SmtpMetadataManager; initialData?: SmtpConfig }) {
     this.metadataConfigurator = args.metadataManager;
 
     if (args.initialData) {
       this.configurationData = args.initialData;
     }
-
-    this.featureFlagService = args.featureFlagService;
 
     this.emailCompiler = new EmailCompiler(
       new HandlebarsTemplateCompiler(),
@@ -155,46 +145,15 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFall
     return this.getConfigurationRoot().andThen((d) => ok(d.useSaleorSmtpFallback));
   }
 
-  private containActiveGiftCardEvent(config: SmtpConfig) {
-    for (const configuration of config.configurations) {
-      const giftCardSentEvent = configuration.events.find(
-        (event) => event.eventType === "GIFT_CARD_SENT",
-      );
-
-      if (giftCardSentEvent?.active) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
   // Saves configuration to Saleor API and cache it
   private setConfigurationRoot(config: SmtpConfig) {
     logger.debug("Validate configuration before sending it to the Saleor API");
 
-    return fromAsyncThrowable(
-      this.featureFlagService.getFeatureFlags,
-      SmtpConfigurationService.SmtpConfigurationServiceError.normalize,
-    )().andThen((features) => {
-      if (!features.giftCardSentEvent && this.containActiveGiftCardEvent(config)) {
-        logger.error(
-          "Attempt to enable gift card sent event for unsupported Saleor version. Aborting configuration update.",
-        );
+    logger.debug("Set configuration root");
 
-        return errAsync(
-          new SmtpConfigurationService.WrongSaleorVersionError(
-            "Gift card sent event is not supported for this Saleor version",
-          ),
-        );
-      }
+    this.configurationData = config;
 
-      logger.debug("Set configuration root");
-
-      this.configurationData = config;
-
-      return this.pushConfiguration();
-    });
+    return this.pushConfiguration();
   }
 
   /**
