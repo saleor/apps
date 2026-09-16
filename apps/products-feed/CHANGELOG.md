@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 3.2.1
+
+### Patch Changes
+
+- 1d4b04d: Now the Product Feed app declares compatibility with Saleor 3.22 and 3.23 only. Before, it advertised support for every 3.x version, so Saleor Dashboard offered it for installation on 3.24, where it is not supported.
+
 ## 3.2.0
 
 ### Minor Changes
