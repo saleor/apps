@@ -1,5 +1,11 @@
 # saleor-app-extensions-explorer
 
+## 0.1.2
+
+### Patch Changes
+
+- @saleor/apps-shared@1.16.1
+
 ## 0.1.1
 
 ### Patch Changes

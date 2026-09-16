@@ -1,5 +1,19 @@
 # saleor-app-payment-np-atobarai
 
+## 1.5.0
+
+### Minor Changes
+
+- b7efe3b: Dropped support for Saleor 3.21. Before, these apps could be installed on Saleor 3.21 and newer. Now, the minimum supported version is 3.22 - installing on an older Saleor will be rejected by the Dashboard. Saleor 3.21 users should stay on the previous app release until they upgrade their Saleor instance.
+
+### Patch Changes
+
+- Updated dependencies [53fa836]
+  - @saleor/apps-logger@1.6.5
+  - @saleor/dynamo-config-repository@1.0.4
+  - @saleor/apps-shared@1.16.1
+  - @saleor/apps-trpc@4.0.5
+
 ## 1.4.13
 
 ### Patch Changes

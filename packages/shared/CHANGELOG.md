@@ -1,5 +1,12 @@
 # @saleor/apps-shared
 
+## 1.16.1
+
+### Patch Changes
+
+- Updated dependencies [53fa836]
+  - @saleor/apps-logger@1.6.5
+
 ## 1.16.0
 
 ### Minor Changes
