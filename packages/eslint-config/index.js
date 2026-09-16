@@ -1,3 +1,5 @@
+import path from "node:path";
+
 import eslint from "@eslint/js";
 import graphqlPlugin from "@graphql-eslint/eslint-plugin";
 import nextPlugin from "@next/eslint-plugin-next";
@@ -27,7 +29,14 @@ export const config = [
    * */
   {
     name: "@saleor/eslint-config-apps/ignores",
-    ignores: [".next/**/*", ".tmp/**/*", "coverage/**/*", "**/generated/**/*", "next-env.d.ts"],
+    ignores: [
+      ".next/**/*",
+      ".tmp/**/*",
+      "coverage/**/*",
+      "**/generated/**/*",
+      "next-env.d.ts",
+      "**/schema.graphql", // vendored Saleor schema, not our document
+    ],
   },
   /**
    * Dependencies - suggests better alternatives for redundant packages
@@ -49,11 +58,20 @@ export const config = [
     files: ["**/*.graphql"],
     languageOptions: {
       parser: graphqlPlugin.parser,
+      parserOptions: {
+        /*
+         * Required by `no-deprecated`. Apps keep their own copy of the schema for codegen,
+         * but all copies come from the root one (`pnpm fetch-schema`), so lint against that
+         * single source - it also covers packages that have documents but no local copy.
+         */
+        graphQLConfig: { schema: path.join(import.meta.dirname, "../../schema.graphql") },
+      },
     },
     plugins: {
       "@graphql-eslint": graphqlPlugin,
     },
     rules: {
+      "@graphql-eslint/no-deprecated": "warn",
       "@graphql-eslint/match-document-filename": [
         "error",
         {
@@ -65,6 +83,14 @@ export const config = [
         },
       ],
     },
+  },
+  /**
+   * GraphQL documents embedded in `gql` template literals inside TS files
+   */
+  {
+    name: "@saleor/eslint-config-apps/graphql-in-ts",
+    files: ["**/*.{ts,tsx}"],
+    processor: graphqlPlugin.processor,
   },
   /**
    * Main rules - on JS/TS
