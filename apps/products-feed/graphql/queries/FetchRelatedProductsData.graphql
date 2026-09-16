@@ -1,5 +1,5 @@
-query FetchRelatedProductsData($ids: [ID!], $imageSize: Int = 1024){
-  products(filter: { ids: $ids }, first: 100){
+query FetchRelatedProductsData($ids: [ID!], $imageSize: Int = 1024) {
+  products(where: { ids: $ids }, first: 100) {
     edges {
       node {
         ...RelatedProducts
