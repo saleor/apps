@@ -31,7 +31,6 @@ export const SmtpEventsSection = ({ configuration }: SmtpEventsSectionProps) => 
   const { notifySuccess, notifyError } = useDashboardNotification();
   const router = useRouter();
 
-  const { data: featureFlags } = trpcClient.app.featureFlags.useQuery();
   const { data: appPermissions } = trpcClient.app.appPermissions.useQuery();
 
   // Sort events by displayed label
@@ -93,12 +92,10 @@ export const SmtpEventsSection = ({ configuration }: SmtpEventsSectionProps) => 
               </Table.Header>
               <Table.Body>
                 {eventsSorted.map((event, index) => {
-                  const { isDisabled, requiredSaleorVersion, missingPermission } =
-                    getEventFormStatus({
-                      appPermissions,
-                      featureFlags: featureFlags,
-                      eventType: event.eventType,
-                    });
+                  const { isDisabled, missingPermission } = getEventFormStatus({
+                    appPermissions,
+                    eventType: event.eventType,
+                  });
 
                   return (
                     <Table.Row key={event.eventType}>
@@ -111,19 +108,11 @@ export const SmtpEventsSection = ({ configuration }: SmtpEventsSectionProps) => 
                               disabled={isDisabled}
                             />
                           </Tooltip.Trigger>
-                          {requiredSaleorVersion ? (
+                          {missingPermission && (
                             <Tooltip.Content side="left">
-                              The feature requires Saleor version {requiredSaleorVersion}. Update
-                              the instance to enable.
+                              <ManagePermissionsTextLink missingPermission={missingPermission} />
                               <Tooltip.Arrow />
                             </Tooltip.Content>
-                          ) : (
-                            missingPermission && (
-                              <Tooltip.Content side="left">
-                                <ManagePermissionsTextLink missingPermission={missingPermission} />
-                                <Tooltip.Arrow />
-                              </Tooltip.Content>
-                            )
                           )}
                         </Tooltip>
                       </Table.Cell>

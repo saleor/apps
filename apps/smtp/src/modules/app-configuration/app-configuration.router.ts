@@ -4,13 +4,6 @@ import { protectedWithConfigurationServices } from "../trpc/protected-client-pro
 import { router } from "../trpc/trpc-server";
 
 export const appConfigurationRouter = router({
-  featureFlags: protectedWithConfigurationServices.query(async ({ ctx }) => {
-    const logger = createLogger("appConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
-
-    logger.debug("appConfigurationRouter.featureFlags called");
-
-    return await ctx.featureFlagService.getFeatureFlags();
-  }),
   appPermissions: protectedWithConfigurationServices.query(async ({ ctx }) => {
     const logger = createLogger("appConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
 

@@ -319,14 +319,6 @@ describe("smtpConfigurationRouter", () => {
       expect(thrown.code).toBe("INTERNAL_SERVER_ERROR");
     });
 
-    it("should map WrongSaleorVersionError to INTERNAL_SERVER_ERROR", () => {
-      const error = new SmtpConfigurationService.WrongSaleorVersionError("Wrong Saleor version");
-
-      const thrown = getThrownError(error);
-
-      expect(thrown.code).toBe("INTERNAL_SERVER_ERROR");
-    });
-
     it("should map unknown errors to INTERNAL_SERVER_ERROR", () => {
       const thrown = getThrownError(new Error("Some unexpected error"));
 

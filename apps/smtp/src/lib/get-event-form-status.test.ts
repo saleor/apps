@@ -8,29 +8,19 @@ describe("getEventFormStatus", function () {
       getEventFormStatus({
         eventType: "ORDER_CREATED",
         appPermissions: ["MANAGE_GIFT_CARD"],
-        featureFlags: {
-          giftCardSentEvent: true,
-          orderRefundedEvent: true,
-        },
       }),
     ).toStrictEqual({
       isDisabled: false,
       missingPermission: undefined,
-      requiredSaleorVersion: undefined,
     });
     expect(
       getEventFormStatus({
         eventType: "ORDER_CREATED",
         appPermissions: [],
-        featureFlags: {
-          giftCardSentEvent: false,
-          orderRefundedEvent: true,
-        },
       }),
     ).toStrictEqual({
       isDisabled: false,
       missingPermission: undefined,
-      requiredSaleorVersion: undefined,
     });
   });
 
@@ -39,32 +29,22 @@ describe("getEventFormStatus", function () {
       getEventFormStatus({
         eventType: "GIFT_CARD_SENT",
         appPermissions: [],
-        featureFlags: {
-          giftCardSentEvent: true,
-          orderRefundedEvent: true,
-        },
       }),
     ).toStrictEqual({
       isDisabled: true,
       missingPermission: "MANAGE_GIFT_CARD",
-      requiredSaleorVersion: undefined,
     });
   });
 
-  it("Return disable flag and unsupported Saleor version message, when GIFT_CARD_SENT is passed with missing feature flag", () => {
+  it("Return disable flag and lack of the permission message, when ORDER_REFUNDED is passed and app has no manage orders permission", () => {
     expect(
       getEventFormStatus({
-        eventType: "GIFT_CARD_SENT",
-        appPermissions: ["MANAGE_GIFT_CARD"],
-        featureFlags: {
-          giftCardSentEvent: false,
-          orderRefundedEvent: true,
-        },
+        eventType: "ORDER_REFUNDED",
+        appPermissions: [],
       }),
     ).toStrictEqual({
       isDisabled: true,
-      missingPermission: undefined,
-      requiredSaleorVersion: ">=3.13",
+      missingPermission: "MANAGE_ORDERS",
     });
   });
 });
