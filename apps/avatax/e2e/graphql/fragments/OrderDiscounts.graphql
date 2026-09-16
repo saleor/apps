@@ -4,7 +4,7 @@ fragment Discounts on OrderDiscount {
   type
   valueType
   value
-  amount {
+  total {
     amount
   }
 }

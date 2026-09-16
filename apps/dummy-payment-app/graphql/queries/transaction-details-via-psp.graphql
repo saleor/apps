@@ -1,5 +1,5 @@
 query TransactionDetailsViaPsp($pspReference: String!) {
-  orders(first: 1, filter: { search: $pspReference }) {
+  orders(first: 1, search: $pspReference) {
     edges {
       node {
         id

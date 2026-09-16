@@ -5,9 +5,9 @@ import {
   CategoriesDataForImportDocument,
   type CategoriesDataForImportQuery,
   ChannelsDocument,
-  type PageFilterInput,
   PagesDataForImportDocument,
   type PagesDataForImportQuery,
+  type PageWhereInput,
   ProductsDataForImportDocument,
   type ProductsDataForImportQuery,
 } from "../../../generated/graphql";
@@ -83,13 +83,13 @@ export const useGraphQLClient = () => {
       return;
     }
 
-    const filter: PageFilterInput = { pageTypes: pageTypeIds };
+    const where: PageWhereInput = { pageType: { oneOf: pageTypeIds } };
 
     const response = await client
       .query(PagesDataForImportDocument, {
         after: cursor,
         first: PER_PAGE,
-        filter,
+        where,
       })
       .toPromise();
 
