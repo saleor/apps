@@ -1,5 +1,13 @@
 # saleor-app-anonymizer
 
+## 1.2.3
+
+### Patch Changes
+
+- Updated dependencies [53fa836]
+  - @saleor/apps-logger@1.6.5
+  - @saleor/apps-shared@1.16.1
+
 ## 1.2.2
 
 ### Patch Changes
