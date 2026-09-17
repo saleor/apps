@@ -1,0 +1,8 @@
+{
+  "comment": "Saleor versions the apps are checked against by scripts/check-schema-compatibility.ts. `ref` is the git ref on github.com/saleor/saleor holding that version's schema - upcoming versions point at `main` until their release branch is cut.",
+  "versions": [
+    { "version": "3.22", "ref": "3.22" },
+    { "version": "3.23", "ref": "3.23" },
+    { "version": "3.24", "ref": "main" }
+  ]
+}

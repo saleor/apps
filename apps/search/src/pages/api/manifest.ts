@@ -52,7 +52,7 @@ export default wrapWithLoggerContext(
             appDeletedWebhook.getWebhookManifest(apiBaseURL),
           ],
           author: "Saleor Commerce",
-          requiredSaleorVersion: ">=3.22 <4",
+          requiredSaleorVersion: packageJson.saleor.requiredVersion,
         };
 
         return manifest;

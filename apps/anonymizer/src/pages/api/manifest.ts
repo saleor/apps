@@ -48,7 +48,7 @@ const handler = wrapWithLoggerContext(
           id: env.MANIFEST_APP_ID,
           name: "Anonymizer",
           permissions: ["MANAGE_ORDERS", "MANAGE_USERS", "MANAGE_CHECKOUTS", "MANAGE_GIFT_CARD"],
-          requiredSaleorVersion: ">=3.22 <4",
+          requiredSaleorVersion: pkg.saleor.requiredVersion,
           supportUrl: "https://github.com/saleor/apps/discussions",
           tokenTargetUrl: `${apiBaseURL}/api/register`,
           version: pkg.version,

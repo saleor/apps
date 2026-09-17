@@ -33,7 +33,7 @@ export default withSpanAttributes(
         id: env.MANIFEST_APP_ID,
         name: "SMTP",
         permissions: ["MANAGE_ORDERS", "MANAGE_USERS", "MANAGE_GIFT_CARD"],
-        requiredSaleorVersion: ">=3.22 <3.24",
+        requiredSaleorVersion: packageJson.saleor.requiredVersion,
         supportUrl: "https://github.com/saleor/apps/discussions",
         tokenTargetUrl: `${apiBaseURL}/api/register`,
         version: packageJson.version,

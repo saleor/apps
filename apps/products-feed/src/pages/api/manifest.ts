@@ -39,7 +39,7 @@ export default wrapWithLoggerContext(
           supportUrl: "https://github.com/saleor/apps/discussions",
           tokenTargetUrl: `${apiBaseURL}/api/register`,
           version: packageJson.version,
-          requiredSaleorVersion: ">=3.22 <4",
+          requiredSaleorVersion: packageJson.saleor.requiredVersion,
           webhooks: [appDeletedWebhook.getWebhookManifest(apiBaseURL)],
         };
 

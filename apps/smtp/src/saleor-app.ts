@@ -4,6 +4,7 @@ import { FileAPL } from "@saleor/app-sdk/APL/file";
 import { UpstashAPL } from "@saleor/app-sdk/APL/upstash";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 
+import packageJson from "../package.json";
 import { env } from "./env";
 import { getDynamoEnv } from "./env-dynamodb";
 import { createLogger } from "./logger";
@@ -52,4 +53,4 @@ export const saleorApp = new SaleorApp({
   apl,
 });
 
-export const REQUIRED_SALEOR_VERSION = ">=3.22 <3.24";
+export const REQUIRED_SALEOR_VERSION = packageJson.saleor.requiredVersion;

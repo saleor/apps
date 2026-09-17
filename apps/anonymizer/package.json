@@ -67,5 +67,8 @@
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
+  },
+  "saleor": {
+    "requiredVersion": ">=3.22 <4"
   }
 }

@@ -57,5 +57,8 @@
     "vite": "catalog:",
     "vite-tsconfig-paths": "catalog:",
     "vitest": "catalog:"
+  },
+  "saleor": {
+    "requiredVersion": ">=3.23 <4"
   }
 }

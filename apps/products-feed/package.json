@@ -99,5 +99,8 @@
     "tsx": "catalog:",
     "typescript": "catalog:",
     "vite-tsconfig-paths": "5.1.4"
+  },
+  "saleor": {
+    "requiredVersion": ">=3.22 <4"
   }
 }

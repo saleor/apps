@@ -1,0 +1,99 @@
+name: GraphQL Schema Compatibility
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    paths:
+      # Self
+      - ".github/workflows/graphql-schema-compatibility.yml"
+      - "scripts/check-schema-compatibility.ts"
+      # Which Saleor versions apps are checked against
+      - "saleor-versions.json"
+      # Documents, and the ranges apps declare support for
+      - "apps/*/graphql/**"
+      - "apps/*/e2e/**/*.graphql"
+      - "apps/*/src/**/*.ts"
+      - "apps/*/src/**/*.tsx"
+      - "apps/*/graphql.config.ts"
+      - "apps/*/codegen.ts"
+      - "apps/*/package.json"
+  schedule:
+    # Nightly, so a moving `main` schema is noticed without waiting for a PR
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check documents against supported Saleor versions
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - name: Setup PNPM
+        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        with:
+          run_install: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+        env:
+          HUSKY: 0
+
+      # Findings never fail this step - apps intentionally author documents against the
+      # newest supported schema and degrade at runtime, so errors on older versions are
+      # expected. The step fails only if the check itself could not run.
+      - name: Check schema compatibility
+        id: check
+        run: pnpm check-schema-compatibility
+        env:
+          SCHEMA_REPORT_PATH: ${{ runner.temp }}/schema-report.md
+
+      # Fails on forked PRs, where the token is read-only. The job must not fail with it:
+      # the report is already in the step summary, which is always written.
+      - name: Comment on pull request
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.number }}
+          REPO: ${{ github.repository }}
+          FINDINGS: ${{ steps.check.outputs.findings }}
+          REPORT: ${{ runner.temp }}/schema-report.md
+        run: |
+          set -euo pipefail
+          MARKER='<!-- saleor-schema-compatibility -->'
+
+          # --paginate runs --jq per page, so reduce to a single id afterwards. Kept out of
+          # a pipeline so `head` closing early cannot SIGPIPE gh into a pipefail failure.
+          MATCHES=$(gh api "repos/$REPO/issues/$PR/comments" --paginate \
+            --jq ".[] | select(.body | startswith(\"$MARKER\")) | .id")
+          EXISTING=$(printf '%s\n' "$MATCHES" | head -n 1)
+
+          # Stay silent on clean PRs, unless a previous run already left a comment to clear.
+          if [ "$FINDINGS" = "0" ] && [ -z "$EXISTING" ]; then
+            echo "No findings and no existing comment - nothing to post."
+            exit 0
+          fi
+
+          BODY="$RUNNER_TEMP/body.md"
+          printf '%s\n\n' "$MARKER" > "$BODY"
+          cat "$REPORT" >> "$BODY"
+
+          if [ -n "$EXISTING" ]; then
+            gh api --method PATCH "repos/$REPO/issues/comments/$EXISTING" -F "body=@$BODY"
+          else
+            gh api --method POST "repos/$REPO/issues/$PR/comments" -F "body=@$BODY"
+          fi

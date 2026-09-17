@@ -106,5 +106,8 @@
     "null-loader": "4.0.1",
     "tsx": "catalog:",
     "typescript": "5.8.2"
+  },
+  "saleor": {
+    "requiredVersion": ">=3.22 <3.24"
   }
 }

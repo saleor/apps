@@ -35,7 +35,7 @@ const handler = createManifestHandler({
       id: env.MANIFEST_APP_ID,
       name: env.APP_NAME,
       permissions: [],
-      requiredSaleorVersion: ">=3.23 <4",
+      requiredSaleorVersion: packageJson.saleor.requiredVersion,
       supportUrl: "https://saleor.io/discord",
       version: packageJson.version,
       webhooks: [],
