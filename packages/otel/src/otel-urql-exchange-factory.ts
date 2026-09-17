@@ -10,13 +10,8 @@ type Definition = {
   };
 };
 
-interface ExtendedFetchOptions extends RequestInit {
-  headers: Record<string, string>;
-}
-
 type ExtendedOperationContext = Operation["context"] & {
   span: Span;
-  fetchOptions?: ExtendedFetchOptions;
 };
 
 interface ExtendedOperation extends Operation {
@@ -28,7 +23,6 @@ const GraphQLAttributeNames = {
   OPERATION_NAME: "graphql.operation.name",
   OPERATION_BODY: "graphql.operation.body",
   OPERATION_KEY: "graphql.operation.key",
-  VARIABLES: "graphql.variables.",
 } as const;
 
 export const createOtelUrqlExchange = (args: { tracer: Tracer }) => {
@@ -60,11 +54,6 @@ export const createOtelUrqlExchange = (args: { tracer: Tracer }) => {
 
       span.setAttribute(ATTR_URL_FULL, operation.context.url);
 
-      addRequestHeaderAttributes(span, operation.context.fetchOptions?.headers);
-      if (operation.variables) {
-        addInputVariableAttributes(span, operation.variables);
-      }
-
       return makeOperation(operation.kind, operation, {
         ...operation.context,
         span,
@@ -83,43 +72,5 @@ export const createOtelUrqlExchange = (args: { tracer: Tracer }) => {
 
       span.end();
     },
-  });
-};
-
-const addRequestHeaderAttributes = (span: Span, headers?: Record<string, string | string[]>) => {
-  if (!headers) return;
-
-  Object.entries(headers).forEach(([key, value]) => {
-    if (key.toLowerCase().includes("authorization")) {
-      span.setAttribute(`http.request.header.${key}`, "(redacted)");
-
-      return;
-    }
-
-    if (Array.isArray(value)) {
-      span.setAttribute(`http.request.header.${key}`, value.join(", "));
-    } else {
-      span.setAttribute(`http.request.header.${key}`, String(value));
-    }
-  });
-};
-
-const addInputVariableAttribute = (span: Span, key: string, variable: any) => {
-  if (Array.isArray(variable)) {
-    variable.forEach((value, idx) => {
-      addInputVariableAttribute(span, `${key}.${idx}`, value);
-    });
-  } else if (variable instanceof Object) {
-    Object.entries(variable).forEach(([nestedKey, value]) => {
-      addInputVariableAttribute(span, `${key}.${nestedKey}`, value);
-    });
-  } else {
-    span.setAttribute(`${GraphQLAttributeNames.VARIABLES}${String(key)}`, variable);
-  }
-};
-
-const addInputVariableAttributes = (span: Span, variableValues: { [key: string]: any }) => {
-  Object.entries(variableValues).forEach(([key, value]) => {
-    addInputVariableAttribute(span, key, value);
   });
 };
