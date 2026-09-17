@@ -46,3 +46,7 @@ yarn-error.log*
 .saleor-app-auth.json
 .DS_Store
 *.pem
+
+# OSS sync export output (oss/export.ts)
+.oss-export/
+.oss-mirror/

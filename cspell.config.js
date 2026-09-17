@@ -32,6 +32,13 @@ export default {
   ],
   words: [
     "anonymization",
+    "pathspecs",
+    "unbuildable",
+    "cutover",
+    "regen",
+    "worktree",
+    "unmirrored",
+    "refspec",
     "retryable",
     "atobarai",
     "avalara",
@@ -100,7 +107,9 @@ export default {
     "Savebar",
     "unassigning",
     "unassigns",
-    "Vercel"
+    "Vercel",
+    "Copybara",
+    "Dagster"
   ],
   language: "en-US",
   useGitignore: true,

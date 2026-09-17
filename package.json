@@ -1,5 +1,5 @@
 {
-  "name": "saleor-apps",
+  "name": "saleor-monorepo",
   "version": "0.0.0",
   "private": true,
   "license": "(BSD-3-Clause AND CC-BY-4.0)",
@@ -20,6 +20,9 @@
     "lint:fix": "turbo run lint:fix",
     "lint:packages": "sherif",
     "lint:packages:fix": "sherif --fix",
+    "oss:check": "node oss/export.ts check",
+    "oss:export": "node oss/export.ts build",
+    "oss:verify": "node oss/export.ts verify",
     "prepare": "husky",
     "start": "turbo run start",
     "test": "turbo run test",

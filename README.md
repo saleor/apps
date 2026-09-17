@@ -104,6 +104,8 @@ To add a new ADR, follow [the guide](https://github.com/npryce/adr-tools).
 
 We love your contributions and do our best to provide you with mentorship and support. However, please keep in mind that the `saleor/apps` monorepo is used by Saleor to host apps in Saleor infrastructure. While the code remains open source, the decisions in this repository are made to enable Saleor to maintain features needed by its business goals.
 
+This repository is a one-way mirror of a private repository where development happens, so pull requests here are accepted by copying them upstream rather than by pressing the merge button. **Read [CONTRIBUTING.md](./CONTRIBUTING.md) before opening one** — it explains what that means for your PR.
+
 If you are looking for an issue to tackle, take a look at issues labeled [`Good first issue`](https://github.com/saleor/apps/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+) and [`Help wanted`](https://github.com/saleor/apps/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22).
 
 If nothing grabs your attention, check [our roadmap](https://saleor.io/roadmap) or [start a Discord discussion](https://saleor.io/discord) about a feature you'd like to see. Make sure to read our [Contribution Guidelines](http://docs.saleor.io/developer/community/contributing) before opening a PR or issue.
