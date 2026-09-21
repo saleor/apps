@@ -10,6 +10,7 @@ import { type ILogWriter, NoopLogWriter } from "@/modules/client-logs/log-writer
 import {
   AvataxGetTaxSystemError,
   AvataxGetTaxWrongUserInputError,
+  AvataxInvalidAddressError,
   AvataxTimeoutError,
 } from "@/modules/taxes/tax-error";
 
@@ -440,6 +441,23 @@ describe("CalculateTaxesUseCase", () => {
 
       const error = result._unsafeUnwrapErr();
 
+      expect(error).not.toBeInstanceOf(CalculateTaxesUseCase.FailedCalculatingTaxesError);
+    });
+  });
+
+  describe("Invalid address error handling", () => {
+    it("Returns InvalidAppAddressError (not FailedCalculatingTaxesError) when AvaTax rejects the address", async () => {
+      mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
+
+      mockedAvataxClient.createTransaction.mockRejectedValueOnce(
+        new AvataxInvalidAddressError("The address value was incomplete."),
+      );
+
+      const result = await instance.calculateTaxes(getBasePayload(), getMockAuthData());
+
+      const error = result._unsafeUnwrapErr();
+
+      expect(error).toBeInstanceOf(CalculateTaxesUseCase.InvalidAppAddressError);
       expect(error).not.toBeInstanceOf(CalculateTaxesUseCase.FailedCalculatingTaxesError);
     });
   });

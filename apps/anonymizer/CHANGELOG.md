@@ -1,5 +1,14 @@
 # saleor-app-anonymizer
 
+## 1.2.4
+
+### Patch Changes
+
+- Updated dependencies [9c585ac]
+  - @saleor/apps-otel@2.4.2
+  - @saleor/apps-logger@1.6.6
+  - @saleor/apps-shared@1.16.2
+
 ## 1.2.3
 
 ### Patch Changes

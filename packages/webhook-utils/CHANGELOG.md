@@ -1,5 +1,11 @@
 # @saleor/webhook-utils
 
+## 0.3.2
+
+### Patch Changes
+
+- @saleor/apps-logger@1.6.6
+
 ## 0.3.1
 
 ### Patch Changes

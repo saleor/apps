@@ -23,9 +23,10 @@ import { suspiciousLineCalculationCheck } from "@/modules/avatax/calculate-taxes
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
 import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
+import { reportUnhandledCalculateTaxesError } from "@/modules/calculate-taxes/report-unhandled-calculate-taxes-error";
 import { CalculateTaxesUseCase } from "@/modules/calculate-taxes/use-case/calculate-taxes.use-case";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
-import { AvataxInvalidAddressError, AvataxTimeoutError } from "@/modules/taxes/tax-error";
+import { AvataxTimeoutError } from "@/modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/checkout-calculate-taxes";
 
 const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
@@ -226,7 +227,40 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                   );
                 }
 
+                case CalculateTaxesUseCase.InvalidAppAddressError: {
+                  logger.warn(
+                    "InvalidAppAddressError: App returns status 400 due to broken address configuration",
+                    { error },
+                  );
+
+                  span.setStatus({
+                    code: SpanStatusCode.ERROR,
+                    message: "Failed to calculate taxes: invalid address in app configuration",
+                  });
+
+                  if (providerConfig.isOk()) {
+                    const problemReporter = createAvataxProblemReporter(authData);
+                    const avataxConfig = providerConfig.value.avataxConfig;
+
+                    after(() =>
+                      problemReporter.reportInvalidAddress(
+                        avataxConfig.id,
+                        avataxConfig.config.name,
+                      ),
+                    );
+                  }
+
+                  return Response.json(
+                    {
+                      message: "InvalidAppAddressError: Check address in app configuration",
+                    },
+                    { status: 400 },
+                  );
+                }
+
                 case CalculateTaxesUseCase.FailedCalculatingTaxesError: {
+                  reportUnhandledCalculateTaxesError(error, "500");
+
                   span.setStatus({
                     code: SpanStatusCode.ERROR,
                     message: "Failed to calculate taxes: error from AvaTax API",
@@ -300,7 +334,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
 
                 default:
                 case CalculateTaxesUseCase.UnhandledError: {
-                  captureException(error);
+                  reportUnhandledCalculateTaxesError(error, "500");
                   span.setStatus({
                     code: SpanStatusCode.ERROR,
                     message: "Failed to calculate taxes: unhandled error",
@@ -331,27 +365,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
           return Response.json({ message: "AvaTax API request timed out" }, { status: 504 });
         }
 
-        // todo this should be now available in usecase. Catch it from FailedCalculatingTaxesError
-        if (error instanceof AvataxInvalidAddressError) {
-          logger.warn(
-            "InvalidAppAddressError: App returns status 400 due to broken address configuration",
-            { error },
-          );
-
-          span.setStatus({
-            code: SpanStatusCode.ERROR,
-            message: "Failed to calculate taxes: error from AvaTax API",
-          });
-
-          return Response.json(
-            {
-              message: "InvalidAppAddressError: Check address in app configuration",
-            },
-            { status: 400 },
-          );
-        }
-
-        captureException(error);
+        reportUnhandledCalculateTaxesError(error, "500");
 
         span.setStatus({
           code: SpanStatusCode.ERROR,

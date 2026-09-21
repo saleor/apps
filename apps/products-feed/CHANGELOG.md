@@ -1,5 +1,15 @@
 # saleor-app-products-feed
 
+## 3.2.2
+
+### Patch Changes
+
+- Updated dependencies [9c585ac]
+  - @saleor/apps-otel@2.4.2
+  - @saleor/apps-logger@1.6.6
+  - @saleor/apps-shared@1.16.2
+  - @saleor/webhook-utils@0.3.2
+
 ## 3.2.1
 
 ### Patch Changes

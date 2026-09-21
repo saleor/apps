@@ -1,5 +1,16 @@
 # saleor-app-payment-np-atobarai
 
+## 1.5.1
+
+### Patch Changes
+
+- Updated dependencies [9c585ac]
+  - @saleor/apps-otel@2.4.2
+  - @saleor/apps-logger@1.6.6
+  - @saleor/apps-shared@1.16.2
+  - @saleor/dynamo-config-repository@1.0.5
+  - @saleor/apps-trpc@4.0.5
+
 ## 1.5.0
 
 ### Minor Changes

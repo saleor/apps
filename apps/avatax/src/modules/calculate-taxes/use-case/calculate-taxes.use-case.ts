@@ -26,6 +26,7 @@ import {
 } from "../../avatax/calculate-taxes/avatax-calculate-taxes-adapter";
 import {
   AvataxGetTaxWrongUserInputError,
+  AvataxInvalidAddressError,
   AvataxTimeoutError,
   TaxIncompletePayloadErrors,
 } from "../../taxes/tax-error";
@@ -47,6 +48,12 @@ export class CalculateTaxesUseCase {
     "FailedCalculatingTaxesError",
   );
   static TimeoutError = this.CalculateTaxesUseCaseError.subclass("TimeoutError");
+  /**
+   * AvaTax rejected the addresses we sent. Caused by incomplete app/channel configuration,
+   * not by anything Saleor can retry - hence it's mapped to 400, not 500.
+   */
+  static InvalidAppAddressError =
+    this.CalculateTaxesUseCaseError.subclass("InvalidAppAddressError");
 
   constructor(
     private deps: {
@@ -228,6 +235,15 @@ export class CalculateTaxesUseCase {
           return new CalculateTaxesUseCase.TimeoutError("AvaTax API request timed out", {
             cause: err,
           });
+        }
+
+        if (err instanceof AvataxInvalidAddressError) {
+          return new CalculateTaxesUseCase.InvalidAppAddressError(
+            "AvaTax rejected the address - check the address in app configuration",
+            {
+              cause: err,
+            },
+          );
         }
 
         // Check if this is a user input error (should return HTTP 400)

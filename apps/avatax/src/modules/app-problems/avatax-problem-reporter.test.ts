@@ -244,6 +244,7 @@ describe("AvataxProblemReporter", () => {
         "avatax-entity-not-found:config-abc",
         "avatax-suspicious-zero-tax:config-abc",
         "avatax-tax-code-permission:config-abc",
+        "avatax-invalid-address:config-abc",
       ]);
     });
 

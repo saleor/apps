@@ -1,5 +1,11 @@
 # saleor-app-shipping-dummy
 
+## 1.1.3
+
+### Patch Changes
+
+- @saleor/apps-shared@1.16.2
+
 ## 1.1.2
 
 ### Patch Changes

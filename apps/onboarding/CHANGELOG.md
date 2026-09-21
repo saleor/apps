@@ -1,5 +1,11 @@
 # saleor-app-onboarding
 
+## 0.1.5
+
+### Patch Changes
+
+- @saleor/apps-shared@1.16.2
+
 ## 0.1.4
 
 ### Patch Changes

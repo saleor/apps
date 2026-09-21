@@ -20,6 +20,7 @@ export const PROBLEM_KEYS = {
   suspiciousZeroTax: (configId: string) => `avatax-suspicious-zero-tax:${configId}`,
   taxCodePermission: (configId: string) => `avatax-tax-code-permission:${configId}`,
   channelConfigMissing: (channelSlug: string) => `avatax-channel-config-missing:${channelSlug}`,
+  invalidAddress: (configId: string) => `avatax-invalid-address:${configId}`,
 } as const;
 
 export class AvataxProblemReporter {
@@ -101,6 +102,18 @@ export class AvataxProblemReporter {
     }
   }
 
+  async reportInvalidAddress(configId: string, configName: string): Promise<void> {
+    const result = await this.reporter.reportProblem({
+      key: PROBLEM_KEYS.invalidAddress(configId),
+      criticalThreshold: 1,
+      message: `AvaTax rejected the "ship from" address in configuration "${configName}" as incomplete. Tax calculations for channels using this configuration will fail. Please provide either a postal code, or street + city + region.`,
+    });
+
+    if (result.isErr()) {
+      logger.error("Failed to report invalid address problem", { error: result.error });
+    }
+  }
+
   async reportSuspiciousZeroTax(configId: string, configName: string): Promise<void> {
     const result = await this.reporter.reportProblem({
       key: PROBLEM_KEYS.suspiciousZeroTax(configId),
@@ -173,6 +186,7 @@ export class AvataxProblemReporter {
       PROBLEM_KEYS.entityNotFound(configId),
       PROBLEM_KEYS.suspiciousZeroTax(configId),
       PROBLEM_KEYS.taxCodePermission(configId),
+      PROBLEM_KEYS.invalidAddress(configId),
     ];
     const result = await this.reporter.clearProblems(keys);
 

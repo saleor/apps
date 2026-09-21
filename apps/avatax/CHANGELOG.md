@@ -1,5 +1,17 @@
 # saleor-app-avatax
 
+## 1.25.1
+
+### Patch Changes
+
+- b139865: Fixed incomplete "ship from" addresses being reported as app failures. Before: when AvaTax rejected the configured address as incomplete, checkout tax calculation returned HTTP 500, so the problem looked like an app outage and the merchant got no hint about what was wrong. After: the app returns HTTP 400 and raises an app problem in the Dashboard naming the configuration and what the address is missing, so it can actually be fixed.
+- b139865: Tax calculation errors the app does not recognize are now reported as errors. Before: when AvaTax returned a failure the app had no mapping for, checkout answered with HTTP 500 but only wrote a warning log and no error report, so a brand new provider error could keep breaking checkouts unnoticed. After: those unmapped failures emit an error log and an error report, so they surface as soon as they start. Failures caused by configuration or by the checkout itself are unchanged - they keep returning 4xx/202 with a warning.
+- Updated dependencies [9c585ac]
+  - @saleor/apps-otel@2.4.2
+  - @saleor/apps-logger@1.6.6
+  - @saleor/apps-shared@1.16.2
+  - @saleor/webhook-utils@0.3.2
+
 ## 1.25.0
 
 ### Minor Changes

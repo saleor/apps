@@ -35,6 +35,7 @@ import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calcul
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
 import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "@/modules/avatax/discounts";
 import { AvataxTaxCodeMatchesService } from "@/modules/avatax/tax-code/avatax-tax-code-matches.service";
+import { reportUnhandledCalculateTaxesError } from "@/modules/calculate-taxes/report-unhandled-calculate-taxes-error";
 import { CalculateTaxesLogRequest } from "@/modules/client-logs/calculate-taxes-log-request";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
 import {
@@ -453,9 +454,16 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
             { error },
           );
 
+          if (avataxConfigRef) {
+            const problemReporter = createAvataxProblemReporter(ctx.authData);
+            const configRef = avataxConfigRef;
+
+            after(() => problemReporter.reportInvalidAddress(configRef.id, configRef.name));
+          }
+
           span.setStatus({
             code: SpanStatusCode.ERROR,
-            message: "Failed to calculate taxes: error from AvaTax API",
+            message: "Failed to calculate taxes: invalid address in app configuration",
           });
 
           return Response.json(
@@ -542,7 +550,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
           return Response.json({ message: "AvaTax API request timed out" }, { status: 504 });
         }
 
-        captureException(error);
+        reportUnhandledCalculateTaxesError(error, "500");
 
         CalculateTaxesLogRequest.createErrorLog({
           sourceId: orderId,

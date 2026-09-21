@@ -1,5 +1,11 @@
 # @saleor/apps-otel
 
+## 2.4.2
+
+### Patch Changes
+
+- 9c585ac: Dropped GraphQL variables and headers from APM spans
+
 ## 2.4.1
 
 ### Patch Changes
