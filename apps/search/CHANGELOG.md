@@ -1,5 +1,12 @@
 # saleor-app-search
 
+## 1.32.2
+
+### Patch Changes
+
+- Updated dependencies [831f396]
+  - @saleor/apps-shared@1.17.0
+
 ## 1.32.1
 
 ### Patch Changes

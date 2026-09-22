@@ -1,7 +1,10 @@
 import { Box, Text } from "@saleor/macaw-ui";
 import { type ReactNode } from "react";
 
-import { type SettingsOwnership, SettingsOwnershipChip } from "../settings-ownership-chip";
+import {
+  type SettingsOwnership,
+  SettingsOwnershipChip,
+} from "../settings-ownership-chip/settings-ownership-chip";
 import styles from "./settings-section.module.css";
 
 export interface SettingsSectionProps {

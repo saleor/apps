@@ -1,5 +1,12 @@
 # saleor-app-smtp
 
+## 2.8.2
+
+### Patch Changes
+
+- Updated dependencies [831f396]
+  - @saleor/apps-shared@1.17.0
+
 ## 2.8.1
 
 ### Patch Changes

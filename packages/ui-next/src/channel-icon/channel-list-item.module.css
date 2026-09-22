@@ -3,19 +3,28 @@
   display: flex;
   align-items: center;
   gap: var(--mu-spacing-2);
-  /* Same box model for every row: always reserve 1px bottom border. */
   box-sizing: border-box;
+  /*
+   * 32px disconnect slot + 8px padding = 40px. A border-bottom would add a 41st
+   * pixel and throw off anything that sizes to “two rows”. The hairline is an
+   * inset shadow so it does not change the box.
+   */
   min-height: 40px;
   /* Keep left inset aligned with card header text; tighter right so the
      disconnect control doesn’t float inward. */
   padding: var(--mu-spacing-1) var(--mu-spacing-2) var(--mu-spacing-1) var(--mu-spacing-4);
-  border-bottom: 1px solid var(--mu-colors-border-default1);
+  box-shadow: inset 0 -1px 0 var(--mu-colors-border-default1);
   background-color: var(--mu-colors-background-default1);
   min-width: 0;
 }
 
 .row[data-show-divider="false"] {
-  border-bottom-color: transparent;
+  box-shadow: none;
+}
+
+/* SettingsSection header is padding-inline 6. Do not wrap this row to get that gutter. */
+.row[data-inset="settings"] {
+  padding-inline: var(--mu-spacing-6);
 }
 
 .start {
@@ -30,6 +39,16 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
+}
+
+.secondary {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* Give the name first claim on a tight row; the country can clip. */
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 /* Compact pill — fixed height so rounding never changes row size. */

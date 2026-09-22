@@ -1,0 +1,60 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mu-spacing-1);
+  max-width: 100%;
+  padding: 2px var(--mu-spacing-2);
+  border: 1px solid var(--mu-colors-border-default1);
+  /* Same pill as the `StatusChip`s beside it; the `Toggle` is what says this one acts. */
+  border-radius: 999px;
+  background-color: var(--mu-colors-background-default2);
+  color: var(--mu-colors-text-default2);
+  cursor: pointer;
+}
+
+.chip:hover {
+  border-color: var(--mu-colors-border-default2);
+}
+
+.chip:focus-visible {
+  outline: 2px solid var(--mu-colors-border-accent1);
+  outline-offset: 1px;
+}
+
+.chip[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/*
+ * For an off state worth noticing — nothing is being sent, nothing is being collected. The border
+ * carries it, as `Callout` does: a filled warning surface on something this small reads as an error
+ * the merchant has to deal with, when it is a setting they may well have chosen.
+ */
+.warning {
+  border-color: var(--mu-colors-border-warning1);
+  color: var(--mu-colors-text-default1);
+}
+
+.warning:hover {
+  border-color: var(--mu-colors-border-warning1);
+}
+
+/*
+ * The `Toggle` is the state's picture, not a second control: the pill owns the click, the keyboard
+ * and the accessible name, so the switch inside it must not take events or a tab stop of its own.
+ */
+.toggle,
+.toggle * {
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.label {
+  min-width: 0;
+  overflow: hidden;
+  padding-right: var(--mu-spacing-1);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

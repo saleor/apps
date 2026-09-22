@@ -14564,6 +14564,14 @@ export type Mutation = {
    */
   productMediaReorder?: Maybe<ProductMediaReorder>;
   /**
+   * Creates or updates a product media translation.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: MANAGE_TRANSLATIONS.
+   */
+  productMediaTranslate?: Maybe<ProductMediaTranslate>;
+  /**
    * Updates a product media.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
@@ -16719,6 +16727,13 @@ export type MutationProductMediaReorderArgs = {
 };
 
 
+export type MutationProductMediaTranslateArgs = {
+  id: Scalars['ID']['input'];
+  input: ProductMediaTranslationInput;
+  languageCode: LanguageCodeEnum;
+};
+
+
 export type MutationProductMediaUpdateArgs = {
   id: Scalars['ID']['input'];
   input: ProductMediaUpdateInput;
@@ -17710,6 +17725,12 @@ export type Order = Node & ObjectWithMetadata & {
   totalRemainingGrant: Money;
   /** Google Analytics tracking client ID. */
   trackingClientId: Scalars['String']['output'];
+  /**
+   * Payment history of the order, with one entry per payment transaction that moved any money. Unlike `transactions`, it requires no permission and exposes only the payment method and the amounts, so it can be used to display payment details to the customer without exposing internal information.
+   *
+   * Added in Saleor 3.23.
+   */
+  transactionSummaries: Array<TransactionSummary>;
   /** List of transactions for the order. Requires one of the following permissions: MANAGE_ORDERS, HANDLE_PAYMENTS. */
   transactions: Array<TransactionItem>;
   /**
@@ -22288,7 +22309,10 @@ export type Product = Node & ObjectWithAttributes & ObjectWithMetadata & {
    * Added in Saleor 3.21.
    */
   productVariants?: Maybe<ProductVariantCountableConnection>;
-  /** Rating of the product. */
+  /**
+   * Rating of the product.
+   * @deprecated Product rating is deprecated and will be removed. Use a numeric attribute instead.
+   */
   rating?: Maybe<Scalars['Float']['output']>;
   /** SEO description of the product. */
   seoDescription?: Maybe<Scalars['String']['output']>;
@@ -22585,7 +22609,10 @@ export type ProductBulkCreateInput = {
   privateMetadata?: InputMaybe<Array<MetadataInput>>;
   /** ID of the type that product belongs to. */
   productType: Scalars['ID']['input'];
-  /** Defines the product rating value. */
+  /**
+   * Defines the product rating value.
+   * @deprecated Product rating is deprecated and will be removed. Use a numeric attribute instead.
+   */
   rating?: InputMaybe<Scalars['Float']['input']>;
   /** Search engine optimization fields. */
   seo?: InputMaybe<SeoInput>;
@@ -22867,7 +22894,10 @@ export type ProductCreateInput = {
   privateMetadata?: InputMaybe<Array<MetadataInput>>;
   /** ID of the type that product belongs to. */
   productType: Scalars['ID']['input'];
-  /** Defines the product rating value. */
+  /**
+   * Defines the product rating value.
+   * @deprecated Product rating is deprecated and will be removed. Use a numeric attribute instead.
+   */
   rating?: InputMaybe<Scalars['Float']['input']>;
   /** Search engine optimization fields. */
   seo?: InputMaybe<SeoInput>;
@@ -23115,7 +23145,10 @@ export type ProductInput = {
    * Warning: never store sensitive information, including financial data such as credit card details.
    */
   privateMetadata?: InputMaybe<Array<MetadataInput>>;
-  /** Defines the product rating value. */
+  /**
+   * Defines the product rating value.
+   * @deprecated Product rating is deprecated and will be removed. Use a numeric attribute instead.
+   */
   rating?: InputMaybe<Scalars['Float']['input']>;
   /** Search engine optimization fields. */
   seo?: InputMaybe<SeoInput>;
@@ -23165,6 +23198,12 @@ export type ProductMedia = Node & ObjectWithMetadata & {
   productId?: Maybe<Scalars['ID']['output']>;
   /** The sort order of the media. */
   sortOrder?: Maybe<Scalars['Int']['output']>;
+  /**
+   * Returns translated product media fields for the given language code.
+   *
+   * Added in Saleor 3.23.
+   */
+  translation?: Maybe<ProductMediaTranslation>;
   /** The type of the media. */
   type: ProductMediaType;
   /** The URL of the media. */
@@ -23193,6 +23232,12 @@ export type ProductMediaPrivateMetafieldArgs = {
 /** Represents a product media. */
 export type ProductMediaPrivateMetafieldsArgs = {
   keys?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+/** Represents a product media. */
+export type ProductMediaTranslationArgs = {
+  languageCode: LanguageCodeEnum;
 };
 
 
@@ -23297,6 +23342,97 @@ export type ProductMediaReorder = {
   product?: Maybe<Product>;
   /** @deprecated Use `errors` field instead. */
   productErrors: Array<ProductError>;
+};
+
+/**
+ * Represents product media's original translatable fields and related translations.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductMediaTranslatableContent = Node & {
+  __typename?: 'ProductMediaTranslatableContent';
+  /** Product media alt text to translate. */
+  alt: Scalars['String']['output'];
+  /** The ID of the product media translatable content. */
+  id: Scalars['ID']['output'];
+  /** Represents a product media. */
+  productMedia?: Maybe<ProductMedia>;
+  /** The ID of the product media to translate. */
+  productMediaId: Scalars['ID']['output'];
+  /** Returns translated product media fields for the given language code. */
+  translation?: Maybe<ProductMediaTranslation>;
+};
+
+
+/**
+ * Represents product media's original translatable fields and related translations.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductMediaTranslatableContentTranslationArgs = {
+  languageCode: LanguageCodeEnum;
+};
+
+/**
+ * Creates or updates a product media translation.
+ *
+ * Added in Saleor 3.23.
+ *
+ * Requires one of the following permissions: MANAGE_TRANSLATIONS.
+ */
+export type ProductMediaTranslate = {
+  __typename?: 'ProductMediaTranslate';
+  errors: Array<ProductMediaTranslateError>;
+  productMedia?: Maybe<ProductMedia>;
+};
+
+/**
+ * Represents an error in product media translation input.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductMediaTranslateError = {
+  __typename?: 'ProductMediaTranslateError';
+  /** The error code. */
+  code: ProductMediaTranslateErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+export enum ProductMediaTranslateErrorCode {
+  GraphqlError = 'GRAPHQL_ERROR',
+  Invalid = 'INVALID',
+  NotFound = 'NOT_FOUND',
+  Required = 'REQUIRED'
+}
+
+/**
+ * Represents product media translations.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductMediaTranslation = Node & {
+  __typename?: 'ProductMediaTranslation';
+  /** Translated product media alt text. */
+  alt: Scalars['String']['output'];
+  /** The ID of the product media translation. */
+  id: Scalars['ID']['output'];
+  /** Translation language. */
+  language: LanguageDisplay;
+  /** Represents the product media fields to translate. */
+  translatableContent?: Maybe<ProductMediaTranslatableContent>;
+};
+
+/**
+ * Fields required to translate product media.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductMediaTranslationInput = {
+  /** Translated product media alt text. */
+  alt?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum ProductMediaType {
@@ -23434,7 +23570,10 @@ export enum ProductOrderField {
   PublishedAt = 'PUBLISHED_AT',
   /** Sort products by rank. Note: This option is available only with the `search` filter. */
   Rank = 'RANK',
-  /** Sort products by rating. */
+  /**
+   * Sort products by rating.
+   * @deprecated Product rating is deprecated and will be removed. Use a numeric attribute instead.
+   */
   Rating = 'RATING',
   /** Sort products by type. */
   Type = 'TYPE'
@@ -24819,6 +24958,12 @@ export type ProductVariantSetDefault = {
 };
 
 export enum ProductVariantSortField {
+  /**
+   * Sort product variants by ID.
+   *
+   * Added in Saleor 3.23.
+   */
+  Id = 'ID',
   /** Sort product variants by last modification date. */
   LastModifiedAt = 'LAST_MODIFIED_AT'
 }
@@ -31753,6 +31898,31 @@ export type TransactionSortingInput = {
 };
 
 /**
+ * Customer-facing summary of a single payment transaction. Exposes the payment method and the amounts, without the identifiers, events and actions available on `TransactionItem`.
+ *
+ * Added in Saleor 3.23.
+ */
+export type TransactionSummary = {
+  __typename?: 'TransactionSummary';
+  /** Total amount of ongoing authorization requests for the transaction. */
+  authorizePendingAmount: Money;
+  /** Total amount authorized for this payment. */
+  authorizedAmount: Money;
+  /** Total amount canceled for this payment. */
+  canceledAmount: Money;
+  /** Total amount of ongoing charge requests for the transaction. */
+  chargePendingAmount: Money;
+  /** Total amount charged for this payment. */
+  chargedAmount: Money;
+  /** Date and time at which payment transaction was created. */
+  createdAt: Scalars['DateTime']['output'];
+  /** The payment method used for this transaction. As this field is public, card number digits and expiration date are stripped: `firstDigits`, `lastDigits`, `expMonth` and `expYear` of `CardPaymentMethodDetails` are always `null` here. Read them through `Order.transactions` instead, which requires MANAGE_ORDERS or HANDLE_PAYMENTS. */
+  paymentMethodDetails?: Maybe<PaymentMethodDetails>;
+  /** Total amount refunded for this payment. */
+  refundedAmount: Money;
+};
+
+/**
  * Update transaction.
  *
  * Requires the following permissions: OWNER and HANDLE_PAYMENTS for apps, HANDLE_PAYMENTS for staff users. Staff user cannot update a transaction that is owned by the app.
@@ -31851,7 +32021,7 @@ export type TransactionWhereInput = {
   pspReference?: InputMaybe<StringFilterInput>;
 };
 
-export type TranslatableItem = AttributeTranslatableContent | AttributeValueTranslatableContent | CategoryTranslatableContent | CollectionTranslatableContent | MenuItemTranslatableContent | PageTranslatableContent | ProductTranslatableContent | ProductVariantTranslatableContent | PromotionRuleTranslatableContent | PromotionTranslatableContent | SaleTranslatableContent | ShippingMethodTranslatableContent | VoucherTranslatableContent;
+export type TranslatableItem = AttributeTranslatableContent | AttributeValueTranslatableContent | CategoryTranslatableContent | CollectionTranslatableContent | MenuItemTranslatableContent | PageTranslatableContent | ProductMediaTranslatableContent | ProductTranslatableContent | ProductVariantTranslatableContent | PromotionRuleTranslatableContent | PromotionTranslatableContent | SaleTranslatableContent | ShippingMethodTranslatableContent | VoucherTranslatableContent;
 
 export type TranslatableItemConnection = {
   __typename?: 'TranslatableItemConnection';
@@ -31878,6 +32048,7 @@ export enum TranslatableKinds {
   MenuItem = 'MENU_ITEM',
   Page = 'PAGE',
   Product = 'PRODUCT',
+  ProductMedia = 'PRODUCT_MEDIA',
   Promotion = 'PROMOTION',
   PromotionRule = 'PROMOTION_RULE',
   Sale = 'SALE',
@@ -31932,7 +32103,7 @@ export type TranslationInput = {
   slug?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type TranslationTypes = AttributeTranslation | AttributeValueTranslation | CategoryTranslation | CollectionTranslation | MenuItemTranslation | PageTranslation | ProductTranslation | ProductVariantTranslation | PromotionRuleTranslation | PromotionTranslation | SaleTranslation | ShippingMethodTranslation | VoucherTranslation;
+export type TranslationTypes = AttributeTranslation | AttributeValueTranslation | CategoryTranslation | CollectionTranslation | MenuItemTranslation | PageTranslation | ProductMediaTranslation | ProductTranslation | ProductVariantTranslation | PromotionRuleTranslation | PromotionTranslation | SaleTranslation | ShippingMethodTranslation | VoucherTranslation;
 
 /** Event sent when translation is updated. */
 export type TranslationUpdated = Event & {

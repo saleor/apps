@@ -52,9 +52,9 @@ type PossibleErrors =
  * Saleor 3.22 introduced the `paymentMethodDetails` field in the Transaction API.
  * See: https://github.com/saleor/saleor/releases/tag/3.22.0
  *
- * TODO: dead gate - app manifest now requires Saleor >=3.22, so this always passes.
- * Remove the check and always fetch payment method details. Kept until stored
- * transactions recorded on <3.22 are no longer in play.
+ * The version checked here comes from the stored RecordedTransaction, not from the
+ * live request, so the manifest floor (>=3.23) does not make this gate dead: records
+ * written while the merchant ran <3.22 have no TTL and stay in DynamoDB forever.
  */
 const PAYMENT_METHOD_DETAILS_MIN_VERSION = "3.22";
 

@@ -24,6 +24,22 @@ describe("AppPageHeader", () => {
     expect(screen.getByRole("button", { name: "Docs" })).toBeInTheDocument();
   });
 
+  /**
+   * The control replaces the title on screen only. A page whose subject is switchable still owes a
+   * heading to assistive technology, and losing it would leave the document without an `h1`.
+   */
+  it("keeps the heading when a control takes the title's place", () => {
+    render(
+      <AppPageHeader
+        title="Order fulfilled"
+        titleControl={<button type="button">Switch email</button>}
+      />,
+    );
+
+    expect(screen.getByRole("heading", { level: 1, name: "Order fulfilled" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Switch email" })).toBeInTheDocument();
+  });
+
   it("renders back link when href is set", () => {
     render(<AppPageHeader title="New config" href="/config" hrefTitle="Configuration" />);
 

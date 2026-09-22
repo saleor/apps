@@ -1,0 +1,5 @@
+.body {
+  /* Macaw's tooltip does not wrap or cap itself; without this an explanation is one long line. */
+  max-width: 20rem;
+  white-space: normal;
+}

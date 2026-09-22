@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { ChevronDown } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
-import { iconSize, iconStrokeWidthBySize } from "../icons";
+import { iconSize, iconStrokeWidthBySize } from "../icons/icon-size";
 import styles from "./detail-group-box.module.css";
 
 export interface DetailGroupBoxProps {
@@ -78,7 +78,10 @@ export const DetailGroupBox = ({
                 isCard && styles.headerCard,
                 isCard && headerEnd && styles.headerCardWithEnd,
                 usesSecondaryHeader && styles.headerSecondary,
-                usesSecondaryHeader && isExpanded && styles.headerSecondaryExpanded,
+                isFlush && styles.headerFlush,
+                usesSecondaryHeader &&
+                  isExpanded &&
+                  (isFlush ? styles.headerFlushExpanded : styles.headerSecondaryExpanded),
               )}
               backgroundColor={usesSecondaryHeader ? "default1" : "default2"}
             >

@@ -20,6 +20,51 @@ describe("AsideInfoCard", () => {
     expect(screen.queryByTestId("info-fold-trigger")).not.toBeInTheDocument();
   });
 
+  /* Open on arrival, because nothing remembers a merchant closed it last visit. */
+  it("collapses the whole card from its title, starting open", async () => {
+    render(
+      <AsideInfoCard title="How languages work" collapsible data-test-id="info">
+        <span>Body copy</span>
+      </AsideInfoCard>,
+    );
+
+    expect(screen.getByText("Body copy")).toBeInTheDocument();
+    expect(screen.getByTestId("info-trigger")).toHaveAttribute("aria-expanded", "true");
+
+    await userEvent.click(screen.getByTestId("info-trigger"));
+
+    expect(screen.queryByText("Body copy")).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "How languages work" }),
+    ).toBeInTheDocument();
+  });
+
+  /* Both shut: the footer fold is only reachable once the card itself is open. */
+  it("keeps the footer fold shut while a defaultCollapsed card is closed", async () => {
+    render(
+      <AsideInfoCard
+        title="How languages work"
+        collapsible
+        defaultCollapsed
+        data-test-id="info"
+        fold={{
+          title: "When an email is not translated",
+          children: <span>It still goes out</span>,
+        }}
+      >
+        <span>Body copy</span>
+      </AsideInfoCard>,
+    );
+
+    expect(screen.queryByText("Body copy")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("info-fold-trigger")).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByTestId("info-trigger"));
+
+    expect(screen.getByText("Body copy")).toBeInTheDocument();
+    expect(screen.getByTestId("info-fold-trigger")).toHaveAttribute("aria-expanded", "false");
+  });
+
   it("expands and collapses the foldable footer", async () => {
     render(
       <AsideInfoCard

@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { ChevronRight } from "lucide-react";
 import { type ReactNode } from "react";
 
-import { iconSize, iconStrokeWidthBySize } from "../icons";
+import { iconSize, iconStrokeWidthBySize } from "../icons/icon-size";
 import styles from "./parked-setup-checklist.module.css";
 import { type SetupChecklistProgress } from "./types";
 

@@ -42,6 +42,34 @@
   min-width: 0;
 }
 
+/*
+ * The heading is still owed to assistive technology and to the document outline when a control
+ * takes its place on screen. Standard clip-rect recipe rather than `display: none`, which would
+ * take it out of the accessibility tree along with the pixels.
+ */
+.titleVisuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.titleControl {
+  min-width: 0;
+  /*
+   * Takes the width the title would have had, up to a cap: wide enough for two record pickers,
+   * a compact toggle, and prev/next, short of stretching across a maximised window.
+   */
+  flex: 1;
+  max-width: 48rem;
+}
+
 .actions {
   display: flex;
   align-items: center;

@@ -1,6 +1,8 @@
 .section {
   box-shadow: none;
   position: relative;
+  /* Air above the card when a `DetailSectionNav` row or a checklist task scrolls it to the top. */
+  scroll-margin-top: var(--mu-spacing-6);
 }
 
 .header {

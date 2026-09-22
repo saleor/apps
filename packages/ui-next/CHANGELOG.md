@@ -1,5 +1,17 @@
 # @saleor/apps-ui-next
 
+## 0.2.0
+
+### Minor Changes
+
+- 831f396: Added the components apps need to build a Dashboard-style detail page: `ActionDialog`, `AppLink`, `Callout`, `ConfirmButton`, `DashboardModal`, `DetailSectionNav`, `DetailSettingToggleRow`, `InfoTooltip`, `ListSubheader`, `Skeleton`, `StatusChip`, `SaleorThrobber`, `ToggleChip`, and helpers for scrolling within `DetailPageLayout`.
+
+  `Savebar` now composes the shared `ConfirmButton` instead of its own copy, and gained `Savebar.Changes` — a hint naming which areas of the form are unsaved, so the save bar rather than a locked control is what tells the merchant what Save will persist. Its in-progress spinner is now `SaleorThrobber`, matching Dashboard.
+
+  `AppPageHeader` takes an optional `titleControl` for pages whose subject the user can switch from the header, and its back link now goes through `AppLink`.
+
+  Existing exports keep their current API.
+
 ## 0.1.0
 
 ### Minor Changes

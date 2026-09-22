@@ -1,0 +1,25 @@
+.icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--mu-colors-text-default2);
+}
+
+/* Sit on the cap-height of surrounding text instead of starting a flex row. */
+.iconInline {
+  display: inline-flex;
+  vertical-align: -0.15em;
+}
+
+.icon[data-status="success"] {
+  /* Dashboard SUCCESS_ICON_COLOR — Channel.isActive */
+  color: #0ABF53;
+}
+
+/*
+ * Lucide sets stroke as a presentation attribute. Any stylesheet `svg { stroke: currentColor }`
+ * beats that attribute, so the tint has to live on `color` here and the glyph must use it.
+ */
+.icon svg {
+  stroke: currentColor;
+}

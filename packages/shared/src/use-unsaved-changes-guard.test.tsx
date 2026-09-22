@@ -110,4 +110,55 @@ describe("useUnsavedChangesGuard", () => {
     expect(router.push).toHaveBeenCalledWith("/config");
     expect(result.current.isBlocked).toBe(false);
   });
+
+  it("holds a reload shortcut and runs it only after changes are discarded", () => {
+    const reload = vi.fn();
+    const { result } = renderHook(() => useUnsavedChangesGuard({ enabled: true, reload }));
+
+    act(() => {
+      window.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "r", metaKey: true, cancelable: true }),
+      );
+    });
+
+    expect(result.current.isBlocked).toBe(true);
+    expect(reload).not.toHaveBeenCalled();
+
+    act(() => {
+      result.current.leave();
+    });
+
+    expect(reload).toHaveBeenCalledTimes(1);
+    expect(result.current.isBlocked).toBe(false);
+  });
+
+  it("holds a local-state leave and runs it after changes are discarded", () => {
+    const run = vi.fn();
+    const { result } = renderHook(() => useUnsavedChangesGuard({ enabled: true }));
+
+    act(() => {
+      result.current.requestLeave(run);
+    });
+
+    expect(result.current.isBlocked).toBe(true);
+    expect(run).not.toHaveBeenCalled();
+
+    act(() => {
+      result.current.leave();
+    });
+
+    expect(run).toHaveBeenCalledTimes(1);
+  });
+
+  it("lets a reload shortcut through when there are no changes", () => {
+    const reload = vi.fn();
+
+    renderHook(() => useUnsavedChangesGuard({ enabled: false, reload }));
+
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: "F5", cancelable: true }));
+    });
+
+    expect(reload).not.toHaveBeenCalled();
+  });
 });

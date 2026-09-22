@@ -12,3 +12,8 @@
 - Extra `flush` variant: full-bleed fold inside a parent settings card (no own
   border/radius). Dashboard embeds folds as nested bordered `primary` groups or
   standalone `secondary` cards; apps use `flush` to avoid stacked boxes.
+- An expanded `flush` fold separates its header from its content with a dashed line, where
+  `secondary` keeps upstream's solid one. Without its own border, the fold's boundaries are the
+  parent card's row separators, and a solid line reads as the next row rather than as the fold's
+  contents. Dashed is how the Dashboard marks content belonging to the line above it
+  (`OrderCardTitle`, `RefundLineSubRow`, `SubmenuSeparator`).

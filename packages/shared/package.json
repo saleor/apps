@@ -1,6 +1,6 @@
 {
   "name": "@saleor/apps-shared",
-  "version": "1.16.2",
+  "version": "1.17.0",
   "type": "module",
   "exports": {
     "./compose": "./src/compose.ts",
@@ -20,6 +20,7 @@
     "./use-dashboard-notification": "./src/use-dashboard-notification.ts",
     "./use-unsaved-changes-guard": "./src/use-unsaved-changes-guard.ts",
     "./encryptor": "./src/encryptor.ts",
+    "./key-rotation/metadata-key-matcher": "./src/key-rotation/metadata-key-matcher.ts",
     "./key-rotation/rotating-decrypt-callback": "./src/key-rotation/rotating-decrypt-callback.ts",
     "./key-rotation/rotating-encryptor": "./src/key-rotation/rotating-encryptor.ts",
     "./key-rotation/secret-key-rotation-runner": "./src/key-rotation/secret-key-rotation-runner.ts",

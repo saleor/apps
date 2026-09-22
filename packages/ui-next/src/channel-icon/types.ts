@@ -30,6 +30,21 @@ export const channelStatusToLabel = (statusType?: ChannelStatusType): string | u
   }
 };
 
-/** Map Saleor `Channel.isActive` to icon status. */
-export const channelActiveToStatus = (isActive: boolean): ChannelStatusType =>
-  isActive ? "success" : "hidden";
+/**
+ * Map Saleor `Channel.isActive` to icon status.
+ * Only an explicit `true` is active — missing / undefined must not look inactive by accident,
+ * and must not look active either; the caller should pass through the boolean from Saleor.
+ */
+export const channelActiveToStatus = (
+  isActive: boolean | null | undefined,
+): ChannelStatusType | undefined => {
+  if (isActive === true) {
+    return "success";
+  }
+
+  if (isActive === false) {
+    return "hidden";
+  }
+
+  return undefined;
+};

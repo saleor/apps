@@ -9,6 +9,11 @@ interface DetailPageLayoutProps extends BoxProps {
   gridTemplateColumns?: Sprinkles["gridTemplateColumns"];
   /** Reserve bottom space and fill the iframe height for a fixed `Savebar`. */
   withSavebar?: boolean;
+  /**
+   * Fill the iframe height so `Content` scrolls instead of the document. Required for anything
+   * sticky inside it, e.g. a `DetailSectionNav` rail. Implied by `withSavebar`.
+   */
+  fillHeight?: boolean;
   "data-test-id"?: string;
 }
 
@@ -16,6 +21,7 @@ const RootLayout = ({
   children,
   gridTemplateColumns = 1,
   withSavebar = false,
+  fillHeight = false,
   "data-test-id": dataTestId,
   className,
   ...props
@@ -38,7 +44,12 @@ const RootLayout = ({
 
   return (
     <Box
-      className={clsx(styles.root, withSavebar && styles.rootWithSavebar, className)}
+      className={clsx(
+        styles.root,
+        (fillHeight || withSavebar) && styles.rootFillHeight,
+        withSavebar && styles.rootWithSavebar,
+        className,
+      )}
       display="grid"
       gridTemplateColumns={gridTemplateColumnsValue}
       __gridTemplateRows="auto 1fr"

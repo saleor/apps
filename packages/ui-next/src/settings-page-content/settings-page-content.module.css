@@ -25,6 +25,18 @@
   }
 }
 
+/* Below the rail's breakpoint the rail sits above the forms and scrolls away with them, so a map
+   of what is further down would leave the viewport before it could be used. */
+.nav {
+  display: none;
+}
+
+@media (min-width: 960px) {
+  .nav {
+    display: block;
+  }
+}
+
 .description {
   line-height: 1.5;
   max-width: none;

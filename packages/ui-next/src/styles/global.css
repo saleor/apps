@@ -1,3 +1,5 @@
+@import "../skeleton/skeleton.css";
+
 /**
  * Document reset for Dashboard-aligned app pages. Import once per app, after
  * `@saleor/macaw-ui/style`:
@@ -16,10 +18,43 @@ body {
 }
 
 /*
- * Next Pages Router wrapper. Macaw sets `html, body { height: 100% }`; without passing that
- * height on, `DetailPageLayout`'s `min-height: 100%` resolves against an auto-height parent
- * and Content cannot fill the frame above a fixed `Savebar`.
+ * Next Pages Router wrapper and Macaw's `ThemeProvider` element, which renders a
+ * `<main id="macaw-ui-root">` around the page. Macaw sets `html, body { height: 100% }`; every
+ * element between that and the page has to pass the height on, or `DetailPageLayout`'s
+ * `height: 100%` resolves against an auto-height parent. Then `Content` is a scroll container that
+ * never scrolls: it cannot fill the frame above a fixed `Savebar`, sticky rails inside it never
+ * stick, and anything sized against it (a code editor, a preview pane) collapses.
  */
-#__next {
+#__next,
+#macaw-ui-root {
   height: 100%;
+}
+
+/*
+ * Line breaking for settings copy.
+ *
+ * Descriptions and hints are the longest text an app renders, in a column whose width the
+ * merchant chooses by resizing the window, so the default greedy algorithm regularly leaves a
+ * one-word last line under a three-line paragraph. `pretty` inherits, which is the only way to
+ * reach this copy: macaw `Text` renders a `span` unless told otherwise, so an element rule for
+ * `p` would miss almost all of it.
+ *
+ * Headings get `balance` instead, which evens every line rather than only the last — the right
+ * trade for a few words, and too expensive for the browser to offer beyond a handful of lines.
+ *
+ * Both are the `text-wrap-style` longhand rather than the `text-wrap` shorthand on purpose: the
+ * shorthand also resets `text-wrap-mode` to `wrap`, which would fight the truncating
+ * `white-space: nowrap` rows in this package.
+ */
+body {
+  text-wrap-style: pretty;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap-style: balance;
 }

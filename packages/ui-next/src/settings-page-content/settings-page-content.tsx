@@ -9,6 +9,11 @@ export interface SettingsPageContentProps {
   /** Explainer in the left rail; forms go in `children` on the right. */
   description?: ReactNode;
   /**
+   * In-page map of the sections (`DetailSectionNav`), between the description and the aside.
+   * Hidden below the rail's breakpoint, where the rail stacks above the forms and scrolls away.
+   */
+  nav?: ReactNode;
+  /**
    * Extra left-rail content (e.g. `AsideInfoCard` legend).
    * Stacks below `title` / `description` — does not replace them.
    */
@@ -26,12 +31,13 @@ export interface SettingsPageContentProps {
 export const SettingsPageContent = ({
   title,
   description,
+  nav,
   aside,
   children,
   disablePadding = false,
   "data-test-id": dataTestId,
 }: SettingsPageContentProps): JSX.Element => {
-  const hasAside = aside != null || title != null || description != null;
+  const hasAside = aside != null || title != null || description != null || nav != null;
 
   return (
     <Box
@@ -58,6 +64,7 @@ export const SettingsPageContent = ({
               ) : null}
             </Box>
           ) : null}
+          {nav ? <Box className={styles.nav}>{nav}</Box> : null}
           {aside}
         </Box>
       ) : null}

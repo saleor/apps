@@ -1,5 +1,15 @@
 # @saleor/apps-shared
 
+## 1.17.0
+
+### Minor Changes
+
+- 831f396: `useUnsavedChangesGuard` now also holds back reload shortcuts (⌘R / Ctrl+R / F5). Before, only Pages Router navigation was guarded, so reloading silently discarded a half-written form — and because the Dashboard iframe is sandboxed without `allow-modals`, the browser's own "leave site?" prompt never appeared to catch it. Treat it as best effort: the keys only arrive while the iframe has focus, so a form that must not lose work still needs to persist its draft.
+
+  Added `requestLeave(run)` for holding back a leave that is not a route change, such as switching language in local state.
+
+  Also exposed `@saleor/apps-shared/key-rotation/metadata-key-matcher`, which was already in the package but unreachable.
+
 ## 1.16.2
 
 ### Patch Changes

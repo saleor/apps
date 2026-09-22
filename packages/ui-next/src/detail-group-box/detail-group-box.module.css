@@ -24,8 +24,23 @@
   padding: var(--mu-spacing-4);
 }
 
+/* Flush fold lives in a SettingsSection — match that card's header gutter. */
+.headerFlush {
+  padding-inline: var(--mu-spacing-6);
+}
+
 .headerSecondaryExpanded {
   border-bottom: 1px solid var(--mu-colors-border-default1);
+}
+
+/*
+ * Dashed for a flush fold, because it is not the same kind of boundary. The card around it separates
+ * its rows with solid lines, so a solid line here reads as "next row" rather than "the contents of
+ * the fold above". Dashed is the Dashboard's own mark for content belonging to the line above it —
+ * order card title, refund line sub-rows, submenu separator.
+ */
+.headerFlushExpanded {
+  border-bottom: 1px dashed var(--mu-colors-border-default1);
 }
 
 /* Match DetailSettingsCard header padding. */

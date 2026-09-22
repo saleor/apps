@@ -54,7 +54,7 @@ describe("Manifest handler", async () => {
             "permissions": [
               "HANDLE_PAYMENTS",
             ],
-            "requiredSaleorVersion": ">=3.22 <4",
+            "requiredSaleorVersion": ">=3.23 <4",
             "supportUrl": "https://saleor.io/discord",
             "tokenTargetUrl": "https://localhost:3000/api/register",
             "version": Any<String>,

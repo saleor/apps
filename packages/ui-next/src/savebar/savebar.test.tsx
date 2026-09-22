@@ -19,6 +19,31 @@ describe("Savebar", () => {
     expect(screen.getByTestId("button-bar-confirm")).toHaveTextContent("Save");
   });
 
+  it("names the dirty areas the way Dashboard's savebar does", () => {
+    render(
+      <Savebar>
+        <Savebar.Spacer />
+        <Savebar.Changes segments={["Subject", "Body"]} />
+        <Savebar.CancelButton>Cancel</Savebar.CancelButton>
+        <Savebar.ConfirmButton>Save</Savebar.ConfirmButton>
+      </Savebar>,
+    );
+
+    expect(screen.getByTestId("savebar-changes")).toHaveTextContent(
+      "Unsaved changes: Subject, Body",
+    );
+  });
+
+  it("renders nothing when nothing has changed", () => {
+    render(
+      <Savebar>
+        <Savebar.Changes segments={[]} />
+      </Savebar>,
+    );
+
+    expect(screen.queryByTestId("savebar-changes")).not.toBeInTheDocument();
+  });
+
   describe("ConfirmButton transition state", () => {
     it("disables confirm when there is nothing to save", () => {
       render(<Savebar.ConfirmButton disabled>Save</Savebar.ConfirmButton>);

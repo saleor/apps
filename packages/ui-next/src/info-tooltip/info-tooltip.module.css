@@ -1,0 +1,23 @@
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 2px;
+  background: transparent;
+  /* Informational: it explains the label beside it, it does not go anywhere. */
+  cursor: help;
+  color: var(--mu-colors-text-default2);
+}
+
+.trigger:hover {
+  color: var(--mu-colors-text-default1);
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--mu-colors-border-accent1);
+  outline-offset: 2px;
+}

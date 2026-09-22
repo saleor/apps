@@ -3,10 +3,14 @@
   width: 100%;
 }
 
-/* Definite height so Content's `1fr` + overflow scroll, while the fixed Savebar overlays the frame. */
-.rootWithSavebar {
+/* Definite height so Content's `1fr` + overflow actually scroll, rather than the document. */
+.rootFillHeight {
   height: 100%;
   box-sizing: border-box;
+}
+
+/* The fixed Savebar overlays the frame, so the space it covers has to be reserved. */
+.rootWithSavebar {
   padding-bottom: var(--app-savebar-height, 64px);
 }
 

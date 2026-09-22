@@ -11,10 +11,15 @@
   `position: sticky` is not enough: with a short form it sits under the content instead of at
   the bottom of the iframe view, so the bar is `position: fixed` and `DetailPageLayout`'s
   `withSavebar` reserves matching bottom padding.
+- The bar is `savebarHeight - 1px` tall, where Dashboard's anchor is the full height plus a border it
+  pulls back over the content (`margin-top: -1px`). Fixed to the bottom of an inset frame there is
+  nothing to pull back, so the height has to absorb the border instead — otherwise the line sits a
+  pixel above the sidebar hairline it is meant to continue.
 - Action button labels are required `children` (no `react-intl` defaults), so `errorLabel`
   defaults to a plain `"Try again"` string instead of a translated message.
-- `ConfirmButton` keeps Dashboard's transition-state behavior (`src/components/ConfirmButton/`):
-  spinner while `loading`, checkmark held for 3s on `success`, error variant with a retry label,
-  pointer events blocked while locked, and `disabled` ignored while completed feedback shows so the
-  button color does not flicker. The spinner is `lucide-react`'s `Loader2` rather than Dashboard's
-  `SaleorThrobber`, which depends on vendored Saleor logo path geometry.
+- `Savebar.Changes` is Dashboard `SavebarCompositionHint` without `react-intl`: "Unsaved
+  changes: {segments}". Render it immediately before Cancel/Save (after the spacer), not
+  among leading actions. Hidden under 720px so those buttons stay usable.
+- `ConfirmButton` is the shared primitive in `confirm-button/` (Dashboard
+  `src/components/ConfirmButton/`). The save-bar wrapper only adds `size="large"`, `type="submit"`,
+  and `data-test-id="button-bar-confirm"`. In-progress uses `SaleorThrobber`, same as Dashboard.

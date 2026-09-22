@@ -10,4 +10,6 @@
 - No `react-intl` — no Error/Draft badges in this package surface.
 - Status union kept open (`success | hidden | warning | error | scheduled`) but Stripe only uses `success` / `hidden` from `isActive`.
 - Success green `#0ABF53` vendored as `CHANNEL_STATUS_SUCCESS_COLOR` (Dashboard `SUCCESS_ICON_COLOR`).
+- Tint via wrapper `color` + `svg { stroke: currentColor }`, not Lucide’s `color` prop. A presentation-attribute stroke loses to any `svg { stroke: currentColor }` rule and every globe goes gray.
 - Status on hover via native `title` (Active / Inactive) instead of Dashboard’s Macaw `Tooltip` chrome.
+- Optional `secondary` after the name (muted) for the channel's country — Saleor has no channel language, and a country is what merchants use to tell similarly named channels apart.

@@ -1,5 +1,19 @@
 # saleor-app-payment-stripe
 
+## 2.9.0
+
+### Minor Changes
+
+- b5f3231: Dropped support for Saleor 3.22. Before, the app could be installed on Saleor 3.22 and newer. Now the minimum supported version is 3.23 - installing on an older Saleor will be rejected by the Dashboard. Saleor 3.22 users should stay on the previous app release until they upgrade their Saleor instance.
+
+### Patch Changes
+
+- Updated dependencies [831f396]
+- Updated dependencies [831f396]
+  - @saleor/apps-shared@1.17.0
+  - @saleor/apps-ui-next@0.2.0
+  - @saleor/apps-trpc@4.0.5
+
 ## 2.8.1
 
 ### Patch Changes

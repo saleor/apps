@@ -1,0 +1,36 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  margin: 0;
+  padding: 2px var(--mu-spacing-2);
+  /* Same pill as `ToggleChip`, which it shares a row with: one shape for "what this thing is". */
+  border: 1px solid var(--mu-colors-border-default1);
+  border-radius: 999px;
+  background-color: var(--mu-colors-background-default2);
+  color: var(--mu-colors-text-default1);
+  font: inherit;
+  white-space: nowrap;
+}
+
+.interactive {
+  /* Informational, not an action: the chip explains itself, it does not go anywhere. */
+  cursor: help;
+  text-align: left;
+}
+
+.interactive:hover {
+  border-color: var(--mu-colors-border-default2);
+}
+
+.interactive:focus-visible {
+  outline: 2px solid var(--mu-colors-border-accent1);
+  outline-offset: 1px;
+}
+
+.label {
+  min-width: 0;
+  overflow: hidden;
+  padding: 0 var(--mu-spacing-1);
+  text-overflow: ellipsis;
+}
