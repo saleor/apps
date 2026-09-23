@@ -38,6 +38,12 @@ export {
   type ConfirmButtonProps,
   type ConfirmButtonTransitionState,
 } from "./confirm-button/confirm-button";
+export {
+  CountPill,
+  countPillFromNumber,
+  type CountPillProps,
+  type CountPillValue,
+} from "./count-pill/count-pill";
 export { DashboardModal, type DashboardModalContentSize } from "./dashboard-modal/dashboard-modal";
 export { DetailGroupBox, type DetailGroupBoxProps } from "./detail-group-box/detail-group-box";
 export {
@@ -68,6 +74,7 @@ export {
 export {
   DetailSettingsCard,
   DetailSettingsCardIntro,
+  detailSettingsCardStyles,
   DetailSettingsCardTitle,
   DetailSettingsOptionalLabel,
 } from "./detail-settings-card/detail-settings-card";
@@ -80,6 +87,7 @@ export { IconButton, type IconButtonProps } from "./icon-button/icon-button";
 export { type IconSize, iconSize, iconStrokeWidth, iconStrokeWidthBySize } from "./icons/icon-size";
 export { InfoTooltip, type InfoTooltipProps } from "./info-tooltip/info-tooltip";
 export { ListSubheader, type ListSubheaderProps } from "./list-subheader/list-subheader";
+export { Pill, type PillProps } from "./pill/pill";
 export { Savebar, type SavebarProps } from "./savebar/savebar";
 export {
   type SettingsOwnership,
@@ -116,6 +124,9 @@ export type {
 } from "./setup-checklist/types";
 export { Skeleton, type SkeletonProps } from "./skeleton/skeleton";
 export { StatusChip, type StatusChipProps } from "./status-chip/status-chip";
+export { StatusDot, type StatusDotProps } from "./status-dot/status-dot";
+export { type StatusTone } from "./status-dot/status-tone";
+export { StatusLabel, type StatusLabelProps } from "./status-label/status-label";
 export { SaleorThrobber, type SaleorThrobberProps } from "./throbber/saleor-throbber";
 export { ToggleChip, type ToggleChipProps } from "./toggle-chip/toggle-chip";
 /* `TooltipBody` stays unexported on purpose: it is the width cap the chips share, not a component. */

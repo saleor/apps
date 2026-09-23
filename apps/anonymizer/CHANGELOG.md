@@ -1,5 +1,13 @@
 # saleor-app-anonymizer
 
+## 1.2.6
+
+### Patch Changes
+
+- ce36410: Upgraded Next.js to v15.5.26
+- Updated dependencies [c12c623]
+  - @saleor/apps-shared@1.17.1
+
 ## 1.2.5
 
 ### Patch Changes

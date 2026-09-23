@@ -128,6 +128,17 @@ export default {
     "unconfigured",
     "wordmark",
     "Wordmark",
+    "valkey",
+    "traceparent",
+    "upserts",
+    "presign",
+    "presigned",
+    "presigning",
+    // CSS color function used for Dashboard pill washes
+    "oklch",
+    // Dashboard's table component (`Datagrid`)
+    "datagrid",
+    "Datagrid",
   ],
   language: "en-US",
   useGitignore: true,
@@ -136,6 +147,8 @@ export default {
     "**/CHANGELOG.md",
     "**/schema.graphql",
     "**/generated/types.ts",
+    "**/schema.d.ts",
+    "**/openapi.json",
     "**/*.test.ts",
   ],
 };

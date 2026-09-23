@@ -1,0 +1,105 @@
+.pill {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: 22px;
+  margin: 0;
+  /* Dashboard datagrid pill: 8px X, 32px capsule. Tight Y so the caps stay circular. */
+  padding: 0 8px;
+  border: 1px solid var(--pill-border);
+  border-radius: 32px;
+  background-color: var(--pill-bg);
+  color: var(--pill-fg);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Dashboard `hueToPillColorLight` — oklch(94% 0.065 <hue>) wash, darker same-hue type. */
+.success {
+  --pill-bg: oklch(94% 0.065 135);
+  --pill-border: oklch(86% 0.065 135);
+  --pill-fg: oklch(39% 0.06 135);
+}
+
+.info {
+  --pill-bg: oklch(94% 0.065 240);
+  --pill-border: oklch(86% 0.065 240);
+  --pill-fg: oklch(39% 0.06 240);
+}
+
+.warning {
+  --pill-bg: oklch(94% 0.065 75);
+  --pill-border: oklch(86% 0.065 75);
+  --pill-fg: oklch(39% 0.06 75);
+}
+
+.error {
+  --pill-bg: oklch(94% 0.065 8);
+  --pill-border: oklch(86% 0.065 8);
+  --pill-fg: oklch(39% 0.06 8);
+}
+
+.neutral {
+  --pill-bg: oklch(97% 0 0 / 0.3);
+  --pill-border: oklch(52% 0 0 / 0.3);
+  --pill-fg: oklch(42% 0 0);
+}
+
+/* Dashboard `hueToPillColorDark`. */
+.dark.success {
+  --pill-bg: oklch(40% 0.07 135);
+  --pill-border: oklch(43% 0.07 135);
+  --pill-fg: oklch(95% 0.08 135);
+}
+
+.dark.info {
+  --pill-bg: oklch(40% 0.07 240);
+  --pill-border: oklch(43% 0.07 240);
+  --pill-fg: oklch(95% 0.08 240);
+}
+
+.dark.warning {
+  --pill-bg: oklch(40% 0.07 75);
+  --pill-border: oklch(43% 0.07 75);
+  --pill-fg: oklch(95% 0.08 75);
+}
+
+.dark.error {
+  --pill-bg: oklch(40% 0.07 8);
+  --pill-border: oklch(43% 0.07 8);
+  --pill-fg: oklch(95% 0.08 8);
+}
+
+.dark.neutral {
+  --pill-bg: oklch(25% 0 0 / 0.3);
+  --pill-border: oklch(80% 0 0 / 0.3);
+  --pill-fg: oklch(95% 0 0);
+}
+
+.interactive {
+  cursor: help;
+  text-align: left;
+}
+
+.interactive:hover {
+  filter: brightness(0.97);
+}
+
+.interactive:focus-visible {
+  outline: 2px solid var(--mu-colors-border-accent1);
+  outline-offset: 1px;
+}

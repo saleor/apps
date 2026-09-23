@@ -17,6 +17,11 @@
   border-bottom: 1px solid var(--mu-colors-border-default1);
 }
 
+/* Same chrome as `DetailGroupBox` secondary: no tinted band. */
+.headerSecondary {
+  background-color: var(--mu-colors-background-default1);
+}
+
 /* Same vertical padding as `.header`; only pull the action in so its right
    inset matches the header’s Y gap (spacing-4), not the wider X (spacing-6).
    Use size="small" actions in headerEnd so the band stays title-only height.
@@ -55,4 +60,22 @@
 
 .contentFlush {
   padding: 0;
+}
+
+/*
+ * Emphasis for the one card on the page that answers "what is true right now" — the same
+ * smooth-shadow-ring `SetupChecklist` uses, so a highlighted card reads as its sibling.
+ * The hairline is the last shadow layer rather than a border: both on one node is a double edge.
+ */
+.elevated {
+  border: none;
+  --smooth-ring-color: rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    0 0 0 1px var(--smooth-ring-color);
+}
+
+.elevatedDark {
+  --smooth-ring-color: rgba(255, 255, 255, 0.18);
 }

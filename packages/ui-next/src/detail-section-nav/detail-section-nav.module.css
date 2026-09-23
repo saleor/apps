@@ -1,6 +1,8 @@
 .nav {
   width: 100%;
   padding-top: var(--mu-spacing-1);
+  /* Matches `iconSize.small` — the label starts after gutter + this + the row gap. */
+  --section-nav-icon-size: 16px;
 }
 
 .list {
@@ -12,11 +14,17 @@
 
 .item {
   position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
 }
 
 .button {
-  display: block;
-  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--mu-spacing-2);
+  flex: 1;
+  min-width: 0;
   margin: 0;
   padding: var(--mu-spacing-2) var(--mu-spacing-5);
   border: none;
@@ -29,6 +37,17 @@
   line-height: 1.4;
   text-align: left;
   cursor: pointer;
+}
+
+.icon {
+  display: flex;
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.end {
+  flex-shrink: 0;
+  padding-right: var(--mu-spacing-5);
 }
 
 .button:hover {
@@ -56,4 +75,9 @@
 
 .item:last-child.active::before {
   bottom: 0;
+}
+
+/* Same inset as the section labels (gutter + icon + gap), not the icons. */
+.nested {
+  padding-left: calc(var(--mu-spacing-5) + var(--section-nav-icon-size) + var(--mu-spacing-2));
 }

@@ -192,6 +192,7 @@ Token typings: `node_modules/@saleor/macaw-ui/dist/theme/contract.css.d.ts`
 | Configuration hub (left rail + forms) | `SettingsPageContent` (`1fr` / `3fr`) |
 | Settings card with Shop / Channel scope | `SettingsSection` + `ownership` |
 | Scope pill | `SettingsOwnershipChip` (`shop` \| `channel`) |
+| Compact count (Filters button, section totals) | `CountPill` |
 | Left-rail legend / hint (no tinted header) | `AsideInfoCard` (+ optional fold footer) |
 | Primary bordered settings block (entity detail) | `DetailSettingsCard` |
 | Secondary foldable section (SEO-style) | `DetailGroupBox` (`variant="secondary"`) |

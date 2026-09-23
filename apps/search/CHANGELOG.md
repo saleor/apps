@@ -1,5 +1,13 @@
 # saleor-app-search
 
+## 1.32.3
+
+### Patch Changes
+
+- ce36410: Upgraded Next.js to v15.5.26
+- Updated dependencies [c12c623]
+  - @saleor/apps-shared@1.17.1
+
 ## 1.32.2
 
 ### Patch Changes

@@ -13,7 +13,10 @@ import {
   type SetupChecklistTaskStatus,
 } from "./types";
 
-/** Same vivid green Dashboard StatusDot / getDotColor("success") uses (pending success2 in Macaw). */
+/**
+ * Dashboard `getDotColor("success")`. A saturated fill on purpose: the white check sits on it.
+ * Not the `Pill` success wash — that is a 94% tint and would swallow the glyph.
+ */
 const SUCCESS_DOT_COLOR = "hsla(173, 100%, 26%, 1)";
 
 export const SetupChecklistBadge = ({ children }: { children: ReactNode }) => (

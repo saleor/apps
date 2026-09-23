@@ -9,6 +9,18 @@ const items = [
 ];
 
 describe("DetailSectionNav", () => {
+  it("keeps the row name when a leading icon is present", () => {
+    render(
+      <DetailSectionNav
+        items={[{ id: "delivery", label: "Delivery", icon: <span data-test-id="truck" /> }]}
+        onSelect={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole("button", { name: "Delivery" })).toBeInTheDocument();
+    expect(screen.getByTestId("truck")).toBeInTheDocument();
+  });
+
   it("renders one row per section", () => {
     render(<DetailSectionNav items={items} onSelect={vi.fn()} />);
 
@@ -37,6 +49,31 @@ describe("DetailSectionNav", () => {
   });
 
   /* Two of these can share a page (settings rail, entity detail), so each needs its own name. */
+  it("keeps a trailing control off the row name", () => {
+    render(
+      <DetailSectionNav
+        items={[{ id: "delivery", label: "Delivery", end: <button type="button">Reset</button> }]}
+        onSelect={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole("button", { name: "Delivery" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Reset" })).toBeInTheDocument();
+  });
+
+  it("renders a submenu after the section rail", () => {
+    render(
+      <DetailSectionNav
+        items={items}
+        activeId="branding"
+        nested={<button type="button">Time</button>}
+        onSelect={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByTestId("detail-section-nav-nested")).toHaveTextContent("Time");
+  });
+
   it("names the nav for assistive technology", () => {
     render(
       <DetailSectionNav items={items} ariaLabel="Email settings sections" onSelect={vi.fn()} />,

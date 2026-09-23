@@ -1,5 +1,17 @@
 # saleor-app-payment-stripe
 
+## 2.9.1
+
+### Patch Changes
+
+- ce36410: Upgraded Next.js to v15.5.26
+- Updated dependencies [c12c623]
+- Updated dependencies [c12c623]
+- Updated dependencies [c12c623]
+  - @saleor/apps-shared@1.17.1
+  - @saleor/apps-ui-next@0.2.1
+  - @saleor/apps-trpc@4.0.5
+
 ## 2.9.0
 
 ### Minor Changes

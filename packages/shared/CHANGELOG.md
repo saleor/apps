@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.17.1
+
+### Patch Changes
+
+- c12c623: `useUnsavedChangesGuard` can ignore same-page query updates so a form can change `?scope=` without asking the merchant to discard edits.
+
 ## 1.17.0
 
 ### Minor Changes

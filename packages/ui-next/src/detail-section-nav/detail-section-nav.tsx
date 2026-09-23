@@ -8,12 +8,21 @@ export interface DetailSectionNavItem {
   /** Id of the section this jumps to. */
   id: string;
   label: ReactNode;
+  /** Optional leading glyph. Hidden from the accessible name — `label` stays the name. */
+  icon?: ReactNode;
+  /** Trailing control on the row (e.g. reset). Not inside the select button. */
+  end?: ReactNode;
 }
 
 export interface DetailSectionNavProps {
   items: DetailSectionNavItem[];
   activeId?: string;
   onSelect: (sectionId: string) => void;
+  /**
+   * Submenu of the active row — filters or jumps that belong to that section, not another
+   * top-level item. Renders after the rail so it does not inherit the section mark.
+   */
+  nested?: ReactNode;
   /** Names the nav for screen readers, e.g. "Email settings sections". */
   ariaLabel?: string;
   "data-test-id"?: string;
@@ -29,6 +38,7 @@ export const DetailSectionNav = ({
   items,
   activeId,
   onSelect,
+  nested,
   ariaLabel = "Sections",
   "data-test-id": dataTestId = "detail-section-nav",
 }: DetailSectionNavProps): JSX.Element => (
@@ -46,14 +56,25 @@ export const DetailSectionNav = ({
               data-test-id={`${dataTestId}-${item.id}`}
               onClick={() => onSelect(item.id)}
             >
+              {item.icon ? (
+                <Box className={styles.icon} aria-hidden>
+                  {item.icon}
+                </Box>
+              ) : null}
               <Text as="span" size={3}>
                 {item.label}
               </Text>
             </button>
+            {item.end ? <Box className={styles.end}>{item.end}</Box> : null}
           </Box>
         );
       })}
     </Box>
+    {nested ? (
+      <Box className={styles.nested} data-test-id={`${dataTestId}-nested`}>
+        {nested}
+      </Box>
+    ) : null}
   </Box>
 );
 

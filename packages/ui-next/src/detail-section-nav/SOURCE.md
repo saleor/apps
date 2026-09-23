@@ -23,6 +23,11 @@
   "scrolled to the bottom" and pins the last section as active forever.
 - Dropped `align: "end"` scrolling and its `ResizeObserver` pinning. That exists for the Dashboard's
   SEO accordion, which grows after the scroll starts; nothing here does.
+- Rows may carry `icon` and `end`. The icon is `aria-hidden`; `end` is a trailing control that is
+  not part of the select button (Dashboard has no equivalent). Used for actions that belong to the
+  current section, such as Reset.
+- `nested` renders after the rail so a submenu (filters of the active section) does not inherit
+  the current-section mark.
 - Dropped `resetScrollOutsideContentRoot`. It protects the Dashboard's `TopNav` from being scrolled
   out of view, and an app iframe has no nav of its own inside it.
 - The scroll-spy effect keys on the joined section ids rather than the array identity, since callers

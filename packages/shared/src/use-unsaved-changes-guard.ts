@@ -54,10 +54,16 @@ export interface UnsavedChangesGuard {
 export const useUnsavedChangesGuard = ({
   enabled,
   reload = () => window.location.reload(),
+  ignoreUrl,
 }: {
   enabled: boolean;
   /** Injected in tests. Defaults to a full frame reload. */
   reload?: () => void;
+  /**
+   * Same-page query updates that are not leaving the form (for example a `?scope=` switch).
+   * Return true to let the URL through without prompting.
+   */
+  ignoreUrl?: (url: string) => boolean;
 }): UnsavedChangesGuard => {
   const router = useRouter();
   const [pending, setPending] = useState<PendingLeave | null>(null);
@@ -66,6 +72,7 @@ export const useUnsavedChangesGuard = ({
   const bypassRef = useRef(false);
   const pendingRef = useRef<PendingLeave | null>(null);
   const reloadRef = useRef(reload);
+  const ignoreUrlRef = useRef(ignoreUrl);
 
   useEffect(() => {
     enabledRef.current = enabled;
@@ -74,6 +81,10 @@ export const useUnsavedChangesGuard = ({
   useEffect(() => {
     reloadRef.current = reload;
   }, [reload]);
+
+  useEffect(() => {
+    ignoreUrlRef.current = ignoreUrl;
+  }, [ignoreUrl]);
 
   useEffect(() => {
     pendingRef.current = pending;
@@ -95,7 +106,12 @@ export const useUnsavedChangesGuard = ({
 
   useEffect(() => {
     const handleRouteChangeStart = (url: string) => {
-      if (bypassRef.current || !enabledRef.current || url === router.asPath) {
+      if (
+        bypassRef.current ||
+        !enabledRef.current ||
+        url === router.asPath ||
+        ignoreUrlRef.current?.(url)
+      ) {
         return;
       }
 

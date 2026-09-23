@@ -1,5 +1,12 @@
 # @saleor/apps-ui-next
 
+## 0.2.1
+
+### Patch Changes
+
+- c12c623: Counts can use the same compact pill the Dashboard puts on its Filters button, including a longer-than-counted list (`99+`).
+- c12c623: Add Pill, StatusDot and StatusLabel, and let settings cards drop their title or sit as a secondary well. Section nav can carry an icon, a trailing control, and a nested submenu.
+
 ## 0.2.0
 
 ### Minor Changes

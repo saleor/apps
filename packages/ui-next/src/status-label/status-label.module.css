@@ -1,0 +1,33 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mu-spacing-2);
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  appearance: none;
+  color: inherit;
+  font: inherit;
+  white-space: nowrap;
+}
+
+.label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.interactive {
+  cursor: help;
+  text-align: left;
+}
+
+.interactive:focus-visible {
+  outline: 2px solid var(--mu-colors-border-accent1);
+  outline-offset: 2px;
+}

@@ -150,6 +150,24 @@ describe("useUnsavedChangesGuard", () => {
     expect(run).toHaveBeenCalledTimes(1);
   });
 
+  it("lets through URLs the caller marks as same-page", () => {
+    const { result } = renderHook(() =>
+      useUnsavedChangesGuard({
+        enabled: true,
+        ignoreUrl: (url) => url.split("?")[0] === "/config/config-1",
+      }),
+    );
+
+    expect(() => router.startRouteChange("/config/config-1?tab=body")).not.toThrow();
+    expect(result.current.isBlocked).toBe(false);
+
+    act(() => {
+      expect(() => router.startRouteChange("/config")).toThrow();
+    });
+
+    expect(result.current.isBlocked).toBe(true);
+  });
+
   it("lets a reload shortcut through when there are no changes", () => {
     const reload = vi.fn();
 
