@@ -1,0 +1,9 @@
+{
+  "$schema": "https://turbo.build/schema.v2.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "env": ["NEXT_OUTPUT"]
+    }
+  }
+}

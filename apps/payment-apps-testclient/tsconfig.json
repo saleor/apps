@@ -1,0 +1,26 @@
+{
+  "extends": "@saleor/typescript-config-apps/base.json",
+  "compilerOptions": {
+    "verbatimModuleSyntax": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "plugins": [
+      {
+        "name": "next"
+      },
+      {
+        "name": "gql.tada/ts-plugin",
+        "schema": "../../schema.graphql",
+        "tadaOutputLocation": "./src/graphql-env.d.ts",
+        "tadaTurboLocation": "./src/graphql-cache.d.ts"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

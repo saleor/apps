@@ -32,6 +32,8 @@ coverage:
         flags: [dummy-payment-app]
       app-extensions-explorer:
         flags: [extensions-explorer]
+      app-payment-apps-testclient:
+        flags: [payment-apps-testclient]
       packages-app-problems:
         flags: [app-problems]
       packages-domain:
@@ -98,6 +100,9 @@ flags:
   extensions-explorer:
     paths:
       - apps/extensions-explorer/
+  payment-apps-testclient:
+    paths:
+      - apps/payment-apps-testclient/
   app-problems:
     paths:
       - packages/app-problems/

@@ -91,7 +91,7 @@
     "@graphql-codegen/typescript-operations": "catalog:",
     "@graphql-codegen/typescript-urql": "catalog:",
     "@graphql-typed-document-node/core": "catalog:",
-    "@playwright/test": "1.52.0",
+    "@playwright/test": "catalog:",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@saleor/webhook-utils": "workspace:*",

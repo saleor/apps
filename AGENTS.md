@@ -136,6 +136,7 @@ directory below before searching the whole repo.
 | `apps/klaviyo`           | `saleor-app-klaviyo`             | Klaviyo, marketing events, customer events                                                                                       |
 | `apps/np-atobarai`       | `saleor-app-payment-np-atobarai` | NP Atobarai, Net Protections, Japan, deferred payment, zip code lookup, 後払い                                                     |
 | `apps/onboarding`        | `saleor-app-onboarding`          | onboarding, welcome widget, Dashboard home page widget                                                                           |
+| `apps/payment-apps-testclient` | `saleor-payment-apps-testclient` | payment test client, test storefront, checkout flow, Adyen drop-in, Stripe Payment Element, `paymentGatewayInitialize`, `transactionInitialize` |
 | `apps/products-feed`     | `saleor-app-products-feed`       | Google Merchant Center, product feed, XML feed, S3 upload, feed template, Handlebars feed attributes                              |
 | `apps/search`            | `saleor-app-search`              | Algolia, search, indexing, index products, `algoliasearch`, webhook-driven product indexing                                      |
 | `apps/segment`           | `saleor-app-segment`             | Segment, Twilio Segment, analytics tracking, track events                                                                        |
