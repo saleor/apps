@@ -30178,6 +30178,12 @@ export type TransactionActionEnum =
 export type TransactionCancelationRequested = Event & {
   /** Requested action data. */
   readonly action: TransactionAction;
+  /**
+   * Idempotency key assigned to this requested action. Saleor's delivery retries of this request carry the same key, so an app can use it to avoid performing the action twice. Requesting the action again is a new request and gets a new key.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly idempotencyKey: Scalars['String']['output'];
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -30194,6 +30200,12 @@ export type TransactionCancelationRequested = Event & {
 export type TransactionChargeRequested = Event & {
   /** Requested action data. */
   readonly action: TransactionAction;
+  /**
+   * Idempotency key assigned to this requested action. Saleor's delivery retries of this request carry the same key, so an app can use it to avoid performing the action twice. Requesting the action again is a new request and gets a new key.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly idempotencyKey: Scalars['String']['output'];
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -30715,6 +30727,12 @@ export type TransactionRefundRequested = Event & {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   readonly grantedRefund?: Maybe<OrderGrantedRefund>;
+  /**
+   * Idempotency key assigned to this requested action. Saleor's delivery retries of this request carry the same key, so an app can use it to avoid performing the action twice. Requesting the action again is a new request and gets a new key.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly idempotencyKey: Scalars['String']['output'];
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */

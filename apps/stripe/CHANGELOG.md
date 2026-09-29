@@ -1,5 +1,13 @@
 # saleor-app-payment-stripe
 
+## 2.10.0
+
+### Minor Changes
+
+- 57acbeb: Refunds, captures and cancellations are no longer performed twice when Saleor re-delivers the same request. Saleor retries a transaction action webhook up to five times when the app is slow or returns an error, and until now each retry reached Stripe as a brand new call - a retry that arrived after Stripe had already accepted a refund created a second, duplicate refund. The app now forwards the `idempotencyKey` that Saleor sends with the request, so Stripe returns the original refund instead of creating another one. Two separate refunds of the same amount are still processed independently, because Saleor assigns each requested action its own key.
+
+  Requires Saleor 3.23 or newer, which is where `idempotencyKey` was added to the transaction action webhook payloads.
+
 ## 2.9.1
 
 ### Patch Changes

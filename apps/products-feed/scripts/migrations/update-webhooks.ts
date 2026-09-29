@@ -1,6 +1,7 @@
 import { type AuthData } from "@saleor/app-sdk/APL";
-import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
+
+import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 
 export const updateWebhooksScript = async ({
   authData,
@@ -9,7 +10,7 @@ export const updateWebhooksScript = async ({
   authData: AuthData;
   dryRun: boolean;
 }) => {
-  const client = createGraphQLClient({
+  const client = createInstrumentedGraphqlClient({
     saleorApiUrl: authData.saleorApiUrl,
     token: authData.token,
   });

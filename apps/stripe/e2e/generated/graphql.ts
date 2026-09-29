@@ -30986,6 +30986,12 @@ export type TransactionCancelationRequested = Event & {
   __typename?: 'TransactionCancelationRequested';
   /** Requested action data. */
   action: TransactionAction;
+  /**
+   * Idempotency key assigned to this requested action. Saleor's delivery retries of this request carry the same key, so an app can use it to avoid performing the action twice. Requesting the action again is a new request and gets a new key.
+   *
+   * Added in Saleor 3.23.
+   */
+  idempotencyKey: Scalars['String']['output'];
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -31003,6 +31009,12 @@ export type TransactionChargeRequested = Event & {
   __typename?: 'TransactionChargeRequested';
   /** Requested action data. */
   action: TransactionAction;
+  /**
+   * Idempotency key assigned to this requested action. Saleor's delivery retries of this request carry the same key, so an app can use it to avoid performing the action twice. Requesting the action again is a new request and gets a new key.
+   *
+   * Added in Saleor 3.23.
+   */
+  idempotencyKey: Scalars['String']['output'];
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -31541,6 +31553,12 @@ export type TransactionRefundRequested = Event & {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   grantedRefund?: Maybe<OrderGrantedRefund>;
+  /**
+   * Idempotency key assigned to this requested action. Saleor's delivery retries of this request carry the same key, so an app can use it to avoid performing the action twice. Requesting the action again is a new request and gets a new key.
+   *
+   * Added in Saleor 3.23.
+   */
+  idempotencyKey: Scalars['String']['output'];
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */

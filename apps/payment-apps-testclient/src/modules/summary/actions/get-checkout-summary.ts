@@ -7,6 +7,7 @@ import { graphql } from "@/graphql/gql";
 import { envUrlSchema } from "@/lib/env-url";
 import { BaseError, UnknownError } from "@/lib/errors";
 import { actionClient } from "@/lib/safe-action";
+import { saleorRequestHeaders } from "@/lib/saleor-request-headers";
 
 import { CheckoutFragment } from "../fragments";
 
@@ -30,9 +31,14 @@ export const getCheckoutSummary = actionClient
   )
   .metadata({ actionName: "getCheckoutSummary" })
   .action(async ({ parsedInput: { envUrl, checkoutId } }) => {
-    const response = await request(envUrl, GetCheckoutSummaryQuery, {
-      checkoutId,
-    }).catch((error) => {
+    const response = await request(
+      envUrl,
+      GetCheckoutSummaryQuery,
+      {
+        checkoutId,
+      },
+      saleorRequestHeaders,
+    ).catch((error) => {
       throw BaseError.normalize(error, UnknownError);
     });
 

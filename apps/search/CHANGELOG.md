@@ -1,5 +1,17 @@
 # saleor-app-search
 
+## 1.32.5
+
+### Patch Changes
+
+- 2eed75b: Webhooks received before the app is configured are now logged as warnings instead of errors. Previously each such webhook produced an "App not configured" error log, even though this is expected (e.g. right after installation). Saleor still receives a 400 response, as before.
+
+## 1.32.4
+
+### Patch Changes
+
+- 1d0f24a: Fixed NUMERIC attributes without a value being indexed in Algolia as an empty array (`[]`). Before, a product with an unset numeric attribute (e.g. `width`) was sent as `"width": []`, which broke numeric filtering on that attribute. Now the attribute is left out of the Algolia record.
+
 ## 1.32.3
 
 ### Patch Changes

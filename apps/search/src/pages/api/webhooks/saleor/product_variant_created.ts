@@ -13,6 +13,7 @@ import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookProductVariantCreated } from "../../../../webhooks/definitions/product-variant-created";
 import { handleAlgoliaWebhookError } from "../../../../webhooks/handle-algolia-webhook-error";
 import { handleInvalidAppIdError } from "../../../../webhooks/handle-invalid-app-id-error";
+import { handleWebhookContextError } from "../../../../webhooks/handle-webhook-context-error";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
 export const config = {
@@ -100,11 +101,12 @@ export const handler: NextJsWebhookHandler<ProductVariantCreated> = async (req, 
       });
     }
   } catch (e) {
-    logger.error("Failed to execute product_variant_created webhook (createWebhookContext)", {
+    return handleWebhookContextError({
       error: e,
+      logger,
+      message: "Failed to execute product_variant_created webhook (createWebhookContext)",
+      res,
     });
-
-    return res.status(400).send((e as Error).message);
   }
 };
 

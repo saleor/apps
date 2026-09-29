@@ -6,8 +6,11 @@
       "maxDuration": 25
     }
   },
-  "regions": [
-    "dub1",
-    "iad1"
-  ]
+  "regions": ["dub1", "iad1"],
+  "git": {
+    "deploymentEnabled": {
+      "oss-sync-staging": false,
+      "public-mirror": false
+    }
+  }
 }

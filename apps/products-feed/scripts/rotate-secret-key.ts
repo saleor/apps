@@ -9,6 +9,7 @@ import {
 import * as Sentry from "@sentry/nextjs";
 
 import { env } from "@/env";
+import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 import { ALL_ENCRYPTED_METADATA_KEYS } from "@/lib/encrypted-metadata-keys";
 import { saleorApp } from "@/saleor-app";
 
@@ -32,7 +33,13 @@ const runner = new SecretKeyRotationRunner({
   logger,
   decrypt,
   encrypt,
-  getItems: () => fetchMetadataRotationItems(saleorApp.apl, logger, ALL_ENCRYPTED_METADATA_KEYS),
+  getItems: () =>
+    fetchMetadataRotationItems({
+      apl: saleorApp.apl,
+      logger,
+      encryptedFieldNames: ALL_ENCRYPTED_METADATA_KEYS,
+      createClient: createInstrumentedGraphqlClient,
+    }),
   saveItem: saveMetadataRotationItem,
 });
 

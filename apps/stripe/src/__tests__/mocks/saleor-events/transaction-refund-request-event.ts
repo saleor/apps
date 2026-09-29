@@ -1,10 +1,15 @@
 import { type TransactionRefundRequestedEventFragment } from "@/generated/graphql";
 
-import { mockedSaleorChannelId, mockedSaleorTransactionId } from "../constants";
+import {
+  mockedSaleorActionIdempotencyKey,
+  mockedSaleorChannelId,
+  mockedSaleorTransactionId,
+} from "../constants";
 import { mockedStripePaymentIntentId } from "../mocked-stripe-payment-intent-id";
 
 export const getMockedTransactionRefundRequestedEvent =
   (): TransactionRefundRequestedEventFragment => ({
+    idempotencyKey: mockedSaleorActionIdempotencyKey,
     action: {
       amount: 100,
       currency: "USD",

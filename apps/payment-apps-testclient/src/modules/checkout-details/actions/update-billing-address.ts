@@ -8,6 +8,7 @@ import { graphql } from "@/graphql/gql";
 import { envUrlSchema } from "@/lib/env-url";
 import { BaseError, UnknownError } from "@/lib/errors";
 import { actionClient } from "@/lib/safe-action";
+import { saleorRequestHeaders } from "@/lib/saleor-request-headers";
 import { createPath } from "@/lib/utils";
 
 import { BillingAddressSchema } from "../schemas/billing-address";
@@ -49,10 +50,15 @@ export const updateBillingAddress = actionClient
   )
   .metadata({ actionName: "updateBillingAddress" })
   .action(async ({ parsedInput: { envUrl, checkoutId, billingAddress } }) => {
-    const response = await request(envUrl, UpdateBillingAddressMutation, {
-      checkoutId,
-      input: billingAddress,
-    }).catch((error) => {
+    const response = await request(
+      envUrl,
+      UpdateBillingAddressMutation,
+      {
+        checkoutId,
+        input: billingAddress,
+      },
+      saleorRequestHeaders,
+    ).catch((error) => {
       // eslint-disable-next-line no-console
       console.error("Failed to update billing address", { error });
       throw BaseError.normalize(error, UnknownError);

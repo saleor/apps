@@ -1,5 +1,6 @@
 fragment TransactionRefundRequestedEvent on TransactionRefundRequested {
   ...EventMetadata
+  idempotencyKey
   action {
     amount
     currency

@@ -3,7 +3,11 @@ import type Stripe from "stripe";
 import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import { mockedSaleorAppId, mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
+import {
+  mockedSaleorActionIdempotencyKey,
+  mockedSaleorAppId,
+  mockedSaleorTransactionId,
+} from "@/__tests__/mocks/constants";
 import { mockStripeProblemReporter } from "@/__tests__/mocks/mock-stripe-problem-reporter";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
@@ -79,6 +83,7 @@ describe("TransactionCancelationRequestedUseCase", () => {
 
     expect(spy).toHaveBeenCalledWith({
       id: mockedStripePaymentIntentId,
+      idempotencyKey: mockedSaleorActionIdempotencyKey,
     });
   });
 
@@ -106,6 +111,7 @@ describe("TransactionCancelationRequestedUseCase", () => {
 
     expect(spy).toHaveBeenCalledWith({
       id: mockedStripePaymentIntentId,
+      idempotencyKey: mockedSaleorActionIdempotencyKey,
     });
   });
 

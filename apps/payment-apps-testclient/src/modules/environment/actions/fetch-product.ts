@@ -7,6 +7,7 @@ import { graphql, readFragment } from "@/graphql/gql";
 import { envUrlSchema } from "@/lib/env-url";
 import { BaseError, UnknownError } from "@/lib/errors";
 import { actionClient } from "@/lib/safe-action";
+import { saleorRequestHeaders } from "@/lib/saleor-request-headers";
 
 import { ProductFragment } from "../fragments";
 
@@ -42,9 +43,14 @@ export const fetchProduct = actionClient
   )
   .metadata({ actionName: "fetchProduct" })
   .action(async ({ parsedInput: { channelSlug, envUrl } }) => {
-    const response = await request(envUrl, FetchProductQuery, {
-      channelSlug,
-    }).catch((error) => {
+    const response = await request(
+      envUrl,
+      FetchProductQuery,
+      {
+        channelSlug,
+      },
+      saleorRequestHeaders,
+    ).catch((error) => {
       throw BaseError.normalize(error, UnknownError);
     });
 

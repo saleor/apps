@@ -1,5 +1,6 @@
 fragment TransactionChargeRequestedEvent on TransactionChargeRequested {
   ...EventMetadata
+  idempotencyKey
   action {
     amount
   }

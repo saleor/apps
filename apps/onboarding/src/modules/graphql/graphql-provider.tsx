@@ -1,25 +1,20 @@
 "use client";
 
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { type PropsWithChildren, useMemo, useRef } from "react";
-import { cacheExchange, createClient, fetchExchange, Provider } from "urql";
+import { Provider } from "urql";
 
 /**
  * Stable placeholder so the tree can paint before AppBridge has a Saleor API URL.
  * Queries stay paused until a token exists.
  */
-const pendingClient = createClient({
-  url: "https://pending.invalid/graphql/",
-  exchanges: [cacheExchange, fetchExchange],
-});
+const pendingClient = createGraphQLClient({ saleorApiUrl: "https://pending.invalid/graphql/" });
 
 /**
- * Local urql client — do not use shared `createGraphQLClient` here.
- * That helper closes over the JWT at construction time, so AppBridge
- * `tokenRefresh` would require a new client and drop the cache (skeleton flash).
- *
  * Recreate only when the shop URL changes or the first token arrives.
- * Auth headers are read from a ref per request.
+ * The token is read from a ref per request, so AppBridge `tokenRefresh` keeps the client
+ * and its cache (no skeleton flash).
  */
 export const GraphQLProvider = ({ children }: PropsWithChildren) => {
   const { appBridgeState } = useAppBridge();
@@ -35,15 +30,7 @@ export const GraphQLProvider = ({ children }: PropsWithChildren) => {
       return pendingClient;
     }
 
-    return createClient({
-      url: saleorApiUrl,
-      fetchOptions: () => {
-        const authToken = tokenRef.current;
-
-        return authToken ? { headers: { "Authorization-Bearer": authToken } } : {};
-      },
-      exchanges: [cacheExchange, fetchExchange],
-    });
+    return createGraphQLClient({ saleorApiUrl, token: () => tokenRef.current });
   }, [saleorApiUrl, hasToken]);
 
   return <Provider value={client}>{children}</Provider>;

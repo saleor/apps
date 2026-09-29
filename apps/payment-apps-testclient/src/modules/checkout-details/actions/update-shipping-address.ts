@@ -8,6 +8,7 @@ import { graphql } from "@/graphql/gql";
 import { envUrlSchema } from "@/lib/env-url";
 import { BaseError, UnknownError } from "@/lib/errors";
 import { actionClient } from "@/lib/safe-action";
+import { saleorRequestHeaders } from "@/lib/saleor-request-headers";
 import { createPath } from "@/lib/utils";
 
 import { ShippingAddressSchema } from "../schemas/shipping-address";
@@ -49,10 +50,15 @@ export const updateShippingAddress = actionClient
   )
   .metadata({ actionName: "updateShippingAddress" })
   .action(async ({ parsedInput: { envUrl, checkoutId, shippingAddress } }) => {
-    const response = await request(envUrl, UpdateShippingAddressMutation, {
-      checkoutId,
-      input: shippingAddress,
-    }).catch((error) => {
+    const response = await request(
+      envUrl,
+      UpdateShippingAddressMutation,
+      {
+        checkoutId,
+        input: shippingAddress,
+      },
+      saleorRequestHeaders,
+    ).catch((error) => {
       throw BaseError.normalize(error, UnknownError);
     });
 

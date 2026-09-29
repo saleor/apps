@@ -7,6 +7,7 @@ import { graphql } from "@/graphql/gql";
 import { envUrlSchema } from "@/lib/env-url";
 import { BaseError, UnknownError } from "@/lib/errors";
 import { actionClient } from "@/lib/safe-action";
+import { saleorRequestHeaders } from "@/lib/saleor-request-headers";
 
 import { redirectToPaymentGatewaySelect } from "./redirect-to-payment-gateway-select";
 
@@ -48,10 +49,15 @@ export const updateDeliveryMethod = actionClient
   .metadata({ actionName: "updateDeliveryMethod" })
   .action(
     async ({ parsedInput: { envUrl, checkoutId, deliveryMethod } }) => {
-      const response = await request(envUrl, UpdateDeliveryMethodMutation, {
-        checkoutId,
-        input: deliveryMethod,
-      }).catch((error) => {
+      const response = await request(
+        envUrl,
+        UpdateDeliveryMethodMutation,
+        {
+          checkoutId,
+          input: deliveryMethod,
+        },
+        saleorRequestHeaders,
+      ).catch((error) => {
         throw BaseError.normalize(error, UnknownError);
       });
 

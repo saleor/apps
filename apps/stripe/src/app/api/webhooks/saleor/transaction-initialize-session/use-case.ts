@@ -318,6 +318,8 @@ export class TransactionInitializeSessionUseCase {
       if (paymentIntentIdResult.isOk()) {
         const cancelResult = await stripePaymentIntentsApi.cancelPaymentIntent({
           id: paymentIntentIdResult.value,
+          // Best-effort rollback, not a Saleor-requested action - it has no idempotency key of its own
+          idempotencyKey: undefined,
         });
 
         if (cancelResult.isErr()) {
@@ -365,6 +367,8 @@ export class TransactionInitializeSessionUseCase {
 
       const cancelResult = await stripePaymentIntentsApi.cancelPaymentIntent({
         id: stripePaymentIntentId,
+        // Best-effort rollback, not a Saleor-requested action - it has no idempotency key of its own
+        idempotencyKey: undefined,
       });
 
       if (cancelResult.isErr()) {

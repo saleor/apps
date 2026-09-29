@@ -7,6 +7,7 @@ import { createVariantsAvailabilityFetcher } from "../lib/algolia/variants-avail
 import { AlgoliaPageFieldsKeys } from "../lib/algolia-fields";
 import { createInstrumentedGraphqlClient } from "../lib/create-instrumented-graphql-client";
 import { createTraceEffect } from "../lib/trace-effect";
+import { AppNotConfiguredError } from "./handle-webhook-context-error";
 
 const traceFetchChannels = createTraceEffect({ name: "Saleor fetchChannels" });
 
@@ -41,7 +42,7 @@ export const createWebhookContext = async ({ authData }: { authData: AuthData })
   }
 
   if (!settings.appConfig) {
-    throw new Error("App not configured");
+    throw new AppNotConfiguredError("App not configured");
   }
 
   const algoliaClient = new AlgoliaSearchProvider({

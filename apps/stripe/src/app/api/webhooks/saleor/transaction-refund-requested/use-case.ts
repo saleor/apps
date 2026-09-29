@@ -19,6 +19,7 @@ import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { createSaleorTransactionId } from "@/modules/saleor/saleor-transaction-id";
 import {
   getChannelIdFromRequestedEventPayload,
+  getIdempotencyKeyFromRequestedEventPayload,
   getTransactionFromRequestedEventPayload,
 } from "@/modules/saleor/transaction-requested-event-helpers";
 import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
@@ -134,6 +135,7 @@ export class TransactionRefundRequestedUseCase {
     const createRefundResult = await stripeRefundsApi.createRefund({
       paymentIntentId: stripePaymentIntentId,
       stripeMoney: stripeMoneyResult.value,
+      idempotencyKey: getIdempotencyKeyFromRequestedEventPayload(event),
       metadata: {
         saleor_source_id: transaction.checkout?.id
           ? transaction.checkout.id

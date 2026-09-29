@@ -7,6 +7,7 @@ import { graphql } from "@/graphql/gql";
 import { envUrlSchema } from "@/lib/env-url";
 import { BaseError, UnknownError } from "@/lib/errors";
 import { actionClient } from "@/lib/safe-action";
+import { saleorRequestHeaders } from "@/lib/saleor-request-headers";
 
 import { TransactionProcessSchema } from "../schemas/transaction-process";
 
@@ -51,10 +52,15 @@ export const processTransaction = actionClient
   )
   .metadata({ actionName: "processTransaction" })
   .action(async ({ parsedInput: { envUrl, transactionId, data } }) => {
-    const response = await request(envUrl, processTransactionMutation, {
-      transactionId,
-      data,
-    }).catch((error) => {
+    const response = await request(
+      envUrl,
+      processTransactionMutation,
+      {
+        transactionId,
+        data,
+      },
+      saleorRequestHeaders,
+    ).catch((error) => {
       throw BaseError.normalize(error, UnknownError);
     });
 

@@ -7,6 +7,7 @@ import { graphql } from "@/graphql/gql";
 import { envUrlSchema } from "@/lib/env-url";
 import { BaseError, UnknownError } from "@/lib/errors";
 import { actionClient } from "@/lib/safe-action";
+import { saleorRequestHeaders } from "@/lib/saleor-request-headers";
 
 import { InitalizeTransactionSchema } from "../schemas/initalize-transaction";
 
@@ -58,13 +59,18 @@ export const initalizeTransaction = actionClient
     async ({
       parsedInput: { envUrl, checkoutId, paymentGatewayId, data, amount, idempotencyKey },
     }) => {
-      const response = await request(envUrl, initalizeTransactionMutation, {
-        checkoutId,
-        data,
-        amount,
-        idempotencyKey,
-        paymentGatewayId,
-      }).catch((error) => {
+      const response = await request(
+        envUrl,
+        initalizeTransactionMutation,
+        {
+          checkoutId,
+          data,
+          amount,
+          idempotencyKey,
+          paymentGatewayId,
+        },
+        saleorRequestHeaders,
+      ).catch((error) => {
         throw BaseError.normalize(error, UnknownError);
       });
       const parsedResponse = InitalizeTransactionSchema.safeParse(response);

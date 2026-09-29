@@ -7,6 +7,7 @@ import { graphql } from "@/graphql/gql";
 import { envUrlSchema } from "@/lib/env-url";
 import { BaseError, UnknownError } from "@/lib/errors";
 import { actionClient } from "@/lib/safe-action";
+import { saleorRequestHeaders } from "@/lib/saleor-request-headers";
 
 import { redirectToCheckoutDetails } from "./redirect-to-checkout-details";
 
@@ -54,18 +55,23 @@ export const createCheckout = actionClient
   .metadata({ actionName: "createCheckout" })
   .action(
     async ({ parsedInput: { channelSlug, envUrl, variantId } }) => {
-      const response = await request(envUrl, CreateCheckoutMutation, {
-        input: {
-          channel: channelSlug,
-          email: "adyen-testclient@saleor.io",
-          lines: [
-            {
-              variantId,
-              quantity: 1,
-            },
-          ],
+      const response = await request(
+        envUrl,
+        CreateCheckoutMutation,
+        {
+          input: {
+            channel: channelSlug,
+            email: "adyen-testclient@saleor.io",
+            lines: [
+              {
+                variantId,
+                quantity: 1,
+              },
+            ],
+          },
         },
-      }).catch((error) => {
+        saleorRequestHeaders,
+      ).catch((error) => {
         throw BaseError.normalize(error, UnknownError);
       });
 

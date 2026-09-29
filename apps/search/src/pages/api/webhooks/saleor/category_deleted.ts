@@ -10,6 +10,7 @@ import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookCategoryDeleted } from "../../../../webhooks/definitions/category-deleted";
 import { handleAlgoliaWebhookError } from "../../../../webhooks/handle-algolia-webhook-error";
 import { handleInvalidAppIdError } from "../../../../webhooks/handle-invalid-app-id-error";
+import { handleWebhookContextError } from "../../../../webhooks/handle-webhook-context-error";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
 export const config = {
@@ -74,9 +75,12 @@ export const handler: NextJsWebhookHandler<CategoryDeleted> = async (req, res, c
       });
     }
   } catch (e) {
-    logger.error("Failed to execute category_deleted webhook (createWebhookContext)", { error: e });
-
-    return res.status(400).send((e as Error).message);
+    return handleWebhookContextError({
+      error: e,
+      logger,
+      message: "Failed to execute category_deleted webhook (createWebhookContext)",
+      res,
+    });
   }
 };
 

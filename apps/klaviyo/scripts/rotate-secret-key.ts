@@ -11,6 +11,7 @@ import * as Sentry from "@sentry/nextjs";
 import { saleorApp } from "../saleor-app";
 import { env } from "../src/env";
 import { ALL_ENCRYPTED_METADATA_KEYS } from "../src/lib/encrypted-metadata-keys";
+import { createSaleorGraphqlClient } from "../src/lib/graphql-client";
 import { createMigrationScriptLogger } from "./migration-logger";
 
 const logger = createMigrationScriptLogger("RotateSecretKey");
@@ -31,7 +32,13 @@ const runner = new SecretKeyRotationRunner({
   logger,
   decrypt,
   encrypt,
-  getItems: () => fetchMetadataRotationItems(saleorApp.apl, logger, ALL_ENCRYPTED_METADATA_KEYS),
+  getItems: () =>
+    fetchMetadataRotationItems({
+      apl: saleorApp.apl,
+      logger,
+      encryptedFieldNames: ALL_ENCRYPTED_METADATA_KEYS,
+      createClient: createSaleorGraphqlClient,
+    }),
   saveItem: saveMetadataRotationItem,
 });
 

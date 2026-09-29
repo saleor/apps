@@ -7,6 +7,7 @@ import { graphql } from "@/graphql/gql";
 import { envUrlSchema } from "@/lib/env-url";
 import { BaseError, UnknownError } from "@/lib/errors";
 import { actionClient } from "@/lib/safe-action";
+import { saleorRequestHeaders } from "@/lib/saleor-request-headers";
 
 import { InitalizePaymentGatewaySchema } from "../schemas/initalize-payment-gateway";
 
@@ -81,12 +82,17 @@ export const initalizePaymentGateway = actionClient
     actionName: "initalizePaymentGateway",
   })
   .action(async ({ parsedInput: { envUrl, checkoutId, paymentGatewayId, amount, data } }) => {
-    const response = await request(envUrl, InitalizePaymentGatewayMutation, {
-      checkoutId,
-      paymentGatewayId,
-      amount,
-      data,
-    }).catch((error) => {
+    const response = await request(
+      envUrl,
+      InitalizePaymentGatewayMutation,
+      {
+        checkoutId,
+        paymentGatewayId,
+        amount,
+        data,
+      },
+      saleorRequestHeaders,
+    ).catch((error) => {
       // eslint-disable-next-line no-console
       console.error("Failed to fetch payment", { error });
       throw BaseError.normalize(error, UnknownError);

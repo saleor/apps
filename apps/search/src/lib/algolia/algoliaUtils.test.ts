@@ -282,6 +282,43 @@ describe("algoliaUtils", function () {
       );
     });
 
+    it("Drops NUMERIC attribute without a value instead of sending an empty array", () => {
+      const mappedEntity = productAndVariantToAlgolia({
+        channel: "test",
+        enabledKeys: ["attributes"],
+        variant: {
+          id: "id",
+          trackInventory: true,
+          attributes: [
+            {
+              attribute: { name: "width", inputType: "NUMERIC" },
+              values: [],
+            },
+          ],
+          name: "product name",
+          metadata: [],
+          product: {
+            __typename: undefined,
+            id: "",
+            name: "",
+            description: undefined,
+            slug: "",
+            productType: { id: "pt-1", name: "Default", slug: "default" },
+            variants: undefined,
+            category: undefined,
+            thumbnail: undefined,
+            media: undefined,
+            attributes: [],
+            channelListings: undefined,
+            collections: undefined,
+            metadata: [],
+          },
+        },
+      });
+
+      expect(mappedEntity.attributes).not.toHaveProperty("width");
+    });
+
     it("Maps NUMERIC, BOOLEAN and string attributes correctly when present on the same product", () => {
       const mappedEntity = productAndVariantToAlgolia({
         channel: "test",

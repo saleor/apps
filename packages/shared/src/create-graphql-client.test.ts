@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { gql } from "urql";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
@@ -12,10 +13,11 @@ const TestQuery = gql`
 `;
 
 const mockFetch = () =>
-  vi.fn().mockResolvedValue(
-    new Response(JSON.stringify({ data: { shop: { name: "Shop" } } }), {
-      headers: { "content-type": "application/json" },
-    }),
+  vi.fn().mockImplementation(
+    async () =>
+      new Response(JSON.stringify({ data: { shop: { name: "Shop" } } }), {
+        headers: { "content-type": "application/json" },
+      }),
   );
 
 const getSentHeaders = (fetchSpy: ReturnType<typeof mockFetch>) =>
@@ -56,5 +58,42 @@ describe("createGraphQLClient", () => {
       .toPromise();
 
     expect(getSentHeaders(fetchSpy)).not.toHaveProperty("user-agent");
+  });
+
+  it("does not send User-Agent in the browser", async () => {
+    const fetchSpy = mockFetch();
+
+    vi.stubGlobal("fetch", fetchSpy);
+    vi.stubGlobal("window", {});
+
+    await createGraphQLClient({
+      saleorApiUrl: "https://example.saleor.cloud/graphql/",
+      userAgent: "saleor-app-example/1.2.3",
+    })
+      .query(TestQuery, {})
+      .toPromise();
+
+    expect(getSentHeaders(fetchSpy)).not.toHaveProperty("user-agent");
+  });
+
+  it("reads the token from a getter on every request", async () => {
+    const fetchSpy = mockFetch();
+    let token = "first";
+
+    vi.stubGlobal("fetch", fetchSpy);
+
+    const client = createGraphQLClient({
+      saleorApiUrl: "https://example.saleor.cloud/graphql/",
+      token: () => token,
+    });
+
+    await client.query(TestQuery, {}, { requestPolicy: "network-only" }).toPromise();
+    token = "second";
+    await client.query(TestQuery, {}, { requestPolicy: "network-only" }).toPromise();
+
+    expect(fetchSpy.mock.calls.map(([, init]) => (init as RequestInit).headers)).toMatchObject([
+      { "authorization-bearer": "first" },
+      { "authorization-bearer": "second" },
+    ]);
   });
 });

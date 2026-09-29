@@ -8,12 +8,16 @@ import {
 
 export interface CreateGraphQLClientArgs {
   saleorApiUrl: string;
-  token?: string;
+  /**
+   * Pass a getter when the token can change during the client's lifetime (e.g. AppBridge token refresh),
+   * so the client (and its cache) can be kept.
+   */
+  token?: string | (() => string | undefined);
   /**
    * Identifies the calling app in Saleor's access logs. Apps should pass
    * `${packageJson.name}/${packageJson.version}`.
    *
-   * Browsers forbid overriding User-Agent, so this only takes effect server-side.
+   * Sent only server-side: Chrome ignores it and Firefox would add it to the CORS preflight.
    */
   userAgent?: string;
   opts?: {
@@ -44,17 +48,20 @@ export const createGraphQLClient = ({
     beforeFetch.push(...opts?.prependingFetchExchanges);
   }
 
+  const sendUserAgent = userAgent && typeof window === "undefined";
+
   return urqlCreateClient({
     url: saleorApiUrl,
-    fetchOptions: userAgent ? { headers: { "User-Agent": userAgent } } : undefined,
+    fetchOptions: sendUserAgent ? { headers: { "User-Agent": userAgent } } : undefined,
     exchanges: [
       cacheExchange,
       authExchange(async (utils) => {
         return {
           addAuthToOperation(operation) {
-            const headers: Record<string, string> = token
+            const currentToken = typeof token === "function" ? token() : token;
+            const headers: Record<string, string> = currentToken
               ? {
-                  "Authorization-Bearer": token,
+                  "Authorization-Bearer": currentToken,
                 }
               : {};
 

@@ -4,6 +4,7 @@ import {
   mockedSaleorTransactionId,
 } from "@/__tests__/mocks/constants";
 import { type TransactionChargeRequestedEventFragment } from "@/generated/graphql";
+import { RandomId } from "@/lib/random-id";
 import { type StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
 export const transactionChargeRequestedFixture = (args: {
@@ -11,6 +12,7 @@ export const transactionChargeRequestedFixture = (args: {
   amount: number;
 }): TransactionChargeRequestedEventFragment => {
   return {
+    idempotencyKey: new RandomId().generate(),
     action: {
       amount: args.amount,
     },

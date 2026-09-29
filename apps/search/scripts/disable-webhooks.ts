@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
 import { parseArgs } from "node:util";
 
-import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { getAppDetailsAndWebhooksData } from "@saleor/webhook-utils";
 
 import { DisableWebhookDocument } from "../generated/graphql";
 import { saleorApp } from "../saleor-app";
+import { createInstrumentedGraphqlClient } from "../src/lib/create-instrumented-graphql-client";
 import { appWebhooks } from "../webhooks";
 
 const {
@@ -63,7 +63,7 @@ appWebhooks.forEach((webhook) => {
 console.log();
 
 // Create GraphQL client
-const client = createGraphQLClient({
+const client = createInstrumentedGraphqlClient({
   saleorApiUrl: authData.saleorApiUrl,
   token: authData.token,
 });

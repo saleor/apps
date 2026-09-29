@@ -56,18 +56,24 @@ export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
 
   async capturePaymentIntent(args: {
     id: StripePaymentIntentId;
+    idempotencyKey: string | undefined;
   }): Promise<Result<Stripe.PaymentIntent, unknown>> {
     return ResultAsync.fromPromise(
-      this.stripeApiWrapper.paymentIntents.capture(args.id),
+      this.stripeApiWrapper.paymentIntents.capture(args.id, undefined, {
+        idempotencyKey: args.idempotencyKey,
+      }),
       (error) => error,
     );
   }
 
   async cancelPaymentIntent(args: {
     id: StripePaymentIntentId;
+    idempotencyKey: string | undefined;
   }): Promise<Result<Stripe.PaymentIntent, unknown>> {
     return ResultAsync.fromPromise(
-      this.stripeApiWrapper.paymentIntents.cancel(args.id),
+      this.stripeApiWrapper.paymentIntents.cancel(args.id, undefined, {
+        idempotencyKey: args.idempotencyKey,
+      }),
       (error) => error,
     );
   }

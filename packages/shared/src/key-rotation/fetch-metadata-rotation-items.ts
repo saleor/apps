@@ -3,7 +3,7 @@ import { type Logger } from "@saleor/apps-logger";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { gql } from "urql";
 
-import { createGraphQLClient } from "../create-graphql-client";
+import { type createGraphQLClient } from "../create-graphql-client";
 import { matchesAnyEncryptedMetadataKey } from "./metadata-key-matcher";
 import type { RotationItem } from "./secret-key-rotation-runner";
 
@@ -19,20 +19,31 @@ const FetchAppDetailsQuery = gql`
   }
 `;
 
+type GraphQLClient = ReturnType<typeof createGraphQLClient>;
+
 export interface MetadataItemContext {
-  client: ReturnType<typeof createGraphQLClient>;
+  client: GraphQLClient;
   appId: string;
 }
 
-export async function* fetchMetadataRotationItems(
-  apl: Pick<APL, "getAll">,
-  logger: Logger,
-  encryptedFieldNames: readonly string[],
-): AsyncGenerator<RotationItem<MetadataItemContext>> {
+export async function* fetchMetadataRotationItems({
+  apl,
+  logger,
+  encryptedFieldNames,
+  createClient,
+}: {
+  apl: Pick<APL, "getAll">;
+  logger: Logger;
+  encryptedFieldNames: readonly string[];
+  /**
+   * The app's own client factory, so requests carry its User-Agent and instrumentation.
+   */
+  createClient: (args: { saleorApiUrl: string; token: string }) => GraphQLClient;
+}): AsyncGenerator<RotationItem<MetadataItemContext>> {
   const installations = await apl.getAll();
 
   for (const { token, saleorApiUrl } of installations) {
-    const client = createGraphQLClient({ saleorApiUrl, token });
+    const client = createClient({ saleorApiUrl, token });
 
     const { data, error } = await client
       .query(FetchAppDetailsQuery, {}, { requestPolicy: "network-only" })

@@ -20,6 +20,7 @@ export const mockAdyenWebhookUrl = `${mockAppUrlBase}?${new URLSearchParams({
   [WebhookParams.appIdSearchParam]: mockedSaleorAppId,
 }).toString()}`;
 export const mockedSaleorTransactionId = createSaleorTransactionId("mocked-transaction-id");
+export const mockedSaleorActionIdempotencyKey = "mocked-action-idempotency-key";
 
 export const getMockedSaleorMoney = (amount: number = 10_00, currency: string = "usd") =>
   SaleorMoney.createFromStripe({

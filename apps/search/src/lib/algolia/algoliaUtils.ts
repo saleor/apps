@@ -111,6 +111,14 @@ export const mapSelectedAttributesToRecord = (
    */
   const filteredValues = attr.values.filter((v) => !!v.name?.length);
 
+  /**
+   * Unset NUMERIC attribute has no values, so it would fall back to an empty array,
+   * which breaks Algolia numericFilters on that attribute.
+   */
+  if (attr.attribute.inputType === "NUMERIC" && filteredValues.length === 0) {
+    return undefined;
+  }
+
   let value: string | boolean | number | string[];
 
   /**

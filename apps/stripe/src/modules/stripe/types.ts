@@ -21,6 +21,7 @@ export interface IStripeRefundsApi {
   createRefund(args: {
     paymentIntentId: StripePaymentIntentId;
     stripeMoney: StripeMoney;
+    idempotencyKey: string | undefined;
     metadata?: AllowedStripeObjectMetadata;
   }): Promise<Result<Stripe.Refund, unknown>>;
 }
@@ -59,9 +60,11 @@ export interface IStripePaymentIntentsApi {
   }): Promise<Result<Stripe.PaymentIntent, unknown>>;
   capturePaymentIntent(args: {
     id: StripePaymentIntentId;
+    idempotencyKey: string | undefined;
   }): Promise<Result<Stripe.PaymentIntent, unknown>>;
   cancelPaymentIntent(args: {
     id: StripePaymentIntentId;
+    idempotencyKey: string | undefined;
   }): Promise<Result<Stripe.PaymentIntent, unknown>>;
 }
 
