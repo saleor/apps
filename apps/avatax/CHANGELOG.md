@@ -1,5 +1,11 @@
 # saleor-app-avatax
 
+## 1.25.5
+
+### Patch Changes
+
+- 52c80bb: Fixed "You can only call end() on a span once" OpenTelemetry errors that were logged for every client log written to DynamoDB. Previously, the write ran in the background and could still be running when the request finished, which also meant Vercel could stop the function before the log was saved. Now the write runs after the response is sent, and the function stays alive until it finishes.
+
 ## 1.25.4
 
 ### Patch Changes

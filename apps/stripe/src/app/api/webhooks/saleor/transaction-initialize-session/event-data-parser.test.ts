@@ -40,6 +40,17 @@ describe("parseTransactionInitializeSessionEventData", () => {
     });
   });
 
+  it.each(["pay_by_bank", "mobilepay", "revolut_pay"])(
+    "should parse valid data with %s payment method",
+    (paymentMethod) => {
+      const result = parseTransactionInitializeSessionEventData({
+        paymentIntent: { paymentMethod },
+      });
+
+      expect(result._unsafeUnwrap()).toStrictEqual({ paymentIntent: { paymentMethod } });
+    },
+  );
+
   it("should return UnsupportedPaymentMethodError if storefront sends unsupported payment method", () => {
     const storefrontData = {
       paymentIntent: {

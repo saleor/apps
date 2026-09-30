@@ -4,7 +4,10 @@ import { CardPaymentMethod } from "@/modules/stripe/payment-methods/card";
 import { GooglePayPaymentMethod } from "@/modules/stripe/payment-methods/google-pay";
 import { KlarnaPaymentMethod } from "@/modules/stripe/payment-methods/klarna";
 import { LinkPaymentMethod } from "@/modules/stripe/payment-methods/link";
+import { MobilePayPaymentMethod } from "@/modules/stripe/payment-methods/mobilepay";
+import { PayByBankPaymentMethod } from "@/modules/stripe/payment-methods/pay-by-bank";
 import { PayPalPaymentMethod } from "@/modules/stripe/payment-methods/paypal";
+import { RevolutPayPaymentMethod } from "@/modules/stripe/payment-methods/revolut-pay";
 import { SepaDebitPaymentMethod } from "@/modules/stripe/payment-methods/sepa-debit";
 import { USBankAccountPaymentMethod } from "@/modules/stripe/payment-methods/us-bank-account";
 
@@ -30,6 +33,12 @@ export const resolvePaymentMethodFromEventData = (
       return new SepaDebitPaymentMethod();
     case "link":
       return new LinkPaymentMethod();
+    case "pay_by_bank":
+      return new PayByBankPaymentMethod();
+    case "mobilepay":
+      return new MobilePayPaymentMethod();
+    case "revolut_pay":
+      return new RevolutPayPaymentMethod();
     default:
       assertUnreachable(eventData.paymentIntent);
   }

@@ -1,5 +1,11 @@
 # saleor-app-payment-stripe
 
+## 2.11.0
+
+### Minor Changes
+
+- 649ea54: Added support for Pay by Bank (`pay_by_bank`), MobilePay (`mobilepay`) and Revolut Pay (`revolut_pay`) payment methods. Previously, sending any of these as `paymentMethod` in `transactionInitializeSession` returned an `UnsupportedPaymentMethodError`. Now a PaymentIntent is created for them. MobilePay and Revolut Pay support both AUTHORIZATION and CHARGE flows. Pay by Bank is always charged immediately.
+
 ## 2.10.1
 
 ### Patch Changes
