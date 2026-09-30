@@ -1,5 +1,11 @@
 # @saleor/apps-logger
 
+## 1.6.7
+
+### Patch Changes
+
+- 4c5c512: Fixed the Sentry log transport. Before, every log call attached one more transport, so each log added a growing number of duplicated (and stale) breadcrumbs, and all breadcrumbs were sent with the "debug" level. Error logs were never reported to Sentry as events. Now each log adds exactly one breadcrumb with the correct level, and `error`/`fatal` logs are sent to Sentry as events: as an exception when the log attributes contain an `Error`, otherwise as a message.
+
 ## 1.6.6
 
 ### Patch Changes

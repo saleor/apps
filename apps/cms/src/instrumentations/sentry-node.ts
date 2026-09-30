@@ -1,22 +1,8 @@
-import {
-  defaultStackParser,
-  getCurrentScope,
-  getDefaultIntegrationsWithoutPerformance,
-  makeNodeTransport,
-  NodeClient,
-} from "@sentry/nextjs";
+import * as Sentry from "@sentry/nextjs";
 
-// We didn't use `Sentry.init` here because it interferes with our OTEL setup and it is causing some spans to be lost. Instead we are using `NodeClient` directly - which is `Sentry.init` doing under the hood.
-const nodeClient = new NodeClient({
+Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
   environment: process.env.ENV,
-  // we don't follow OTEL guide from Sentry https://docs.sentry.io/platforms/javascript/guides/nextjs/opentelemetry/custom-setup/ as we use Sentry just for error tracking
-  skipOpenTelemetrySetup: true,
-  integrations: [...getDefaultIntegrationsWithoutPerformance()],
-  transport: makeNodeTransport,
-  stackParser: defaultStackParser,
+  // @vercel/otel owns the OTEL setup when enabled (./otel-node.ts). Sentry is used only for error tracking
+  skipOpenTelemetrySetup: process.env.OTEL_ENABLED === "true",
 });
-
-getCurrentScope().setClient(nodeClient);
-
-nodeClient.init();

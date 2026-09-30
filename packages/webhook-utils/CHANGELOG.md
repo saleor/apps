@@ -1,5 +1,12 @@
 # @saleor/webhook-utils
 
+## 0.3.3
+
+### Patch Changes
+
+- Updated dependencies [4c5c512]
+  - @saleor/apps-logger@1.6.7
+
 ## 0.3.2
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 import * as Sentry from "@sentry/nextjs";
-import { SeverityLevel } from "@sentry/nextjs";
-import { ILogObj, Logger } from "tslog";
+import { type SeverityLevel } from "@sentry/nextjs";
+import { type ILogObj, type Logger } from "tslog";
 
 const loggerLevelToSentryLevel = (level: string): SeverityLevel => {
   switch (level) {
@@ -53,15 +53,29 @@ export const attachLoggerSentryTransport = (logger: Logger<ILogObj>) => {
       return;
     }
 
-    logger.attachTransport((log) => {
-      Sentry?.addBreadcrumb?.({
-        message: message,
-        type: levelToBreadcrumbType(log._meta.logLevelName),
-        level: loggerLevelToSentryLevel(log._meta.logLevelName),
-        // @ts-expect-error - Sentry only allows number type, but ISOString is valid
-        timestamp: log._meta.date.toISOString(),
-        data: attributes,
-      });
+    // tslog level names are uppercase ("ERROR"), mappers expect lowercase
+    const levelName = log._meta.logLevelName.toLowerCase();
+    const level = loggerLevelToSentryLevel(levelName);
+
+    if (level === "error") {
+      const error = Object.values(attributes).find((value) => value instanceof Error);
+      const captureContext = { level, extra: { message, ...attributes } };
+
+      // Sentry skips Error instances that were already captured, so explicit captureException calls won't duplicate
+      if (error) {
+        Sentry?.captureException?.(error, captureContext);
+      } else {
+        Sentry?.captureMessage?.(message, captureContext);
+      }
+    }
+
+    Sentry?.addBreadcrumb?.({
+      message: message,
+      type: levelToBreadcrumbType(levelName),
+      level,
+      // @ts-expect-error - Sentry only allows number type, but ISOString is valid
+      timestamp: log._meta.date.toISOString(),
+      data: attributes,
     });
   });
 };

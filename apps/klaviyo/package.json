@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-klaviyo",
-  "version": "1.18.3",
+  "version": "1.18.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -24,6 +24,7 @@
     "@opentelemetry/instrumentation": "catalog:",
     "@opentelemetry/resources": "catalog:",
     "@opentelemetry/sdk-logs": "catalog:",
+    "@opentelemetry/sdk-trace-base": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",

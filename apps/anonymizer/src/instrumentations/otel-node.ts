@@ -7,6 +7,7 @@ import { createBatchSpanProcessor } from "@saleor/apps-otel/src/batch-span-proce
 import { createHttpInstrumentation } from "@saleor/apps-otel/src/http-instrumentation-factory";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { createServiceInstanceId } from "@saleor/apps-otel/src/service-instance-id-factory";
+import * as Sentry from "@sentry/nextjs";
 import { registerOTel } from "@vercel/otel";
 
 import pkg from "../../package.json";
@@ -29,4 +30,6 @@ registerOTel({
     }),
   ],
   instrumentations: [createHttpInstrumentation()],
+  // Sentry skips its own OTEL setup when OTEL is enabled (./sentry-node.ts), but its context manager is still required to isolate Sentry scopes per request
+  contextManager: new Sentry.SentryContextManager(),
 });

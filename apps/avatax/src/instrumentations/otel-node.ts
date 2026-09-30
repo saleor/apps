@@ -8,6 +8,7 @@ import { createAwsInstrumentation } from "@saleor/apps-otel/src/aws-instrumentat
 import { createBatchSpanProcessor } from "@saleor/apps-otel/src/batch-span-processor-factory";
 import { createHttpInstrumentation } from "@saleor/apps-otel/src/http-instrumentation-factory";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
+import * as Sentry from "@sentry/nextjs";
 import { registerOTel } from "@vercel/otel";
 
 import { env } from "@/env";
@@ -34,6 +35,8 @@ registerOTel({
     }),
   ],
   instrumentations: [createAwsInstrumentation(), createHttpInstrumentation()],
+  // Sentry skips its own OTEL setup when OTEL is enabled (./sentry-node.ts), but its context manager is still required to isolate Sentry scopes per request
+  contextManager: new Sentry.SentryContextManager(),
 });
 
 metrics.setGlobalMeterProvider(meterProvider);

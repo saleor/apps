@@ -1,5 +1,12 @@
 # @saleor/apps-shared
 
+## 1.17.2
+
+### Patch Changes
+
+- Updated dependencies [4c5c512]
+  - @saleor/apps-logger@1.6.7
+
 ## 1.17.1
 
 ### Patch Changes

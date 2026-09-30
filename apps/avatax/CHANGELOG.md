@@ -1,5 +1,19 @@
 # saleor-app-avatax
 
+## 1.25.4
+
+### Patch Changes
+
+- 635e29e: Upgraded Sentry SDK to v10. Previously, Sentry context (breadcrumbs, tags, user) could leak between concurrent requests handled by the same server instance. Now each request gets its own isolated Sentry scope, so error reports only contain data from the request that failed.
+
+  Sentry no longer wraps API route handlers. Previously, this wrapper stopped OpenTelemetry from recording spans created inside handlers. Now those spans appear in traces again. Errors from API routes are still reported to Sentry.
+
+- abdba39: Fixed OpenTelemetry spans that could go missing when a route was loaded before instrumentation was registered. Previously, tracers created at module load (e.g. DynamoDB APL) could stay silent; now they share the same OpenTelemetry instance as instrumentation and always record spans. This also prepares the apps for the Next.js 16 upgrade, where this load order happens on Vercel.
+- Updated dependencies [4c5c512]
+  - @saleor/apps-logger@1.6.7
+  - @saleor/apps-shared@1.17.2
+  - @saleor/webhook-utils@0.3.3
+
 ## 1.25.3
 
 ### Patch Changes

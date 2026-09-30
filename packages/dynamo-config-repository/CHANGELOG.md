@@ -1,5 +1,12 @@
 # @saleor/dynamo-config-repository
 
+## 1.0.6
+
+### Patch Changes
+
+- Updated dependencies [4c5c512]
+  - @saleor/apps-logger@1.6.7
+
 ## 1.0.5
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-segment",
-  "version": "2.4.3",
+  "version": "2.4.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -30,6 +30,7 @@
     "@opentelemetry/instrumentation": "catalog:",
     "@opentelemetry/resources": "catalog:",
     "@opentelemetry/sdk-logs": "catalog:",
+    "@opentelemetry/sdk-trace-base": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
     "@saleor/app-problems": "workspace:*",

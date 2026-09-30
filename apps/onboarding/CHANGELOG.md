@@ -1,5 +1,15 @@
 # saleor-app-onboarding
 
+## 0.1.8
+
+### Patch Changes
+
+- 635e29e: Upgraded Sentry SDK to v10. Previously, Sentry context (breadcrumbs, tags, user) could leak between concurrent requests handled by the same server instance. Now each request gets its own isolated Sentry scope, so error reports only contain data from the request that failed.
+
+  Sentry no longer wraps API route handlers. Previously, this wrapper stopped OpenTelemetry from recording spans created inside handlers. Now those spans appear in traces again. Errors from API routes are still reported to Sentry.
+
+  - @saleor/apps-shared@1.17.2
+
 ## 0.1.7
 
 ### Patch Changes

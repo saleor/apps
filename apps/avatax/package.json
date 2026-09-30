@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-avatax",
-  "version": "1.25.3",
+  "version": "1.25.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -36,6 +36,7 @@
     "@opentelemetry/resources": "catalog:",
     "@opentelemetry/sdk-logs": "catalog:",
     "@opentelemetry/sdk-metrics": "catalog:",
+    "@opentelemetry/sdk-trace-base": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
     "@saleor/app-problems": "workspace:*",
