@@ -61,7 +61,7 @@ catalog:
   modern-errors: 7.0.1
   modern-errors-serialize: 6.1.0
   neverthrow: 6.2.1
-  next: 15.5.26
+  next: 15.5.27
   next-test-api-route-handler: 5.0.4
   node-mocks-http: 1.16.1
   react: 18.2.0
@@ -90,17 +90,17 @@ minimumReleaseAgeExclude:
   - '@saleor/app-sdk'
   - '@saleor/macaw-ui'
   - handlebars@4.7.9
-  - next@15.5.26
-  - '@next/env@15.5.26'
-  - '@next/bundle-analyzer@15.5.26'
-  - '@next/swc-linux-arm64-gnu@15.5.26'
-  - '@next/swc-linux-arm64-musl@15.5.26'
-  - '@next/swc-linux-x64-musl@15.5.26'
-  - '@next/swc-linux-x64-gnu@15.5.26'
-  - '@next/swc-darwin-x64@15.5.26'
-  - '@next/swc-darwin-arm64@15.5.26'
-  - '@next/swc-win32-x64-msvc@15.5.26'
-  - '@next/swc-win32-arm64-msvc@15.5.26'
+  - next@15.5.27
+  - '@next/env@15.5.27'
+  - '@next/bundle-analyzer@15.5.27'
+  - '@next/swc-linux-arm64-gnu@15.5.27'
+  - '@next/swc-linux-arm64-musl@15.5.27'
+  - '@next/swc-linux-x64-musl@15.5.27'
+  - '@next/swc-linux-x64-gnu@15.5.27'
+  - '@next/swc-darwin-x64@15.5.27'
+  - '@next/swc-darwin-arm64@15.5.27'
+  - '@next/swc-win32-x64-msvc@15.5.27'
+  - '@next/swc-win32-arm64-msvc@15.5.27'
   - protobufjs@7.5.8 || 8.2.0
   - '@protobufjs/inquire@1.1.1'
   - '@protobufjs/utf8@1.1.1'

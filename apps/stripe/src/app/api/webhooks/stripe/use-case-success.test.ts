@@ -5,7 +5,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import {
   mockAdyenWebhookUrl,
-  mockedSaleorSchemaVersionNotSupportingPaymentMethodDetails,
   mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
   mockedSaleorTransactionId,
 } from "@/__tests__/mocks/constants";
@@ -568,7 +567,7 @@ describe("StripeWebhookUseCase - handling payment_intent.processing event", () =
         saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
         resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
         selectedPaymentMethod: "card",
-        saleorSchemaVersion: mockedSaleorSchemaVersionNotSupportingPaymentMethodDetails,
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     };
 
@@ -613,7 +612,15 @@ describe("StripeWebhookUseCase - handling payment_intent.processing event", () =
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent is processing",
         "pspReference": "pi_TEST_TEST_TEST",
-        "saleorPaymentMethodDetailsInput": null,
+        "saleorPaymentMethodDetailsInput": {
+          "card": {
+            "brand": "visa",
+            "expMonth": 12,
+            "expYear": 2025,
+            "lastDigits": "4242",
+            "name": "Visa",
+          },
+        },
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "CHARGE_REQUEST",
@@ -914,7 +921,7 @@ describe("StripeWebhookUseCase - handling payment_intent.canceled event", () => 
         saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
         resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
         selectedPaymentMethod: "card",
-        saleorSchemaVersion: mockedSaleorSchemaVersionNotSupportingPaymentMethodDetails,
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     };
 
@@ -959,7 +966,15 @@ describe("StripeWebhookUseCase - handling payment_intent.canceled event", () => 
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent was cancelled",
         "pspReference": "pi_TEST_TEST_TEST",
-        "saleorPaymentMethodDetailsInput": null,
+        "saleorPaymentMethodDetailsInput": {
+          "card": {
+            "brand": "visa",
+            "expMonth": 12,
+            "expYear": 2025,
+            "lastDigits": "4242",
+            "name": "Visa",
+          },
+        },
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "CANCEL_SUCCESS",
@@ -981,7 +996,7 @@ describe("StripeWebhookUseCase - handling payment_intent.canceled event", () => 
         saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
         resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
         selectedPaymentMethod: "card",
-        saleorSchemaVersion: mockedSaleorSchemaVersionNotSupportingPaymentMethodDetails,
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     };
 
@@ -1026,7 +1041,15 @@ describe("StripeWebhookUseCase - handling payment_intent.canceled event", () => 
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent was cancelled",
         "pspReference": "pi_TEST_TEST_TEST",
-        "saleorPaymentMethodDetailsInput": null,
+        "saleorPaymentMethodDetailsInput": {
+          "card": {
+            "brand": "visa",
+            "expMonth": 12,
+            "expYear": 2025,
+            "lastDigits": "4242",
+            "name": "Visa",
+          },
+        },
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "CANCEL_SUCCESS",

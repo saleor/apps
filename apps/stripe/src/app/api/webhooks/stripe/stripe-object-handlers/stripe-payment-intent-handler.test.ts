@@ -2,7 +2,6 @@ import { ok } from "neverthrow";
 import type Stripe from "stripe";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { mockedSaleorSchemaVersionNotSupportingPaymentMethodDetails } from "@/__tests__/mocks/constants";
 import { getMockedRecordedTransaction } from "@/__tests__/mocks/mocked-recorded-transaction";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
@@ -316,7 +315,6 @@ describe("StripePaymentIntentHandler", () => {
           mockTransactionRecorder.transactions = {
             [mockedStripePaymentIntentId]: getMockedRecordedTransaction({
               resolvedTransactionFlow,
-              saleorSchemaVersion: mockedSaleorSchemaVersionNotSupportingPaymentMethodDetails,
             }),
           };
 
@@ -353,7 +351,11 @@ describe("StripePaymentIntentHandler", () => {
           expect(amount.amount).toStrictEqual(amountExpected);
           expect(pspReference).toStrictEqual(event.data.object.id);
           expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");
-          expect(saleorPaymentMethodDetailsInput).toBeNull();
+          expect(saleorPaymentMethodDetailsInput).toStrictEqual({
+            other: {
+              name: "sepa_debit",
+            },
+          });
         },
       );
     });
@@ -376,7 +378,6 @@ describe("StripePaymentIntentHandler", () => {
 
           mockTransactionRecorder.transactions = {
             [mockedStripePaymentIntentId]: getMockedRecordedTransaction({
-              saleorSchemaVersion: mockedSaleorSchemaVersionNotSupportingPaymentMethodDetails,
               resolvedTransactionFlow,
             }),
           };
@@ -413,7 +414,15 @@ describe("StripePaymentIntentHandler", () => {
           expect(amount.amount).toStrictEqual(amountExpected);
           expect(pspReference).toStrictEqual(event.data.object.id);
           expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");
-          expect(saleorPaymentMethodDetailsInput).toBeNull();
+          expect(saleorPaymentMethodDetailsInput).toStrictEqual({
+            card: {
+              brand: "visa",
+              expMonth: 12,
+              expYear: 2025,
+              lastDigits: "4242",
+              name: "Visa",
+            },
+          });
         },
       );
     });

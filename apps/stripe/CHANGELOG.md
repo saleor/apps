@@ -1,5 +1,12 @@
 # saleor-app-payment-stripe
 
+## 2.11.1
+
+### Patch Changes
+
+- 60f11e2: Upgrade next.js to 16.3.8 or 15.5.27
+- d3e9a93: Fixed payment method details (e.g. card brand and last digits) missing on transactions for Saleor 3.23 and newer. Before, the Stripe webhook sent payment method details only on Saleor 3.22. If the Stripe webhook arrived before the shopper returned to the storefront, or Saleor completed the checkout itself, the transaction had no payment method. Now the details are always sent from the Stripe webhook.
+
 ## 2.11.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-avatax",
-  "version": "1.25.5",
+  "version": "1.25.6",
   "private": true,
   "type": "module",
   "scripts": {
@@ -92,7 +92,7 @@
     "@graphql-codegen/typescript-operations": "catalog:",
     "@graphql-codegen/typescript-urql": "catalog:",
     "@graphql-typed-document-node/core": "catalog:",
-    "@next/bundle-analyzer": "15.5.26",
+    "@next/bundle-analyzer": "15.5.27",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@testing-library/dom": "10.4.0",
