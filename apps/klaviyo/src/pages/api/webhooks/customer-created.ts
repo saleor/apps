@@ -19,6 +19,7 @@ const logger = createLogger("customerCreatedAsyncWebhookHandler");
 
 const CustomerCreatedWebhookPayload = gql`
   fragment CustomerCreatedWebhookPayload on CustomerCreated {
+    version
     user {
       __typename
       id
@@ -71,6 +72,8 @@ const handler: NextJsWebhookHandler<CustomerCreatedWebhookPayloadFragment> = asy
   res,
   context,
 ) => {
+  loggerContext.setSaleorVersion(context.schemaVersion);
+
   const { payload, authData } = context;
   const { saleorApiUrl, token, appId } = authData;
 

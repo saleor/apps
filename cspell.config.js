@@ -42,6 +42,7 @@ export default {
     "unmirrored",
     "refspec",
     "retryable",
+    "templatable",
     "atobarai",
     "avalara",
     "avatax",

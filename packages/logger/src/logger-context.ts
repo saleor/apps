@@ -1,10 +1,15 @@
-import { NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
-import { SALEOR_API_URL_HEADER, SALEOR_EVENT_HEADER } from "@saleor/app-sdk/headers";
+import { type NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
+import {
+  SALEOR_API_URL_HEADER,
+  SALEOR_EVENT_HEADER,
+  SALEOR_SCHEMA_VERSION_HEADER,
+} from "@saleor/app-sdk/headers";
+import { type SaleorSchemaVersion } from "@saleor/app-sdk/types";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { BaseError } from "@saleor/errors";
 import { AsyncLocalStorage } from "async_hooks";
-import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import { NextRequest } from "next/server";
+import { type NextApiHandler, type NextApiRequest, type NextApiResponse } from "next";
+import { type NextRequest } from "next/server";
 
 export class LoggerContext {
   private als = new AsyncLocalStorage<Record<string, unknown>>();
@@ -75,6 +80,21 @@ export class LoggerContext {
 
     store[key] = value;
   }
+
+  /**
+   * Accepts raw version ("3.21.5" from payload or `shop.version`, "3.21" from header)
+   * or parsed `ctx.schemaVersion` from app-sdk webhook context
+   */
+  setSaleorVersion(version: string | SaleorSchemaVersion | null | undefined) {
+    if (!version) {
+      return;
+    }
+
+    this.set(
+      ObservabilityAttributes.SALEOR_VERSION,
+      Array.isArray(version) ? version.join(".") : version,
+    );
+  }
 }
 
 export const wrapWithLoggerContext = (handler: NextApiHandler, loggerContext: LoggerContext) => {
@@ -82,6 +102,7 @@ export const wrapWithLoggerContext = (handler: NextApiHandler, loggerContext: Lo
     return loggerContext.wrapNextApiHandler(() => {
       const saleorApiUrl = req.headers[SALEOR_API_URL_HEADER] as string;
       const saleorEvent = req.headers[SALEOR_EVENT_HEADER] as string;
+      const saleorSchemaVersion = req.headers[SALEOR_SCHEMA_VERSION_HEADER] as string | undefined;
       const path = req.url as string;
 
       loggerContext.set(ObservabilityAttributes.PATH, path);
@@ -94,6 +115,8 @@ export const wrapWithLoggerContext = (handler: NextApiHandler, loggerContext: Lo
       if (saleorEvent) {
         loggerContext.set("saleorEvent", saleorEvent);
       }
+
+      loggerContext.setSaleorVersion(saleorSchemaVersion);
 
       return handler(req, res);
     });
@@ -108,6 +131,7 @@ export const wrapWithLoggerContextAppRouter = (
     return loggerContext.wrapNextAppRouterHandler(() => {
       const saleorApiUrl = req.headers.get(SALEOR_API_URL_HEADER);
       const saleorEvent = req.headers.get(SALEOR_EVENT_HEADER);
+      const saleorSchemaVersion = req.headers.get(SALEOR_SCHEMA_VERSION_HEADER);
 
       loggerContext.set(ObservabilityAttributes.PATH, req.nextUrl.pathname);
 
@@ -119,6 +143,8 @@ export const wrapWithLoggerContextAppRouter = (
       if (saleorEvent) {
         loggerContext.set("saleorEvent", saleorEvent);
       }
+
+      loggerContext.setSaleorVersion(saleorSchemaVersion);
 
       return handler(req);
     });

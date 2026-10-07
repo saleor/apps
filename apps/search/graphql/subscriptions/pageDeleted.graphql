@@ -2,6 +2,7 @@ subscription PageDeleted {
   event {
     __typename
     ... on PageDeleted {
+      version
       __typename
       page {
         ...PageData

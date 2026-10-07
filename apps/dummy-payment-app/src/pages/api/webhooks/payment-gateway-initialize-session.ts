@@ -20,7 +20,9 @@ export const paymentGatewayInitializeSessionWebhook =
 
 export default wrapWithLoggerContext(
   withSpanAttributes(
-    paymentGatewayInitializeSessionWebhook.createHandler((_req, res, _ctx) => {
+    paymentGatewayInitializeSessionWebhook.createHandler((_req, res, ctx) => {
+      loggerContext.setSaleorVersion(ctx.schemaVersion);
+
       return res.status(200).json({
         data: {
           ok: true,

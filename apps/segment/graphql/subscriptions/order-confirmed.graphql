@@ -1,4 +1,5 @@
 fragment OrderConfirmedSubscriptionPayload on OrderConfirmed {
+  version
   issuedAt
   order {
     ...OrderBase

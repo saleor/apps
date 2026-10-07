@@ -1,6 +1,7 @@
 import { type Client } from "urql";
 
 import { createLogger } from "../../logger";
+import { loggerContext } from "../../logger-context";
 import { fetchSaleorVersion } from "./fetch-saleor-version";
 import { type FeatureFlagsState, getFeatureFlags } from "./get-feature-flags";
 
@@ -25,6 +26,8 @@ export class FeatureFlagService {
       logger.debug("No cached value, fetching version from the API");
       this.saleorVersion = await fetchSaleorVersion(this.client);
     }
+
+    loggerContext.setSaleorVersion(this.saleorVersion);
 
     return this.saleorVersion;
   };

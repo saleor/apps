@@ -3,6 +3,7 @@ import type Stripe from "stripe";
 
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
+import { loggerContext } from "@/lib/logger-context";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { type SaleorMoney } from "@/modules/saleor/saleor-money";
@@ -114,6 +115,8 @@ export class StripePaymentIntentHandler {
     if (recordedTransactionResult.isErr()) {
       return err(recordedTransactionResult.error);
     }
+
+    loggerContext.setSaleorVersion(recordedTransactionResult.value.saleorSchemaVersion);
 
     return ok(recordedTransactionResult.value);
   }

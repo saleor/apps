@@ -2,6 +2,7 @@ subscription ProductVariantCreated {
   event {
     __typename
     ... on ProductVariantCreated {
+      version
       __typename
       productVariant {
         ...ProductVariantWebhookPayload

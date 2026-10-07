@@ -13,6 +13,12 @@
 <br><br>
 </div>
 
+> [!WARNING] > **This app is deprecated.** It has been replaced by the
+> Google Merchant Center app, which generates feeds asynchronously and
+> handles much larger catalogs. Install it from **Extensions → Explore** in the Dashboard.
+> Product Feed still works, but is no longer developed. Configuration
+> is not migrated automatically — set the new app up alongside this one, then uninstall this one.
+
 ### How to use this project
 
 #### Requirements

@@ -2,6 +2,7 @@ import { err, ok, type Result } from "neverthrow";
 import type Stripe from "stripe";
 
 import { BaseError } from "@/lib/errors";
+import { loggerContext } from "@/lib/logger-context";
 import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { generateRefundStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
@@ -103,6 +104,8 @@ export class StripeRefundHandler {
     if (recordedTransactionResult.isErr()) {
       return err(recordedTransactionResult.error);
     }
+
+    loggerContext.setSaleorVersion(recordedTransactionResult.value.saleorSchemaVersion);
 
     return ok(recordedTransactionResult.value);
   }

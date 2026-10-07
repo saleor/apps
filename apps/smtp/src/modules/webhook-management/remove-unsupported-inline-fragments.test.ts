@@ -32,6 +32,7 @@ describe("removeUnsupportedInlineFragments", () => {
       }
 
       fragment OrderCreatedWebhookPayload on OrderCreated {
+        version
         order {
           ...OrderDetails
         }

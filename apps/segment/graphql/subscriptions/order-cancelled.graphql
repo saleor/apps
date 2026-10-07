@@ -1,4 +1,5 @@
 fragment OrderCancelledSubscriptionPayload on OrderCancelled {
+  version
   issuedAt
   order {
     ...OrderBase

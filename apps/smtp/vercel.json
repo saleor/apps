@@ -1,9 +1,18 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    {
+      "path": "/api/cron/set-deprecation",
+      "schedule": "0 9 * * *"
+    }
+  ],
   "functions": {
     "src/pages/api/webhooks/*": {
       "memory": 512,
       "maxDuration": 25
+    },
+    "src/pages/api/cron/*": {
+      "maxDuration": 300
     }
   },
   "regions": ["dub1", "iad1"],

@@ -30,6 +30,8 @@ export const transactionCancelationRequestedWebhook =
 export default wrapWithLoggerContext(
   withSpanAttributes(
     transactionCancelationRequestedWebhook.createHandler((_req, res, ctx) => {
+      loggerContext.setSaleorVersion(ctx.schemaVersion);
+
       const logger = createLogger("transaction-cancelation-requested");
       const { payload } = ctx;
 

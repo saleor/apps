@@ -5,6 +5,7 @@ import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import packageJson from "../../../package.json";
 import { appDeletedWebhook } from "../../app/api/webhooks/app-deleted/webhook-definition";
 import { env } from "../../env";
+import { DEPRECATION_REASON } from "../../modules/deprecation/deprecation-reason";
 
 export default withSpanAttributes(
   createManifestHandler({
@@ -14,7 +15,7 @@ export default withSpanAttributes(
 
       const manifest: AppManifest = {
         about:
-          "SMTP App is a Saleor integration that allows you to send emails using your own SMTP server.",
+          "[Deprecated] Replaced by the Customer Emails app, installable from Extensions \u2192 Explore. Still functional, but no longer developed.",
         appUrl: iframeBaseUrl,
         author: "Saleor Commerce",
         brand: {
@@ -22,6 +23,11 @@ export default withSpanAttributes(
             default: `${apiBaseURL}/logo.png`,
           },
         },
+        /*
+         * Saleor below 3.23 ignores this field; the daily cron picks such an installation up
+         * once its core is upgraded.
+         */
+        deprecationReason: DEPRECATION_REASON,
         dataPrivacyUrl: "https://saleor.io/legal/privacy/",
         extensions: [
           /**
@@ -31,7 +37,7 @@ export default withSpanAttributes(
         ],
         homepageUrl: "https://github.com/saleor/apps",
         id: env.MANIFEST_APP_ID,
-        name: "SMTP",
+        name: "SMTP (deprecated)",
         permissions: ["MANAGE_ORDERS", "MANAGE_USERS", "MANAGE_GIFT_CARD"],
         requiredSaleorVersion: ">=3.22 <3.24",
         supportUrl: "https://github.com/saleor/apps/discussions",

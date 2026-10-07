@@ -2,6 +2,7 @@ subscription PageUpdated {
   event {
     __typename
     ... on PageUpdated {
+      version
       __typename
       page {
         ...PageData

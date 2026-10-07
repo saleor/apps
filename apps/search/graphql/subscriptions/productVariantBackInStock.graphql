@@ -2,6 +2,7 @@ subscription ProductVariantBackInStock {
   event {
     __typename
     ... on ProductVariantBackInStock {
+      version
       __typename
       productVariant {
         ...ProductVariantWebhookPayload

@@ -30,6 +30,8 @@ export const transactionChargeRequestedWebhook =
 export default wrapWithLoggerContext(
   withSpanAttributes(
     transactionChargeRequestedWebhook.createHandler((_req, res, ctx) => {
+      loggerContext.setSaleorVersion(ctx.schemaVersion);
+
       const logger = createLogger("transaction-charge-requested");
       const { payload } = ctx;
       const { amount } = payload.action;

@@ -32,6 +32,8 @@ const handler: NextJsWebhookHandler<OrderRefundedSubscriptionPayloadFragment> = 
   res,
   context,
 ) => {
+  loggerContext.setSaleorVersion(context.schemaVersion);
+
   try {
     const { authData, payload } = context;
     const reporter = createSegmentProblemReporter(authData);

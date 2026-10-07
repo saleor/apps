@@ -31,6 +31,8 @@ export const transactionRefundRequestedWebhook =
 export default wrapWithLoggerContext(
   withSpanAttributes(
     transactionRefundRequestedWebhook.createHandler((_req, res, ctx) => {
+      loggerContext.setSaleorVersion(ctx.schemaVersion);
+
       const logger = createLogger("transaction-refund-requested");
       const { payload } = ctx;
       const { amount } = payload.action;

@@ -33,6 +33,8 @@ export const transactionProcessSessionWebhook =
 export default wrapWithLoggerContext(
   withSpanAttributes(
     transactionProcessSessionWebhook.createHandler((_req, res, ctx) => {
+      loggerContext.setSaleorVersion(ctx.schemaVersion);
+
       const logger = createLogger("transaction-process-session");
       const { payload } = ctx;
       const { actionType, amount } = payload.action;

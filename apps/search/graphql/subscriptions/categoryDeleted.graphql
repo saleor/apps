@@ -2,6 +2,7 @@ subscription CategoryDeleted {
   event {
     __typename
     ... on CategoryDeleted {
+      version
       __typename
       category {
         ...CategoryData

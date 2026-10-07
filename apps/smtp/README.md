@@ -13,6 +13,12 @@
 <br><br>
 </div>
 
+> [!WARNING]
+> This app is **deprecated**. It has been replaced by the Customer Emails app, which sends
+> order, account, and fulfillment emails through your own SMTP server. Install it from
+> **Extensions → Explore** in the Dashboard. SMTP still works, but is no longer developed.
+> Email templates are not migrated — set the new app up alongside this one, then uninstall this one.
+
 ### How to use this project
 
 #### Requirements

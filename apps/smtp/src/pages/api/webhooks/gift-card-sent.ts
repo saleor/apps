@@ -14,6 +14,7 @@ import { saleorApp } from "../../../saleor-app";
 
 const GiftCardSentWebhookPayload = gql`
   fragment GiftCardSentWebhookPayload on GiftCardSent {
+    version
     giftCard {
       id
       code
@@ -81,6 +82,8 @@ const handler: NextJsWebhookHandler<GiftCardSentWebhookPayloadFragment> = async 
   res,
   context,
 ) => {
+  loggerContext.setSaleorVersion(context.schemaVersion);
+
   logger.info("Webhook received");
 
   const { payload, authData } = context;

@@ -19,6 +19,7 @@ const logger = createLogger("orderFullyPaidAsyncWebhookHandler");
 
 const OrderFullyPaidWebhookPayload = gql`
   fragment OrderFullyPaidWebhookPayload on OrderFullyPaid {
+    version
     order {
       ...OrderFragment
     }
@@ -47,6 +48,8 @@ const handler: NextJsWebhookHandler<OrderFullyPaidWebhookPayloadFragment> = asyn
   res,
   context,
 ) => {
+  loggerContext.setSaleorVersion(context.schemaVersion);
+
   const { payload, authData } = context;
   const { saleorApiUrl, token, appId } = authData;
 

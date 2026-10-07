@@ -1,5 +1,26 @@
 # saleor-app-smtp
 
+## 2.9.1
+
+### Patch Changes
+
+- f59c456: Fixed the daily deprecation job timing out before it reached every store. Before, it updated 5 stores at a time and a single slow store held up the whole group, so with ~2000 installations it hit the 5-minute limit and never finished. Now it handles 25 stores at a time by default (configurable with `DEPRECATION_CRON_PARALLEL_CALLS`), each store gets at most 3 seconds (configurable with `DEPRECATION_CRON_REQUEST_TIMEOUT_MS`), and a slow store no longer holds up the others.
+
+  Stores that no longer exist (deleted environment, or the app's access was revoked) are now counted as `gone` and logged as information instead of warnings, so they no longer appear as failures. The job also logs a summary when it finishes.
+
+- Updated dependencies [f59c456]
+  - @saleor/app-deprecation@0.0.1
+
+## 2.9.0
+
+### Minor Changes
+
+- 2fecd57: This app is now deprecated. It has been replaced by the Customer Emails app.
+
+  SMTP keeps working and keeps sending emails, but it will not receive new features. The Dashboard now shows the deprecation next to the app (Saleor 3.23+) and the app name gets a "(deprecated)" suffix. The replacement can be installed from Extensions → Explore. Email templates are not carried over: set the new app up alongside this one, then uninstall this one.
+
+  Deploying this version requires the `CRON_SECRET` environment variable. Without it, stores that installed the app earlier will not be told about the deprecation.
+
 ## 2.8.5
 
 ### Patch Changes

@@ -25,6 +25,19 @@ export const env = createEnv({
     OTEL_SERVICE_NAME: z.string().optional(),
     PORT: z.coerce.number().default(3000),
     SECRET_KEY: z.string(),
+    /*
+     * Shared secret Vercel Cron sends as `Authorization: Bearer <value>`, used by the
+     * deprecation-notice tick. Optional so existing deployments keep booting without it;
+     * the cron route refuses every request while it is unset.
+     */
+    CRON_SECRET: z.string().optional(),
+    /*
+     * Installations the deprecation cron handles concurrently. The whole sweep over the APL must
+     * finish within the cron's maxDuration (vercel.json), so raise it as installations grow.
+     */
+    DEPRECATION_CRON_PARALLEL_CALLS: z.coerce.number().int().positive().default(25),
+    // Max time in milliseconds the deprecation cron waits for a single installation's Saleor.
+    DEPRECATION_CRON_REQUEST_TIMEOUT_MS: z.coerce.number().int().positive().default(3000),
     VERCEL_URL: z.string().optional(),
     VERCEL_GIT_COMMIT_SHA: z.string().optional(),
     OTEL_ACCESS_TOKEN: z.string().optional(),
@@ -67,6 +80,9 @@ export const env = createEnv({
     REST_APL_ENDPOINT: process.env.REST_APL_ENDPOINT,
     REST_APL_TOKEN: process.env.REST_APL_TOKEN,
     SECRET_KEY: process.env.SECRET_KEY,
+    CRON_SECRET: process.env.CRON_SECRET,
+    DEPRECATION_CRON_PARALLEL_CALLS: process.env.DEPRECATION_CRON_PARALLEL_CALLS,
+    DEPRECATION_CRON_REQUEST_TIMEOUT_MS: process.env.DEPRECATION_CRON_REQUEST_TIMEOUT_MS,
     VERCEL_URL: process.env.VERCEL_URL,
     VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
     OTEL_ACCESS_TOKEN: process.env.OTEL_ACCESS_TOKEN,

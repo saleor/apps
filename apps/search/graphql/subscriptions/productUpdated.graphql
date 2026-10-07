@@ -2,6 +2,7 @@ subscription ProductUpdated {
   event {
     __typename
     ... on ProductUpdated {
+      version
       __typename
       product {
         ...ProductWebhookPayload

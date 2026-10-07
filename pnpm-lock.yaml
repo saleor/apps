@@ -82,8 +82,8 @@ catalogs:
       specifier: 1.62.1
       version: 1.62.1
     '@saleor/app-sdk':
-      specifier: 1.15.0
-      version: 1.15.0
+      specifier: 1.16.0
+      version: 1.16.0
     '@saleor/macaw-ui':
       specifier: 2.0.0
       version: 2.0.0
@@ -245,7 +245,7 @@ importers:
         version: 8.17.5
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 1.15.0(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0))(@aws-sdk/util-dynamodb@3.996.2(@aws-sdk/client-dynamodb@3.1004.0))(graphql@16.7.1)(next@15.5.27(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.16.0(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0))(@aws-sdk/util-dynamodb@3.996.2(@aws-sdk/client-dynamodb@3.1004.0))(graphql@16.7.1)(next@15.5.27(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       cspell:
         specifier: 8.17.5
         version: 8.17.5
@@ -2014,6 +2014,9 @@ importers:
       '@opentelemetry/semantic-conventions':
         specifier: 'catalog:'
         version: 1.30.0
+      '@saleor/app-deprecation':
+        specifier: workspace:*
+        version: link:../../packages/app-deprecation
       '@saleor/app-problems':
         specifier: workspace:*
         version: link:../../packages/app-problems
@@ -2713,6 +2716,9 @@ importers:
       '@opentelemetry/semantic-conventions':
         specifier: 'catalog:'
         version: 1.30.0
+      '@saleor/app-deprecation':
+        specifier: workspace:*
+        version: link:../../packages/app-deprecation
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
         version: link:../../node_modules/@saleor/app-sdk
@@ -3178,11 +3184,84 @@ importers:
         specifier: 'catalog:'
         version: 3.1.1(@types/node@24.1.0)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@24.1.0)(typescript@5.8.2))(terser@5.51.2)(tsx@4.19.3)(yaml@2.7.0)
 
+  packages/app-deprecation:
+    dependencies:
+      '@saleor/apps-shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@saleor/errors':
+        specifier: workspace:*
+        version: link:../errors
+      graphql:
+        specifier: 'catalog:'
+        version: 16.7.1
+      graphql-tag:
+        specifier: 'catalog:'
+        version: 2.12.6(graphql@16.7.1)
+      neverthrow:
+        specifier: 'catalog:'
+        version: 6.2.1
+    devDependencies:
+      '@graphql-codegen/cli':
+        specifier: 'catalog:'
+        version: 5.0.2(@types/node@26.5.1)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.8.2)
+      '@graphql-codegen/schema-ast':
+        specifier: 4.0.2
+        version: 4.0.2(graphql@16.7.1)
+      '@graphql-codegen/typed-document-node':
+        specifier: 'catalog:'
+        version: 5.0.5(graphql@16.7.1)
+      '@graphql-codegen/typescript-operations':
+        specifier: 'catalog:'
+        version: 4.1.3(graphql@16.7.1)
+      '@graphql-typed-document-node/core':
+        specifier: 'catalog:'
+        version: 3.2.0(graphql@16.7.1)
+      '@saleor/app-sdk':
+        specifier: 'catalog:'
+        version: 1.16.0(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0))(@aws-sdk/util-dynamodb@3.996.2(@aws-sdk/client-dynamodb@3.1004.0))(graphql@16.7.1)(next@15.5.27(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@saleor/apps-logger':
+        specifier: workspace:*
+        version: link:../logger
+      '@saleor/eslint-config-apps':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@saleor/typescript-config-apps':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 3.1.1(vitest@3.1.1(@types/node@26.5.1)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@26.5.1)(typescript@5.8.2))(terser@5.51.2)(tsx@4.19.3)(yaml@2.7.0))
+      eslint:
+        specifier: 'catalog:'
+        version: 9.23.0(jiti@2.4.2)
+      graphql-codegen-typescript-operation-types:
+        specifier: 'catalog:'
+        version: 2.0.2(graphql@16.7.1)
+      graphql-config:
+        specifier: 5.0.3
+        version: 5.0.3(@types/node@26.5.1)(graphql@16.7.1)(typescript@5.8.2)
+      next:
+        specifier: 'catalog:'
+        version: 15.5.27(@babel/core@7.28.6)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      typescript:
+        specifier: 'catalog:'
+        version: 5.8.2
+      urql:
+        specifier: 'catalog:'
+        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
+      vite:
+        specifier: 'catalog:'
+        version: 6.2.4(@types/node@26.5.1)(jiti@2.4.2)(terser@5.51.2)(tsx@4.19.3)(yaml@2.7.0)
+      vitest:
+        specifier: 'catalog:'
+        version: 3.1.1(@types/node@26.5.1)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@26.5.1)(typescript@5.8.2))(terser@5.51.2)(tsx@4.19.3)(yaml@2.7.0)
+
   packages/app-problems:
     dependencies:
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 1.15.0(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0))(@aws-sdk/util-dynamodb@3.996.2(@aws-sdk/client-dynamodb@3.1004.0))(graphql@16.7.1)(next@15.5.27(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.16.0(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0))(@aws-sdk/util-dynamodb@3.996.2(@aws-sdk/client-dynamodb@3.1004.0))(graphql@16.7.1)(next@15.5.27(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/errors':
         specifier: workspace:*
         version: link:../errors
@@ -7163,8 +7242,8 @@ packages:
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
 
-  '@saleor/app-sdk@1.15.0':
-    resolution: {integrity: sha512-M3OokC5x/NHJFmiQ9QNFO5lQZZVSa9KUP9X2UHwVOfmGDREiZmp5wN3p0tiZRUZe+2OXBNt7NdRbju8frg5pVA==}
+  '@saleor/app-sdk@1.16.0':
+    resolution: {integrity: sha512-wYC5aLEDwEZmBgB3ZrhNMPgSd0bMYLju7ePnsYFW1PQO87S2RtHaSNxRM1gI/ozRl49nLedzdCXp1y87QY4oSQ==}
     peerDependencies:
       '@aws-sdk/client-dynamodb': ^3.848.0
       '@aws-sdk/lib-dynamodb': ^3.850.0
@@ -17646,7 +17725,7 @@ snapshots:
 
   '@rtsao/scc@1.1.0': {}
 
-  '@saleor/app-sdk@1.15.0(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0))(@aws-sdk/util-dynamodb@3.996.2(@aws-sdk/client-dynamodb@3.1004.0))(graphql@16.7.1)(next@15.5.27(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@saleor/app-sdk@1.16.0(@aws-sdk/client-dynamodb@3.1004.0)(@aws-sdk/lib-dynamodb@3.1004.0(@aws-sdk/client-dynamodb@3.1004.0))(@aws-sdk/util-dynamodb@3.996.2(@aws-sdk/client-dynamodb@3.1004.0))(graphql@16.7.1)(next@15.5.27(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/semantic-conventions': 1.30.0

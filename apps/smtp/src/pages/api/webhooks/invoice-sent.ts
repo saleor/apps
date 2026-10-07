@@ -18,6 +18,7 @@ import { saleorApp } from "../../../saleor-app";
 const InvoiceSentWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
   fragment InvoiceSentWebhookPayload on InvoiceSent {
+    version
     invoice {
       id
       metadata {
@@ -67,6 +68,8 @@ const handler: NextJsWebhookHandler<InvoiceSentWebhookPayloadFragment> = async (
   res,
   context,
 ) => {
+  loggerContext.setSaleorVersion(context.schemaVersion);
+
   logger.info("Webhook received");
 
   const { payload, authData } = context;

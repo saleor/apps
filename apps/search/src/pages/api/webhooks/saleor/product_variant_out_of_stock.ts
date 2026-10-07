@@ -26,6 +26,8 @@ export const handler: NextJsWebhookHandler<ProductVariantOutOfStock> = async (
   res,
   context,
 ) => {
+  loggerContext.setSaleorVersion(context.schemaVersion);
+
   const { event, authData } = context;
 
   logger.info(`New event received: ${event} (${context.payload?.__typename})`, {

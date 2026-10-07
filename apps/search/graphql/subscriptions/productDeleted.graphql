@@ -2,12 +2,13 @@ subscription ProductDeleted {
   event {
     __typename
     ... on ProductDeleted {
+      version
       __typename
       product {
         id
-        variants{
+        variants {
           id
-          product{
+          product {
             id
           }
         }

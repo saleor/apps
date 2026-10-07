@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-products-feed",
-  "version": "3.2.6",
+  "version": "3.3.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -32,6 +32,7 @@
     "@opentelemetry/sdk-trace-base": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
+    "@saleor/app-deprecation": "workspace:*",
     "@saleor/app-problems": "workspace:*",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-logger": "workspace:*",

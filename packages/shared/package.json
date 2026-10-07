@@ -28,7 +28,8 @@
     "./key-rotation/save-metadata-rotation-item": "./src/key-rotation/save-metadata-rotation-item.ts",
     "./key-rotation/dynamodb-secret-key-rotation-runner": "./src/key-rotation/dynamodb-secret-key-rotation-runner.ts",
     "./boolean-env": "./src/boolean-env-schema.ts",
-    "./secret-key-resolution": "./src/secret-key-resolution.ts"
+    "./secret-key-resolution": "./src/secret-key-resolution.ts",
+    "./cron": "./src/cron.ts"
   },
   "scripts": {
     "check-types": "tsc",

@@ -1,0 +1,9 @@
+mutation AppSelfUpdateDeprecation($deprecationReason: String!) {
+  appSelfUpdate(input: { deprecationReason: $deprecationReason }) {
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

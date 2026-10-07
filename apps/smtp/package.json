@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-smtp",
-  "version": "2.8.5",
+  "version": "2.9.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -34,6 +34,7 @@
     "@opentelemetry/sdk-trace-base": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
+    "@saleor/app-deprecation": "workspace:*",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-logger": "workspace:*",
     "@saleor/apps-otel": "workspace:*",

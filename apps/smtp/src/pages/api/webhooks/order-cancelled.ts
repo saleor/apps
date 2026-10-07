@@ -18,6 +18,7 @@ import { saleorApp } from "../../../saleor-app";
 const OrderCancelledWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
   fragment OrderCancelledWebhookPayload on OrderCancelled {
+    version
     order {
       ...OrderDetails
     }
@@ -50,6 +51,8 @@ const handler: NextJsWebhookHandler<OrderCancelledWebhookPayloadFragment> = asyn
   res,
   context,
 ) => {
+  loggerContext.setSaleorVersion(context.schemaVersion);
+
   logger.info("Webhook received");
 
   const { payload, authData } = context;

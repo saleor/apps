@@ -26,6 +26,7 @@ export const config = {
 gql`
   ${WebhookProductVariantFragmentDoc}
   fragment ProductVariantCreatedWebhookPayload on ProductVariantCreated {
+    version
     productVariant {
       ...WebhookProductVariant
     }
@@ -60,6 +61,8 @@ const handler: NextJsWebhookHandler<ProductVariantCreatedWebhookPayloadFragment>
   res,
   context,
 ) => {
+  loggerContext.setSaleorVersion(context.schemaVersion);
+
   const logger = createLogger("ProductVariantCreatedWebhook", {
     saleorApiUrl: context.authData.saleorApiUrl,
   });

@@ -1,4 +1,5 @@
 fragment OrderRefundedSubscriptionPayload on OrderRefunded {
+  version
   issuedAt
   order {
     ...OrderBase

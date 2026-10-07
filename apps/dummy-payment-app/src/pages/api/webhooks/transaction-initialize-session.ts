@@ -33,6 +33,8 @@ export const transactionInitializeSessionWebhook =
 export default wrapWithLoggerContext(
   withSpanAttributes(
     transactionInitializeSessionWebhook.createHandler((_req, res, ctx) => {
+      loggerContext.setSaleorVersion(ctx.schemaVersion);
+
       const logger = createLogger("transaction-initialize-session");
       const { payload } = ctx;
       const { actionType, amount } = payload.action;

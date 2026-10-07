@@ -22,6 +22,8 @@ export const config = {
 const logger = createLogger("webhookCategoryDeletedHandler");
 
 export const handler: NextJsWebhookHandler<CategoryDeleted> = async (req, res, context) => {
+  loggerContext.setSaleorVersion(context.schemaVersion);
+
   const { event, authData } = context;
 
   logger.info(`New event received: ${event} (${context.payload?.__typename})`, {

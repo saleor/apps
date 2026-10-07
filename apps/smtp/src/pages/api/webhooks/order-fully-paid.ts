@@ -19,6 +19,7 @@ const OrderFullyPaidWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
 
   fragment OrderFullyPaidWebhookPayload on OrderFullyPaid {
+    version
     order {
       ...OrderDetails
     }
@@ -51,6 +52,8 @@ const handler: NextJsWebhookHandler<OrderFullyPaidWebhookPayloadFragment> = asyn
   res,
   context,
 ) => {
+  loggerContext.setSaleorVersion(context.schemaVersion);
+
   logger.info("Webhook received");
 
   const { payload, authData } = context;
