@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-smtp",
-  "version": "2.9.3",
+  "version": "2.9.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -61,8 +61,8 @@
     "dynamodb-toolbox": "catalog:",
     "graphql": "catalog:",
     "graphql-tag": "catalog:",
-    "handlebars": "4.7.9",
-    "handlebars-helpers": "0.10.0",
+    "handlebars": "catalog:",
+    "handlebars-helpers": "catalog:",
     "html-to-text": "9.0.3",
     "jsdom": "catalog:",
     "lucide-react": "catalog:",

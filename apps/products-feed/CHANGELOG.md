@@ -1,5 +1,13 @@
 # saleor-app-products-feed
 
+## 3.3.4
+
+### Patch Changes
+
+- 335cc0c: Upgraded Handlebar.js to 4.7.10 to fix CVE-2026-106444, CVE-2026-106446, and CVE-2026-106445
+- Updated dependencies [335cc0c]
+  - @saleor/handlebars@0.1.3
+
 ## 3.3.3
 
 ### Patch Changes
