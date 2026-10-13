@@ -1,6 +1,5 @@
-import { after } from "next/server";
-
 import { metadataCache } from "@/lib/app-metadata-cache";
+import { afterDetached } from "@/lib/otel/after-detached";
 import { createLogger } from "@/logger";
 import { createSettingsManager } from "@/modules/app/metadata-manager";
 import { AvataxProblemReporter } from "@/modules/app-problems";
@@ -45,7 +44,9 @@ export const channelsConfigurationRouter = router({
 
       const result = await ctx.connectionService.upsert(input);
 
-      after(() => new AvataxProblemReporter(ctx.apiClient).clearChannelConfigProblem(input.slug));
+      afterDetached(() =>
+        new AvataxProblemReporter(ctx.apiClient).clearChannelConfigProblem(input.slug),
+      );
 
       logger.info("Channel configuration upserted");
 

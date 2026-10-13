@@ -191,7 +191,7 @@ describe("StripeWebhookUseCase - Error cases", () => {
     `);
   });
 
-  it("Returns error if payment_intent belongs to a different Saleor installation and does not call DB", async () => {
+  it("Acknowledges with 200 if payment_intent belongs to a different Saleor installation and does not call DB", async () => {
     const event = getMockedPaymentIntentSucceededEvent();
 
     event.data.object.metadata = {
@@ -205,24 +205,29 @@ describe("StripeWebhookUseCase - Error cases", () => {
 
     const dbSpy = vi.spyOn(mockTransactionRecorder, "getTransactionByStripePaymentIntentId");
 
+    const reportProblemSpy = vi
+      .spyOn(StripeProblemReporter.prototype, "reportObjectFromDifferentInstallation")
+      .mockResolvedValue();
+
     const result = await instance.execute({
       rawBody: rawEventBody,
       signatureHeader: "test-signature",
       webhookParams: webhookParams,
     });
 
-    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      ObjectCreatedOutsideOfSaleorResponse {
-        "message": "Object created outside of Saleor is not processable",
-        "statusCode": 400,
+    expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
       }
     `);
 
     expect(dbSpy).not.toHaveBeenCalled();
     expect(mockEventReporter.reportTransactionEvent).not.toHaveBeenCalled();
+    expect(reportProblemSpy).toHaveBeenCalledWith(webhookParams.configurationId, "config-name");
   });
 
-  it("Returns error if refund belongs to a different Saleor installation and does not call DB", async () => {
+  it("Acknowledges with 200 if refund belongs to a different Saleor installation and does not call DB", async () => {
     const event = {
       type: "charge.refund.updated",
       data: {
@@ -244,21 +249,26 @@ describe("StripeWebhookUseCase - Error cases", () => {
 
     const dbSpy = vi.spyOn(mockTransactionRecorder, "getTransactionByStripePaymentIntentId");
 
+    const reportProblemSpy = vi
+      .spyOn(StripeProblemReporter.prototype, "reportObjectFromDifferentInstallation")
+      .mockResolvedValue();
+
     const result = await instance.execute({
       rawBody: rawEventBody,
       signatureHeader: "test-signature",
       webhookParams: webhookParams,
     });
 
-    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      ObjectCreatedOutsideOfSaleorResponse {
-        "message": "Object created outside of Saleor is not processable",
-        "statusCode": 400,
+    expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
       }
     `);
 
     expect(dbSpy).not.toHaveBeenCalled();
     expect(mockEventReporter.reportTransactionEvent).not.toHaveBeenCalled();
+    expect(reportProblemSpy).toHaveBeenCalledWith(webhookParams.configurationId, "config-name");
   });
 
   it("Processes payment_intent without saleor_app_id for backward compatibility", async () => {

@@ -5,7 +5,6 @@ import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-att
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException, setTag } from "@sentry/nextjs";
 import Decimal from "decimal.js-light";
-import { after } from "next/server";
 
 import { AppConfig } from "@/lib/app-config";
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
@@ -13,6 +12,7 @@ import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
 import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
+import { afterDetached } from "@/lib/otel/after-detached";
 import { appExternalTracer } from "@/lib/otel/tracing";
 import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
@@ -144,7 +144,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                     value.transaction.customerUsageType ??
                     undefined;
 
-                  after(() => {
+                  afterDetached(() => {
                     const isExemptionApplied = exemptAmountTotalDecimal.gt(0);
                     const currentExemptionStatus =
                       payload.taxBase.sourceObject.avataxExemptionStatus ?? null;
@@ -193,7 +193,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                   const problemReporter = createAvataxProblemReporter(authData);
                   const avataxConfig = providerConfig.value.avataxConfig;
 
-                  after(() =>
+                  afterDetached(() =>
                     problemReporter.reportSuspiciousZeroTax(
                       avataxConfig.id,
                       avataxConfig.config.name,
@@ -242,7 +242,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                     const problemReporter = createAvataxProblemReporter(authData);
                     const avataxConfig = providerConfig.value.avataxConfig;
 
-                    after(() =>
+                    afterDetached(() =>
                       problemReporter.reportInvalidAddress(
                         avataxConfig.id,
                         avataxConfig.config.name,
@@ -270,7 +270,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                     const problemReporter = createAvataxProblemReporter(authData);
                     const avataxConfig = providerConfig.value.avataxConfig;
 
-                    after(() =>
+                    afterDetached(() =>
                       problemReporter.reportApiProblem(error.cause, {
                         id: avataxConfig.id,
                         name: avataxConfig.config.name,
@@ -306,7 +306,9 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                           ? "Channel references a provider configuration that no longer exists"
                           : "Channel is not configured in the AvaTax app";
 
-                      after(() => problemReporter.reportChannelConfigMissing(channelSlug, reason));
+                      afterDetached(() =>
+                        problemReporter.reportChannelConfigMissing(channelSlug, reason),
+                      );
                     }
                   }
 

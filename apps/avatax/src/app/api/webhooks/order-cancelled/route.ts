@@ -3,7 +3,6 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException, setTag } from "@sentry/nextjs";
-import { after } from "next/server";
 
 import { AppConfig } from "@/lib/app-config";
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
@@ -11,6 +10,7 @@ import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
 import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
+import { afterDetached } from "@/lib/otel/after-detached";
 import { appExternalTracer } from "@/lib/otel/tracing";
 import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
@@ -242,7 +242,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
               ? "Channel references a provider configuration that no longer exists"
               : "Channel is not configured in the AvaTax app";
 
-          after(() => problemReporter.reportChannelConfigMissing(channelSlug, reason));
+          afterDetached(() => problemReporter.reportChannelConfigMissing(channelSlug, reason));
         }
 
         span.recordException(providerConfig.error);
@@ -267,7 +267,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
           config: providerConfig.value.avataxConfig.config,
         });
 
-        after(() => {
+        afterDetached(() => {
           if (!payload.order?.id) {
             return;
           }
@@ -288,7 +288,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
           const problemReporter = createAvataxProblemReporter(ctx.authData);
           const avataxConfig = providerConfig.value.avataxConfig;
 
-          after(() =>
+          afterDetached(() =>
             problemReporter.reportApiProblem(e, {
               id: avataxConfig.id,
               name: avataxConfig.config.name,

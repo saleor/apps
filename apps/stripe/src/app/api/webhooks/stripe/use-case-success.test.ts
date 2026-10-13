@@ -1304,49 +1304,61 @@ describe("StripeWebhookUseCase - handling events without metadata created by Sal
     });
   });
 
-  it("Returns 400 to Stripe if metadata is missing for payment_intent.succeeded event", async () => {
+  it("Acknowledges with 200 to Stripe if metadata is missing for payment_intent.succeeded event", async () => {
     const event = getMockedPaymentIntentSucceededEvent();
 
     event.data.object.metadata = {};
 
     eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
 
+    const reportProblemSpy = vi.spyOn(
+      StripeProblemReporter.prototype,
+      "reportObjectFromDifferentInstallation",
+    );
+
     const result = await instance.execute({
       rawBody: "TEST BODY",
       signatureHeader: "SIGNATURE",
       webhookParams: webhookParams,
     });
 
-    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      ObjectCreatedOutsideOfSaleorResponse {
-        "message": "Object created outside of Saleor is not processable",
-        "statusCode": 400,
+    expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
       }
     `);
 
     expect(mockEventReporter.reportTransactionEvent).not.toHaveBeenCalled();
+    expect(reportProblemSpy).not.toHaveBeenCalled();
   });
 
-  it("Returns 400 to Stripe if metadata is missing for charge.refund.updated event", async () => {
+  it("Acknowledges with 200 to Stripe if metadata is missing for charge.refund.updated event", async () => {
     const event = getMockedChargeRefundUpdatedEvent();
 
     event.data.object.metadata = {};
 
     eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
 
+    const reportProblemSpy = vi.spyOn(
+      StripeProblemReporter.prototype,
+      "reportObjectFromDifferentInstallation",
+    );
+
     const result = await instance.execute({
       rawBody: "TEST BODY",
       signatureHeader: "SIGNATURE",
       webhookParams: webhookParams,
     });
 
-    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      ObjectCreatedOutsideOfSaleorResponse {
-        "message": "Object created outside of Saleor is not processable",
-        "statusCode": 400,
+    expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
       }
     `);
 
     expect(mockEventReporter.reportTransactionEvent).not.toHaveBeenCalled();
+    expect(reportProblemSpy).not.toHaveBeenCalled();
   });
 });

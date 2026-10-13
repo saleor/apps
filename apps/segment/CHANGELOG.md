@@ -1,5 +1,18 @@
 # saleor-app-segment
 
+## 2.4.7
+
+### Patch Changes
+
+- 14691bc: Upgraded neverthrow from v6.2.1 to v8.1.1 and zod from v3.21.4 to v3.24.1. App behavior doesn't change.
+
+## 2.4.6
+
+### Patch Changes
+
+- a2fbe4a: Upgraded Next.js from v15.5.27 to v16.3.8. Apps keep building with Webpack for now; the switch to Turbopack will ship separately.
+- 9e50c88: Fixed Saleor webhooks timing out. Before, webhook functions ran with 256 MB of memory (and proportionally little CPU), so each call took about 15 seconds and hit the 15-second limit, returning 504 and making Saleor retry. Now they run with 1024 MB (same as the app's other routes) and a 25-second limit.
+
 ## 2.4.5
 
 ### Patch Changes

@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "saleor-app-payment-dummy",
-  "version": "1.1.9",
+  "version": "1.1.11",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build",
-    "check-types": "tsc",
-    "dev": "NODE_OPTIONS='--inspect' next dev",
+    "build": "next build --webpack",
+    "check-types": "next typegen && tsc",
+    "dev": "NODE_OPTIONS='--inspect' next dev --webpack",
     "generate": "pnpm run /generate:.*/",
     "generate:app-graphql-types": "graphql-codegen",
     "generate:app-webhooks-types": "tsx ./scripts/generate-app-webhooks-types.ts --json-schema-version=${npm_package_config_saleor_schemaVersion}",

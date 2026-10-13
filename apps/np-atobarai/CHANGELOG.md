@@ -1,5 +1,18 @@
 # saleor-app-payment-np-atobarai
 
+## 1.5.7
+
+### Patch Changes
+
+- 14691bc: Upgraded neverthrow from v6.2.1 to v8.1.1 and zod from v3.21.4 to v3.24.1. App behavior doesn't change.
+
+## 1.5.6
+
+### Patch Changes
+
+- a2fbe4a: Upgraded Next.js from v15.5.27 to v16.3.8. Apps keep building with Webpack for now; the switch to Turbopack will ship separately.
+- ca6d84d: Invalid webhook requests (wrong event, unregistered Saleor instance, bad signature) are now logged as warnings instead of errors. Before, any malformed request sent to the app was logged as an error and could trigger false alerts. The app still rejects these requests with the same 4xx response, and unexpected failures are still logged as errors.
+
 ## 1.5.5
 
 ### Patch Changes

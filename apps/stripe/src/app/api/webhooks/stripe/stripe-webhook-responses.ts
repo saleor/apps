@@ -1,3 +1,7 @@
+/**
+ * TODO: Verify if this is actually non-retryable. Stripe retries every non-2xx response (4xx included),
+ * so these responses are probably retried for up to 3 days. See https://docs.stripe.com/webhooks#automatic-retries
+ */
 abstract class NonRetryableErrorWebhookResponse {
   statusCode = 400;
 }
@@ -57,21 +61,10 @@ export class StripeWebhookTransactionMissingResponse extends NonRetryableErrorWe
   }
 }
 
-export class ObjectCreatedOutsideOfSaleorResponse extends NonRetryableErrorWebhookResponse {
-  readonly message = "Object created outside of Saleor is not processable";
-
-  getResponse() {
-    return new Response(this.message, {
-      status: this.statusCode,
-    });
-  }
-}
-
 export type PossibleStripeWebhookSuccessResponses = StripeWebhookSuccessResponse;
 
 export type PossibleStripeWebhookErrorResponses =
   | StripeWebhookMalformedRequestResponse
   | StripeWebhookAppIsNotConfiguredResponse
   | StripeWebhookSeverErrorResponse
-  | StripeWebhookTransactionMissingResponse
-  | ObjectCreatedOutsideOfSaleorResponse;
+  | StripeWebhookTransactionMissingResponse;

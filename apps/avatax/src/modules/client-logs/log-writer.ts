@@ -1,5 +1,4 @@
-import { after } from "next/server";
-
+import { afterDetached } from "@/lib/otel/after-detached";
 import { type ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 import { type ILogsRepository } from "@/modules/client-logs/logs-repository";
 
@@ -21,11 +20,11 @@ export class DynamoDbLogWriter implements ILogWriter {
 
   /*
    * Callers don't await it, so the write is deferred with after() to run once the response is sent and
-   * keep the function alive until it finishes. A write still pending when the request span ends has
-   * its span force-ended by @vercel/otel and ended again by the AWS SDK instrumentation
+   * keep the function alive until it finishes. It runs in its own trace, otherwise @vercel/otel force-ends
+   * its span when the request span ends and the AWS SDK instrumentation ends it again
    */
   writeLog = async (log: ClientLogStoreRequest): Promise<void> => {
-    after(() =>
+    afterDetached(() =>
       this.repo.writeLog({
         appId: this.context.appId,
         saleorApiUrl: this.context.saleorApiUrl,

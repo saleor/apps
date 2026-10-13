@@ -1,5 +1,18 @@
 # saleor-app-avatax
 
+## 1.25.8
+
+### Patch Changes
+
+- 14691bc: Upgraded neverthrow from v6.2.1 to v8.1.1 and zod from v3.21.4 to v3.24.1. App behavior doesn't change.
+
+## 1.25.7
+
+### Patch Changes
+
+- 9e50c88: Fixed tracing of background work (client logs, problem reports, exemption status updates) that runs after a webhook or configuration response is sent. Before, these spans were cut short when the request finished and produced "You can only call end() on a span once" errors. Now they are recorded as separate traces with their real duration.
+- a2fbe4a: Upgraded Next.js from v15.5.27 to v16.3.8. Apps keep building with Webpack for now; the switch to Turbopack will ship separately.
+
 ## 1.25.6
 
 ### Patch Changes

@@ -11,7 +11,10 @@ import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-
 import { BaseError } from "@/lib/errors";
 import { StripeProblemReporter } from "@/modules/app-problems";
 import { type ITransactionEventReporter } from "@/modules/saleor/transaction-event-reporter";
-import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
+import {
+  StripeWebhookManager,
+  StripeWebhookManagerErrors,
+} from "@/modules/stripe/stripe-webhook-manager";
 import {
   type IStripeEventVerify,
   type IStripePaymentIntentsApiFactory,
@@ -29,6 +32,10 @@ vi.mock("@saleor/app-problems", () => ({
       return Promise.resolve({ isErr: () => false });
     }
   },
+}));
+
+vi.mock("next/server", () => ({
+  after: (callback: () => unknown) => callback(),
 }));
 
 vi.mock("@/lib/logger", () => ({
@@ -117,8 +124,9 @@ describe("StripeWebhookUseCase - Legacy event cases", () => {
       );
     });
 
-    it("Will return 500 to Stripe if legacy config matching legacy event not found", async () => {
+    it("Will return 500 to Stripe and report AppProblem if legacy config matching legacy event not found", async () => {
       vi.mocked(mockedAppConfigRepo.getStripeConfig).mockImplementationOnce(async () => ok(null));
+      const reportSpy = vi.spyOn(StripeProblemReporter.prototype, "reportLegacyWebhookOrphaned");
 
       const result = await instance.execute({
         rawBody: rawEventBody,
@@ -136,6 +144,7 @@ describe("StripeWebhookUseCase - Legacy event cases", () => {
       `);
 
       expect(mockedAppConfigRepo.getStripeConfig).toHaveBeenCalledOnce();
+      expect(reportSpy).toHaveBeenCalledExactlyOnceWith(webhookParams.configurationId);
     });
 
     it("Will return 500 to Stripe if can't access DB to fetch config", async () => {
@@ -163,7 +172,7 @@ describe("StripeWebhookUseCase - Legacy event cases", () => {
 
     it("Will return 500 to Stripe if can't remove webhook for some reason", async () => {
       vi.mocked(webhookManager.removeWebhook).mockImplementationOnce(async () =>
-        err(new BaseError("error removing webhook")),
+        err(new StripeWebhookManagerErrors.CantRemoveWebhookError("error removing webhook")),
       );
 
       const result = await instance.execute({

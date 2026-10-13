@@ -132,8 +132,48 @@ describe("StripeProblemReporter", () => {
     });
   });
 
+  describe("reportLegacyWebhookOrphaned", () => {
+    it("reports non-critical problem grouped per 24h", async () => {
+      mockReportProblem.mockResolvedValue(ok(undefined));
+      const reporter = new StripeProblemReporter(mockClient);
+
+      await reporter.reportLegacyWebhookOrphaned("config-old");
+
+      expect(mockReportProblem).toHaveBeenCalledExactlyOnceWith({
+        key: "stripe-legacy-webhook-orphaned:config-old",
+        aggregationPeriod: 1440,
+        message: expect.stringContaining('"config-old"'),
+      });
+    });
+  });
+
+  describe("reportObjectFromDifferentInstallation", () => {
+    it("calls reportProblem with correct key and message", async () => {
+      mockReportProblem.mockResolvedValue(ok(undefined));
+      const reporter = new StripeProblemReporter(mockClient);
+
+      await reporter.reportObjectFromDifferentInstallation("config-222", "My Config");
+
+      expect(mockReportProblem).toHaveBeenCalledWith({
+        key: "stripe-object-from-different-installation:config-222",
+        message: expect.stringContaining(
+          'payments created by a different Saleor environment to configuration "My Config"',
+        ),
+      });
+    });
+
+    it("does not throw when reportProblem fails", async () => {
+      mockReportProblem.mockResolvedValue(err(new Error("network error")));
+      const reporter = new StripeProblemReporter(mockClient);
+
+      await expect(
+        reporter.reportObjectFromDifferentInstallation("config-222", "My Config"),
+      ).resolves.toBeUndefined();
+    });
+  });
+
   describe("clearProblemsForConfig", () => {
-    it("clears all 4 problem keys for the given configId", async () => {
+    it("clears all problem keys for the given configId", async () => {
       mockClearProblems.mockResolvedValue(ok(undefined));
       const reporter = new StripeProblemReporter(mockClient);
 
@@ -144,6 +184,7 @@ describe("StripeProblemReporter", () => {
         "stripe-permission-error:config-abc",
         "stripe-webhook-secret-mismatch:config-abc",
         "stripe-config-missing:config-abc",
+        "stripe-object-from-different-installation:config-abc",
       ]);
     });
 
@@ -220,5 +261,8 @@ describe("PROBLEM_KEYS", () => {
     expect(PROBLEM_KEYS.permissionError("id1")).toBe("stripe-permission-error:id1");
     expect(PROBLEM_KEYS.webhookSecretMismatch("id1")).toBe("stripe-webhook-secret-mismatch:id1");
     expect(PROBLEM_KEYS.configMissing("id1")).toBe("stripe-config-missing:id1");
+    expect(PROBLEM_KEYS.objectFromDifferentInstallation("id1")).toBe(
+      "stripe-object-from-different-installation:id1",
+    );
   });
 });

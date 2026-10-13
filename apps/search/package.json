@@ -1,13 +1,13 @@
 {
   "name": "saleor-app-search",
-  "version": "1.32.7",
+  "version": "1.32.9",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build",
-    "check-types": "tsc",
+    "build": "next build --webpack",
+    "check-types": "next typegen && tsc",
     "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
-    "dev": "NODE_OPTIONS='--inspect' next dev",
+    "dev": "NODE_OPTIONS='--inspect' next dev --webpack",
     "disable-webhooks": "tsx --env-file-if-exists=.env ./scripts/disable-webhooks.ts",
     "generate": "graphql-codegen",
     "lint": "eslint .",

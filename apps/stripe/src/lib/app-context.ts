@@ -3,6 +3,7 @@ import { AsyncLocalStorage } from "async_hooks";
 import { type NextRequest } from "next/server";
 
 import { createLogger } from "@/lib/logger";
+import { loggerContext } from "@/lib/logger-context";
 import { type StripeEnv } from "@/modules/stripe/stripe-env";
 
 export type AppContext = {
@@ -43,6 +44,8 @@ export class AppContextContainer {
 
       if (key in store && values[key] !== undefined) {
         store[key] = values[key];
+        // Expose in logs too, e.g. to tell if webhook was handled by LIVE or TEST config
+        loggerContext.set(key, values[key]);
       } else {
         throw new Error(
           `Key ${key} does not exist in AppContext. Only known, predefined keys are allowed.`,

@@ -39,7 +39,7 @@ describe("handleUseCaseErrors", () => {
     mockLogger = createMockLogger();
   });
 
-  it("Returns 400 with safe message for FailedToFetchConfigurationError", () => {
+  it("Returns 503 so Saleor retries when FailedToFetchConfigurationError", () => {
     const serverError = new SendEventMessagesUseCase.FailedToFetchConfigurationError(
       "Failed to fetch configuration",
       { props: { channelSlug: "default", event: "ORDER_CREATED" } },
@@ -51,9 +51,27 @@ describe("handleUseCaseErrors", () => {
       res: mockRes.res,
     });
 
-    expect(mockRes.status).toHaveBeenCalledWith(400);
+    expect(mockRes.status).toHaveBeenCalledWith(503);
     expect(mockRes.json).toHaveBeenCalledWith({
       message: "Failed to send email: Failed to fetch SMTP configuration",
+    });
+  });
+
+  it("Returns 503 so Saleor retries when RedirectEmailFetchError", () => {
+    const serverError = new SendEventMessagesUseCase.RedirectEmailFetchError(
+      "Failed to fetch redirect email from endpoint",
+      { props: { channelSlug: "default", event: "ORDER_CREATED" } },
+    );
+
+    handleUseCaseErrors({
+      errors: [serverError],
+      logger: mockLogger,
+      res: mockRes.res,
+    });
+
+    expect(mockRes.status).toHaveBeenCalledWith(503);
+    expect(mockRes.json).toHaveBeenCalledWith({
+      message: "Failed to send email: Failed to fetch redirect email",
     });
   });
 

@@ -1,13 +1,13 @@
 {
   "name": "saleor-app-segment",
-  "version": "2.4.5",
+  "version": "2.4.7",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build",
-    "check-types": "tsc",
+    "build": "next build --webpack",
+    "check-types": "next typegen && tsc",
     "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
-    "dev": "NODE_OPTIONS='--inspect' next dev",
+    "dev": "NODE_OPTIONS='--inspect' next dev --webpack",
     "generate": "graphql-codegen",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",

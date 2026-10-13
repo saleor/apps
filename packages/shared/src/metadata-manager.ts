@@ -4,7 +4,7 @@ import {
   type SettingsManager,
 } from "@saleor/app-sdk/settings-manager";
 import { type Logger } from "@saleor/apps-logger";
-import { type Client, gql } from "urql";
+import { type Client, type CombinedError, gql } from "urql";
 
 import { createRotatingDecryptCallback } from "./key-rotation/rotating-decrypt-callback";
 
@@ -68,16 +68,45 @@ type UpdateAppPrivateMetadataMutation = {
 
 export type MetadataManagerGraphqlClient = Pick<Client, "mutation" | "query">;
 
+/**
+ * Saleor treats the token of an app it no longer knows (uninstalled, reinstalled, environment
+ * restored) as anonymous, so reading `app` is denied. The installation is broken, not the app.
+ */
+export class AppTokenRejectedError extends Error {
+  name = "AppTokenRejectedError";
+}
+
+const isAppTokenRejected = (error: CombinedError) =>
+  error.graphQLErrors.some(
+    (graphQLError) =>
+      (graphQLError.extensions?.exception as { code?: unknown } | undefined)?.code ===
+      "PermissionDenied",
+  );
+
 async function fetchAllPrivateMetadata({
   client,
   logger,
+  throwOnAppTokenRejected,
 }: {
   client: MetadataManagerGraphqlClient;
   logger: Logger;
+  throwOnAppTokenRejected: boolean;
 }): Promise<MetadataEntry[]> {
   const { error, data } = await client
     .query<FetchAppPrivateMetadataQuery>(FetchAppDetailsQuery, {})
     .toPromise();
+
+  if (error && isAppTokenRejected(error)) {
+    logger.warn("Saleor rejected the app token, can't fetch app metadata", {
+      errorMessage: error.message,
+    });
+
+    if (throwOnAppTokenRejected) {
+      throw new AppTokenRejectedError(error.message, { cause: error });
+    }
+
+    return [];
+  }
 
   if (error) {
     const cause =
@@ -151,10 +180,20 @@ export class EncryptedMetadataManagerFactory {
     }
   }
 
-  create(client: MetadataManagerGraphqlClient, appId: string): SettingsManager {
+  /**
+   * By default a rejected token reads as empty metadata. Set `throwOnAppTokenRejected` to get
+   * `AppTokenRejectedError` from `get()` instead, so callers can tell "not configured" from
+   * "can't read configuration".
+   */
+  create(
+    client: MetadataManagerGraphqlClient,
+    appId: string,
+    { throwOnAppTokenRejected = false }: { throwOnAppTokenRejected?: boolean } = {},
+  ): SettingsManager {
     return new EncryptedMetadataManager({
       encryptionKey: this.encryptionKey,
-      fetchMetadata: () => fetchAllPrivateMetadata({ client, logger: this.logger }),
+      fetchMetadata: () =>
+        fetchAllPrivateMetadata({ client, logger: this.logger, throwOnAppTokenRejected }),
       mutateMetadata: (metadata) =>
         updatePrivateMetadata({
           client,

@@ -1,14 +1,14 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "saleor-app-payment-stripe",
-  "version": "2.11.1",
+  "version": "2.11.3",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build",
-    "check-types": "tsc",
+    "build": "next build --webpack",
+    "check-types": "next typegen && tsc",
     "deploy": "tsx --env-file-if-exists=.env ./scripts/deploy.ts",
-    "dev": "NODE_OPTIONS='--inspect' next dev",
+    "dev": "NODE_OPTIONS='--inspect' next dev --webpack",
     "generate": "pnpm run /generate:.*/",
     "generate:app-graphql-types": "graphql-codegen",
     "generate:app-webhooks-types": "tsx ./scripts/generate-app-webhooks-types.ts --json-schema-version=${npm_package_config_saleor_schemaVersion}",

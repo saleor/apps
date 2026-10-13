@@ -18,5 +18,5 @@ export const createSettingsManager = (client: Client, appId: string): SettingsMa
     logger,
   );
 
-  return metadataManagerFactory.create(client, appId);
+  return metadataManagerFactory.create(client, appId, { throwOnAppTokenRejected: true });
 };

@@ -4,7 +4,7 @@ import {
   TransactionRefundRequestedDocument,
   type TransactionRefundRequestedEventFragment,
 } from "@/generated/graphql";
-import { createLogger } from "@/lib/logger";
+import { createWebhookErrorHandler } from "@/lib/create-webhook-error-handler";
 import { saleorApp } from "@/lib/saleor-app";
 
 export const transactionRefundRequestedWebhookDefinition =
@@ -15,9 +15,5 @@ export const transactionRefundRequestedWebhookDefinition =
     isActive: true,
     query: TransactionRefundRequestedDocument,
     webhookPath: "api/webhooks/saleor/transaction-refund-requested",
-    onError(error) {
-      createLogger("TRANSACTION_REFUND_REQUESTED webhook").error("Failed to execute webhook", {
-        error,
-      });
-    },
+    onError: createWebhookErrorHandler("TRANSACTION_REFUND_REQUESTED webhook"),
   });

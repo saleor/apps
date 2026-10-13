@@ -141,7 +141,7 @@ describe("RemoveStripeConfigTrpcHandler", () => {
     const { caller, webhookManager, mockedAppConfigRepo } = getTestCaller();
 
     vi.mocked(webhookManager.removeWebhook).mockImplementationOnce(async () =>
-      err(new StripeWebhookManagerErrors.CantCreateWebhookError("Test error")),
+      err(new StripeWebhookManagerErrors.CantRemoveWebhookError("Test error")),
     );
 
     await expect(caller.testProcedure({ configId: mockedConfigurationId })).resolves.not.toThrow();

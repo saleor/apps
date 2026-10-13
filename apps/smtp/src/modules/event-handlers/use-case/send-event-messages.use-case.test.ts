@@ -1,7 +1,16 @@
+import { type SettingsManager } from "@saleor/app-sdk/settings-manager";
+import { type Logger } from "@saleor/apps-logger";
+import {
+  EncryptedMetadataManagerFactory,
+  type MetadataManagerGraphqlClient,
+} from "@saleor/apps-shared/metadata-manager";
 import { err, errAsync, ok, okAsync } from "neverthrow";
+import { type NextApiResponse } from "next";
+import { CombinedError } from "urql";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { BaseError } from "../../../errors";
+import { createLogger } from "../../../logger";
 import { fetchRedirectEmail } from "../../saleor-fallback-behavior/redirect-email-fetcher";
 import {
   type FallbackSmtpConfig,
@@ -12,10 +21,13 @@ import {
   type FilterConfigurationsArgs,
   type IGetFallbackSmtpEnabled,
   type IGetSmtpConfiguration,
+  SmtpConfigurationService,
 } from "../../smtp/configuration/smtp-configuration.service";
+import { SmtpMetadataManager } from "../../smtp/configuration/smtp-metadata-manager";
 import { type CompileArgs, type IEmailCompiler } from "../../smtp/services/email-compiler";
 import { type ISMTPEmailSender, type SendMailArgs } from "../../smtp/services/smtp-email-sender";
 import { type MessageEventTypes } from "../message-event-types";
+import { handleUseCaseErrors } from "../send-event-messages-response-handler";
 import { SendEventMessagesUseCase } from "./send-event-messages.use-case";
 import { SendEventMessagesUseCaseFactory } from "./send-event-messages.use-case.factory";
 
@@ -230,6 +242,108 @@ describe("SendEventMessagesUseCase", () => {
       expect(result?._unsafeUnwrapErr()[0].errors).toStrictEqual(
         expect.arrayContaining([expect.any(BaseError)]),
       );
+    });
+
+    it("Returns 503 without sending email when Saleor API times out while fetching configuration", async () => {
+      const hangingSaleorSettingsManager: SettingsManager = {
+        get: () => new Promise(() => {}),
+        set: vi.fn(),
+        delete: vi.fn(),
+      };
+
+      const useCase = new SendEventMessagesUseCase({
+        emailCompiler,
+        emailSender,
+        configService: new SmtpConfigurationService({
+          metadataManager: new SmtpMetadataManager(
+            hangingSaleorSettingsManager,
+            "https://demo.saleor.cloud/graphql/",
+            10,
+          ),
+        }),
+      });
+
+      const result = await useCase.sendEventMessages({
+        event: EVENT_TYPE,
+        payload: {},
+        channelSlug: "channel-slug",
+        recipientEmail: "recipient@test.com",
+        saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+      });
+
+      const errors = result._unsafeUnwrapErr();
+
+      expect(errors[0]).toBeInstanceOf(SendEventMessagesUseCase.FailedToFetchConfigurationError);
+      expect(emailSender.mockSendEmailMethod).not.toHaveBeenCalled();
+
+      const res = { status: vi.fn().mockReturnValue({ json: vi.fn() }) };
+
+      handleUseCaseErrors({
+        errors,
+        logger: createLogger("test"),
+        res: res as unknown as NextApiResponse,
+      });
+
+      expect(res.status).toHaveBeenCalledWith(503);
+    });
+
+    it("Returns 400 without sending email or logging errors when Saleor rejects the app token", async () => {
+      const metadataLogger = { warn: vi.fn(), error: vi.fn() };
+      const permissionDeniedClient = {
+        query: () => ({
+          toPromise: async () => ({
+            error: new CombinedError({
+              graphQLErrors: [
+                {
+                  message: "To access this path, you need one of the following permissions",
+                  extensions: { exception: { code: "PermissionDenied" } },
+                },
+              ],
+            }),
+          }),
+        }),
+        mutation: vi.fn(),
+      } as unknown as MetadataManagerGraphqlClient;
+
+      const useCase = new SendEventMessagesUseCase({
+        emailCompiler,
+        emailSender,
+        configService: new SmtpConfigurationService({
+          metadataManager: new SmtpMetadataManager(
+            new EncryptedMetadataManagerFactory(
+              "key",
+              [],
+              metadataLogger as unknown as Logger,
+            ).create(permissionDeniedClient, "app-id", { throwOnAppTokenRejected: true }),
+            "https://demo.saleor.cloud/graphql/",
+          ),
+        }),
+      });
+
+      const result = await useCase.sendEventMessages({
+        event: EVENT_TYPE,
+        payload: {},
+        channelSlug: "channel-slug",
+        recipientEmail: "recipient@test.com",
+        saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+      });
+
+      const errors = result._unsafeUnwrapErr();
+
+      expect(errors[0]).toBeInstanceOf(SendEventMessagesUseCase.AppTokenRejectedError);
+      expect(emailSender.mockSendEmailMethod).not.toHaveBeenCalled();
+      expect(metadataLogger.error).not.toHaveBeenCalled();
+      expect(metadataLogger.warn).toHaveBeenCalledOnce();
+
+      const res = { status: vi.fn().mockReturnValue({ json: vi.fn() }) };
+
+      handleUseCaseErrors({
+        errors,
+        logger: createLogger("test"),
+        res: res as unknown as NextApiResponse,
+      });
+
+      expect(res.status).toHaveBeenCalledWith(400);
     });
 
     describe("Fallback SMTP behavior", () => {

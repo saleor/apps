@@ -16,6 +16,10 @@ function getSafeErrorMessage(
     return "Failed to fetch SMTP configuration";
   }
 
+  if (error instanceof SendEventMessagesUseCase.RedirectEmailFetchError) {
+    return "Failed to fetch redirect email";
+  }
+
   // ClientError subclasses
   if (error instanceof SendEventMessagesUseCase.EmailCompilationError) {
     return "Failed to compile email template";
@@ -23,6 +27,10 @@ function getSafeErrorMessage(
 
   if (error instanceof SendEventMessagesUseCase.InvalidSenderConfigError) {
     return "Invalid sender configuration: missing sender name or email";
+  }
+
+  if (error instanceof SendEventMessagesUseCase.AppTokenRejectedError) {
+    return "Saleor rejected the app token, reinstall the app";
   }
 
   // Generic ServerError (e.g. SMTP send failure)
@@ -49,7 +57,13 @@ export function handleUseCaseErrors({
 }) {
   const errorInstance = errors[0];
 
-  if (errorInstance instanceof SendEventMessagesUseCase.ServerError) {
+  if (errorInstance instanceof SendEventMessagesUseCase.RetryableServerError) {
+    logger.warn("Failed to send email(s) [retryable server error]", { error: errors });
+
+    return res
+      .status(503)
+      .json({ message: `Failed to send email: ${getSafeErrorMessage(errorInstance)}` });
+  } else if (errorInstance instanceof SendEventMessagesUseCase.ServerError) {
     logger.info("Failed to send email(s) [server error]", { error: errors });
 
     return res

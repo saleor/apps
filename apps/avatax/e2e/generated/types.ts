@@ -3774,6 +3774,14 @@ export type Category = Node & ObjectWithMetadata & {
    * Added in Saleor 3.23.
    */
   externalReference?: Maybe<Scalars['String']['output']>;
+  /**
+   * Full description of the category. Returns null when unset.
+   *
+   * Rich text format. For reference see https://editorjs.io/
+   *
+   * Added in Saleor 3.23.
+   */
+  fullDescription?: Maybe<Scalars['JSONString']['output']>;
   /** The ID of the category. */
   id: Scalars['ID']['output'];
   /** Level of the category. */
@@ -3999,6 +4007,14 @@ export type CategoryInput = {
    */
   externalReference?: InputMaybe<Scalars['String']['input']>;
   /**
+   * Full description of the category. Pass null to clear it. Omit to preserve the current value on update.
+   *
+   * Rich text format. For reference see https://editorjs.io/
+   *
+   * Added in Saleor 3.23.
+   */
+  fullDescription?: InputMaybe<Scalars['JSONString']['input']>;
+  /**
    * Fields required to update the category metadata. Can be read by any API client authorized to read the object it's attached to.
    *
    * Warning: never store sensitive information, including financial data such as credit card details.
@@ -4062,6 +4078,14 @@ export type CategoryTranslatableContent = Node & {
    * @deprecated Use the `description` field instead.
    */
   descriptionJson?: Maybe<Scalars['JSONString']['output']>;
+  /**
+   * Category's full description to translate. Returns null when unset.
+   *
+   * Rich text format. For reference see https://editorjs.io/
+   *
+   * Added in Saleor 3.23.
+   */
+  fullDescription?: Maybe<Scalars['JSONString']['output']>;
   /** The ID of the category translatable content. */
   id: Scalars['ID']['output'];
   /** Name of the category translatable content. */
@@ -4115,6 +4139,14 @@ export type CategoryTranslation = Node & {
    * @deprecated Use the `description` field instead.
    */
   descriptionJson?: Maybe<Scalars['JSONString']['output']>;
+  /**
+   * Translated full description of the category. Returns null when unset.
+   *
+   * Rich text format. For reference see https://editorjs.io/
+   *
+   * Added in Saleor 3.23.
+   */
+  fullDescription?: Maybe<Scalars['JSONString']['output']>;
   /** The ID of the category translation. */
   id: Scalars['ID']['output'];
   /** Translation language. */
@@ -5826,6 +5858,14 @@ export type Collection = Node & ObjectWithMetadata & {
    * Added in Saleor 3.23.
    */
   externalReference?: Maybe<Scalars['String']['output']>;
+  /**
+   * Full description of the collection. Returns null when unset.
+   *
+   * Rich text format. For reference see https://editorjs.io/
+   *
+   * Added in Saleor 3.23.
+   */
+  fullDescription?: Maybe<Scalars['JSONString']['output']>;
   /** The ID of the collection. */
   id: Scalars['ID']['output'];
   /** List of public metadata items. Can be accessed without permissions. */
@@ -6040,6 +6080,14 @@ export type CollectionCreateInput = {
    * Added in Saleor 3.23.
    */
   externalReference?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Full description of the collection. Pass null to clear it. Omit to preserve the current value on update.
+   *
+   * Rich text format. For reference see https://editorjs.io/
+   *
+   * Added in Saleor 3.23.
+   */
+  fullDescription?: InputMaybe<Scalars['JSONString']['input']>;
   /** Informs whether a collection is published. */
   isPublished?: InputMaybe<Scalars['Boolean']['input']>;
   /**
@@ -6178,6 +6226,14 @@ export type CollectionInput = {
    * Added in Saleor 3.23.
    */
   externalReference?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Full description of the collection. Pass null to clear it. Omit to preserve the current value on update.
+   *
+   * Rich text format. For reference see https://editorjs.io/
+   *
+   * Added in Saleor 3.23.
+   */
+  fullDescription?: InputMaybe<Scalars['JSONString']['input']>;
   /** Informs whether a collection is published. */
   isPublished?: InputMaybe<Scalars['Boolean']['input']>;
   /**
@@ -6320,6 +6376,14 @@ export type CollectionTranslatableContent = Node & {
    * @deprecated Use the `description` field instead.
    */
   descriptionJson?: Maybe<Scalars['JSONString']['output']>;
+  /**
+   * Collection's full description to translate. Returns null when unset.
+   *
+   * Rich text format. For reference see https://editorjs.io/
+   *
+   * Added in Saleor 3.23.
+   */
+  fullDescription?: Maybe<Scalars['JSONString']['output']>;
   /** The ID of the collection translatable content. */
   id: Scalars['ID']['output'];
   /** Collection's name to translate. */
@@ -6373,6 +6437,14 @@ export type CollectionTranslation = Node & {
    * @deprecated Use the `description` field instead.
    */
   descriptionJson?: Maybe<Scalars['JSONString']['output']>;
+  /**
+   * Translated full description of the collection. Returns null when unset.
+   *
+   * Rich text format. For reference see https://editorjs.io/
+   *
+   * Added in Saleor 3.23.
+   */
+  fullDescription?: Maybe<Scalars['JSONString']['output']>;
   /** The ID of the collection translation. */
   id: Scalars['ID']['output'];
   /** Translation language. */
@@ -17516,7 +17588,8 @@ export type MutationVoucherCreateArgs = {
 
 
 export type MutationVoucherDeleteArgs = {
-  id: Scalars['ID']['input'];
+  externalReference?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
@@ -17528,7 +17601,8 @@ export type MutationVoucherTranslateArgs = {
 
 
 export type MutationVoucherUpdateArgs = {
-  id: Scalars['ID']['input'];
+  externalReference?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
   input: VoucherInput;
 };
 
@@ -25367,6 +25441,12 @@ export type ProductWhereInput = {
   category?: InputMaybe<GlobalIdFilterInput>;
   /** Filter by collection. */
   collection?: InputMaybe<GlobalIdFilterInput>;
+  /**
+   * Filter by external reference.
+   *
+   * Added in Saleor 3.23.
+   */
+  externalReference?: InputMaybe<StringFilterInput>;
   /** Filter on whether product is a gift card or not. */
   giftCard?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by product with category assigned. */
@@ -26895,7 +26975,7 @@ export type Query = {
    */
   user?: Maybe<User>;
   /**
-   * Look up a voucher by ID.
+   * Look up a voucher by ID or external reference.
    *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    */
@@ -27522,7 +27602,8 @@ export type QueryUserArgs = {
 
 export type QueryVoucherArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['ID']['input'];
+  externalReference?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
@@ -32344,6 +32425,14 @@ export type TranslationInput = {
    * Rich text format. For reference see https://editorjs.io/
    */
   description?: InputMaybe<Scalars['JSONString']['input']>;
+  /**
+   * Translated full description. Only supported for categories and collections; product translation mutations reject this field. Pass null to clear it. Omit to preserve the current value on update.
+   *
+   * Rich text format. For reference see https://editorjs.io/
+   *
+   * Added in Saleor 3.23.
+   */
+  fullDescription?: InputMaybe<Scalars['JSONString']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   seoDescription?: InputMaybe<Scalars['String']['input']>;
   seoTitle?: InputMaybe<Scalars['String']['input']>;
@@ -32959,6 +33048,12 @@ export type Voucher = Node & ObjectWithMetadata & {
   discountValueType: DiscountValueTypeEnum;
   /** The end date and time of voucher. */
   endDate?: Maybe<Scalars['DateTime']['output']>;
+  /**
+   * External ID of this voucher.
+   *
+   * Added in Saleor 3.23.
+   */
+  externalReference?: Maybe<Scalars['String']['output']>;
   /** The ID of the voucher. */
   id: Scalars['ID']['output'];
   /** List of public metadata items. Can be accessed without permissions. */
@@ -33449,6 +33544,12 @@ export type VoucherInput = {
   discountValueType?: InputMaybe<DiscountValueTypeEnum>;
   /** End date of the voucher in ISO 8601 format. */
   endDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /**
+   * External ID of this voucher.
+   *
+   * Added in Saleor 3.23.
+   */
+  externalReference?: InputMaybe<Scalars['String']['input']>;
   /** Minimal quantity of checkout items required to apply the voucher. */
   minCheckoutItemsQuantity?: InputMaybe<Scalars['Int']['input']>;
   /** Voucher name. */

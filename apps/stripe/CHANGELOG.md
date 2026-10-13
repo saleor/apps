@@ -1,5 +1,28 @@
 # saleor-app-payment-stripe
 
+## 2.11.3
+
+### Patch Changes
+
+- 14691bc: Upgraded neverthrow from v6.2.1 to v8.1.1 and zod from v3.21.4 to v3.24.1. App behavior doesn't change.
+- 8a86989: Fixed Stripe reporting failed webhook deliveries for events the app should ignore. Stripe sends events for every payment in the account to each webhook endpoint, so the app also receives events for payments it didn't create:
+
+  - payments created outside of Saleor, for example Payment Links or other integrations
+  - payments created by a different Saleor environment connected to the same Stripe account in the same mode
+
+  Before: the app answered these events with HTTP 400. Stripe kept retrying them for up to 3 days, sent "having trouble delivering webhooks" emails, and could eventually disable the endpoint.
+
+  After: the app acknowledges these events with HTTP 200 and ignores them. Payments created by the environment itself are processed as before.
+
+  When events come from a different Saleor environment, the app also shows an App Problem in the Dashboard for the affected configuration. It recommends using a separate Stripe account or sandbox for each environment. The problem is cleared when the configuration is updated or removed.
+
+## 2.11.2
+
+### Patch Changes
+
+- a2fbe4a: Upgraded Next.js from v15.5.27 to v16.3.8. Apps keep building with Webpack for now; the switch to Turbopack will ship separately.
+- c5db97f: You now see an App Problem when Stripe keeps sending webhook events from a previous installation of the app whose configuration no longer exists. This happens when the app is reinstalled while the old webhook endpoint is still active in Stripe. The app can't remove that webhook without the old configuration, so the problem asks you to delete it in your Stripe Dashboard. Repeated events are grouped into one problem per day. Before, this was only logged as an internal error.
+
 ## 2.11.1
 
 ### Patch Changes

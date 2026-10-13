@@ -16,7 +16,7 @@ import {
   type SmtpEventConfiguration,
 } from "./smtp-config-schema";
 import { smtpDefaultEmptyConfigurations } from "./smtp-default-empty-configurations";
-import { type SmtpMetadataManager } from "./smtp-metadata-manager";
+import { SmtpMetadataManager } from "./smtp-metadata-manager";
 
 const logger = createLogger("SmtpConfigurationService");
 
@@ -54,6 +54,8 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFall
     "EventConfigNotFoundError",
   );
   static CantFetchConfigError = this.SmtpConfigurationServiceError.subclass("CantFetchConfigError");
+  static AppTokenRejectedError =
+    this.SmtpConfigurationServiceError.subclass("AppTokenRejectedError");
   static TemplateValidationError = this.SmtpConfigurationServiceError.subclass(
     "TemplateValidationError",
     {
@@ -133,6 +135,14 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFall
         return ok(data);
       })
       .orElse((error) => {
+        if (error instanceof SmtpMetadataManager.AppTokenRejectedError) {
+          return err(
+            new SmtpConfigurationService.AppTokenRejectedError("Saleor rejected the app token", {
+              cause: error,
+            }),
+          );
+        }
+
         return err(
           new SmtpConfigurationService.CantFetchConfigError("API returned no configuration", {
             errors: [error],

@@ -24,7 +24,10 @@ import { BaseError } from "@/lib/errors";
 import { AppRootConfig } from "@/modules/app-config/domain/app-root-config";
 import { UpdateStripeConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/update-stripe-config-trpc-handler";
 import { StripeAuthValidator } from "@/modules/stripe/stripe-auth-validator";
-import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
+import {
+  StripeWebhookManager,
+  StripeWebhookManagerErrors,
+} from "@/modules/stripe/stripe-webhook-manager";
 import { router } from "@/modules/trpc/trpc-server";
 
 vi.mock("next/server", () => ({
@@ -216,7 +219,7 @@ describe("UpdateStripeConfigTrpcHandler", () => {
 
       vi.spyOn(StripeAuthValidator.prototype, "validateStripeAuth").mockResolvedValue(ok(null));
       vi.spyOn(webhookManager, "isWebhookReachableWithKey").mockResolvedValue(
-        err(new BaseError("Stripe is down")),
+        err(new StripeWebhookManagerErrors.CantFetchWebhookError("Stripe is down")),
       );
 
       const createWebhook = vi.spyOn(webhookManager, "createWebhook");
