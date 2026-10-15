@@ -67,10 +67,11 @@ const handler: NextJsWebhookHandler<OrderCreatedWebhookPayloadFragment> = async 
   const recipientEmail = order.userEmail || order.user?.email;
 
   if (!recipientEmail?.length) {
-    logger.error(`The order ${order.number} had no email recipient set. Aborting.`);
+    logger.warn(`The order ${order.number} had no email recipient set. Aborting.`);
 
+    // 202, not 4xx: the payload is valid, there is just no one to email, so Saleor must not treat it as rejected
     return res
-      .status(200)
+      .status(202)
       .json({ error: "Email recipient has not been specified in the event payload." });
   }
 

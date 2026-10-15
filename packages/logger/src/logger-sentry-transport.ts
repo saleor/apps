@@ -59,7 +59,7 @@ export const attachLoggerSentryTransport = (logger: Logger<ILogObj>) => {
 
     if (level === "error") {
       const error = Object.values(attributes).find((value) => value instanceof Error);
-      const captureContext = { level, extra: { message, ...attributes } };
+      const captureContext = { level, extra: { ...attributes, message } };
 
       // Sentry skips Error instances that were already captured, so explicit captureException calls won't duplicate
       if (error) {

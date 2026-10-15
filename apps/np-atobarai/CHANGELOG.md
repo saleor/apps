@@ -1,5 +1,21 @@
 # saleor-app-payment-np-atobarai
 
+## 1.5.9
+
+### Patch Changes
+
+- 7783337: Upgraded next.js v16.4.1
+
+## 1.5.8
+
+### Patch Changes
+
+- Updated dependencies [ab5a656]
+  - @saleor/apps-logger@1.6.8
+  - @saleor/dynamo-config-repository@1.0.7
+  - @saleor/apps-shared@1.17.3
+  - @saleor/apps-trpc@4.0.5
+
 ## 1.5.7
 
 ### Patch Changes

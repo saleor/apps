@@ -1,5 +1,20 @@
 # saleor-app-payment-stripe
 
+## 2.11.5
+
+### Patch Changes
+
+- 7783337: Upgraded next.js v16.4.1
+
+## 2.11.4
+
+### Patch Changes
+
+- Updated dependencies [ab5a656]
+  - @saleor/apps-logger@1.6.8
+  - @saleor/apps-shared@1.17.3
+  - @saleor/apps-trpc@4.0.5
+
 ## 2.11.3
 
 ### Patch Changes

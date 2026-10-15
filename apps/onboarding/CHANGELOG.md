@@ -1,5 +1,17 @@
 # saleor-app-onboarding
 
+## 0.1.13
+
+### Patch Changes
+
+- 7783337: Upgraded next.js v16.4.1
+
+## 0.1.12
+
+### Patch Changes
+
+- @saleor/apps-shared@1.17.3
+
 ## 0.1.11
 
 ### Patch Changes

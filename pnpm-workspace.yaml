@@ -63,7 +63,7 @@ catalog:
   modern-errors: 7.0.1
   modern-errors-serialize: 6.1.0
   neverthrow: 8.1.1
-  next: 16.3.8
+  next: 16.4.1
   next-test-api-route-handler: 5.0.7
   node-mocks-http: 1.16.1
   react: 18.2.0
@@ -92,18 +92,48 @@ minimumReleaseAgeExclude:
   - '@saleor/app-sdk'
   - '@saleor/macaw-ui'
   - handlebars@4.7.10
-  - next@16.3.8
-  - '@next/env@16.3.8'
-  - '@next/bundle-analyzer@16.3.8'
+  - next@16.4.1
+  - '@next/env@16.4.1'
+  - '@next/bundle-analyzer@16.4.1'
   - '@next/eslint-plugin-next@16.3.8'
-  - '@next/swc-linux-arm64-gnu@16.3.8'
-  - '@next/swc-linux-arm64-musl@16.3.8'
-  - '@next/swc-linux-x64-musl@16.3.8'
-  - '@next/swc-linux-x64-gnu@16.3.8'
-  - '@next/swc-darwin-x64@16.3.8'
-  - '@next/swc-darwin-arm64@16.3.8'
-  - '@next/swc-win32-x64-msvc@16.3.8'
-  - '@next/swc-win32-arm64-msvc@16.3.8'
+  - '@next/swc-linux-arm64-gnu@16.4.1'
+  - '@next/swc-linux-arm64-musl@16.4.1'
+  - '@next/swc-linux-x64-musl@16.4.1'
+  - '@next/swc-linux-x64-gnu@16.4.1'
+  - '@next/swc-darwin-x64@16.4.1'
+  - '@next/swc-darwin-arm64@16.4.1'
+  - '@next/swc-win32-x64-msvc@16.4.1'
+  - '@next/swc-win32-arm64-msvc@16.4.1'
+  - sharp@0.35.5
+  - '@img/sharp-linux-riscv64@0.35.5'
+  - '@img/sharp-webcontainers-wasm32@0.35.5'
+  - '@img/sharp-libvips-linux-x64@1.3.4'
+  - '@img/sharp-libvips-darwin-arm64@1.3.4'
+  - '@img/sharp-libvips-linux-riscv64@1.3.4'
+  - '@img/sharp-win32-x64@0.35.5'
+  - '@img/sharp-libvips-linux-s390x@1.3.4'
+  - '@img/sharp-win32-arm64@0.35.5'
+  - '@img/sharp-libvips-linux-arm64@1.3.4'
+  - '@img/sharp-linux-x64@0.35.5'
+  - '@img/sharp-linux-arm64@0.35.5'
+  - '@img/sharp-linux-ppc64@0.35.5'
+  - '@img/sharp-libvips-linux-ppc64@1.3.4'
+  - '@img/sharp-libvips-linuxmusl-arm64@1.3.4'
+  - '@img/sharp-linux-arm@0.35.5'
+  - '@img/sharp-libvips-linux-arm@1.3.4'
+  - '@img/sharp-freebsd-wasm32@0.35.5'
+  - '@img/sharp-linux-s390x@0.35.5'
+  - '@img/sharp-darwin-arm64@0.35.5'
+  - '@img/sharp-darwin-x64@0.35.5'
+  - '@img/sharp-freebsd-x64@0.35.5'
+  - '@img/sharp-linuxmusl-arm64@0.35.5'
+  - '@img/sharp-linuxmusl-x64@0.35.5'
+  - '@img/sharp-win32-ia32@0.35.5'
+  - '@img/sharp-libvips-darwin-x64@1.3.4'
+  - '@img/sharp-libvips-linuxmusl-x64@1.3.4'
+  - '@img/sharp-libvips-win32-arm64@1.3.4'
+  - '@img/sharp-libvips-win32-x64@1.3.4'
+  - '@img/sharp-wasm32@0.35.5'
   - protobufjs@7.5.8 || 8.2.0
   - '@protobufjs/inquire@1.1.1'
   - '@protobufjs/utf8@1.1.1'

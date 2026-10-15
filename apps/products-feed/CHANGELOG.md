@@ -1,5 +1,21 @@
 # saleor-app-products-feed
 
+## 3.3.6
+
+### Patch Changes
+
+- 7783337: Upgraded next.js v16.4.1
+
+## 3.3.5
+
+### Patch Changes
+
+- Updated dependencies [ab5a656]
+  - @saleor/apps-logger@1.6.8
+  - @saleor/app-deprecation@0.0.2
+  - @saleor/apps-shared@1.17.3
+  - @saleor/webhook-utils@0.3.4
+
 ## 3.3.4
 
 ### Patch Changes

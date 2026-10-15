@@ -312,7 +312,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     if (result.isErr()) {
       this.logger.warn("Failed to add order note", {
         orderId,
-        message,
+        noteMessage: message,
         error: result.error,
       });
     }

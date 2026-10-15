@@ -1,5 +1,20 @@
 # saleor-app-cms
 
+## 2.18.9
+
+### Patch Changes
+
+- 7783337: Upgraded next.js v16.4.1
+
+## 2.18.8
+
+### Patch Changes
+
+- Updated dependencies [ab5a656]
+  - @saleor/apps-logger@1.6.8
+  - @saleor/apps-shared@1.17.3
+  - @saleor/webhook-utils@0.3.4
+
 ## 2.18.7
 
 ### Patch Changes

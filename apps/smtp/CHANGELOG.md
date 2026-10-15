@@ -1,5 +1,27 @@
 # saleor-app-smtp
 
+## 2.9.6
+
+### Patch Changes
+
+- 7783337: Upgraded next.js v16.4.1
+
+## 2.9.5
+
+### Patch Changes
+
+- 2c2a138: Webhooks for events without an email recipient (e.g. an order placed without a customer email) are now reported correctly.
+
+  Before: the app logged an error and reported it to Sentry, which made it look like the app was failing.
+
+  After: the app logs a warning, does not report to Sentry, and responds with `202 Accepted` to signal the event was received but there was no one to email.
+
+- Updated dependencies [ab5a656]
+  - @saleor/apps-logger@1.6.8
+  - @saleor/app-deprecation@0.0.2
+  - @saleor/apps-shared@1.17.3
+  - @saleor/webhook-utils@0.3.4
+
 ## 2.9.4
 
 ### Patch Changes

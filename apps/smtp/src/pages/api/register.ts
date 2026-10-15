@@ -70,7 +70,7 @@ export default wrapWithLoggerContext(
           const message = (e as Error)?.message ?? "Unknown error";
 
           logger.debug(
-            { message, saleorApiUrl },
+            { errorMessage: message, saleorApiUrl },
             "Error during fetching saleor version in onRequestVerified handler",
           );
 

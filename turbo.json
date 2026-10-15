@@ -6,7 +6,6 @@
     "CI",
     "ENABLE_EXPERIMENTAL_COREPACK",
     "ENV",
-    "GITHUB_SHA",
     "NEW_SECRET_KEY",
     "NEXT_RUNTIME",
     "NEXT_RUNTIME",
@@ -22,7 +21,6 @@
     "REPOSITORY_URL",
     "SENTRY_ORG",
     "VERCEL_ENV",
-    "VERCEL_GIT_COMMIT_SHA",
     "VERCEL_URL",
     "VERCEL"
   ],
@@ -33,7 +31,8 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", ".vercel/**", "!.next/cache/**"],
-      "inputs": ["$TURBO_DEFAULT$", ".env"]
+      "inputs": ["$TURBO_DEFAULT$", ".env"],
+      "env": ["GITHUB_SHA", "VERCEL_GIT_COMMIT_SHA"]
     },
     "check-types": {
       "dependsOn": ["topo"]
@@ -41,7 +40,8 @@
     "deploy": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", ".vercel/**", "!.next/cache/**"],
-      "inputs": ["$TURBO_DEFAULT$", ".env"]
+      "inputs": ["$TURBO_DEFAULT$", ".env"],
+      "env": ["GITHUB_SHA", "VERCEL_GIT_COMMIT_SHA"]
     },
     "dev": {
       "dependsOn": ["^dev"],
@@ -70,7 +70,6 @@
     },
     "test:ci": {
       "dependsOn": ["topo"],
-      "inputs": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.spec.ts", "src/**/*.spec.tsx"],
       "outputs": ["coverage/**"]
     }
   }

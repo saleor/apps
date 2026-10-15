@@ -60,6 +60,15 @@ describe("attachLoggerSentryTransport", () => {
     expect(Sentry.captureMessage).not.toHaveBeenCalled();
   });
 
+  it("Keeps the log message in extra when attributes contain a message key", () => {
+    logger.error("evt", { message: "boom" });
+
+    expect(Sentry.captureMessage).toHaveBeenCalledExactlyOnceWith("evt", {
+      level: "error",
+      extra: { message: "evt" },
+    });
+  });
+
   it("Captures error log without Error attribute as message", () => {
     logger.fatal("Something broke", { id: 1 });
 

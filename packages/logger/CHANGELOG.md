@@ -1,5 +1,11 @@
 # @saleor/apps-logger
 
+## 1.6.8
+
+### Patch Changes
+
+- ab5a656: Fixed log message being replaced by log attributes. Before: an attribute named `message` replaced the log message in production logs (and in the extra data sent to Sentry). Now: the log message is always kept.
+
 ## 1.6.7
 
 ### Patch Changes

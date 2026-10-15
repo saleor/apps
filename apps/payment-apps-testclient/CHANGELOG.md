@@ -1,5 +1,11 @@
 # saleor-payment-apps-testclient
 
+## 0.1.4
+
+### Patch Changes
+
+- 7783337: Upgraded next.js v16.4.1
+
 ## 0.1.3
 
 ### Patch Changes

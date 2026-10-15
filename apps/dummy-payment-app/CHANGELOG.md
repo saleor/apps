@@ -1,5 +1,19 @@
 # saleor-app-payment-dummy
 
+## 1.1.13
+
+### Patch Changes
+
+- 7783337: Upgraded next.js v16.4.1
+
+## 1.1.12
+
+### Patch Changes
+
+- Updated dependencies [ab5a656]
+  - @saleor/apps-logger@1.6.8
+  - @saleor/apps-shared@1.17.3
+
 ## 1.1.11
 
 ### Patch Changes

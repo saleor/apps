@@ -50,10 +50,11 @@ export const handler: NextJsWebhookHandler<NotifySubscriptionPayload> = async (
   loggerContext.set("event", event);
 
   if (!recipientEmail?.length) {
-    logger.error(`The email recipient has not been specified in the event payload.`);
+    logger.warn(`The email recipient has not been specified in the event payload.`);
 
+    // 202, not 4xx: the payload is valid, there is just no one to email, so Saleor must not treat it as rejected
     return res
-      .status(200)
+      .status(202)
       .json({ error: "Email recipient has not been specified in the event payload." });
   }
 

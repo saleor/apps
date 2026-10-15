@@ -1,5 +1,20 @@
 # saleor-app-avatax
 
+## 1.25.10
+
+### Patch Changes
+
+- 7783337: Upgraded next.js v16.4.1
+
+## 1.25.9
+
+### Patch Changes
+
+- Updated dependencies [ab5a656]
+  - @saleor/apps-logger@1.6.8
+  - @saleor/apps-shared@1.17.3
+  - @saleor/webhook-utils@0.3.4
+
 ## 1.25.8
 
 ### Patch Changes
