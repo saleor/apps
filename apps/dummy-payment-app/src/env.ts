@@ -1,4 +1,5 @@
 import { booleanEnv } from "@saleor/apps-shared/boolean-env";
+import { headerSecretEnv } from "@saleor/apps-shared/header-secret-env";
 import { formatEnvValidationError } from "@saleor/errors";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
@@ -17,7 +18,7 @@ export const env = createEnv({
       .default("info"),
     FILE_APL_PATH: z.string().optional(),
     UPSTASH_URL: z.string().optional(),
-    UPSTASH_TOKEN: z.string().optional(),
+    UPSTASH_TOKEN: headerSecretEnv.optional(),
     DYNAMODB_MAIN_TABLE_NAME: z.string().optional(),
     DYNAMODB_MAIN_TABLE_TIMEOUT_MS: z.coerce.number().default(2_000),
     DYNAMODB_MAIN_TABLE_CONNECTION_TIMEOUT_MS: z.coerce.number().default(5_000),
@@ -32,7 +33,7 @@ export const env = createEnv({
      */
     LOG_SALEOR_OPERATIONS: booleanEnv.defaultFalse,
     OTEL_SERVICE_NAME: z.string().optional(),
-    OTEL_ACCESS_TOKEN: z.string().optional(),
+    OTEL_ACCESS_TOKEN: headerSecretEnv.optional(),
     PORT: z.coerce.number().default(3000),
     VERCEL_URL: z.string().optional(),
     VERCEL_ENV: z.string().optional(),

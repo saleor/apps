@@ -61,10 +61,8 @@ pnpm dev
 ### Webhook migration scripts
 
 > [!NOTE]
-> This section refers to apps hosted by Saleor or using REST APL. If you self host AvaTax app you need to write your own logic for updating migration scripts.
+> This section refers to apps hosted by Saleor. If you self host AvaTax app you need to write your own logic for updating migration scripts.
 > See [How to update app webhooks](https://docs.saleor.io/developer/extending/apps/updating-app-webhooks for more info.
-
-You need to set `REST_APL_TOKEN` & `REST_APL_ENDPOINT` in our `.env` file first.
 
 Test migration with dry run, operation will not modify any data:
 

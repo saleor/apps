@@ -16,6 +16,8 @@ fragment TransactionRefundRequestedEvent on TransactionRefundRequested {
     }
     order {
       id
+      number
+      checkoutId
       channel {
         ...Channel
       }

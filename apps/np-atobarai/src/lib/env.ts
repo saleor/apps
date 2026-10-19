@@ -1,4 +1,5 @@
 import { booleanEnv } from "@saleor/apps-shared/boolean-env";
+import { headerSecretEnv } from "@saleor/apps-shared/header-secret-env";
 import {
   newSecretKeyRuntimeEnv,
   newSecretKeyServerSchema,
@@ -18,7 +19,7 @@ export const env = createEnv({
     APP_IFRAME_BASE_URL: z.string().optional(),
     APP_LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
     MANIFEST_APP_ID: z.string().default("saleor.app.payment.np-atobarai"),
-    OTEL_ACCESS_TOKEN: z.string().optional(),
+    OTEL_ACCESS_TOKEN: headerSecretEnv.optional(),
     OTEL_ENABLED: booleanEnv.defaultFalse,
     OTEL_SERVICE_NAME: z.string().default("saleor-app-payment-np-atobarai"),
     PORT: z.coerce.number().default(3000),

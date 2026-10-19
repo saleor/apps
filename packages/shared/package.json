@@ -28,6 +28,7 @@
     "./key-rotation/save-metadata-rotation-item": "./src/key-rotation/save-metadata-rotation-item.ts",
     "./key-rotation/dynamodb-secret-key-rotation-runner": "./src/key-rotation/dynamodb-secret-key-rotation-runner.ts",
     "./boolean-env": "./src/boolean-env-schema.ts",
+    "./header-secret-env": "./src/header-secret-env-schema.ts",
     "./secret-key-resolution": "./src/secret-key-resolution.ts",
     "./cron": "./src/cron.ts"
   },
@@ -52,8 +53,8 @@
     "@saleor/typescript-config-apps": "workspace:*",
     "@testing-library/jest-dom": "6.8.0",
     "@testing-library/react": "16.2.0",
-    "@types/react": "18.2.5",
-    "@types/react-dom": "18.2.5",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "@types/semver": "catalog:",
     "@vitejs/plugin-react": "4.3.4",
     "@vitest/coverage-v8": "catalog:",

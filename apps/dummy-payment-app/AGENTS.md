@@ -58,7 +58,6 @@ Authentication data storage configured in `src/saleor-app.ts`. Supports:
 
 - `FileAPL` (default) - stores auth in `.auth-data.json`
 - `UpstashAPL` - for multi-tenant deployments
-- `SaleorCloudAPL` - for Saleor Cloud deployments
 
 #### Webhook System
 
@@ -130,8 +129,8 @@ Optional for local development (defaults work without Docker):
 
 - `APP_IFRAME_BASE_URL` - Base URL for iframe (e.g., `http://localhost:3000`)
 - `APP_API_BASE_URL` - Base URL for webhooks (e.g., `http://host.docker.internal:3000` for Docker)
-- `APL` - Auth persistence layer type: `file` (default), `upstash`, `saleor-cloud`
-- APL-specific vars: `FILE_APL_PATH`, `UPSTASH_URL`, `UPSTASH_TOKEN`, `REST_APL_TOKEN`, `REST_APL_ENDPOINT`
+- `APL` - Auth persistence layer type: `file` (default), `upstash`, `dynamodb`
+- APL-specific vars: `FILE_APL_PATH`, `UPSTASH_URL`, `UPSTASH_TOKEN`
 
 ## Testing Payment Flows
 

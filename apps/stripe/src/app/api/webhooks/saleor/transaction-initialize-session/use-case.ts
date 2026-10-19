@@ -26,6 +26,10 @@ import {
   type SaleorTransationFlow,
 } from "@/modules/saleor/saleor-transaction-flow";
 import { createSaleorTransactionId } from "@/modules/saleor/saleor-transaction-id";
+import {
+  getSaleorOrderStripeDescription,
+  getSaleorOrderStripeMetadata,
+} from "@/modules/stripe/saleor-order-stripe-metadata";
 import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
 import {
   createStripeClientSecret,
@@ -101,13 +105,21 @@ export class TransactionInitializeSessionUseCase {
       amount: args.event.action.amount,
       currency: args.event.action.currency,
     }).map((stripeMoney) => {
+      const { sourceObject } = args.event;
+      const order = sourceObject.__typename === "Order" ? sourceObject : null;
+      const description = order ? getSaleorOrderStripeDescription(order) : undefined;
+
       return {
         metadata: {
-          saleor_source_id: args.event.sourceObject.id,
-          saleor_source_type: args.event.sourceObject.__typename,
+          saleor_source_id: sourceObject.id,
+          saleor_source_type: sourceObject.__typename,
           saleor_transaction_id: createSaleorTransactionId(args.event.transaction.id),
           saleor_api_url: args.saleorApiUrl,
           saleor_app_id: args.appId,
+          ...getSaleorOrderStripeMetadata({
+            order,
+            checkout: sourceObject.__typename === "Checkout" ? sourceObject : null,
+          }),
         },
         stripeMoney,
         idempotencyKey: args.idempotencyKey,
@@ -122,6 +134,7 @@ export class TransactionInitializeSessionUseCase {
           payment_method_options: {
             ...args.selectedPaymentMethodOptions,
           },
+          ...(description && { description }),
         },
       };
     });

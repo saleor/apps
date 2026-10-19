@@ -1,3 +1,4 @@
+import { headerSecretEnv } from "@saleor/apps-shared/header-secret-env";
 import { formatEnvValidationError } from "@saleor/errors";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
@@ -9,7 +10,7 @@ export const env = createEnv({
     APP_IFRAME_BASE_URL: z.string().optional(),
     FILE_APL_PATH: z.string().optional(),
     UPSTASH_URL: z.string().optional(),
-    UPSTASH_TOKEN: z.string().optional(),
+    UPSTASH_TOKEN: headerSecretEnv.optional(),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),

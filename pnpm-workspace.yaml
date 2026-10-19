@@ -32,7 +32,7 @@ catalog:
   '@opentelemetry/semantic-conventions': 1.30.0
   '@playwright/test': 1.62.1
   '@saleor/app-sdk': 1.16.0
-  '@saleor/macaw-ui': 2.0.0
+  '@saleor/macaw-ui': 3.0.0
   '@sentry/cli': 1.77.3
   '@sentry/nextjs': 10.74.0
   '@t3-oss/env-nextjs': 0.11.1
@@ -42,6 +42,8 @@ catalog:
   '@trpc/react-query': 10.45.3
   '@trpc/server': 10.45.3
   '@types/node': 24.1.0
+  '@types/react': 18.3.22
+  '@types/react-dom': 18.2.5
   '@types/semver': 7.7.1
   '@vercel/oidc-aws-credentials-provider': 3.0.7
   '@vercel/otel': 1.10.1
@@ -95,6 +97,7 @@ minimumReleaseAgeExclude:
   - next@16.4.1
   - '@next/env@16.4.1'
   - '@next/bundle-analyzer@16.4.1'
+  - '@next/third-parties@16.4.1'
   - '@next/eslint-plugin-next@16.3.8'
   - '@next/swc-linux-arm64-gnu@16.4.1'
   - '@next/swc-linux-arm64-musl@16.4.1'

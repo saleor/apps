@@ -5,7 +5,11 @@ import { StripeClient } from "@/modules/stripe/stripe-client";
 
 import { type StripePaymentIntentId } from "./stripe-payment-intent-id";
 import { type StripeRestrictedKey } from "./stripe-restricted-key";
-import { type CreatePaymentIntentArgs, type IStripePaymentIntentsApi } from "./types";
+import {
+  type AllowedStripeObjectMetadata,
+  type CreatePaymentIntentArgs,
+  type IStripePaymentIntentsApi,
+} from "./types";
 
 export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
   private stripeApiWrapper: Pick<Stripe, "paymentIntents">;
@@ -57,11 +61,16 @@ export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
   async capturePaymentIntent(args: {
     id: StripePaymentIntentId;
     idempotencyKey: string | undefined;
+    metadata?: AllowedStripeObjectMetadata;
   }): Promise<Result<Stripe.PaymentIntent, unknown>> {
     return ResultAsync.fromPromise(
-      this.stripeApiWrapper.paymentIntents.capture(args.id, undefined, {
-        idempotencyKey: args.idempotencyKey,
-      }),
+      this.stripeApiWrapper.paymentIntents.capture(
+        args.id,
+        args.metadata && { metadata: args.metadata },
+        {
+          idempotencyKey: args.idempotencyKey,
+        },
+      ),
       (error) => error,
     );
   }

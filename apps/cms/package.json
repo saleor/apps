@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-cms",
-  "version": "2.18.9",
+  "version": "2.18.10",
   "private": true,
   "type": "module",
   "scripts": {
@@ -85,8 +85,8 @@
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@types/node": "catalog:",
-    "@types/react": "18.2.5",
-    "@types/react-dom": "18.2.5",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-n": "catalog:",

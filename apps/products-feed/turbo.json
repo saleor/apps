@@ -10,8 +10,6 @@
         "APP_IFRAME_BASE_URL",
         "FEED_CACHE_MAX_AGE",
         "NEXT_PUBLIC_SENTRY_DSN",
-        "REST_APL_ENDPOINT",
-        "REST_APL_TOKEN",
         "SECRET_KEY",
         "SENTRY_AUTH_TOKEN",
         "SENTRY_PROJECT",

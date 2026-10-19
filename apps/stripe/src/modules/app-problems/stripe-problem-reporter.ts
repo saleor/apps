@@ -36,7 +36,7 @@ export class StripeProblemReporter {
     });
 
     if (result.isErr()) {
-      logger.error("Failed to report auth failure problem", { error: result.error });
+      logger.warn("Failed to report auth failure problem", { error: result.error });
     }
   }
 
@@ -48,7 +48,7 @@ export class StripeProblemReporter {
     });
 
     if (result.isErr()) {
-      logger.error("Failed to report permission error problem", { error: result.error });
+      logger.warn("Failed to report permission error problem", { error: result.error });
     }
   }
 
@@ -60,7 +60,7 @@ export class StripeProblemReporter {
     });
 
     if (result.isErr()) {
-      logger.error("Failed to report webhook secret mismatch problem", { error: result.error });
+      logger.warn("Failed to report webhook secret mismatch problem", { error: result.error });
     }
   }
 
@@ -72,7 +72,7 @@ export class StripeProblemReporter {
     });
 
     if (result.isErr()) {
-      logger.error("Failed to report config missing problem", { error: result.error });
+      logger.warn("Failed to report config missing problem", { error: result.error });
     }
   }
 
@@ -84,7 +84,7 @@ export class StripeProblemReporter {
     });
 
     if (result.isErr()) {
-      logger.error("Failed to report legacy webhook orphaned problem", { error: result.error });
+      logger.warn("Failed to report legacy webhook orphaned problem", { error: result.error });
     }
   }
 
@@ -95,7 +95,7 @@ export class StripeProblemReporter {
     });
 
     if (result.isErr()) {
-      logger.error("Failed to report config missing problem", { error: result.error });
+      logger.warn("Failed to report invalid payment method problem", { error: result.error });
     }
   }
 
@@ -106,7 +106,7 @@ export class StripeProblemReporter {
     });
 
     if (result.isErr()) {
-      logger.error("Failed to report object from different installation problem", {
+      logger.warn("Failed to report object from different installation problem", {
         error: result.error,
       });
     }
@@ -123,7 +123,7 @@ export class StripeProblemReporter {
     const result = await this.reporter.clearProblems(keys);
 
     if (result.isErr()) {
-      logger.error("Failed to clear problems for config", { error: result.error, configId });
+      logger.warn("Failed to clear problems for config", { error: result.error, configId });
     }
   }
 

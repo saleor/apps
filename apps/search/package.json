@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-search",
-  "version": "1.32.11",
+  "version": "1.32.12",
   "private": true,
   "type": "module",
   "scripts": {
@@ -82,8 +82,8 @@
     "@testing-library/dom": "10.4.0",
     "@testing-library/react": "16.2.0",
     "@types/node": "catalog:",
-    "@types/react": "18.2.5",
-    "@types/react-dom": "18.2.5",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",

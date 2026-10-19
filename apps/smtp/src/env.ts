@@ -1,4 +1,5 @@
 import { booleanEnv } from "@saleor/apps-shared/boolean-env";
+import { headerSecretEnv } from "@saleor/apps-shared/header-secret-env";
 import {
   newSecretKeyRuntimeEnv,
   newSecretKeyServerSchema,
@@ -13,14 +14,12 @@ export const env = createEnv({
   },
   server: {
     ALLOWED_DOMAIN_PATTERN: z.string().optional(),
-    APL: z.enum(["saleor-cloud", "file", "dynamodb", "upstash"]).default("file"),
+    APL: z.enum(["file", "dynamodb", "upstash"]).default("file"),
     APP_API_BASE_URL: z.string().optional(),
     APP_IFRAME_BASE_URL: z.string().optional(),
     APP_LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
     FILE_APL_PATH: z.string().optional(),
     MANIFEST_APP_ID: z.string().default("saleor.app.smtp"),
-    REST_APL_ENDPOINT: z.string().optional(),
-    REST_APL_TOKEN: z.string().optional(),
     OTEL_ENABLED: booleanEnv.defaultFalse,
     OTEL_SERVICE_NAME: z.string().optional(),
     PORT: z.coerce.number().default(3000),
@@ -30,7 +29,7 @@ export const env = createEnv({
      * deprecation-notice tick. Optional so existing deployments keep booting without it;
      * the cron route refuses every request while it is unset.
      */
-    CRON_SECRET: z.string().optional(),
+    CRON_SECRET: headerSecretEnv.optional(),
     /*
      * Installations the deprecation cron handles concurrently. The whole sweep over the APL must
      * finish within the cron's maxDuration (vercel.json), so raise it as installations grow.
@@ -40,7 +39,7 @@ export const env = createEnv({
     DEPRECATION_CRON_REQUEST_TIMEOUT_MS: z.coerce.number().int().positive().default(3000),
     VERCEL_URL: z.string().optional(),
     VERCEL_GIT_COMMIT_SHA: z.string().optional(),
-    OTEL_ACCESS_TOKEN: z.string().optional(),
+    OTEL_ACCESS_TOKEN: headerSecretEnv.optional(),
     VERCEL_ENV: z.string().optional(),
     REPOSITORY_URL: z.string().optional(),
     NEXT_RUNTIME: z.string().optional(),
@@ -77,8 +76,6 @@ export const env = createEnv({
     OTEL_ENABLED: process.env.OTEL_ENABLED,
     OTEL_SERVICE_NAME: process.env.OTEL_SERVICE_NAME,
     PORT: process.env.PORT,
-    REST_APL_ENDPOINT: process.env.REST_APL_ENDPOINT,
-    REST_APL_TOKEN: process.env.REST_APL_TOKEN,
     SECRET_KEY: process.env.SECRET_KEY,
     CRON_SECRET: process.env.CRON_SECRET,
     DEPRECATION_CRON_PARALLEL_CALLS: process.env.DEPRECATION_CRON_PARALLEL_CALLS,

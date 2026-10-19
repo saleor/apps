@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "saleor-app-shipping-dummy",
-  "version": "1.1.11",
+  "version": "1.1.12",
   "private": true,
   "type": "module",
   "scripts": {
@@ -35,8 +35,8 @@
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@types/node": "catalog:",
-    "@types/react": "18.2.5",
-    "@types/react-dom": "18.2.5",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-n": "catalog:",
     "graphql-config": "5.0.3",

@@ -1,5 +1,11 @@
 # saleor-app-onboarding
 
+## 0.1.14
+
+### Patch Changes
+
+- 4cff73c: Updated Macaw UI to v3. Configuration screens keep the same layout and behavior; dialogs, dropdowns, tooltips and popovers now run on newer versions of their underlying components.
+
 ## 0.1.13
 
 ### Patch Changes

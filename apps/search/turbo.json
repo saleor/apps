@@ -9,8 +9,6 @@
         "APP_API_BASE_URL",
         "APP_IFRAME_BASE_URL",
         "NEXT_PUBLIC_SENTRY_DSN",
-        "REST_APL_ENDPOINT",
-        "REST_APL_TOKEN",
         "SECRET_KEY",
         "SENTRY_AUTH_TOKEN",
         "SENTRY_PROJECT",

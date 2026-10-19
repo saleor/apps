@@ -1023,6 +1023,7 @@ export type AppBrandLogo = {
 export type AppBrandLogoDefaultArgs = {
   format?: InputMaybe<IconThumbnailFormatEnum>;
   size?: InputMaybe<Scalars['Int']['input']>;
+  sizeRounding?: InputMaybe<ThumbnailSizeRoundingEnum>;
 };
 
 export type AppCountableConnection = {
@@ -1313,6 +1314,7 @@ export type AppManifestBrandLogo = {
 export type AppManifestBrandLogoDefaultArgs = {
   format?: InputMaybe<IconThumbnailFormatEnum>;
   size?: InputMaybe<Scalars['Int']['input']>;
+  sizeRounding?: InputMaybe<ThumbnailSizeRoundingEnum>;
 };
 
 export type AppManifestExtension = {
@@ -3670,6 +3672,7 @@ export type CategoryAncestorsArgs = {
 export type CategoryBackgroundImageArgs = {
   format?: InputMaybe<ThumbnailFormatEnum>;
   size?: InputMaybe<Scalars['Int']['input']>;
+  sizeRounding?: InputMaybe<ThumbnailSizeRoundingEnum>;
 };
 
 
@@ -4314,6 +4317,12 @@ export type ChannelListingUpdateInput = {
   readonly channelListing: Scalars['ID']['input'];
   /** Cost price of the variant in channel. */
   readonly costPrice?: InputMaybe<Scalars['PositiveDecimal']['input']>;
+  /**
+   * Determines whether the variant can be bought in this channel. When omitted, the current value is kept.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly isAvailableForPurchase?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * The threshold for preorder variant in channel.
    * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
@@ -5659,6 +5668,7 @@ export type Collection = Node & ObjectWithMetadata & {
 export type CollectionBackgroundImageArgs = {
   format?: InputMaybe<ThumbnailFormatEnum>;
   size?: InputMaybe<Scalars['Int']['input']>;
+  sizeRounding?: InputMaybe<ThumbnailSizeRoundingEnum>;
 };
 
 
@@ -14359,6 +14369,14 @@ export type Mutation = {
    */
   readonly productVariantBulkUpdate?: Maybe<ProductVariantBulkUpdate>;
   /**
+   * Toggle whether a product variant can be bought in the given channels, without touching its prices. An unavailable variant is hidden from customers and cannot be added to a checkout or an order.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: MANAGE_PRODUCTS.
+   */
+  readonly productVariantChannelListingAvailabilityUpdate?: Maybe<ProductVariantChannelListingAvailabilityUpdate>;
+  /**
    * Manage product variant prices in channels.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
@@ -16533,6 +16551,13 @@ export type MutationProductVariantBulkUpdateArgs = {
   errorPolicy?: InputMaybe<ErrorPolicyEnum>;
   product: Scalars['ID']['input'];
   variants: ReadonlyArray<ProductVariantBulkUpdateInput>;
+};
+
+
+export type MutationProductVariantChannelListingAvailabilityUpdateArgs = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  input: ReadonlyArray<ProductVariantChannelListingAvailabilityInput>;
+  sku?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -18973,6 +18998,7 @@ export type OrderLinePrivateMetafieldsArgs = {
 export type OrderLineThumbnailArgs = {
   format?: InputMaybe<ThumbnailFormatEnum>;
   size?: InputMaybe<Scalars['Int']['input']>;
+  sizeRounding?: InputMaybe<ThumbnailSizeRoundingEnum>;
 };
 
 export type OrderLineCreateInput = {
@@ -21960,6 +21986,7 @@ export type ProductProductVariantsArgs = {
 export type ProductThumbnailArgs = {
   format?: InputMaybe<ThumbnailFormatEnum>;
   size?: InputMaybe<Scalars['Int']['input']>;
+  sizeRounding?: InputMaybe<ThumbnailSizeRoundingEnum>;
 };
 
 
@@ -22602,6 +22629,7 @@ export type ProductImage = {
 export type ProductImageUrlArgs = {
   format?: InputMaybe<ThumbnailFormatEnum>;
   size?: InputMaybe<Scalars['Int']['input']>;
+  sizeRounding?: InputMaybe<ThumbnailSizeRoundingEnum>;
 };
 
 export type ProductInput = {
@@ -22737,6 +22765,7 @@ export type ProductMediaTranslationArgs = {
 export type ProductMediaUrlArgs = {
   format?: InputMaybe<ThumbnailFormatEnum>;
   size?: InputMaybe<Scalars['Int']['input']>;
+  sizeRounding?: InputMaybe<ThumbnailSizeRoundingEnum>;
 };
 
 /**
@@ -23982,6 +24011,12 @@ export type ProductVariantChannelListing = Node & {
   /** The ID of the variant channel listing. */
   readonly id: Scalars['ID']['output'];
   /**
+   * Determines whether the variant can be bought in this channel. When set to `false`, the variant behaves as if it had no listing in this channel: it is hidden from customers and cannot be added to a checkout or an order. Its prices are preserved.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly isAvailableForPurchase: Scalars['Boolean']['output'];
+  /**
    * Gross margin percentage value.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
@@ -24010,6 +24045,12 @@ export type ProductVariantChannelListingAddInput = {
   /** Cost price of the variant in channel. */
   readonly costPrice?: InputMaybe<Scalars['PositiveDecimal']['input']>;
   /**
+   * Determines whether the variant can be bought in this channel. When omitted on an existing listing, the current value is kept.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly isAvailableForPurchase?: InputMaybe<Scalars['Boolean']['input']>;
+  /**
    * The threshold for preorder variant in channel.
    * @deprecated Preorder is deprecated and will be removed. Model pre-sales with regular stock instead: create the planned quantity in a warehouse, or set `trackInventory` to false to sell without a stock limit.
    */
@@ -24022,6 +24063,47 @@ export type ProductVariantChannelListingAddInput = {
    * Added in Saleor 3.21.
    */
   readonly priorPrice?: InputMaybe<Scalars['PositiveDecimal']['input']>;
+};
+
+/**
+ * Fields required to toggle a product variant's availability in a channel.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductVariantChannelListingAvailabilityInput = {
+  /** ID of a channel. */
+  readonly channelId: Scalars['ID']['input'];
+  /** Determines whether the variant can be bought in this channel. */
+  readonly isAvailableForPurchase: Scalars['Boolean']['input'];
+};
+
+/**
+ * Toggle whether a product variant can be bought in the given channels, without touching its prices. An unavailable variant is hidden from customers and cannot be added to a checkout or an order.
+ *
+ * Added in Saleor 3.23.
+ *
+ * Requires one of the following permissions: MANAGE_PRODUCTS.
+ */
+export type ProductVariantChannelListingAvailabilityUpdate = {
+  readonly errors: ReadonlyArray<ProductVariantChannelListingAvailabilityUpdateError>;
+  /** An updated product variant instance. */
+  readonly variant?: Maybe<ProductVariant>;
+};
+
+/**
+ * Error of the `productVariantChannelListingAvailabilityUpdate` mutation.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductVariantChannelListingAvailabilityUpdateError = {
+  /** List of channels IDs which causes the error. */
+  readonly channels?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
+  /** The error code. */
+  readonly code: ProductErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars['String']['output']>;
 };
 
 /**
@@ -30398,6 +30480,18 @@ export type ThumbnailFormatEnum =
   | 'ORIGINAL'
   | 'WEBP';
 
+/**
+ * Determines how a requested size is matched to an available thumbnail size: 32, 64, 128, 256, 512, 1024, 2048, 4096.
+ *
+ * NEAREST - the closest available size; it may be smaller than requested.
+ * UP - the smallest available size not smaller than requested, so the image is never smaller than requested unless the original is smaller or the requested size exceeds 4096.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ThumbnailSizeRoundingEnum =
+  | 'NEAREST'
+  | 'UP';
+
 export type TimePeriod = {
   /** The length of the period. */
   readonly amount: Scalars['Int']['output'];
@@ -31548,6 +31642,7 @@ export type UserAssignedAttributesArgs = {
 export type UserAvatarArgs = {
   format?: InputMaybe<ThumbnailFormatEnum>;
   size?: InputMaybe<Scalars['Int']['input']>;
+  sizeRounding?: InputMaybe<ThumbnailSizeRoundingEnum>;
 };
 
 
@@ -32941,6 +33036,12 @@ export type Webhook = Node & {
   /** The name of webhook. */
   readonly name?: Maybe<Scalars['String']['output']>;
   /**
+   * Determines when the subscription payload is built for asynchronous events that defer payload generation. Ignored for webhooks without a subscription query, for synchronous events and for events that do not defer their payload.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly payloadGeneration: WebhookPayloadGenerationEnum;
+  /**
    * Used to create a hash signature for each payload.
    * @deprecated As of Saleor 3.5, webhook payloads default to signing using a verifiable JWS.
    */
@@ -32998,6 +33099,12 @@ export type WebhookCreateInput = {
   readonly isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /** The name of the webhook. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Determines when the subscription payload is built for asynchronous events that defer payload generation. Defaults to `DEFERRED`. Ignored for webhooks without a subscription query, for synchronous events and for events that do not defer their payload.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly payloadGeneration?: InputMaybe<WebhookPayloadGenerationEnum>;
   /** Subscription query used to define a webhook payload. */
   readonly query?: InputMaybe<Scalars['String']['input']>;
   /**
@@ -33862,6 +33969,19 @@ export type WebhookEventTypeSyncEnum =
   /** Event called when refund has been requested for transaction. */
   | 'TRANSACTION_REFUND_REQUESTED';
 
+/**
+ * Determines when the subscription payload of an asynchronous webhook is built for events that defer payload generation.
+ *
+ * `DEFERRED`: the payload is built in a background task and reflects the object's state at the time the task runs.
+ *
+ * `IMMEDIATE`: the payload is built by whatever triggered the event, a request or a background task, and reflects the object's state at that moment, at the cost of slowing that request or task.
+ *
+ * Added in Saleor 3.23.
+ */
+export type WebhookPayloadGenerationEnum =
+  | 'DEFERRED'
+  | 'IMMEDIATE';
+
 export type WebhookSampleEventTypeEnum =
   | 'ACCOUNT_CHANGE_EMAIL_REQUESTED'
   | 'ACCOUNT_CONFIRMATION_REQUESTED'
@@ -34079,6 +34199,12 @@ export type WebhookUpdateInput = {
   readonly isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /** The new name of the webhook. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Determines when the subscription payload is built for asynchronous events that defer payload generation. Omit to keep the current value, `null` resets it to `DEFERRED`. Ignored for webhooks without a subscription query, for synchronous events and for events that do not defer their payload. A change applies to events triggered after the update. Deliveries already created finish the way they started, so around a change a newer delivery can be sent before an older one.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly payloadGeneration?: InputMaybe<WebhookPayloadGenerationEnum>;
   /** Subscription query used to define a webhook payload. */
   readonly query?: InputMaybe<Scalars['String']['input']>;
   /**

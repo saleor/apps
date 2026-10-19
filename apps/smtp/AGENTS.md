@@ -88,7 +88,6 @@ The app supports multiple APL (Auth Persistence Layer) options:
 - `file` - Local development (default)
 - `upstash` - Production with Redis
 - `dynamodb` - AWS DynamoDB
-- `saleor-cloud` - Saleor Cloud APL
 
 Set via `APL` environment variable in `.env` file.
 

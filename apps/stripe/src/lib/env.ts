@@ -1,4 +1,5 @@
 import { booleanEnv } from "@saleor/apps-shared/boolean-env";
+import { headerSecretEnv } from "@saleor/apps-shared/header-secret-env";
 import {
   newSecretKeyRuntimeEnv,
   newSecretKeyServerSchema,
@@ -14,12 +15,12 @@ export const env = createEnv({
   server: {
     ...newSecretKeyServerSchema,
     ALLOWED_DOMAIN_PATTERN: z.string().optional(),
-    APL: z.enum(["saleor-cloud", "file", "dynamodb"]).default("file"),
+    APL: z.enum(["file", "dynamodb"]).default("file"),
     APP_API_BASE_URL: z.string().optional(),
     APP_IFRAME_BASE_URL: z.string().optional(),
     APP_LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
     MANIFEST_APP_ID: z.string().default("saleor.app.payment.stripe"),
-    OTEL_ACCESS_TOKEN: z.string().optional(),
+    OTEL_ACCESS_TOKEN: headerSecretEnv.optional(),
     OTEL_ENABLED: booleanEnv.defaultFalse,
     OTEL_SERVICE_NAME: z.string().default("saleor-app-payment-stripe"),
     PORT: z.coerce.number().default(3000),

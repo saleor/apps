@@ -1,5 +1,18 @@
 # saleor-app-payment-stripe
 
+## 2.12.0
+
+### Minor Changes
+
+- d87f0b4: You can now find Saleor orders and checkouts from the Stripe Dashboard. Payment intents and refunds now include `saleor_order_id`, `saleor_order_number` and `saleor_checkout_id` metadata when the app knows them. Payments started for an existing order also get the description "Saleor Order #<number>".
+
+  Before, payment intents only had the ID of the Saleor checkout or order they were started for. Payments created from a checkout get the order details when the payment is captured or refunded. Payments captured right away during checkout still don't have the order number, because the order doesn't exist yet when Stripe creates the payment. Order details are added after the app's webhooks are migrated, which happens on the app's deployment.
+
+### Patch Changes
+
+- 4cff73c: Updated Macaw UI to v3. Configuration screens keep the same layout and behavior; dialogs, dropdowns, tooltips and popovers now run on newer versions of their underlying components.
+- 7e746f3: If the app can't report a problem to your Saleor Dashboard, it now logs a warning instead of an error. Before, this case was logged as an error even though payment processing was not affected. One example is when the Saleor environment that a Stripe webhook points to was deleted.
+
 ## 2.11.5
 
 ### Patch Changes

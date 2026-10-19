@@ -22,8 +22,6 @@
         "FILE_APL_PATH",
         "MANIFEST_APP_ID",
         "NEXT_PUBLIC_SENTRY_DSN",
-        "REST_APL_ENDPOINT",
-        "REST_APL_TOKEN",
         "SECRET_KEY",
         "SENTRY_AUTH_TOKEN",
         "SENTRY_PROJECT",

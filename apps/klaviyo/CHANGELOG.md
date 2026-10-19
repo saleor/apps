@@ -1,5 +1,11 @@
 # saleor-app-klaviyo
 
+## 1.18.10
+
+### Patch Changes
+
+- 4cff73c: Updated Macaw UI to v3. Configuration screens keep the same layout and behavior; dialogs, dropdowns, tooltips and popovers now run on newer versions of their underlying components.
+
 ## 1.18.9
 
 ### Patch Changes

@@ -76,7 +76,7 @@ export const DetailGroupBox = ({
               className={clsx(
                 styles.header,
                 isCard && styles.headerCard,
-                isCard && headerEnd && styles.headerCardWithEnd,
+                isCard && Boolean(headerEnd) && styles.headerCardWithEnd,
                 usesSecondaryHeader && styles.headerSecondary,
                 isFlush && styles.headerFlush,
                 usesSecondaryHeader &&

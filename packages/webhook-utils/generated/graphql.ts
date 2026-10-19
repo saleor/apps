@@ -103,6 +103,12 @@ export type WebhookCreateInput = {
   readonly isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /** The name of the webhook. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Determines when the subscription payload is built for asynchronous events that defer payload generation. Defaults to `DEFERRED`. Ignored for webhooks without a subscription query, for synchronous events and for events that do not defer their payload.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly payloadGeneration?: InputMaybe<WebhookPayloadGenerationEnum>;
   /** Subscription query used to define a webhook payload. */
   readonly query?: InputMaybe<Scalars['String']['input']>;
   /**
@@ -891,6 +897,19 @@ export type WebhookEventTypeSyncEnum =
   /** Event called when refund has been requested for transaction. */
   | 'TRANSACTION_REFUND_REQUESTED';
 
+/**
+ * Determines when the subscription payload of an asynchronous webhook is built for events that defer payload generation.
+ *
+ * `DEFERRED`: the payload is built in a background task and reflects the object's state at the time the task runs.
+ *
+ * `IMMEDIATE`: the payload is built by whatever triggered the event, a request or a background task, and reflects the object's state at that moment, at the cost of slowing that request or task.
+ *
+ * Added in Saleor 3.23.
+ */
+export type WebhookPayloadGenerationEnum =
+  | 'DEFERRED'
+  | 'IMMEDIATE';
+
 export type WebhookUpdateInput = {
   /** ID of the app to which webhook belongs. */
   readonly app?: InputMaybe<Scalars['ID']['input']>;
@@ -913,6 +932,12 @@ export type WebhookUpdateInput = {
   readonly isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /** The new name of the webhook. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Determines when the subscription payload is built for asynchronous events that defer payload generation. Omit to keep the current value, `null` resets it to `DEFERRED`. Ignored for webhooks without a subscription query, for synchronous events and for events that do not defer their payload. A change applies to events triggered after the update. Deliveries already created finish the way they started, so around a change a newer delivery can be sent before an older one.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly payloadGeneration?: InputMaybe<WebhookPayloadGenerationEnum>;
   /** Subscription query used to define a webhook payload. */
   readonly query?: InputMaybe<Scalars['String']['input']>;
   /**

@@ -87,7 +87,7 @@ export const DetailSettingsCard = ({
           className={clsx(
             styles.header,
             variant === "secondary" && styles.headerSecondary,
-            headerEnd && styles.headerWithEnd,
+            Boolean(headerEnd) && styles.headerWithEnd,
           )}
         >
           <Box className={styles.headerMain}>

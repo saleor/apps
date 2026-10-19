@@ -1,4 +1,5 @@
 import { booleanEnv } from "@saleor/apps-shared/boolean-env";
+import { headerSecretEnv } from "@saleor/apps-shared/header-secret-env";
 import { formatEnvValidationError } from "@saleor/errors";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
@@ -21,7 +22,7 @@ export const env = createEnv({
     MANIFEST_APP_ID: z.string().default("saleor.app.anonymizer"),
     OTEL_ENABLED: booleanEnv.defaultFalse,
     OTEL_SERVICE_NAME: z.string().optional(),
-    OTEL_ACCESS_TOKEN: z.string().optional(),
+    OTEL_ACCESS_TOKEN: headerSecretEnv.optional(),
     PORT: z.coerce.number().default(3000),
     REPOSITORY_URL: z.string().optional(),
     NEXT_RUNTIME: z.string().optional(),

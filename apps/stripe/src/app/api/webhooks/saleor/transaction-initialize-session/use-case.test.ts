@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import {
   mockedSaleorAppId,
+  mockedSaleorChannelId,
   mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
 } from "@/__tests__/mocks/constants";
 import { mockStripeProblemReporter } from "@/__tests__/mocks/mock-stripe-problem-reporter";
@@ -117,6 +118,7 @@ describe("TransactionInitializeSessionUseCase", () => {
           saleor_transaction_id: saleorEvent.transaction.id,
           saleor_api_url: mockedSaleorApiUrl,
           saleor_app_id: mockedSaleorAppId,
+          saleor_checkout_id: saleorEvent.sourceObject.id,
         },
       });
 
@@ -124,6 +126,61 @@ describe("TransactionInitializeSessionUseCase", () => {
       expect(spy.mock.calls[0][0].stripeMoney.currency).toBe("usd");
     },
   );
+
+  it("Adds Saleor order number to payment intent metadata and description when source object is Order", async () => {
+    const saleorEvent = {
+      ...getMockedTransactionInitializeSessionEvent(),
+      sourceObject: {
+        __typename: "Order" as const,
+        id: "order-id",
+        number: "123",
+        checkoutId: "checkout-id",
+        channel: {
+          id: mockedSaleorChannelId,
+          slug: "channel-slug",
+        },
+      },
+    };
+
+    const spy = vi
+      .spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent")
+      .mockImplementationOnce(async () =>
+        ok({
+          amount: 100,
+          currency: "usd",
+          client_secret: "secret-value",
+          id: "pi_test",
+          status: "requires_payment_method",
+        } as Stripe.PaymentIntent),
+      );
+
+    const uc = new TransactionInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      stripePaymentIntentsApiFactory,
+      transactionRecorder: new MockedTransactionRecorder(),
+    });
+
+    await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: saleorEvent,
+      saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+      problemReporter: mockStripeProblemReporter,
+    });
+
+    const args = spy.mock.calls[0][0];
+
+    expect(args.intentParams.description).toBe("Saleor Order #123");
+    expect(args.metadata).toStrictEqual(
+      expect.objectContaining({
+        saleor_source_id: "order-id",
+        saleor_source_type: "Order",
+        saleor_order_id: "order-id",
+        saleor_order_number: "123",
+        saleor_checkout_id: "checkout-id",
+      }),
+    );
+  });
 
   it.each([
     {

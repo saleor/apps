@@ -6,6 +6,7 @@ import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import {
   mockedSaleorActionIdempotencyKey,
   mockedSaleorAppId,
+  mockedSaleorChannelId,
   mockedSaleorTransactionId,
 } from "@/__tests__/mocks/constants";
 import { mockStripeProblemReporter } from "@/__tests__/mocks/mock-stripe-problem-reporter";
@@ -83,6 +84,9 @@ describe("TransactionChargeRequestedUseCase", () => {
     expect(spy).toHaveBeenCalledWith({
       id: mockedStripePaymentIntentId,
       idempotencyKey: mockedSaleorActionIdempotencyKey,
+      metadata: {
+        saleor_checkout_id: "mock-channel-1",
+      },
     });
   });
 
@@ -111,6 +115,58 @@ describe("TransactionChargeRequestedUseCase", () => {
     expect(spy).toHaveBeenCalledWith({
       id: mockedStripePaymentIntentId,
       idempotencyKey: mockedSaleorActionIdempotencyKey,
+      metadata: {
+        saleor_checkout_id: "mock-channel-1",
+      },
+    });
+  });
+
+  it("Adds Saleor order and original checkout to payment intent metadata on capture when checkout was completed", async () => {
+    const event = getMockedTransactionChargeRequestedEvent();
+    const spy = vi
+      .spyOn(mockedStripePaymentIntentsApi, "capturePaymentIntent")
+      .mockImplementationOnce(async () =>
+        ok({
+          amount: 100,
+          currency: "usd",
+          id: mockedStripePaymentIntentId.toString(),
+          status: "succeeded",
+        } as Stripe.PaymentIntent),
+      );
+
+    const uc = new TransactionChargeRequestedUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      stripePaymentIntentsApiFactory,
+    });
+
+    await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: {
+        ...event,
+        transaction: {
+          id: mockedSaleorTransactionId,
+          pspReference: mockedStripePaymentIntentId,
+          checkout: null,
+          order: {
+            id: "order-id",
+            number: "123",
+            checkoutId: "checkout-id",
+            channel: { id: mockedSaleorChannelId, slug: "channel-slug" },
+          },
+        },
+      },
+      problemReporter: mockStripeProblemReporter,
+    });
+
+    expect(spy).toHaveBeenCalledWith({
+      id: mockedStripePaymentIntentId,
+      idempotencyKey: mockedSaleorActionIdempotencyKey,
+      metadata: {
+        saleor_order_id: "order-id",
+        saleor_order_number: "123",
+        saleor_checkout_id: "checkout-id",
+      },
     });
   });
 

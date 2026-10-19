@@ -48,7 +48,7 @@ export const AppPageHeader = ({
           size={5}
           fontWeight="bold"
           as="h1"
-          className={clsx(styles.title, titleControl && styles.titleVisuallyHidden)}
+          className={clsx(styles.title, Boolean(titleControl) && styles.titleVisuallyHidden)}
         >
           {title}
         </Text>

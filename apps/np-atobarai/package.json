@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "saleor-app-payment-np-atobarai",
-  "version": "1.5.9",
+  "version": "1.5.10",
   "private": true,
   "type": "module",
   "scripts": {
@@ -91,8 +91,8 @@
     "@testing-library/react": "16.2.0",
     "@total-typescript/ts-reset": "0.6.1",
     "@types/node": "catalog:",
-    "@types/react": "18.2.5",
-    "@types/react-dom": "18.2.5",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "aws-sdk-client-mock": "4.0.1",

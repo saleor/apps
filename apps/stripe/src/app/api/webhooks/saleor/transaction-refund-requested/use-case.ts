@@ -22,6 +22,7 @@ import {
   getIdempotencyKeyFromRequestedEventPayload,
   getTransactionFromRequestedEventPayload,
 } from "@/modules/saleor/transaction-requested-event-helpers";
+import { getSaleorOrderStripeMetadata } from "@/modules/stripe/saleor-order-stripe-metadata";
 import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
@@ -144,6 +145,7 @@ export class TransactionRefundRequestedUseCase {
         saleor_transaction_id: createSaleorTransactionId(transaction.id),
         saleor_api_url: saleorApiUrl,
         saleor_app_id: appId,
+        ...getSaleorOrderStripeMetadata(transaction),
       },
     });
 
