@@ -1,5 +1,5 @@
 ---
-name: Add Environment Variable
+name: add-env-variable
 description: Use when adding a new environment variable to an app.
 ---
 
