@@ -1,5 +1,6 @@
 packages:
   - apps/*
+  - apps/*/*-test-client
   - packages/*
   - templates/*
 
@@ -45,6 +46,7 @@ catalog:
   '@types/react': 18.3.22
   '@types/react-dom': 18.2.5
   '@types/semver': 7.7.1
+  '@vercel/oidc': 3.8.5
   '@vercel/oidc-aws-credentials-provider': 3.0.7
   '@vercel/otel': 1.10.1
   '@vitejs/plugin-react': 4.7.0

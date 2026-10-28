@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { AvataxInvalidAddressError, AvataxTaxCalculationError } from "../taxes/tax-error";
+import {
+  AvataxGetTaxSystemError,
+  AvataxGetTaxWrongUserInputError,
+  AvataxInvalidAddressError,
+  AvataxTaxCalculationError,
+} from "../taxes/tax-error";
 import { AvataxErrorsParser } from "./avatax-errors-parser";
 
 describe("AvataxErrorsParser", () => {
@@ -27,6 +32,49 @@ describe("AvataxErrorsParser", () => {
 
     expect(result).toBeInstanceOf(AvataxInvalidAddressError);
     expect(mockErrorCapture).not.toHaveBeenCalled();
+  });
+
+  it("should parse unknown street GetTaxError as user input error", () => {
+    const parser = new AvataxErrorsParser();
+    const error = {
+      code: "GetTaxError",
+      details: [
+        {
+          faultCode: "Client",
+          faultSubCode: "AddressUnknownStreetError",
+          description: "An exact street name match could not be found",
+          message: "An exact street name match could not be found",
+        },
+      ],
+    };
+
+    const result = parser.parse(error, mockErrorCapture);
+
+    expect(result).toBeInstanceOf(AvataxGetTaxWrongUserInputError);
+    expect(mockErrorCapture).not.toHaveBeenCalled();
+  });
+
+  it("should parse GetTaxError with unknown fault sub code as system error and capture it into error tracking", () => {
+    const parser = new AvataxErrorsParser();
+    const error = {
+      code: "GetTaxError",
+      details: [
+        {
+          faultCode: "Client",
+          faultSubCode: "SomeNewAvataxError",
+          description: "Something new happened",
+          message: "Something new happened",
+        },
+      ],
+    };
+
+    const result = parser.parse(error, mockErrorCapture);
+
+    expect(result).toBeInstanceOf(AvataxGetTaxSystemError);
+    expect(result).toHaveProperty("faultSubCode", "SomeNewAvataxError");
+    expect(mockErrorCapture.mock.calls[0][0]).toBeInstanceOf(
+      AvataxErrorsParser.UnknownFaultSubCodeError,
+    );
   });
 
   it("should normalize unknown error and capture it into error tracking", () => {

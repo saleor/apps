@@ -1,5 +1,18 @@
 # @saleor/webhook-utils
 
+## 0.3.6
+
+### Patch Changes
+
+- 602b8d8: Webhook migration no longer crashes when Saleor returns an error without an error code. Before, such an error caused a "Cannot read properties of undefined" crash that hid the original error. Now it is reported as the original error.
+
+## 0.3.5
+
+### Patch Changes
+
+- Updated dependencies [c1a728f]
+  - @saleor/apps-logger@1.6.9
+
 ## 0.3.4
 
 ### Patch Changes

@@ -71,6 +71,11 @@ export interface IStripePaymentIntentsApi {
     id: StripePaymentIntentId;
     idempotencyKey: string | undefined;
   }): Promise<Result<Stripe.PaymentIntent, unknown>>;
+  updatePaymentIntent(args: {
+    id: StripePaymentIntentId;
+    metadata: AllowedStripeObjectMetadata;
+    description?: string;
+  }): Promise<Result<Stripe.PaymentIntent, unknown>>;
 }
 
 export interface IStripeEventVerify {

@@ -29,14 +29,6 @@ const nextConfig: NextConfig = {
     "@aws-sdk/util-dynamodb",
     "dynamodb-toolbox",
   ],
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      // Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
-      config.ignoreWarnings = [{ module: /require-in-the-middle/ }];
-    }
-
-    return config;
-  },
 };
 
 // Make sure to export sentry config as the last one - https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#apply-instrumentation-to-your-app

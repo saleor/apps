@@ -1,3 +1,4 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -28,7 +29,7 @@ describe("handleInvalidAppIdError", () => {
   });
 
   it("returns false for non-AlgoliaInvalidAppIdError errors", async () => {
-    const { res } = createMocks();
+    const { res } = createMocks<NextApiRequest, NextApiResponse>();
 
     const result = await handleInvalidAppIdError({
       error: new Error("some other error"),
@@ -43,7 +44,7 @@ describe("handleInvalidAppIdError", () => {
   });
 
   it("returns true and sends 401 for AlgoliaInvalidAppIdError", async () => {
-    const { res } = createMocks();
+    const { res } = createMocks<NextApiRequest, NextApiResponse>();
 
     const result = await handleInvalidAppIdError({
       error: new AlgoliaInvalidAppIdError("test"),
@@ -58,7 +59,7 @@ describe("handleInvalidAppIdError", () => {
   });
 
   it("reports problem and deactivates app", async () => {
-    const { res } = createMocks();
+    const { res } = createMocks<NextApiRequest, NextApiResponse>();
 
     await handleInvalidAppIdError({
       error: new AlgoliaInvalidAppIdError("test"),
@@ -71,7 +72,7 @@ describe("handleInvalidAppIdError", () => {
   });
 
   it("logs a warning with the app ID", async () => {
-    const { res } = createMocks();
+    const { res } = createMocks<NextApiRequest, NextApiResponse>();
 
     await handleInvalidAppIdError({
       error: new AlgoliaInvalidAppIdError("test"),

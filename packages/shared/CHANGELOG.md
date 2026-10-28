@@ -1,5 +1,13 @@
 # @saleor/apps-shared
 
+## 1.17.4
+
+### Patch Changes
+
+- 840a60d: Stale installations cleanup now removes data of a deleted Saleor Cloud environment even when its Stripe configuration can no longer be decrypted, for example because it was encrypted with a key that is no longer configured. Before, the cleanup failed for such an installation on every run and kept its data. The Stripe webhook of such a configuration can't be removed, because its restricted key can't be read.
+- Updated dependencies [c1a728f]
+  - @saleor/apps-logger@1.6.9
+
 ## 1.17.3
 
 ### Patch Changes

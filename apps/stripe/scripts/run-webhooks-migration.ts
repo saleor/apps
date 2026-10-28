@@ -3,6 +3,7 @@ import { parseArgs } from "node:util";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
 import * as Sentry from "@sentry/nextjs";
 
+import { orderCreatedWebhookDefinition } from "@/app/api/webhooks/saleor/order-created/webhook-definition";
 import { paymentGatewayInitializeSessionWebhookDefinition } from "@/app/api/webhooks/saleor/payment-gateway-initialize-session/webhook-definition";
 import { transactionCancelationRequestedWebhookDefinition } from "@/app/api/webhooks/saleor/transaction-cancelation-requested/webhook-definition";
 import { transactionChargeRequestedWebhookDefinition } from "@/app/api/webhooks/saleor/transaction-charge-requested/webhook-definition";
@@ -112,6 +113,18 @@ const runMigrations = async () => {
               isActive: enabled,
             },
           ];
+
+          /*
+           * ORDER_CREATED needs MANAGE_ORDERS, which older installations don't have.
+           * The app UI registers it once the permission is granted, so migrate it only where it exists.
+           * Otherwise the runner would remove it, as it removes every webhook missing from this list.
+           */
+          if (webhooks.some((w) => w.name === orderCreatedWebhookDefinition.name)) {
+            appWebhooks.push({
+              ...orderCreatedWebhookDefinition.getWebhookManifest(baseUrl),
+              isActive: enabled,
+            });
+          }
 
           return appWebhooks;
         },

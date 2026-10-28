@@ -5,6 +5,10 @@ import {
   newSecretKeyServerSchema,
 } from "@saleor/apps-shared/secret-key-resolution";
 import { formatEnvValidationError } from "@saleor/errors";
+import {
+  staleInstallationsCleanupRuntimeEnv,
+  staleInstallationsCleanupServerSchema,
+} from "@saleor/stale-installations-cleanup/env";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
@@ -13,6 +17,12 @@ export const env = createEnv({
     NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
   },
   server: {
+    ...staleInstallationsCleanupServerSchema,
+    /*
+     * Shared secret Vercel Cron sends as `Authorization: Bearer <value>`. Optional so existing
+     * deployments keep booting without it; the cron routes refuse every request while it is unset.
+     */
+    CRON_SECRET: headerSecretEnv.optional(),
     ...newSecretKeyServerSchema,
     ALLOWED_DOMAIN_PATTERN: z.string().optional(),
     APL: z.enum(["file", "dynamodb"]).default("file"),
@@ -45,6 +55,8 @@ export const env = createEnv({
   },
   // we use the manual destruction here to validate if env variable is set inside turbo.json
   runtimeEnv: {
+    ...staleInstallationsCleanupRuntimeEnv,
+    CRON_SECRET: process.env.CRON_SECRET,
     ...newSecretKeyRuntimeEnv,
     ALLOWED_DOMAIN_PATTERN: process.env.ALLOWED_DOMAIN_PATTERN,
     APL: process.env.APL,

@@ -1,5 +1,11 @@
 # @saleor/apps-logger
 
+## 1.6.9
+
+### Patch Changes
+
+- c1a728f: Logs now mask the values of secret-like attributes, such as `token`, `apiKey`, `secretKey`, `clientSecret`, `restrictedKey`, `privateKey`, `authorization` and `password`, in any letter case and at any nesting depth, before they reach the console, Vercel or Sentry. Before, only `password` was masked, so a credential passed in log attributes was written to logs in plain text. Attributes given when a logger is created are not masked.
+
 ## 1.6.8
 
 ### Patch Changes

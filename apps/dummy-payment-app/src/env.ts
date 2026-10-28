@@ -1,6 +1,10 @@
 import { booleanEnv } from "@saleor/apps-shared/boolean-env";
 import { headerSecretEnv } from "@saleor/apps-shared/header-secret-env";
 import { formatEnvValidationError } from "@saleor/errors";
+import {
+  staleInstallationsCleanupRuntimeEnv,
+  staleInstallationsCleanupServerSchema,
+} from "@saleor/stale-installations-cleanup/env";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
@@ -9,6 +13,12 @@ export const env = createEnv({
     NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
   },
   server: {
+    ...staleInstallationsCleanupServerSchema,
+    /*
+     * Shared secret Vercel Cron sends as `Authorization: Bearer <value>`. Optional so existing
+     * deployments keep booting without it; the cron routes refuse every request while it is unset.
+     */
+    CRON_SECRET: headerSecretEnv.optional(),
     ALLOWED_DOMAIN_PATTERN: z.string().optional(),
     APL: z.enum(["file", "dynamodb", "upstash"]).default("file"),
     APP_API_BASE_URL: z.string().optional(),
@@ -46,6 +56,8 @@ export const env = createEnv({
   },
   // we use the manual destruction here to validate if env variable is set inside turbo.json
   runtimeEnv: {
+    ...staleInstallationsCleanupRuntimeEnv,
+    CRON_SECRET: process.env.CRON_SECRET,
     ALLOWED_DOMAIN_PATTERN: process.env.ALLOWED_DOMAIN_PATTERN,
     APL: process.env.APL,
     APP_API_BASE_URL: process.env.APP_API_BASE_URL,

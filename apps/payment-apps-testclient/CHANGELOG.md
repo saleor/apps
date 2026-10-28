@@ -1,5 +1,11 @@
 # saleor-payment-apps-testclient
 
+## 0.1.5
+
+### Patch Changes
+
+- 742b2b7: The app is now built with Turbopack instead of webpack, so builds and local development are faster. App behavior is unchanged.
+
 ## 0.1.4
 
 ### Patch Changes

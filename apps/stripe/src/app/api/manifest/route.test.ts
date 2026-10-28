@@ -53,6 +53,7 @@ describe("Manifest handler", async () => {
        "name": "Stripe",
        "permissions": [
          "HANDLE_PAYMENTS",
+         "MANAGE_ORDERS",
        ],
        "requiredSaleorVersion": ">=3.23 <4",
        "supportUrl": "https://saleor.io/discord",
@@ -112,6 +113,15 @@ describe("Manifest handler", async () => {
              "TRANSACTION_REFUND_REQUESTED",
            ],
            "targetUrl": "https://localhost:3000/api/webhooks/saleor/transaction-refund-requested",
+         },
+         {
+           "asyncEvents": [
+             "ORDER_CREATED",
+           ],
+           "isActive": true,
+           "name": "Stripe Order Created",
+           "query": "subscription OrderCreated { event { ...OrderCreatedEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment OrderCreatedEvent on OrderCreated { ...EventMetadata order { id number checkoutId channel { ...Channel } transactions { pspReference createdBy { ... on App { id } } } }}",
+           "targetUrl": "https://localhost:3000/api/webhooks/saleor/order-created",
          },
        ],
      }

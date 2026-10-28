@@ -1,5 +1,6 @@
 import { type AuthData } from "@saleor/app-sdk/APL";
 import { okAsync } from "neverthrow";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -154,7 +155,7 @@ const buildUseCase = ({
 };
 
 const callHandler = async (payload: NotifySubscriptionPayload) => {
-  const { req, res } = createMocks({ method: "POST" });
+  const { req, res } = createMocks<NextApiRequest, NextApiResponse>({ method: "POST" });
 
   await handler(req, res, {
     event: "NOTIFY_USER",

@@ -1,12 +1,12 @@
 {
   "name": "saleor-payment-apps-testclient",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build --webpack",
+    "build": "next build",
     "check-types": "next typegen && tsc --noEmit",
-    "dev": "next dev --webpack --port 3001",
+    "dev": "next dev --port 3001",
     "generate": "gql.tada generate output && gql.tada turbo",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",

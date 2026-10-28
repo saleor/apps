@@ -1,9 +1,5 @@
-import path from "node:path";
-
 import eslint from "@eslint/js";
-import graphqlPlugin from "@graphql-eslint/eslint-plugin";
 import nextPlugin from "@next/eslint-plugin-next";
-import saleorPlugin from "@saleor/eslint-plugin-saleor-app";
 import stylisticPlugin from "@stylistic/eslint-plugin";
 import vitestPlugin from "@vitest/eslint-plugin";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
@@ -29,14 +25,7 @@ export const config = [
    * */
   {
     name: "@saleor/eslint-config-apps/ignores",
-    ignores: [
-      ".next/**/*",
-      ".tmp/**/*",
-      "coverage/**/*",
-      "**/generated/**/*",
-      "next-env.d.ts",
-      "**/schema.graphql", // vendored Saleor schema, not our document
-    ],
+    ignores: [".next/**/*", ".tmp/**/*", "coverage/**/*", "**/generated/**/*", "next-env.d.ts"],
   },
   /**
    * Dependencies - suggests better alternatives for redundant packages
@@ -52,47 +41,6 @@ export const config = [
     },
   },
   /**
-   * Graphql
-   */
-  {
-    files: ["**/*.graphql"],
-    languageOptions: {
-      parser: graphqlPlugin.parser,
-      parserOptions: {
-        /*
-         * Required by `no-deprecated`. Apps keep their own copy of the schema for codegen,
-         * but all copies come from the root one (`pnpm fetch-schema`), so lint against that
-         * single source - it also covers packages that have documents but no local copy.
-         */
-        graphQLConfig: { schema: path.join(import.meta.dirname, "../../schema.graphql") },
-      },
-    },
-    plugins: {
-      "@graphql-eslint": graphqlPlugin,
-    },
-    rules: {
-      "@graphql-eslint/no-deprecated": "warn",
-      "@graphql-eslint/match-document-filename": [
-        "error",
-        {
-          fileExtension: ".graphql",
-          fragment: { style: "kebab-case" },
-          query: { style: "kebab-case" },
-          subscription: { style: "kebab-case" },
-          mutation: { style: "kebab-case" },
-        },
-      ],
-    },
-  },
-  /**
-   * GraphQL documents embedded in `gql` template literals inside TS files
-   */
-  {
-    name: "@saleor/eslint-config-apps/graphql-in-ts",
-    files: ["**/*.{ts,tsx}"],
-    processor: graphqlPlugin.processor,
-  },
-  /**
    * Main rules - on JS/TS
    */
   {
@@ -102,8 +50,6 @@ export const config = [
       parser: tseslint.parser,
       parserOptions: {
         sourceType: "module",
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
       },
     },
     plugins: {
@@ -113,7 +59,6 @@ export const config = [
       "simple-import-sort": simpleImportSortPlugin,
       "@next/next": nextPlugin,
       "@stylistic": stylisticPlugin,
-      "@saleor/saleor-app": saleorPlugin,
       "react-naming-convention": reactNamingConventionPlugin,
     },
     rules: {
@@ -141,7 +86,17 @@ export const config = [
       ],
       "multiline-comment-style": ["error", "starred-block"],
       "no-console": "error",
-      "@saleor/saleor-app/logger-leak": "error",
+      "@typescript-eslint/no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["**/__tests__/**"],
+              message: "Tests related code cannot be imported into application code",
+            },
+          ],
+        },
+      ],
       "react-naming-convention/filename": ["error", { rule: "kebab-case" }],
       "@typescript-eslint/no-unused-vars": [
         "error",
@@ -195,11 +150,6 @@ export const config = [
       "react/jsx-key": "off",
     },
   },
-  {
-    name: "@saleor/eslint-config-apps/code-js",
-    files: ["**/*.js"],
-    ...tseslint.configs.disableTypeChecked,
-  },
   /**
    * Test files
    */
@@ -214,17 +164,6 @@ export const config = [
       ...vitestPlugin.configs.recommended.rules,
       "vitest/prefer-strict-equal": "error",
       "vitest/prefer-vi-mocked": "error",
-      "@typescript-eslint/no-restricted-imports": [
-        "error",
-        {
-          patterns: [
-            {
-              group: ["**/__tests__/**"],
-              message: "Tests related code cannot be imported into application code",
-            },
-          ],
-        },
-      ],
       "turbo/no-undeclared-env-vars": "off",
     },
   },
@@ -244,7 +183,7 @@ export const config = [
   },
   {
     name: "@saleor/eslint-config-apps/override-no-restricted-imports",
-    files: ["**/*.test.{ts,tsx}", "**/__tests__/**/*.{ts,tsx}"],
+    files: ["**/*.test.{ts,tsx}", "**/*.test-utils.{ts,tsx}", "**/__tests__/**/*.{ts,tsx}"],
     rules: {
       "@typescript-eslint/no-restricted-imports": "off",
     },

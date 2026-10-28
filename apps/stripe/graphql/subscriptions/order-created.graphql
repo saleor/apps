@@ -1,0 +1,25 @@
+fragment OrderCreatedEvent on OrderCreated {
+  ...EventMetadata
+  order {
+    id
+    number
+    checkoutId
+    channel {
+      ...Channel
+    }
+    transactions {
+      pspReference
+      createdBy {
+        ... on App {
+          id
+        }
+      }
+    }
+  }
+}
+
+subscription OrderCreated {
+  event {
+    ...OrderCreatedEvent
+  }
+}

@@ -24,7 +24,8 @@
         "SENTRY_ORG",
         "SENTRY_PROJECT",
         "UPSTASH_TOKEN",
-        "UPSTASH_URL"
+        "UPSTASH_URL",
+        "CRON_SECRET"
       ]
     }
   }

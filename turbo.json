@@ -19,6 +19,10 @@
     "OTEL_TRACES_SAMPLER",
     "PORT",
     "REPOSITORY_URL",
+    "SALEOR_CLOUD_API_URL",
+    "SALEOR_CLOUD_OIDC_AUDIENCE",
+    "SALEOR_CLOUD_ROOT_DOMAINS",
+    "STALE_INSTALLATIONS_CLEANUP_DRY_RUN",
     "SENTRY_ORG",
     "VERCEL_ENV",
     "VERCEL_URL",
@@ -50,8 +54,7 @@
     },
     "generate": {
       "dependsOn": ["topo"],
-      "outputs": ["generated/**"],
-      "cache": false
+      "outputs": ["generated/**"]
     },
     "lint": {
       "dependsOn": ["topo"]

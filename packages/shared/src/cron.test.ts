@@ -1,7 +1,7 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { describe, expect, it, vi } from "vitest";
 
-import { isAuthorizedCronRequest, withCronAuth } from "./cron";
+import { isAuthorizedCronRequest, withCronAuth, withCronAuthAppRouter } from "./cron";
 
 describe("isAuthorizedCronRequest", () => {
   it("Accepts the bearer token Vercel Cron sends", () => {
@@ -66,5 +66,40 @@ describe("withCronAuth", () => {
 
     expect(handler).toHaveBeenCalledWith(req, res);
     expect(status).not.toHaveBeenCalled();
+  });
+});
+
+describe("withCronAuthAppRouter", () => {
+  const createHandler = () => {
+    const inner = vi.fn(async () => Response.json({ ok: true }));
+
+    return {
+      inner,
+      handler: withCronAuthAppRouter({ secret: "secret", logger: { warn: vi.fn() } }, inner),
+    };
+  };
+
+  it("Answers 401 without calling the handler when the secret does not match", async () => {
+    const { inner, handler } = createHandler();
+
+    const response = await handler(
+      new Request("https://app.example.com/api/cron", { headers: { authorization: "Bearer x" } }),
+    );
+
+    expect(response.status).toBe(401);
+    expect(inner).not.toHaveBeenCalled();
+  });
+
+  it("Calls the handler when authorized", async () => {
+    const { inner, handler } = createHandler();
+
+    const response = await handler(
+      new Request("https://app.example.com/api/cron", {
+        headers: { authorization: "Bearer secret" },
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(inner).toHaveBeenCalledOnce();
   });
 });

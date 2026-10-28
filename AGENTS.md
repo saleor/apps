@@ -105,6 +105,8 @@ static ValidationError = BaseError.subclass("ValidationError", {
 
 **Configuration**: Apps store configuration in DynamoDB, access via repository pattern with app metadata management
 
+**App Problems**: When a merchant has to fix something (bad config, rejected credentials, missing third-party permission), the app reports an app problem to the Dashboard as well as logging it, and clears it on recovery. Use the `reporting-app-problems` skill.
+
 ## Development Workflow
 
 1. **Environment Setup**: Each app has `.env.example` - copy to `.env.local` with required values

@@ -1,12 +1,12 @@
 {
   "name": "saleor-app-anonymizer",
-  "version": "1.2.13",
+  "version": "1.2.16",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build --webpack",
+    "build": "next build",
     "check-types": "next typegen && tsc",
-    "dev": "NODE_OPTIONS='--inspect' next dev --webpack",
+    "dev": "NODE_OPTIONS='--inspect' next dev",
     "generate": "graphql-codegen",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",

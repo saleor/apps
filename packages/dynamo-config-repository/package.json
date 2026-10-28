@@ -1,6 +1,6 @@
 {
   "name": "@saleor/dynamo-config-repository",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {

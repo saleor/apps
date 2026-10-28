@@ -1,5 +1,72 @@
 # saleor-app-payment-stripe
 
+## 2.15.0
+
+### Minor Changes
+
+- f07e1f0: Stripe payments made during checkout now get the Saleor order number after the order is placed. When Saleor creates an order from a checkout, the app adds `saleor_order_id`, `saleor_order_number` and `saleor_checkout_id` metadata to the order's Stripe payment intents, and sets their description to "Saleor Order #<number>".
+
+  Before, payments captured right away during checkout never had the order number, because the order didn't exist yet when Stripe created the payment.
+
+  This needs the new "Manage orders" permission. New installations get it automatically. For existing installations, the configuration page shows a banner that asks a staff member with the "Manage apps" permission to grant it. After it's granted, the app turns the feature on by itself.
+
+### Patch Changes
+
+- fa2a728: The app is now built with Turbopack instead of webpack, so builds and local development are faster. App behavior is unchanged.
+
+## 2.14.1
+
+### Patch Changes
+
+- 840a60d: Stale installations cleanup now removes data of a deleted Saleor Cloud environment even when its Stripe configuration can no longer be decrypted, for example because it was encrypted with a key that is no longer configured. Before, the cleanup failed for such an installation on every run and kept its data. The Stripe webhook of such a configuration can't be removed, because its restricted key can't be read.
+- Updated dependencies [c1a728f]
+- Updated dependencies [840a60d]
+  - @saleor/apps-logger@1.6.9
+  - @saleor/apps-shared@1.17.4
+  - @saleor/stale-installations-cleanup@0.3.1
+  - @saleor/apps-trpc@4.0.5
+
+## 2.14.0
+
+### Minor Changes
+
+- cf92cf5: Stale installations cleanup now only removes data of installations on the Saleor Cloud it is configured for. Set `SALEOR_CLOUD_ROOT_DOMAINS` to that Cloud's root domains, comma separated, e.g. `saleor.cloud,eu.saleor.cloud`. Until it is set, the job doesn't run.
+
+  Before, Saleor Cloud reported any environment it doesn't host as gone, so data of installations on another Saleor Cloud (e.g. staging), on self-hosted Saleor or on custom domains would have been removed. Now only installations at `<name>.<root domain>` are checked; everything else is kept and counted as `skipped` in the summary.
+
+- 888f9ab: When the stale installations cleanup removes data of a deleted Saleor Cloud environment, the Stripe app now also deletes that environment's webhooks in the merchant's Stripe account, using each configuration's restricted key. Before, those webhooks stayed and Stripe kept sending events to the app for an environment that no longer exists.
+
+  A webhook that is already gone, or a restricted key that was revoked, counts as done. On any other error the installation's data is kept and the next run tries again.
+
+### Patch Changes
+
+- Updated dependencies [cf92cf5]
+- Updated dependencies [888f9ab]
+  - @saleor/stale-installations-cleanup@0.3.0
+
+## 2.13.1
+
+### Patch Changes
+
+- b08cb53: Stale installations cleanup logs now fit in Vercel's limit of 256 log lines per request. Before, it logged one line per stale installation, so with many of them the remaining installations and the final summary were dropped from the logs. Now it logs the summary (`checked`, `unknown`, `stale`, `items`) first, then lists stale installations 100 per line, then the result.
+- Updated dependencies [b08cb53]
+  - @saleor/stale-installations-cleanup@0.2.0
+
+## 2.13.0
+
+### Minor Changes
+
+- c94bfe4: The app now cleans up after deleted Saleor Cloud environments. A daily job asks Saleor Cloud which environments the app is installed in still exist, by their Saleor Cloud or custom domain, and removes everything the app stored for those that are gone. Before, data of deleted environments stayed in the app's database indefinitely.
+
+  The job only runs once `CRON_SECRET`, `SALEOR_CLOUD_API_URL` and `SALEOR_CLOUD_OIDC_AUDIENCE` are set. It starts in dry-run mode, logging what it would remove; set `STALE_INSTALLATIONS_CLEANUP_DRY_RUN=false` to delete.
+
+### Patch Changes
+
+- 88e026b: The app now refuses to start when a secret it sends in HTTP headers (`CRON_SECRET`, `UPSTASH_TOKEN`, `OTEL_ACCESS_TOKEN`) contains non-ASCII characters, and the error names the variable. Before, the app started normally and then the requests using that secret failed at runtime. If one of these secrets has accented or other non-ASCII letters, replace it.
+- 88e026b: `APL=saleor-cloud` is no longer accepted, and the app now refuses to start with an error naming `APL`. That storage option was removed from the app SDK earlier. Before, most apps started anyway and then failed on the first request, and the Stripe app quietly saved auth data to a local file instead. If you still use this value, switch `APL` to `dynamodb`, `upstash` or `file`.
+- Updated dependencies [c94bfe4]
+  - @saleor/stale-installations-cleanup@0.1.0
+
 ## 2.12.0
 
 ### Minor Changes

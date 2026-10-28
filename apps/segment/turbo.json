@@ -20,7 +20,8 @@
         "SENTRY_AUTH_TOKEN",
         "SENTRY_PROJECT",
         "DYNAMODB_REQUEST_TIMEOUT_MS",
-        "DYNAMODB_CONNECTION_TIMEOUT_MS"
+        "DYNAMODB_CONNECTION_TIMEOUT_MS",
+        "CRON_SECRET"
       ]
     }
   }

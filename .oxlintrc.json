@@ -1,0 +1,671 @@
+{
+  // Mirrors the ESLint configs, which stay the linter of record. This file is published to the public
+  // repo, so private apps keep their overrides in their own .oxlintrc.json (extending this one), as do
+  // the two eslint-config-next test clients. Nested configs replace this file rather than merge with it,
+  // and ignorePatterns are not inherited through extends, so each nested config repeats them.
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "import", "nextjs", "react", "vitest", "node", "unicorn"],
+  "categories": { "correctness": "off" },
+  "jsPlugins": [
+    "@stylistic/eslint-plugin",
+    "eslint-plugin-simple-import-sort",
+    "eslint-plugin-depend",
+    "eslint-plugin-turbo",
+    { "name": "vitest-js", "specifier": "@vitest/eslint-plugin" },
+    { "name": "react-js", "specifier": "eslint-plugin-react" },
+    { "name": "next-js", "specifier": "@next/eslint-plugin-next" }
+  ],
+  "settings": { "react": { "version": "18.2.0" } },
+  "ignorePatterns": [
+    "/*.js",
+    "/*.ts",
+    "/oss/**",
+    "/scripts/**",
+    "/templates/**",
+    "/packages/eslint-config/**",
+    "/packages/typescript-config/**",
+    "**/.next/**",
+    "**/.tmp/**",
+    "**/coverage/**",
+    "**/generated/**",
+    "**/next-env.d.ts",
+    "/apps/payment-apps-testclient/src/graphql-env.d.ts",
+    "/apps/payment-apps-testclient/src/graphql-cache.d.ts"
+  ],
+  "rules": {
+    "for-direction": "error",
+    "no-async-promise-executor": "error",
+    "no-case-declarations": "error",
+    "no-compare-neg-zero": "error",
+    "no-cond-assign": "error",
+    "no-constant-binary-expression": "error",
+    "no-constant-condition": "error",
+    "no-control-regex": "error",
+    "no-debugger": "error",
+    "no-delete-var": "error",
+    "no-dupe-else-if": "error",
+    "no-duplicate-case": "error",
+    "no-empty": "error",
+    "no-empty-character-class": "error",
+    "no-empty-pattern": "error",
+    "no-empty-static-block": "error",
+    "no-ex-assign": "error",
+    "no-extra-boolean-cast": "error",
+    "no-fallthrough": "error",
+    "no-global-assign": "error",
+    "no-invalid-regexp": "error",
+    "no-irregular-whitespace": [
+      "error",
+      {
+        "skipComments": false,
+        "skipJSXText": false,
+        "skipRegExps": false,
+        "skipStrings": true,
+        "skipTemplates": false
+      }
+    ],
+    "no-loss-of-precision": "error",
+    "no-misleading-character-class": "error",
+    "no-nonoctal-decimal-escape": "error",
+    "no-prototype-builtins": "error",
+    "no-regex-spaces": "error",
+    "no-self-assign": "error",
+    "no-shadow-restricted-names": "error",
+    "no-sparse-arrays": "error",
+    "no-unsafe-finally": "error",
+    "no-unsafe-optional-chaining": "error",
+    "no-unused-labels": "error",
+    "no-unused-private-class-members": "error",
+    "no-useless-backreference": "error",
+    "no-useless-catch": "error",
+    "no-useless-escape": "error",
+    "require-yield": "error",
+    "use-isnan": "error",
+    "valid-typeof": "error",
+    "typescript/ban-ts-comment": "error",
+    "no-array-constructor": "error",
+    "typescript/no-duplicate-enum-values": "error",
+    "typescript/no-empty-object-type": "error",
+    "typescript/no-explicit-any": "error",
+    "typescript/no-extra-non-null-assertion": "error",
+    "typescript/no-misused-new": "error",
+    "typescript/no-namespace": "error",
+    "typescript/no-non-null-asserted-optional-chain": "error",
+    "typescript/no-require-imports": "error",
+    "typescript/no-this-alias": "error",
+    "typescript/no-unnecessary-type-constraint": "error",
+    "typescript/no-unsafe-declaration-merging": "error",
+    "typescript/no-unsafe-function-type": "error",
+    "no-unused-expressions": "error",
+    "no-unused-vars": "error",
+    "typescript/no-wrapper-object-types": "error",
+    "typescript/prefer-as-const": "error",
+    "typescript/prefer-namespace-keyword": "error",
+    "typescript/triple-slash-reference": "error"
+  },
+  "overrides": [
+    {
+      // typescript-eslint's eslint-recommended turns these off for TS files.
+      "files": ["**/*.{js,mjs,cjs}"],
+      "rules": {
+        "constructor-super": "error",
+        "getter-return": "error",
+        "no-class-assign": "error",
+        "no-const-assign": "error",
+        "no-dupe-class-members": "error",
+        "no-dupe-keys": "error",
+        "no-func-assign": "error",
+        "no-import-assign": "error",
+        "no-new-native-nonconstructor": "error",
+        "no-obj-calls": "error",
+        "no-redeclare": "error",
+        "no-setter-return": "error",
+        "no-this-before-super": "error",
+        "no-undef": "error",
+        "no-unreachable": "error",
+        "no-unsafe-negation": "error",
+        "no-with": "error"
+      }
+    },
+    {
+      "files": ["**/*.{ts,tsx,mts,cts}"],
+      "rules": {
+        "no-var": "error",
+        "prefer-const": "error",
+        "prefer-rest-params": "error",
+        "prefer-spread": "error"
+      }
+    },
+    { "files": ["**/*.{js,ts,tsx}"], "rules": { "depend/ban-dependencies": "warn" } },
+    {
+      "files": ["**/*.{ts,tsx}"],
+      "rules": {
+        "nextjs/google-font-display": "warn",
+        "nextjs/google-font-preconnect": "warn",
+        "nextjs/next-script-for-ga": "warn",
+        "nextjs/no-async-client-component": "warn",
+        "nextjs/no-before-interactive-script-outside-document": "warn",
+        "nextjs/no-css-tags": "warn",
+        "nextjs/no-head-element": "warn",
+        "nextjs/no-img-element": "warn",
+        "next-js/no-location-assign-relative-destination": "warn",
+        "nextjs/no-page-custom-font": "warn",
+        "nextjs/no-styled-jsx-in-document": "warn",
+        "nextjs/no-sync-scripts": "warn",
+        "nextjs/no-title-in-document-head": "warn",
+        "nextjs/no-typos": "warn",
+        "nextjs/no-unwanted-polyfillio": "warn",
+        "nextjs/inline-script-id": "error",
+        "nextjs/no-assign-module-variable": "error",
+        "nextjs/no-document-import-in-page": "error",
+        "nextjs/no-duplicate-head": "error",
+        "nextjs/no-head-import-in-document": "error",
+        "nextjs/no-script-component-in-head": "error",
+        "complexity": "warn",
+        "max-params": ["error", { "max": 3 }],
+        "turbo/no-undeclared-env-vars": "error",
+        "import/first": "error",
+        "import/newline-after-import": "error",
+        "import/no-duplicates": "error",
+        "import/no-default-export": "error",
+        "simple-import-sort/imports": "error",
+        "simple-import-sort/exports": "error",
+        "@stylistic/padding-line-between-statements": [
+          "error",
+          { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
+          { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"] },
+          { "blankLine": "always", "prev": "*", "next": "return" },
+          { "blankLine": "always", "prev": "directive", "next": "*" },
+          { "blankLine": "any", "prev": "directive", "next": "directive" }
+        ],
+        "@stylistic/multiline-comment-style": ["error", "starred-block"],
+        "no-console": "error",
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["**/__tests__/**"],
+                "message": "Tests related code cannot be imported into application code"
+              }
+            ]
+          }
+        ],
+        // Substitute for react-naming-convention/filename (kebab-case).
+        "unicorn/filename-case": ["error", { "case": "kebabCase" }],
+        // oxlint resets options on a severity-only override (ESLint keeps them),
+        // so each per-app "warn" below repeats these options.
+        "no-unused-vars": [
+          "error",
+          {
+            "args": "all",
+            "argsIgnorePattern": "^_",
+            "caughtErrors": "all",
+            "caughtErrorsIgnorePattern": "^_",
+            "destructuredArrayIgnorePattern": "^_",
+            "varsIgnorePattern": "^_",
+            "ignoreRestSiblings": true
+          }
+        ],
+        "typescript/consistent-type-imports": [
+          "warn",
+          {
+            "prefer": "type-imports",
+            "fixStyle": "inline-type-imports",
+            "disallowTypeAnnotations": true
+          }
+        ]
+      }
+    },
+    {
+      "files": ["**/*.tsx"],
+      "env": { "browser": true, "serviceworker": true },
+      "rules": {
+        "react/display-name": "error",
+        "react/jsx-no-comment-textnodes": "error",
+        "react/jsx-no-duplicate-props": "error",
+        "react/jsx-no-target-blank": "error",
+        "react/jsx-no-undef": "error",
+        "react/no-children-prop": "error",
+        "react/no-danger-with-children": "error",
+        "react-js/no-deprecated": "error",
+        "react/no-direct-mutation-state": "error",
+        "react/no-find-dom-node": "error",
+        "react/no-is-mounted": "error",
+        "react/no-render-return-value": "error",
+        "react/no-string-refs": "error",
+        "react/no-unescaped-entities": "error",
+        "react/no-unknown-property": "error",
+        "react/require-render-return": "error",
+        "react/rules-of-hooks": "error",
+        "react/exhaustive-deps": "warn"
+      }
+    },
+    {
+      "files": ["**/*.test.{ts,tsx}", "**/__tests__/**/*.{ts,tsx}"],
+      "rules": {
+        "vitest/expect-expect": ["error", { "assertFunctionNames": ["expect", "testApiHandler"] }],
+        "vitest/no-identical-title": "error",
+        "vitest/no-commented-out-tests": "error",
+        "vitest/valid-title": "error",
+        "vitest/valid-expect": "error",
+        "vitest/valid-describe-callback": "error",
+        "vitest/require-local-test-context-for-concurrent-snapshots": "error",
+        "vitest/no-import-node-test": "error",
+        "vitest/prefer-strict-equal": "error",
+        "vitest-js/prefer-vi-mocked": "error",
+        "turbo/no-undeclared-env-vars": "off"
+      }
+    },
+    {
+      "files": [
+        "**/src/pages/**/*",
+        "**/src/app/global-error.tsx",
+        "**/*.config.{ts,js}",
+        "**/vitest.workspace.ts",
+        "**/codegen.ts"
+      ],
+      "rules": { "import/no-default-export": "off" }
+    },
+    {
+      "files": ["**/*.test.{ts,tsx}", "**/*.test-utils.{ts,tsx}", "**/__tests__/**/*.{ts,tsx}"],
+      "rules": { "no-restricted-imports": "off" }
+    },
+    {
+      "files": ["**/src/pages/**/*", "**/src/app/**/*"],
+      "rules": { "unicorn/filename-case": "off" }
+    },
+    { "files": ["apps/anonymizer/**/*.{ts,tsx}"], "rules": { "node/no-process-env": "error" } },
+    {
+      "files": [
+        "apps/anonymizer/next.config.ts",
+        "apps/anonymizer/src/env.ts",
+        "apps/anonymizer/src/instrumentation.ts",
+        "apps/anonymizer/src/instrumentations/*.ts"
+      ],
+      "rules": { "node/no-process-env": "off" }
+    },
+    {
+      "files": ["apps/anonymizer/**/*.{ts,tsx}"],
+      "rules": {
+        "no-fallthrough": "warn",
+        "no-unused-vars": [
+          "warn",
+          {
+            "args": "all",
+            "argsIgnorePattern": "^_",
+            "caughtErrors": "all",
+            "caughtErrorsIgnorePattern": "^_",
+            "destructuredArrayIgnorePattern": "^_",
+            "varsIgnorePattern": "^_",
+            "ignoreRestSiblings": true
+          }
+        ],
+        "typescript/no-namespace": "warn",
+        "typescript/no-empty-object-type": "warn"
+      }
+    },
+    {
+      "files": ["apps/avatax/**/*.{ts,tsx}"],
+      "rules": {
+        "node/no-process-env": "error",
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "@opentelemetry/api",
+                "importNames": ["trace"],
+                "message": "Importing trace from @opentelemetry/api is not allowed. Use `@lib/tracing` module instead."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["apps/avatax/**/*.{ts,tsx}"],
+      "rules": {
+        "typescript/no-empty-object-type": "warn",
+        "no-unused-vars": [
+          "warn",
+          {
+            "args": "all",
+            "argsIgnorePattern": "^_",
+            "caughtErrors": "all",
+            "caughtErrorsIgnorePattern": "^_",
+            "destructuredArrayIgnorePattern": "^_",
+            "varsIgnorePattern": "^_",
+            "ignoreRestSiblings": true
+          }
+        ],
+        "typescript/no-explicit-any": "warn",
+        "typescript/no-unnecessary-type-constraint": "warn",
+        "no-fallthrough": "warn"
+      }
+    },
+    {
+      "files": [
+        "apps/avatax/next.config.ts",
+        "apps/avatax/src/env*.ts",
+        "apps/avatax/src/instrumentation.ts",
+        "apps/avatax/e2e/env-e2e.ts"
+      ],
+      "rules": { "node/no-process-env": "off" }
+    },
+    {
+      "files": ["apps/avatax/**/*.{ts,tsx}"],
+      "rules": { "unicorn/filename-case": ["warn", { "case": "kebabCase" }] }
+    },
+    { "files": ["apps/cms/**/*.{ts,tsx}"], "rules": { "node/no-process-env": "error" } },
+    {
+      "files": [
+        "apps/cms/next.config.ts",
+        "apps/cms/src/env*.ts",
+        "apps/cms/src/instrumentation.ts",
+        "apps/cms/src/instrumentations/*"
+      ],
+      "rules": { "node/no-process-env": "off" }
+    },
+    {
+      "files": ["apps/cms/**/*.{ts,tsx}"],
+      "rules": {
+        "no-unused-vars": [
+          "warn",
+          {
+            "args": "all",
+            "argsIgnorePattern": "^_",
+            "caughtErrors": "all",
+            "caughtErrorsIgnorePattern": "^_",
+            "destructuredArrayIgnorePattern": "^_",
+            "varsIgnorePattern": "^_",
+            "ignoreRestSiblings": true
+          }
+        ],
+        "no-unused-expressions": "warn",
+        "typescript/no-empty-object-type": "warn",
+        "typescript/no-explicit-any": "warn",
+        "typescript/no-namespace": "warn",
+        "typescript/no-require-imports": "warn",
+        "typescript/no-non-null-asserted-optional-chain": "warn",
+        "no-fallthrough": "warn"
+      }
+    },
+    {
+      "files": ["apps/dummy-payment-app/**/*.{ts,tsx}"],
+      "rules": { "node/no-process-env": "error" }
+    },
+    {
+      "files": [
+        "apps/dummy-payment-app/next.config.ts",
+        "apps/dummy-payment-app/src/env.ts",
+        "apps/dummy-payment-app/src/instrumentation.ts",
+        "apps/dummy-payment-app/src/__tests__/setup.ts"
+      ],
+      "rules": { "node/no-process-env": "off" }
+    },
+    {
+      "files": ["apps/dummy-shipping-app/**/*.{ts,tsx}"],
+      "rules": { "node/no-process-env": "error" }
+    },
+    { "files": ["apps/dummy-shipping-app/src/env.ts"], "rules": { "node/no-process-env": "off" } },
+    {
+      "files": ["apps/extensions-explorer/**/*.{ts,tsx}"],
+      "rules": { "node/no-process-env": "error" }
+    },
+    {
+      "files": ["apps/extensions-explorer/src/lib/env.ts"],
+      "rules": { "node/no-process-env": "off" }
+    },
+    { "files": ["apps/klaviyo/**/*.{ts,tsx}"], "rules": { "node/no-process-env": "error" } },
+    {
+      "files": [
+        "apps/klaviyo/next.config.ts",
+        "apps/klaviyo/src/env*.ts",
+        "apps/klaviyo/src/instrumentations/*",
+        "apps/klaviyo/src/instrumentation.ts"
+      ],
+      "rules": { "node/no-process-env": "off" }
+    },
+    {
+      "files": ["apps/klaviyo/**/*.{ts,tsx}"],
+      "rules": {
+        "typescript/no-empty-object-type": "warn",
+        "typescript/no-explicit-any": "warn",
+        "no-constant-binary-expression": "warn",
+        "typescript/no-require-imports": "warn",
+        "typescript/no-non-null-asserted-optional-chain": "warn"
+      }
+    },
+    { "files": ["apps/np-atobarai/**/*.{ts,tsx}"], "rules": { "node/no-process-env": "error" } },
+    {
+      "files": [
+        "apps/np-atobarai/next.config.ts",
+        "apps/np-atobarai/src/lib/env.ts",
+        "apps/np-atobarai/src/__tests__/setup.ts",
+        "apps/np-atobarai/src/instrumentation.ts"
+      ],
+      "rules": { "node/no-process-env": "off" }
+    },
+    { "files": ["apps/onboarding/**/*.{ts,tsx}"], "rules": { "node/no-process-env": "error" } },
+    {
+      "files": [
+        "apps/onboarding/next.config.ts",
+        "apps/onboarding/src/lib/env.ts",
+        "apps/onboarding/src/instrumentation.ts"
+      ],
+      "rules": { "node/no-process-env": "off" }
+    },
+    { "files": ["apps/onboarding/src/app/**/*"], "rules": { "import/no-default-export": "off" } },
+    {
+      "files": ["apps/payment-apps-testclient/**/*.{ts,tsx}"],
+      "rules": { "node/no-process-env": "error" }
+    },
+    {
+      "files": [
+        "apps/payment-apps-testclient/next.config.ts",
+        "apps/payment-apps-testclient/src/env.ts"
+      ],
+      "rules": { "node/no-process-env": "off" }
+    },
+    {
+      "files": ["apps/payment-apps-testclient/src/app/**/*"],
+      "rules": { "import/no-default-export": "off" }
+    },
+    {
+      "files": ["apps/products-feed/**/*.{ts,tsx}"],
+      "rules": {
+        "no-unused-vars": [
+          "warn",
+          {
+            "args": "all",
+            "argsIgnorePattern": "^_",
+            "caughtErrors": "all",
+            "caughtErrorsIgnorePattern": "^_",
+            "destructuredArrayIgnorePattern": "^_",
+            "varsIgnorePattern": "^_",
+            "ignoreRestSiblings": true
+          }
+        ],
+        "no-empty": "warn",
+        "typescript/ban-ts-comment": "warn",
+        "typescript/no-empty-object-type": "warn",
+        "no-unused-expressions": "warn",
+        "typescript/no-explicit-any": "warn",
+        "typescript/no-require-imports": "warn"
+      }
+    },
+    { "files": ["apps/products-feed/**/*.{ts,tsx}"], "rules": { "node/no-process-env": "error" } },
+    {
+      "files": [
+        "apps/products-feed/next.config.ts",
+        "apps/products-feed/src/env*.ts",
+        "apps/products-feed/src/instrumentation.ts",
+        "apps/products-feed/src/instrumentations/*"
+      ],
+      "rules": { "node/no-process-env": "off" }
+    },
+    { "files": ["apps/search/**/*.{ts,tsx}"], "rules": { "node/no-process-env": "error" } },
+    {
+      "files": [
+        "apps/search/next.config.ts",
+        "apps/search/src/env*.ts",
+        "apps/search/src/instrumentation.ts",
+        "apps/search/src/instrumentations/*"
+      ],
+      "rules": { "node/no-process-env": "off" }
+    },
+    {
+      "files": ["apps/search/**/*.{ts,tsx}"],
+      "rules": {
+        "no-unused-vars": [
+          "warn",
+          {
+            "args": "all",
+            "argsIgnorePattern": "^_",
+            "caughtErrors": "all",
+            "caughtErrorsIgnorePattern": "^_",
+            "destructuredArrayIgnorePattern": "^_",
+            "varsIgnorePattern": "^_",
+            "ignoreRestSiblings": true
+          }
+        ],
+        "typescript/ban-ts-comment": "warn",
+        "typescript/no-empty-object-type": "warn",
+        "typescript/no-non-null-asserted-optional-chain": "warn",
+        "typescript/no-explicit-any": "warn",
+        "typescript/no-require-imports": "warn",
+        "unicorn/filename-case": ["warn", { "case": "kebabCase" }]
+      }
+    },
+    { "files": ["apps/segment/**/*.{ts,tsx}"], "rules": { "node/no-process-env": "error" } },
+    {
+      "files": [
+        "apps/segment/next.config.ts",
+        "apps/segment/src/env*.ts",
+        "apps/segment/src/instrumentation.ts",
+        "apps/segment/scripts/setup-dynamodb.ts"
+      ],
+      "rules": { "node/no-process-env": "off" }
+    },
+    {
+      "files": ["apps/segment/**/*.{ts,tsx}"],
+      "rules": {
+        "no-fallthrough": "warn",
+        "no-unused-vars": [
+          "warn",
+          {
+            "args": "all",
+            "argsIgnorePattern": "^_",
+            "caughtErrors": "all",
+            "caughtErrorsIgnorePattern": "^_",
+            "destructuredArrayIgnorePattern": "^_",
+            "varsIgnorePattern": "^_",
+            "ignoreRestSiblings": true
+          }
+        ],
+        "typescript/no-namespace": "warn",
+        "typescript/no-empty-object-type": "warn"
+      }
+    },
+    { "files": ["apps/smtp/**/*.{ts,tsx}"], "rules": { "node/no-process-env": "error" } },
+    {
+      "files": [
+        "apps/smtp/next.config.ts",
+        "apps/smtp/src/env*.ts",
+        "apps/smtp/src/instrumentation.ts",
+        "apps/smtp/src/instrumentations/*"
+      ],
+      "rules": { "node/no-process-env": "off" }
+    },
+    {
+      "files": ["apps/smtp/**/*.{ts,tsx}"],
+      "rules": {
+        "no-unused-vars": [
+          "warn",
+          {
+            "args": "all",
+            "argsIgnorePattern": "^_",
+            "caughtErrors": "all",
+            "caughtErrorsIgnorePattern": "^_",
+            "destructuredArrayIgnorePattern": "^_",
+            "varsIgnorePattern": "^_",
+            "ignoreRestSiblings": true
+          }
+        ],
+        "no-unused-expressions": "warn",
+        "typescript/no-explicit-any": "warn",
+        "typescript/no-non-null-asserted-optional-chain": "warn",
+        "typescript/ban-ts-comment": "warn",
+        "no-empty": "warn",
+        "typescript/no-require-imports": "warn",
+        "no-extra-boolean-cast": "warn"
+      }
+    },
+    { "files": ["apps/stripe/**/*.{ts,tsx}"], "rules": { "node/no-process-env": "error" } },
+    {
+      "files": [
+        "apps/stripe/next.config.ts",
+        "apps/stripe/playwright.config.ts",
+        "apps/stripe/src/lib/env.ts",
+        "apps/stripe/e2e/env.ts",
+        "apps/stripe/src/__tests__/integration/env.ts",
+        "apps/stripe/src/instrumentation.ts",
+        "apps/stripe/src/__tests__/**/*setup.*.ts"
+      ],
+      "rules": { "node/no-process-env": "off" }
+    },
+    { "files": ["packages/**/*.{ts,tsx}"], "rules": { "node/no-process-env": "warn" } },
+    {
+      "files": ["apps/stripe/src/__tests__/**", "apps/stripe/*.test.ts", "apps/stripe/e2e/**"],
+      "rules": { "turbo/no-undeclared-env-vars": "off" }
+    },
+    {
+      "files": ["apps/stripe/src/__tests__/**", "apps/stripe/*.test.ts"],
+      "rules": { "no-console": "off" }
+    },
+    {
+      "files": ["packages/logger/**/*.ts", "packages/sentry-utils/**/*.ts"],
+      "rules": { "no-console": "off" }
+    },
+    { "files": ["packages/otel/**/*.{ts,tsx}"], "rules": { "typescript/no-explicit-any": "warn" } },
+    {
+      "files": ["packages/shared/**/*.{ts,tsx}"],
+      "rules": {
+        "no-unused-vars": [
+          "warn",
+          {
+            "args": "all",
+            "argsIgnorePattern": "^_",
+            "caughtErrors": "all",
+            "caughtErrorsIgnorePattern": "^_",
+            "destructuredArrayIgnorePattern": "^_",
+            "varsIgnorePattern": "^_",
+            "ignoreRestSiblings": true
+          }
+        ],
+        "typescript/no-empty-object-type": "warn",
+        "typescript/no-non-null-asserted-optional-chain": "warn",
+        "no-unsafe-optional-chaining": "warn"
+      }
+    },
+    {
+      "files": ["packages/ui/**/*.{ts,tsx}"],
+      "rules": {
+        "no-unused-vars": [
+          "warn",
+          {
+            "args": "all",
+            "argsIgnorePattern": "^_",
+            "caughtErrors": "all",
+            "caughtErrorsIgnorePattern": "^_",
+            "destructuredArrayIgnorePattern": "^_",
+            "varsIgnorePattern": "^_",
+            "ignoreRestSiblings": true
+          }
+        ],
+        "typescript/no-empty-object-type": "warn"
+      }
+    }
+  ]
+}

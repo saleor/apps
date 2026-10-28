@@ -4,6 +4,15 @@ import type { IEncryptor } from "../encryptor";
 import { Encryptor } from "../encryptor";
 import { tryDecryptWithFallback } from "./try-decrypt-with-fallback";
 
+/**
+ * No configured key decrypts the value, e.g. it was encrypted with a key that is no longer
+ * configured. Retrying won't help. `decryptionFailed` survives BaseError wrapping, which merges a
+ * cause's own properties into the wrapping error.
+ */
+export class DecryptionError extends Error {
+  readonly decryptionFailed = true;
+}
+
 export class RotatingEncryptor implements IEncryptor {
   private primaryEncryptor: Encryptor;
   private primarySecret: string;
@@ -45,7 +54,7 @@ export class RotatingEncryptor implements IEncryptor {
     }
 
     if (result.status === "failed") {
-      const error = new Error(
+      const error = new DecryptionError(
         `Failed to decrypt with primary key and ${this.fallbackSecrets.length} fallback key(s).`,
       );
 

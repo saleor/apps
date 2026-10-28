@@ -1,6 +1,5 @@
 import { timingSafeEqual } from "node:crypto";
 
-import { type Logger } from "@saleor/apps-logger";
 import { type NextApiHandler } from "next";
 
 /**
@@ -36,7 +35,10 @@ export const isAuthorizedCronRequest = (
  */
 export const withCronAuth =
   (
-    { secret, logger }: { secret: string | undefined; logger: Pick<Logger, "warn"> },
+    {
+      secret,
+      logger,
+    }: { secret: string | undefined; logger: { warn: (message: string) => unknown } },
     handler: NextApiHandler,
   ): NextApiHandler =>
   (req, res) => {
@@ -47,4 +49,25 @@ export const withCronAuth =
     }
 
     return handler(req, res);
+  };
+
+/** `withCronAuth` for App Router route handlers. */
+export const withCronAuthAppRouter =
+  <TRequest extends Request>(
+    {
+      secret,
+      logger,
+    }: { secret: string | undefined; logger: { warn: (message: string) => unknown } },
+    handler: (req: TRequest) => Promise<Response>,
+  ) =>
+  (req: TRequest): Promise<Response> => {
+    const authorization = req.headers.get("authorization") ?? undefined;
+
+    if (!isAuthorizedCronRequest({ headers: { authorization } }, secret)) {
+      logger.warn("Rejected an unauthorized cron request");
+
+      return Promise.resolve(Response.json({ error: "Unauthorized" }, { status: 401 }));
+    }
+
+    return handler(req);
   };

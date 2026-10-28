@@ -7,6 +7,7 @@ import { env } from "@/lib/env";
 import { withLoggerContext } from "@/lib/logger-context";
 import packageJson from "@/package.json";
 
+import { orderCreatedWebhookDefinition } from "../webhooks/saleor/order-created/webhook-definition";
 import { paymentGatewayInitializeSessionWebhookDefinition } from "../webhooks/saleor/payment-gateway-initialize-session/webhook-definition";
 import { transactionCancelationRequestedWebhookDefinition } from "../webhooks/saleor/transaction-cancelation-requested/webhook-definition";
 import { transactionChargeRequestedWebhookDefinition } from "../webhooks/saleor/transaction-charge-requested/webhook-definition";
@@ -37,7 +38,11 @@ const handler = createManifestHandler({
        * Can set custom name, e.g. in Development to recognize the app
        */
       name: env.APP_NAME,
-      permissions: ["HANDLE_PAYMENTS"],
+      /**
+       * MANAGE_ORDERS is needed for ORDER_CREATED. Installations from before it was added
+       * request it from the app UI (see `order-sync` module).
+       */
+      permissions: ["HANDLE_PAYMENTS", "MANAGE_ORDERS"],
       requiredSaleorVersion: ">=3.23 <4",
       supportUrl: "https://saleor.io/discord",
       tokenTargetUrl: `${apiBaseUrl}/api/register`,
@@ -49,6 +54,7 @@ const handler = createManifestHandler({
         transactionChargeRequestedWebhookDefinition.getWebhookManifest(apiBaseUrl),
         transactionCancelationRequestedWebhookDefinition.getWebhookManifest(apiBaseUrl),
         transactionRefundRequestedWebhookDefinition.getWebhookManifest(apiBaseUrl),
+        orderCreatedWebhookDefinition.getWebhookManifest(apiBaseUrl),
       ],
     };
 

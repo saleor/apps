@@ -1,5 +1,13 @@
 # saleor-app-onboarding
 
+## 0.1.15
+
+### Patch Changes
+
+- 742b2b7: The app is now built with Turbopack instead of webpack, so builds and local development are faster. App behavior is unchanged.
+- Updated dependencies [840a60d]
+  - @saleor/apps-shared@1.17.4
+
 ## 0.1.14
 
 ### Patch Changes

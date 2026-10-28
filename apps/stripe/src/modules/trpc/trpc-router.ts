@@ -16,11 +16,13 @@ if (typeof window !== "undefined") {
 
 /* eslint-disable import/first */
 import { appConfigRouter } from "@/modules/app-config/trpc-handlers/app-config-router";
+import { orderSyncRouter } from "@/modules/order-sync/order-sync-router";
 
 import { router } from "./trpc-server";
 
 export const trpcRouter = router({
   appConfig: appConfigRouter,
+  orderSync: orderSyncRouter,
 });
 
 export type TrpcRouter = typeof trpcRouter;

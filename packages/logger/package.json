@@ -1,6 +1,6 @@
 {
   "name": "@saleor/apps-logger",
-  "version": "1.6.8",
+  "version": "1.6.9",
   "type": "module",
   "exports": {
     ".": {

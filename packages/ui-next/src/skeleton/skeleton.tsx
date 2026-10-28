@@ -1,5 +1,3 @@
-import "./skeleton.css";
-
 import { Box, type SkeletonProps as MacawSkeletonProps } from "@saleor/macaw-ui";
 import clsx from "clsx";
 import { type ComponentProps } from "react";

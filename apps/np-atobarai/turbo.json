@@ -21,7 +21,8 @@
         "APP_NAME",
         "DYNAMODB_MAIN_TABLE_NAME",
         "DYNAMODB_REQUEST_TIMEOUT_MS",
-        "DYNAMODB_CONNECTION_TIMEOUT_MS"
+        "DYNAMODB_CONNECTION_TIMEOUT_MS",
+        "CRON_SECRET"
       ]
     }
   }

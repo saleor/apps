@@ -14,7 +14,7 @@ export const WebhookMigrationNetworkError = BaseError.subclass("NetworkError");
 export const WebhookMigrationUnknownError = BaseError.subclass("WebhookMigrationUnknownError");
 
 function getSaleorErrorExtensionCode(extension: GraphQLErrorExtensions) {
-  return (extension?.exception as { code: string }).code;
+  return (extension?.exception as { code?: string } | undefined)?.code;
 }
 
 export function doesErrorCodeExistsInErrors(errors: GraphQLError[] | undefined, code: string) {

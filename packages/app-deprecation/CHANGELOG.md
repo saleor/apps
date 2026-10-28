@@ -1,5 +1,14 @@
 # @saleor/app-deprecation
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [c1a728f]
+- Updated dependencies [840a60d]
+  - @saleor/apps-logger@1.6.9
+  - @saleor/apps-shared@1.17.4
+
 ## 0.0.2
 
 ### Patch Changes

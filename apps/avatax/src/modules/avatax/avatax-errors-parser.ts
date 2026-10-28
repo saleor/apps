@@ -17,6 +17,7 @@ import { normalizeAvaTaxError } from "./avatax-error-normalizer";
 
 export class AvataxErrorsParser {
   static UnhandledErrorShapeError = BaseError.subclass("UnhandledErrorShapeError");
+  static UnknownFaultSubCodeError = BaseError.subclass("UnknownFaultSubCodeError");
 
   /**
    * User input fault codes that should return HTTP 400 - errors caused by invalid user data
@@ -26,6 +27,7 @@ export class AvataxErrorsParser {
     "InvalidZipForStateError", // Zip not valid for the provided state
     "ZipNotValidError", // Zip not valid for the provided state
     "AddressRangeError", // The address number is out of range
+    "AddressUnknownStreetError", // An exact street name match could not be found
     "InvalidAddress", // Address is incomplete or invalid
     "InsufficientAddressError", // Insufficient address information
     "PostalCodeError", // Invalid ZIP/Postal Code
@@ -35,7 +37,7 @@ export class AvataxErrorsParser {
     "RegionCodeError", // Invalid or missing state/province code.
   ] as const;
 
-  private static userInputFaultCodesSet = new Set(AvataxErrorsParser.userInputFaultCodes);
+  private static userInputFaultCodesSet = new Set<string>(AvataxErrorsParser.userInputFaultCodes);
 
   /**
    * System fault codes that should return HTTP 500 - errors caused by system/app configuration issues
@@ -55,10 +57,7 @@ export class AvataxErrorsParser {
     "UnsupportedCountryError", // Country not supported.
   ] as const;
 
-  private static faultSubCodeSchema = z.enum([
-    ...AvataxErrorsParser.userInputFaultCodes,
-    ...AvataxErrorsParser.systemFaultCodes,
-  ]);
+  private static systemFaultCodesSet = new Set<string>(AvataxErrorsParser.systemFaultCodes);
 
   private static baseDetailsSchema = z.object({
     description: z.string().optional(),
@@ -76,7 +75,8 @@ export class AvataxErrorsParser {
       code: z.literal("GetTaxError"),
       details: z.array(
         AvataxErrorsParser.baseDetailsSchema.extend({
-          faultSubCode: AvataxErrorsParser.faultSubCodeSchema.optional(),
+          // Not an enum - AvaTax adds new codes, and an unknown one must not fail the whole parse
+          faultSubCode: z.string().optional(),
         }),
       ),
     }),
@@ -138,15 +138,26 @@ export class AvataxErrorsParser {
               message,
             },
           });
-        } else {
-          return new AvataxGetTaxSystemError(parsedError.data.code, {
-            props: {
-              faultSubCode,
-              description,
-              message,
-            },
-          });
         }
+
+        const systemError = new AvataxGetTaxSystemError(parsedError.data.code, {
+          props: {
+            faultSubCode,
+            description,
+            message,
+          },
+        });
+
+        if (faultSubCode && !AvataxErrorsParser.systemFaultCodesSet.has(faultSubCode)) {
+          injectedErrorCapture(
+            new AvataxErrorsParser.UnknownFaultSubCodeError(
+              `AvaTax returned unknown fault sub code: ${faultSubCode}`,
+              { cause: systemError },
+            ),
+          );
+        }
+
+        return systemError;
       }
 
       case "AuthenticationException": {

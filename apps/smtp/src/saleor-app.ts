@@ -7,18 +7,20 @@ import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 import { env } from "./env";
 import { getDynamoEnv } from "./env-dynamodb";
 import { createLogger } from "./logger";
-import { createDynamoMainTable } from "./modules/dynamodb/dynamo-main-table";
+import { createDynamoMainTable, type DynamoMainTable } from "./modules/dynamodb/dynamo-main-table";
 
 const logger = createLogger("saleor-app");
 
 const aplType = env.APL;
 
 export let apl: APL;
+export let dynamoMainTable: DynamoMainTable | undefined;
 
 switch (aplType) {
   case "dynamodb": {
     const dynamoEnv = getDynamoEnv();
-    const dynamoMainTable = createDynamoMainTable(dynamoEnv);
+
+    dynamoMainTable = createDynamoMainTable(dynamoEnv);
 
     apl = DynamoAPL.create({
       table: dynamoMainTable,

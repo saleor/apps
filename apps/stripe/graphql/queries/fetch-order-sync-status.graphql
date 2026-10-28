@@ -1,0 +1,10 @@
+query FetchOrderSyncStatus {
+  app {
+    permissions {
+      code
+    }
+    webhooks {
+      name
+    }
+  }
+}

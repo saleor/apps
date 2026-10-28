@@ -5,6 +5,10 @@ import {
   newSecretKeyServerSchema,
 } from "@saleor/apps-shared/secret-key-resolution";
 import { formatEnvValidationError } from "@saleor/errors";
+import {
+  staleInstallationsCleanupRuntimeEnv,
+  staleInstallationsCleanupServerSchema,
+} from "@saleor/stale-installations-cleanup/env";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
@@ -26,8 +30,8 @@ export const env = createEnv({
     SECRET_KEY: z.string(),
     /*
      * Shared secret Vercel Cron sends as `Authorization: Bearer <value>`, used by the
-     * deprecation-notice tick. Optional so existing deployments keep booting without it;
-     * the cron route refuses every request while it is unset.
+     * deprecation-notice and stale installations cleanup ticks. Optional so existing deployments
+     * keep booting without it; the cron routes refuse every request while it is unset.
      */
     CRON_SECRET: headerSecretEnv.optional(),
     /*
@@ -57,6 +61,7 @@ export const env = createEnv({
     FALLBACK_SMTP_EMAIL_REDIRECT_ENDPOINT: z.string().url().optional(),
     FALLBACK_SMTP_EMAIL_REDIRECT_TOKEN: z.string().min(1).optional(),
     ...newSecretKeyServerSchema,
+    ...staleInstallationsCleanupServerSchema,
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
@@ -96,6 +101,7 @@ export const env = createEnv({
     FALLBACK_SMTP_EMAIL_REDIRECT_ENDPOINT: process.env.FALLBACK_SMTP_EMAIL_REDIRECT_ENDPOINT,
     FALLBACK_SMTP_EMAIL_REDIRECT_TOKEN: process.env.FALLBACK_SMTP_EMAIL_REDIRECT_TOKEN,
     ...newSecretKeyRuntimeEnv,
+    ...staleInstallationsCleanupRuntimeEnv,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
   onValidationError: formatEnvValidationError,

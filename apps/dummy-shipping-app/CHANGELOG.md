@@ -1,5 +1,19 @@
 # saleor-app-shipping-dummy
 
+## 1.1.14
+
+### Patch Changes
+
+- 742b2b7: The app is now built with Turbopack instead of webpack, so builds and local development are faster. App behavior is unchanged.
+- Updated dependencies [840a60d]
+  - @saleor/apps-shared@1.17.4
+
+## 1.1.13
+
+### Patch Changes
+
+- 88e026b: The app now refuses to start when a secret it sends in HTTP headers (`CRON_SECRET`, `UPSTASH_TOKEN`, `OTEL_ACCESS_TOKEN`) contains non-ASCII characters, and the error names the variable. Before, the app started normally and then the requests using that secret failed at runtime. If one of these secrets has accented or other non-ASCII letters, replace it.
+
 ## 1.1.12
 
 ### Patch Changes

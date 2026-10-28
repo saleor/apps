@@ -1,0 +1,44 @@
+{
+  "name": "@saleor/stale-installations-cleanup",
+  "version": "0.3.1",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    },
+    "./env": {
+      "import": "./src/env.ts",
+      "types": "./src/env.ts"
+    }
+  },
+  "main": "./src/index.ts",
+  "scripts": {
+    "check-types": "tsc",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "test": "vitest",
+    "test:ci": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@aws-sdk/lib-dynamodb": "catalog:",
+    "@saleor/apps-shared": "workspace:*",
+    "@saleor/errors": "workspace:*",
+    "@vercel/oidc": "catalog:",
+    "neverthrow": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@saleor/app-sdk": "catalog:",
+    "@saleor/eslint-config-apps": "workspace:*",
+    "@saleor/typescript-config-apps": "workspace:*",
+    "@vitest/coverage-v8": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "@saleor/app-sdk": "catalog:"
+  }
+}

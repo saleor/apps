@@ -1,5 +1,13 @@
 # saleor-app-extensions-explorer
 
+## 0.1.13
+
+### Patch Changes
+
+- 742b2b7: The app is now built with Turbopack instead of webpack, so builds and local development are faster. App behavior is unchanged.
+- Updated dependencies [840a60d]
+  - @saleor/apps-shared@1.17.4
+
 ## 0.1.12
 
 ### Patch Changes

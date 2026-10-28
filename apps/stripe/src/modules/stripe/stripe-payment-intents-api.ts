@@ -86,4 +86,18 @@ export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
       (error) => error,
     );
   }
+
+  async updatePaymentIntent(args: {
+    id: StripePaymentIntentId;
+    metadata: AllowedStripeObjectMetadata;
+    description?: string;
+  }): Promise<Result<Stripe.PaymentIntent, unknown>> {
+    return ResultAsync.fromPromise(
+      this.stripeApiWrapper.paymentIntents.update(args.id, {
+        metadata: args.metadata,
+        ...(args.description && { description: args.description }),
+      }),
+      (error) => error,
+    );
+  }
 }

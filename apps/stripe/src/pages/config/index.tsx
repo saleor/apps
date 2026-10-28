@@ -4,6 +4,7 @@ import { useMemo } from "react";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";
 import { MissingAppAccess } from "@/modules/ui/missing-app-access";
+import { OrderSyncCallout } from "@/modules/ui/order-sync-callout";
 import {
   ChannelConfigSection,
   ChannelConfigSectionSkeleton,
@@ -54,6 +55,7 @@ const ConfigPage: NextPage = () => {
 
   return (
     <ConfigPageShell>
+      <OrderSyncCallout />
       {showSetup ? (
         <StripeSetupCard
           configs={configsQuery.data}

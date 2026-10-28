@@ -62,6 +62,6 @@ describe("getCursors", () => {
       client: mockClient,
     });
 
-    expect(result).to.toStrictEqual(["cursor-1", "cursor-2", "cursor-3"]);
+    expect(result).toStrictEqual(["cursor-1", "cursor-2", "cursor-3"]);
   });
 });

@@ -1,5 +1,61 @@
 # saleor-app-smtp
 
+## 2.11.2
+
+### Patch Changes
+
+- Updated dependencies [602b8d8]
+  - @saleor/webhook-utils@0.3.6
+
+## 2.11.1
+
+### Patch Changes
+
+- Updated dependencies [c1a728f]
+- Updated dependencies [840a60d]
+  - @saleor/apps-logger@1.6.9
+  - @saleor/apps-shared@1.17.4
+  - @saleor/app-deprecation@0.0.3
+  - @saleor/webhook-utils@0.3.5
+  - @saleor/stale-installations-cleanup@0.3.1
+
+## 2.11.0
+
+### Minor Changes
+
+- cf92cf5: Stale installations cleanup now only removes data of installations on the Saleor Cloud it is configured for. Set `SALEOR_CLOUD_ROOT_DOMAINS` to that Cloud's root domains, comma separated, e.g. `saleor.cloud,eu.saleor.cloud`. Until it is set, the job doesn't run.
+
+  Before, Saleor Cloud reported any environment it doesn't host as gone, so data of installations on another Saleor Cloud (e.g. staging), on self-hosted Saleor or on custom domains would have been removed. Now only installations at `<name>.<root domain>` are checked; everything else is kept and counted as `skipped` in the summary.
+
+### Patch Changes
+
+- Updated dependencies [cf92cf5]
+- Updated dependencies [888f9ab]
+  - @saleor/stale-installations-cleanup@0.3.0
+
+## 2.10.1
+
+### Patch Changes
+
+- b08cb53: Stale installations cleanup logs now fit in Vercel's limit of 256 log lines per request. Before, it logged one line per stale installation, so with many of them the remaining installations and the final summary were dropped from the logs. Now it logs the summary (`checked`, `unknown`, `stale`, `items`) first, then lists stale installations 100 per line, then the result.
+- Updated dependencies [b08cb53]
+  - @saleor/stale-installations-cleanup@0.2.0
+
+## 2.10.0
+
+### Minor Changes
+
+- c94bfe4: The app now cleans up after deleted Saleor Cloud environments. A daily job asks Saleor Cloud which environments the app is installed in still exist, by their Saleor Cloud or custom domain, and removes everything the app stored for those that are gone. Before, data of deleted environments stayed in the app's database indefinitely.
+
+  The job only runs once `CRON_SECRET`, `SALEOR_CLOUD_API_URL` and `SALEOR_CLOUD_OIDC_AUDIENCE` are set. It starts in dry-run mode, logging what it would remove; set `STALE_INSTALLATIONS_CLEANUP_DRY_RUN=false` to delete.
+
+### Patch Changes
+
+- 88e026b: The app now refuses to start when a secret it sends in HTTP headers (`CRON_SECRET`, `UPSTASH_TOKEN`, `OTEL_ACCESS_TOKEN`) contains non-ASCII characters, and the error names the variable. Before, the app started normally and then the requests using that secret failed at runtime. If one of these secrets has accented or other non-ASCII letters, replace it.
+- 88e026b: `APL=saleor-cloud` is no longer accepted, and the app now refuses to start with an error naming `APL`. That storage option was removed from the app SDK earlier. Before, most apps started anyway and then failed on the first request, and the Stripe app quietly saved auth data to a local file instead. If you still use this value, switch `APL` to `dynamodb`, `upstash` or `file`.
+- Updated dependencies [c94bfe4]
+  - @saleor/stale-installations-cleanup@0.1.0
+
 ## 2.9.7
 
 ### Patch Changes

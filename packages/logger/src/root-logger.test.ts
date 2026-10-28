@@ -42,5 +42,34 @@ describe("Logger", () => {
         ),
       );
     });
+
+    it("Masks secret keys at any depth and with any casing", () => {
+      const logger = rootLogger.getSubLogger({ name: "Test Logger" });
+
+      attachLoggerConsoleTransport(logger);
+
+      logger.info("Test Message", {
+        AuthToken: "top-level-secret",
+        config: {
+          apiKey: "nested-secret",
+          channels: [{ restrictedKey: "array-secret", name: "default" }],
+        },
+      });
+
+      expect(console.log).toHaveBeenLastCalledWith(
+        "\x1B[2m 2024-02-01T05:15:00.000Z :Test Logger\x1B[0m \tTest Message",
+        JSON.stringify(
+          {
+            AuthToken: "[***]",
+            config: {
+              apiKey: "[***]",
+              channels: [{ restrictedKey: "[***]", name: "default" }],
+            },
+          },
+          null,
+          2,
+        ),
+      );
+    });
   });
 });

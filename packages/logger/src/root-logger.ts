@@ -1,4 +1,4 @@
-import { ILogObj, Logger } from "tslog";
+import { type ILogObj, Logger } from "tslog";
 
 function isObject(item: unknown) {
   return typeof item === "object" && !Array.isArray(item) && item !== null;
@@ -35,6 +35,26 @@ function getMinLevel() {
 export const rootLogger = new Logger<ILogObj>({
   minLevel: getMinLevel(),
   hideLogPositionForProduction: true,
+  /**
+   * Masks these keys at any depth of logged arguments, for every transport.
+   * Attributes passed to getSubLogger() are not masked - tslog only masks log call arguments.
+   */
+  maskValuesOfKeys: [
+    "password",
+    "secret",
+    "secretKey",
+    "clientSecret",
+    "webhookSecret",
+    "token",
+    "authToken",
+    "accessToken",
+    "refreshToken",
+    "apiKey",
+    "restrictedKey",
+    "privateKey",
+    "authorization",
+  ],
+  maskValuesOfKeysCaseInsensitive: true,
   /**
    * Use custom console.log transport, because built-in API for pretty logger is limited
    */

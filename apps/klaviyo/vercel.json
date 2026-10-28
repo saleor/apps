@@ -1,9 +1,21 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    {
+      "path": "/api/cron/cleanup-stale-installations",
+      "schedule": "0 3 * * *"
+    }
+  ],
+  "functions": {
+    "src/pages/api/cron/*": {
+      "maxDuration": 300
+    }
+  },
   "git": {
     "deploymentEnabled": {
       "oss-sync-staging": false,
-      "public-mirror": false
+      "public-mirror": false,
+      "changeset-release/main": false
     }
   }
 }

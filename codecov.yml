@@ -60,6 +60,12 @@ ignore:
   - "**/*.config.js"
   - "**/*.config.ts"
 
+# CI uploads coverage only for packages whose tests ran (Turbo cache miss).
+# Flags not uploaded on a commit keep their last report instead of dropping to zero.
+flag_management:
+  default_rules:
+    carryforward: true
+
 flags:
   anonymizer:
     paths:

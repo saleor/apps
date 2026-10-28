@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-smtp",
-  "version": "2.9.7",
+  "version": "2.11.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -45,6 +45,7 @@
     "@saleor/macaw-ui": "catalog:",
     "@saleor/react-hook-form-macaw": "workspace:*",
     "@saleor/sentry-utils": "workspace:*",
+    "@saleor/stale-installations-cleanup": "workspace:*",
     "@saleor/webhook-utils": "workspace:*",
     "@sentry/cli": "catalog:",
     "@sentry/nextjs": "catalog:",
