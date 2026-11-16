@@ -9,16 +9,12 @@
   },
   "main": "index.ts",
   "scripts": {
-    "check-types": "tsc",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "check-types": "tsc"
   },
   "devDependencies": {
-    "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@sentry/nextjs": "catalog:",
     "@types/node": "catalog:",
-    "eslint": "catalog:",
     "typescript": "5.8.2"
   },
   "peerDependencies": {

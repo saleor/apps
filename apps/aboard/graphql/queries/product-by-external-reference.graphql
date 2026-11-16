@@ -1,0 +1,8 @@
+query ProductByExternalReference($externalReference: String!) {
+  product(externalReference: $externalReference) {
+    id
+    managed: privateMetafield(key: "aboard.managed")
+    connectorId: privateMetafield(key: "aboard.connectorId")
+    sourceInstanceId: privateMetafield(key: "aboard.sourceInstanceId")
+  }
+}

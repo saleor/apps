@@ -1,0 +1,7 @@
+mutation RemovePrivateMetadata($id: ID!, $keys: [String!]!) {
+  deletePrivateMetadata(id: $id, keys: $keys) {
+    errors {
+      message
+    }
+  }
+}

@@ -8,4 +8,5 @@ export const mockedAppConfigRepo = {
   getRootConfig: vi.fn(),
   updateMapping: vi.fn(),
   removeConfig: vi.fn(),
+  disableCustomerCreation: vi.fn(),
 } satisfies AppConfigRepo;

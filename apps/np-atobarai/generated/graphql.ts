@@ -24671,6 +24671,12 @@ export type ProductVariantWhereInput = {
    * Added in Saleor 3.22.
    */
   readonly attributes?: InputMaybe<ReadonlyArray<AssignedAttributeWhereInput>>;
+  /**
+   * Filter by external reference.
+   *
+   * Added in Saleor 3.23.
+   */
+  readonly externalReference?: InputMaybe<StringFilterInput>;
   readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataFilter>>;
   /** Filter by product SKU. */

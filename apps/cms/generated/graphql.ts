@@ -90,9 +90,9 @@ export type MetadataInput = {
 
 export type BulkImportProductFragment = { id: string, name: string, slug: string, variants?: Array<{ id: string, name: string, sku?: string | null, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null }> | null };
 
-export type WebhookProductFragment = { id: string, name: string, slug: string, channelListings?: Array<{ id: string, channel: { id: string, slug: string } }> | null, variants?: Array<{ id: string, name: string, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null }> | null };
-
 export type WebhookProductVariantFragment = { id: string, name: string, sku?: string | null, product: { id: string, name: string, slug: string }, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null };
+
+export type WebhookProductFragment = { id: string, name: string, slug: string, channelListings?: Array<{ id: string, channel: { id: string, slug: string } }> | null, variants?: Array<{ id: string, name: string, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null }> | null };
 
 export type UpdateAppMetadataMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -115,33 +115,33 @@ export type FetchProductsPaginatedQueryVariables = Exact<{
 
 export type FetchProductsPaginatedQuery = { products?: { pageInfo: { hasNextPage: boolean, endCursor?: string | null }, edges: Array<{ node: { id: string, name: string, slug: string, variants?: Array<{ id: string, name: string, sku?: string | null, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null }> | null } }> } | null };
 
-export type ProductUpdatedWebhookPayloadFragment = { version?: string | null, product?: { id: string, name: string, slug: string, channelListings?: Array<{ id: string, channel: { id: string, slug: string } }> | null, variants?: Array<{ id: string, name: string, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null }> | null } | null };
-
 export type ProductUpdatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ProductUpdatedSubscription = { event?: { version?: string | null, product?: { id: string, name: string, slug: string, channelListings?: Array<{ id: string, channel: { id: string, slug: string } }> | null, variants?: Array<{ id: string, name: string, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null }> | null } | null } | {} | null };
 
-export type ProductVariantCreatedWebhookPayloadFragment = { version?: string | null, productVariant?: { id: string, name: string, sku?: string | null, product: { id: string, name: string, slug: string }, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null } | null };
+export type ProductUpdatedWebhookPayloadFragment = { version?: string | null, product?: { id: string, name: string, slug: string, channelListings?: Array<{ id: string, channel: { id: string, slug: string } }> | null, variants?: Array<{ id: string, name: string, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null }> | null } | null };
 
 export type ProductVariantCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ProductVariantCreatedSubscription = { event?: { version?: string | null, productVariant?: { id: string, name: string, sku?: string | null, product: { id: string, name: string, slug: string }, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null } | null } | {} | null };
 
-export type ProductVariantDeletedWebhookPayloadFragment = { version?: string | null, productVariant?: { id: string, name: string, sku?: string | null, product: { id: string, name: string, slug: string }, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null } | null };
+export type ProductVariantCreatedWebhookPayloadFragment = { version?: string | null, productVariant?: { id: string, name: string, sku?: string | null, product: { id: string, name: string, slug: string }, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null } | null };
 
 export type ProductVariantDeletedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ProductVariantDeletedSubscription = { event?: { version?: string | null, productVariant?: { id: string, name: string, sku?: string | null, product: { id: string, name: string, slug: string }, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null } | null } | {} | null };
 
-export type ProductVariantUpdatedWebhookPayloadFragment = { version?: string | null, productVariant?: { id: string, name: string, sku?: string | null, product: { id: string, name: string, slug: string }, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null } | null };
+export type ProductVariantDeletedWebhookPayloadFragment = { version?: string | null, productVariant?: { id: string, name: string, sku?: string | null, product: { id: string, name: string, slug: string }, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null } | null };
 
 export type ProductVariantUpdatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ProductVariantUpdatedSubscription = { event?: { version?: string | null, productVariant?: { id: string, name: string, sku?: string | null, product: { id: string, name: string, slug: string }, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null } | null } | {} | null };
+
+export type ProductVariantUpdatedWebhookPayloadFragment = { version?: string | null, productVariant?: { id: string, name: string, sku?: string | null, product: { id: string, name: string, slug: string }, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null } | null };
 
 export const UntypedBulkImportProductFragmentDoc = gql`
     fragment BulkImportProduct on Product {

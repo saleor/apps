@@ -1,4 +1,4 @@
-import { SaleorSchemaVersion } from "@saleor/app-sdk/types";
+import { type SaleorSchemaVersion } from "@saleor/app-sdk/types";
 import { describe, expect, it } from "vitest";
 
 import { SaleorVersionCompatibilityValidator } from "./saleor-version-compatibility-validator";

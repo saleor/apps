@@ -10,6 +10,7 @@ const CompleteCheckoutMutation = graphql(`
     checkoutComplete(id: $checkoutId) {
       order {
         id
+        number
       }
       errors {
         field
@@ -47,6 +48,10 @@ export const useCompleteCheckoutMutation = () => {
             ),
           },
         );
+      }
+
+      if (!response.checkoutComplete?.order) {
+        throw new CreateCheckoutMutationError("Checkout completion returned no order.");
       }
 
       return response;

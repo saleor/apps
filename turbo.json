@@ -1,6 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.v2.json",
-  "globalDependencies": ["**/.env.*local", "schema.graphql"],
+  "globalDependencies": ["**/.env.*local", "schema.graphql", "saleor-json-schemas/**"],
   "globalEnv": [
     "APP_LOG_LEVEL",
     "CI",
@@ -30,7 +30,8 @@
   ],
   "tasks": {
     "topo": {
-      "dependsOn": ["^topo"]
+      "dependsOn": ["^topo"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!vercel.json"]
     },
     "build": {
       "dependsOn": ["^build"],
@@ -38,8 +39,31 @@
       "inputs": ["$TURBO_DEFAULT$", ".env"],
       "env": ["GITHUB_SHA", "VERCEL_GIT_COMMIT_SHA"]
     },
+    "build:ci": {
+      // CI-only: proves each app builds and type-checks (next build runs tsc over the whole
+      // tsconfig, tests included). No outputs, so the cache stores only pass/fail; .next would
+      // crowd the GitHub cache. topo makes upstream package changes rebuild dependents.
+      "dependsOn": ["topo"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!vercel.json"],
+      "outputs": [],
+      // Placeholders set by the CI job: env schemas are validated when route modules load.
+      "passThroughEnv": [
+        "ALLOWED_DOMAIN_PATTERN",
+        "AWS_REGION",
+        "CRON_SECRET",
+        "DYNAMODB_LOGS_TABLE_NAME",
+        "DYNAMODB_MAIN_TABLE_NAME",
+        "ENGINE_CONTROL_PLANE_URL",
+        "MCP_TOKEN_ENCRYPTION_KEY",
+        "NEXT_PUBLIC_INITIAL_CHANNEL_SLUG",
+        "REQUEST_SECRET",
+        "S3_BUCKET_NAME",
+        "SECRET_KEY"
+      ]
+    },
     "check-types": {
-      "dependsOn": ["topo"]
+      "dependsOn": ["topo"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md", "!vercel.json"]
     },
     "deploy": {
       "dependsOn": ["^build"],
@@ -53,14 +77,20 @@
       "persistent": true
     },
     "generate": {
-      "dependsOn": ["topo"],
+      // Codegen reads only its own package (documents, config, schema), so no topo: upstream
+      // changes would rerun it for nothing. TS is an input because some apps still write
+      // documents inline (gql`...` scanned by codegen, gql.tada). TODO: move inline documents
+      // to .graphql files, drop the TS globs from codegen `documents`, then drop TS here.
+      "inputs": [
+        "**/*.graphql",
+        "**/*.ts",
+        "**/*.tsx",
+        "package.json",
+        "tsconfig.json",
+        "!**/.next/**",
+        "!**/next-env.d.ts"
+      ],
       "outputs": ["generated/**"]
-    },
-    "lint": {
-      "dependsOn": ["topo"]
-    },
-    "lint:fix": {
-      "dependsOn": ["topo"]
     },
     "start": {
       "dependsOn": ["^build", "^start"],

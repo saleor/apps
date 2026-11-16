@@ -1,0 +1,12 @@
+subscription OrderFullyPaid {
+  event {
+    ...OrderFullyPaidWebhookPayload
+  }
+}
+
+fragment OrderFullyPaidWebhookPayload on OrderFullyPaid {
+  version
+  order {
+    ...OrderFragment
+  }
+}

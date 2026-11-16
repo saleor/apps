@@ -1,0 +1,12 @@
+subscription ProductVariantCreated {
+  event {
+    ...ProductVariantCreatedWebhookPayload
+  }
+}
+
+fragment ProductVariantCreatedWebhookPayload on ProductVariantCreated {
+  version
+  productVariant {
+    ...WebhookProductVariant
+  }
+}

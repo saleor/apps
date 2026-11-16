@@ -172,6 +172,50 @@ describe("StripeProblemReporter", () => {
     });
   });
 
+  describe("reportCustomerCreationDisabled", () => {
+    it("calls reportProblem with correct key, threshold and message", async () => {
+      mockReportProblem.mockResolvedValue(ok(undefined));
+      const reporter = new StripeProblemReporter(mockClient);
+
+      await reporter.reportCustomerCreationDisabled("config-333", "My Config");
+
+      expect(mockReportProblem).toHaveBeenCalledWith({
+        key: "stripe-customer-creation-disabled:config-333",
+        criticalThreshold: 1,
+        message: expect.stringMatching(/"My Config".*"Customers - Write"/),
+      });
+    });
+
+    it("does not throw when reportProblem fails", async () => {
+      mockReportProblem.mockResolvedValue(err(new Error("network error")));
+      const reporter = new StripeProblemReporter(mockClient);
+
+      await expect(
+        reporter.reportCustomerCreationDisabled("config-333", "My Config"),
+      ).resolves.toBeUndefined();
+    });
+  });
+
+  describe("clearCustomerCreationDisabled", () => {
+    it("clears the customer creation problem for the given configId", async () => {
+      mockClearProblems.mockResolvedValue(ok(undefined));
+      const reporter = new StripeProblemReporter(mockClient);
+
+      await reporter.clearCustomerCreationDisabled("config-333");
+
+      expect(mockClearProblems).toHaveBeenCalledWith([
+        "stripe-customer-creation-disabled:config-333",
+      ]);
+    });
+
+    it("does not throw when clearProblems fails", async () => {
+      mockClearProblems.mockResolvedValue(err(new Error("network error")));
+      const reporter = new StripeProblemReporter(mockClient);
+
+      await expect(reporter.clearCustomerCreationDisabled("config-333")).resolves.toBeUndefined();
+    });
+  });
+
   describe("clearProblemsForConfig", () => {
     it("clears all problem keys for the given configId", async () => {
       mockClearProblems.mockResolvedValue(ok(undefined));

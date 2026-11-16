@@ -4,7 +4,13 @@ import {
   resolveDecryptFallbacks,
   resolveEncryptKey,
 } from "@saleor/apps-shared/secret-key-resolution";
-import { DeleteItemCommand, GetItemCommand, Parser, PutItemCommand } from "dynamodb-toolbox";
+import {
+  DeleteItemCommand,
+  GetItemCommand,
+  Parser,
+  PutItemCommand,
+  UpdateItemCommand,
+} from "dynamodb-toolbox";
 import { QueryCommand } from "dynamodb-toolbox/table/actions/query";
 import { err, ok, type Result } from "neverthrow";
 
@@ -189,6 +195,7 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
       webhookSecret: createStripeWebhookSecret(
         this.encryptor.decrypt(parsed.stripeWhSecret),
       )._unsafeUnwrap(), // make it throwable
+      customerCreationEnabled: parsed.customerCreationEnabled ?? false,
     });
 
     if (configResult.isErr()) {
@@ -290,6 +297,7 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
         PK: DynamoDbStripeConfig.accessPattern.getPK({ saleorApiUrl, appId }),
         SK: DynamoDbStripeConfig.accessPattern.getSKforSpecificItem({ configId: config.id }),
         configName: config.name,
+        customerCreationEnabled: config.customerCreationEnabled,
       });
 
       const response = await command.send();
@@ -307,6 +315,36 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
         new AppConfigRepoError.FailureSavingConfig("Failed to save config to DynamoDB", {
           cause: e,
         }),
+      );
+    }
+  }
+
+  async disableCustomerCreation(
+    access: StripeConfigByConfigIdAccessPattern,
+  ): Promise<Result<null, InstanceType<typeof AppConfigRepoError.FailureSavingConfig>>> {
+    try {
+      await this.stripeConfigEntity
+        .build(UpdateItemCommand)
+        .item({
+          PK: DynamoDbStripeConfig.accessPattern.getPK(access),
+          SK: DynamoDbStripeConfig.accessPattern.getSKforSpecificItem({
+            configId: access.configId,
+          }),
+          customerCreationEnabled: false,
+        })
+        // Without it, a config removed in the meantime would come back as a partial item
+        .options({ condition: { attr: "configId", exists: true } })
+        .send();
+
+      return ok(null);
+    } catch (e) {
+      this.logger.error("Failed to disable customer creation in DynamoDB", { cause: e });
+
+      return err(
+        new AppConfigRepoError.FailureSavingConfig(
+          "Failed to disable customer creation in DynamoDB",
+          { cause: e },
+        ),
       );
     }
   }

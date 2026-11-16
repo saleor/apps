@@ -1,4 +1,4 @@
-import { ILogObj, Logger as TSLogger } from "tslog";
+import { type ILogObj, type Logger as TSLogger } from "tslog";
 
 export { attachLoggerConsoleTransport } from "./src/logger-console-transport";
 export { attachLoggerVercelBuildtimeTransport } from "./src/logger-vercel-buildtime-transport";

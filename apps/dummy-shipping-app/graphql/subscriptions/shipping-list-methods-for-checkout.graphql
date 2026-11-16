@@ -1,0 +1,23 @@
+subscription ShippingListMethodsForCheckout {
+  event {
+    ...ShippingListMethodsPayload
+  }
+}
+
+fragment ShippingListMethodsPayload on ShippingListMethodsForCheckout {
+  checkout {
+    id
+    shippingAddress {
+      firstName
+      lastName
+      streetAddress1
+      streetAddress2
+      city
+      postalCode
+      country {
+        code
+      }
+      phone
+    }
+  }
+}

@@ -10,19 +10,26 @@ const TABLE_ITEMS: TenantKey[] = [
   { PK: GONE, SK: "APL" },
   { PK: `${GONE}#app-id`, SK: "CONFIG" },
   { PK: `${GONE}#app-id`, SK: "TRANSACTION#1" },
+  { PK: `${GONE}#old-app-id`, SK: "TRANSACTION#0" },
   { PK: ALIVE, SK: "APL" },
   { PK: `${ALIVE}#app-id`, SK: "CONFIG" },
   { PK: "MCP#state#1", SK: "STATE" },
 ];
 
-const createTable = ({ unprocessed = false } = {}) => {
+const sortKeys = (keys: TenantKey[] = []) =>
+  [...keys].sort((a, b) => `${a.PK}|${a.SK}`.localeCompare(`${b.PK}|${b.SK}`));
+
+const createTable = ({ unprocessed = false, items = TABLE_ITEMS } = {}) => {
   const deleted: TenantKey[] = [];
   const send = vi.fn(async (command: unknown) => {
     if (command instanceof ScanCommand) {
-      // Two pages, to cover pagination.
-      return command.input.ExclusiveStartKey
-        ? { Items: TABLE_ITEMS.slice(3) }
-        : { Items: TABLE_ITEMS.slice(0, 3), LastEvaluatedKey: { PK: "x", SK: "x" } };
+      const { Segment, TotalSegments, ExclusiveStartKey } = command.input;
+      const segmentItems = items.filter((_, index) => index % TotalSegments! === Segment);
+
+      // Two pages per segment, to cover pagination.
+      return ExclusiveStartKey
+        ? { Items: segmentItems.slice(1) }
+        : { Items: segmentItems.slice(0, 1), LastEvaluatedKey: { PK: "x", SK: "x" } };
     }
 
     if (command instanceof BatchWriteCommand) {
@@ -49,12 +56,27 @@ const createTable = ({ unprocessed = false } = {}) => {
 };
 
 describe("scanTenantKeys", () => {
-  it("Returns every key of the given tenants only", async () => {
+  it("Returns every key of the given tenants only, under any appId", async () => {
     const { table } = createTable();
 
     const keys = await scanTenantKeys(table, [GONE]);
 
-    expect(keys).toStrictEqual(new Map([[GONE, TABLE_ITEMS.slice(0, 3)]]));
+    expect([...keys.keys()]).toStrictEqual([GONE]);
+    expect(sortKeys(keys.get(GONE))).toStrictEqual(sortKeys(TABLE_ITEMS.slice(0, 4)));
+  });
+
+  it("Scans every segment in parallel", async () => {
+    const { table, send } = createTable();
+
+    await scanTenantKeys(table, [GONE]);
+
+    const segments = send.mock.calls.map(([command]) => (command as ScanCommand).input.Segment);
+    const totalSegments = (send.mock.calls[0][0] as ScanCommand).input.TotalSegments!;
+
+    expect(totalSegments).toBeGreaterThan(1);
+    expect(new Set(segments)).toStrictEqual(
+      new Set(Array.from({ length: totalSegments }, (_, segment) => segment)),
+    );
   });
 
   it("Finds and deletes installation-scoped MCP policy and OAuth records through shared cleanup", async () => {
@@ -67,10 +89,8 @@ describe("scanTenantKeys", () => {
       "OAUTH_REFRESH_TOKEN#hash",
       "OAUTH_UPGRADE#hash",
     ].map((SK) => ({ PK: `${GONE}#mcp-app`, SK }));
-    const { table, send, deleted } = createTable();
-
-    send.mockResolvedValueOnce({
-      Items: [
+    const { table, deleted } = createTable({
+      items: [
         ...records,
         { PK: `${ALIVE}#mcp-app`, SK: "GROUP_POLICY" },
         { PK: "OAUTH_CLIENT", SK: "client" },
@@ -78,9 +98,9 @@ describe("scanTenantKeys", () => {
     });
     const keys = await scanTenantKeys(table, [GONE]);
 
-    expect(keys.get(GONE)).toStrictEqual(records);
+    expect(sortKeys(keys.get(GONE))).toStrictEqual(sortKeys(records));
     expect(await deleteTenantKeys(table, GONE, keys.get(GONE)!)).toBe(0);
-    expect(deleted).toStrictEqual(records);
+    expect(sortKeys(deleted)).toStrictEqual(sortKeys(records));
   });
 
   it("Does not scan for no tenants", async () => {

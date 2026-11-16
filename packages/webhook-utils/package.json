@@ -10,8 +10,6 @@
   "scripts": {
     "check-types": "tsc",
     "generate": "graphql-codegen",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
     "test": "vitest",
     "test:ci": "vitest run --coverage"
   },
@@ -29,11 +27,9 @@
     "@graphql-codegen/typescript-operations": "catalog:",
     "@graphql-typed-document-node/core": "catalog:",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
-    "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@types/semver": "catalog:",
     "@vitest/coverage-v8": "catalog:",
-    "eslint": "catalog:",
     "graphql-codegen-typescript-operation-types": "catalog:",
     "graphql-config": "5.0.3",
     "typescript": "catalog:",

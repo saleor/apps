@@ -1,0 +1,221 @@
+diff --git a/lib/src/typings/notification/notificationRequestItem.d.ts b/lib/src/typings/notification/notificationRequestItem.d.ts
+index 22933e60253a26af1dc697863203ea56acdc02c8..5066b47f86e69ea4a5649ff601f9c6ef88a4739e 100644
+--- a/lib/src/typings/notification/notificationRequestItem.d.ts
++++ b/lib/src/typings/notification/notificationRequestItem.d.ts
+@@ -68,52 +68,59 @@ export declare class NotificationRequestItem {
+     }[];
+ }
+ export declare namespace NotificationRequestItem {
+-    enum EventCodeEnum {
+-        Authorisation,
+-        AuthorisationAdjustment,
+-        Cancellation,
+-        CancelOrRefund,
+-        Capture,
+-        CaptureFailed,
+-        Donation,
+-        HandledExternally,
+-        OrderOpened,
+-        OrderClosed,
+-        Pending,
+-        ProcessRetry,
+-        Refund,
+-        RefundFailed,
+-        RefundedReversed,
+-        RefundWithData,
+-        ReportAvailable,
+-        VoidPendingRefund,
+-        Chargeback,
+-        ChargebackReversed,
+-        NotificationOfChargeback,
+-        NotificationOfFraud,
+-        PrearbitrationLost,
+-        PrearbitrationWon,
+-        RequestForInformation,
+-        SecondChargeback,
+-        PayoutExpire,
+-        PayoutDecline,
+-        PayoutThirdparty,
+-        PaidoutReversed,
+-        Autorescue,
+-        CancelAutorescue,
+-        RecurringContract,
+-        PostponedRefund,
+-        OfferClosed,
+-        ManualReviewAccept,
+-        ManualReviewReject
++    // Copied from https://github.com/Adyen/adyen-node-api-library/blob/7ef41bfec16078bf049649383f3fc9f760ede703/src/typings/notification/notificationRequestItem.ts#L148
++    export enum EventCodeEnum {
++        Autorescue = 'AUTORESCUE',
++        Authorisation = 'AUTHORISATION',
++        AuthorisationAdjustment = 'AUTHORISATION_ADJUSTMENT',
++        CancelAutorescue = 'CANCEL_AUTORESCUE',
++        Cancellation = 'CANCELLATION',
++        CancelOrRefund = 'CANCEL_OR_REFUND',
++        Capture = 'CAPTURE',
++        CaptureFailed = 'CAPTURE_FAILED',
++        Chargeback = 'CHARGEBACK',
++        ChargebackReversed = 'CHARGEBACK_REVERSED',
++        DisputeDefensePeriodEnded = 'DISPUTE_DEFENSE_PERIOD_ENDED',
++        Donation = 'DONATION',
++        Expire = 'EXPIRE',
++        HandledExternally = 'HANDLED_EXTERNALLY',
++        InformationSupplied = 'INFORMATION_SUPPLIED',
++        IssuerComments = 'ISSUER_COMMENTS',
++        IssuerResponseTimeframeExpired = 'ISSUER_RESPONSE_TIMEFRAME_EXPIRED',
++        ManualReviewAccept = 'MANUAL_REVIEW_ACCEPT',
++        ManualReviewReject = 'MANUAL_REVIEW_REJECT',
++        NotificationOfChargeback = 'NOTIFICATION_OF_CHARGEBACK',
++        NotificationOfFraud = 'NOTIFICATION_OF_FRAUD',
++        OfferClosed = 'OFFER_CLOSED',
++        OrderClosed = 'ORDER_CLOSED',
++        OrderOpened = 'ORDER_OPENED',
++        PaidoutReversed = 'PAIDOUT_REVERSED',
++        Pending = 'PENDING',
++        PostponedRefund = 'POSTPONED_REFUND',
++        PrearbitrationLost = 'PREARBITRATION_LOST',
++        PrearbitrationWon = 'PREARBITRATION_WON',
++        ProcessRetry = 'PROCESS_RETRY',
++        PayoutDecline = 'PAYOUT_DECLINE',
++        PayoutExpire = 'PAYOUT_EXPIRE',
++        PayoutThirdparty = 'PAYOUT_THIRDPARTY',
++        RecurringContract = 'RECURRING_CONTRACT',
++        Refund = 'REFUND',
++        RefundFailed = 'REFUND_FAILED',
++        RefundedReversed = 'REFUNDED_REVERSED',
++        RefundWithData = 'REFUND_WITH_DATA',
++        ReportAvailable = 'REPORT_AVAILABLE',
++        RequestForInformation = 'REQUEST_FOR_INFORMATION',
++        SecondChargeback = 'SECOND_CHARGEBACK',
++        TechnicalCancel = 'TECHNICAL_CANCEL',
++        VoidPendingRefund = 'VOID_PENDING_REFUND'
+     }
+-    enum OperationsEnum {
+-        Cancel,
+-        Capture,
+-        Refund
++    export enum OperationsEnum {
++        Cancel = 'CANCEL',
++        Capture = 'CAPTURE',
++        Refund = 'REFUND'
+     }
+-    enum SuccessEnum {
+-        True,
+-        False
++    export enum SuccessEnum {
++        True = 'true',
++        False = 'false'
+     }
+ }
+diff --git a/lib/src/typings/notification/notificationRequestItem.js b/lib/src/typings/notification/notificationRequestItem.js
+index 362e20fd686131d2464ea42e4872bc5a76379d36..b165b81f73d93d7403dd9f06ca0cdf5565fe06f1 100644
+--- a/lib/src/typings/notification/notificationRequestItem.js
++++ b/lib/src/typings/notification/notificationRequestItem.js
+@@ -88,57 +88,65 @@ NotificationRequestItem.attributeTypeMap = [
+         "type": "NotificationRequestItem.SuccessEnum"
+     }
+ ];
++// Copied from https://github.com/Adyen/adyen-node-api-library/blob/7ef41bfec16078bf049649383f3fc9f760ede703/src/typings/notification/notificationRequestItem.ts#L148
++// built locally using npm i && npm build
+ (function (NotificationRequestItem) {
+     let EventCodeEnum;
+     (function (EventCodeEnum) {
+-        EventCodeEnum[EventCodeEnum["Authorisation"] = 'AUTHORISATION'] = "Authorisation";
+-        EventCodeEnum[EventCodeEnum["AuthorisationAdjustment"] = 'AUTHORISATION_ADJUSTMENT'] = "AuthorisationAdjustment";
+-        EventCodeEnum[EventCodeEnum["Cancellation"] = 'CANCELLATION'] = "Cancellation";
+-        EventCodeEnum[EventCodeEnum["CancelOrRefund"] = 'CANCEL_OR_REFUND'] = "CancelOrRefund";
+-        EventCodeEnum[EventCodeEnum["Capture"] = 'CAPTURE'] = "Capture";
+-        EventCodeEnum[EventCodeEnum["CaptureFailed"] = 'CAPTURE_FAILED'] = "CaptureFailed";
+-        EventCodeEnum[EventCodeEnum["Donation"] = 'DONATION'] = "Donation";
+-        EventCodeEnum[EventCodeEnum["HandledExternally"] = 'HANDLED_EXTERNALLY'] = "HandledExternally";
+-        EventCodeEnum[EventCodeEnum["OrderOpened"] = 'ORDER_OPENED'] = "OrderOpened";
+-        EventCodeEnum[EventCodeEnum["OrderClosed"] = 'ORDER_CLOSED'] = "OrderClosed";
+-        EventCodeEnum[EventCodeEnum["Pending"] = 'PENDING'] = "Pending";
+-        EventCodeEnum[EventCodeEnum["ProcessRetry"] = 'PROCESS_RETRY'] = "ProcessRetry";
+-        EventCodeEnum[EventCodeEnum["Refund"] = 'REFUND'] = "Refund";
+-        EventCodeEnum[EventCodeEnum["RefundFailed"] = 'REFUND_FAILED'] = "RefundFailed";
+-        EventCodeEnum[EventCodeEnum["RefundedReversed"] = 'REFUNDED_REVERSED'] = "RefundedReversed";
+-        EventCodeEnum[EventCodeEnum["RefundWithData"] = 'REFUND_WITH_DATA'] = "RefundWithData";
+-        EventCodeEnum[EventCodeEnum["ReportAvailable"] = 'REPORT_AVAILABLE'] = "ReportAvailable";
+-        EventCodeEnum[EventCodeEnum["VoidPendingRefund"] = 'VOID_PENDING_REFUND'] = "VoidPendingRefund";
+-        EventCodeEnum[EventCodeEnum["Chargeback"] = 'CHARGEBACK'] = "Chargeback";
+-        EventCodeEnum[EventCodeEnum["ChargebackReversed"] = 'CHARGEBACK_REVERSED'] = "ChargebackReversed";
+-        EventCodeEnum[EventCodeEnum["NotificationOfChargeback"] = 'NOTIFICATION_OF_CHARGEBACK'] = "NotificationOfChargeback";
+-        EventCodeEnum[EventCodeEnum["NotificationOfFraud"] = 'NOTIFICATION_OF_FRAUD'] = "NotificationOfFraud";
+-        EventCodeEnum[EventCodeEnum["PrearbitrationLost"] = 'PREARBITRATION_LOST'] = "PrearbitrationLost";
+-        EventCodeEnum[EventCodeEnum["PrearbitrationWon"] = 'PREARBITRATION_WON'] = "PrearbitrationWon";
+-        EventCodeEnum[EventCodeEnum["RequestForInformation"] = 'REQUEST_FOR_INFORMATION'] = "RequestForInformation";
+-        EventCodeEnum[EventCodeEnum["SecondChargeback"] = 'SECOND_CHARGEBACK'] = "SecondChargeback";
+-        EventCodeEnum[EventCodeEnum["PayoutExpire"] = 'PAYOUT_EXPIRE'] = "PayoutExpire";
+-        EventCodeEnum[EventCodeEnum["PayoutDecline"] = 'PAYOUT_DECLINE'] = "PayoutDecline";
+-        EventCodeEnum[EventCodeEnum["PayoutThirdparty"] = 'PAYOUT_THIRDPARTY'] = "PayoutThirdparty";
+-        EventCodeEnum[EventCodeEnum["PaidoutReversed"] = 'PAIDOUT_REVERSED'] = "PaidoutReversed";
+-        EventCodeEnum[EventCodeEnum["Autorescue"] = 'AUTORESCUE'] = "Autorescue";
+-        EventCodeEnum[EventCodeEnum["CancelAutorescue"] = 'CANCEL_AUTORESCUE'] = "CancelAutorescue";
+-        EventCodeEnum[EventCodeEnum["RecurringContract"] = 'RECURRING_CONTRACT'] = "RecurringContract";
+-        EventCodeEnum[EventCodeEnum["PostponedRefund"] = 'POSTPONED_REFUND'] = "PostponedRefund";
+-        EventCodeEnum[EventCodeEnum["OfferClosed"] = 'OFFER_CLOSED'] = "OfferClosed";
+-        EventCodeEnum[EventCodeEnum["ManualReviewAccept"] = 'MANUAL_REVIEW_ACCEPT'] = "ManualReviewAccept";
+-        EventCodeEnum[EventCodeEnum["ManualReviewReject"] = 'MANUAL_REVIEW_REJECT'] = "ManualReviewReject";
++        EventCodeEnum["Autorescue"] = "AUTORESCUE";
++        EventCodeEnum["Authorisation"] = "AUTHORISATION";
++        EventCodeEnum["AuthorisationAdjustment"] = "AUTHORISATION_ADJUSTMENT";
++        EventCodeEnum["CancelAutorescue"] = "CANCEL_AUTORESCUE";
++        EventCodeEnum["Cancellation"] = "CANCELLATION";
++        EventCodeEnum["CancelOrRefund"] = "CANCEL_OR_REFUND";
++        EventCodeEnum["Capture"] = "CAPTURE";
++        EventCodeEnum["CaptureFailed"] = "CAPTURE_FAILED";
++        EventCodeEnum["Chargeback"] = "CHARGEBACK";
++        EventCodeEnum["ChargebackReversed"] = "CHARGEBACK_REVERSED";
++        EventCodeEnum["DisputeDefensePeriodEnded"] = "DISPUTE_DEFENSE_PERIOD_ENDED";
++        EventCodeEnum["Donation"] = "DONATION";
++        EventCodeEnum["Expire"] = "EXPIRE";
++        EventCodeEnum["HandledExternally"] = "HANDLED_EXTERNALLY";
++        EventCodeEnum["InformationSupplied"] = "INFORMATION_SUPPLIED";
++        EventCodeEnum["IssuerComments"] = "ISSUER_COMMENTS";
++        EventCodeEnum["IssuerResponseTimeframeExpired"] = "ISSUER_RESPONSE_TIMEFRAME_EXPIRED";
++        EventCodeEnum["ManualReviewAccept"] = "MANUAL_REVIEW_ACCEPT";
++        EventCodeEnum["ManualReviewReject"] = "MANUAL_REVIEW_REJECT";
++        EventCodeEnum["NotificationOfChargeback"] = "NOTIFICATION_OF_CHARGEBACK";
++        EventCodeEnum["NotificationOfFraud"] = "NOTIFICATION_OF_FRAUD";
++        EventCodeEnum["OfferClosed"] = "OFFER_CLOSED";
++        EventCodeEnum["OrderClosed"] = "ORDER_CLOSED";
++        EventCodeEnum["OrderOpened"] = "ORDER_OPENED";
++        EventCodeEnum["PaidoutReversed"] = "PAIDOUT_REVERSED";
++        EventCodeEnum["Pending"] = "PENDING";
++        EventCodeEnum["PostponedRefund"] = "POSTPONED_REFUND";
++        EventCodeEnum["PrearbitrationLost"] = "PREARBITRATION_LOST";
++        EventCodeEnum["PrearbitrationWon"] = "PREARBITRATION_WON";
++        EventCodeEnum["ProcessRetry"] = "PROCESS_RETRY";
++        EventCodeEnum["PayoutDecline"] = "PAYOUT_DECLINE";
++        EventCodeEnum["PayoutExpire"] = "PAYOUT_EXPIRE";
++        EventCodeEnum["PayoutThirdparty"] = "PAYOUT_THIRDPARTY";
++        EventCodeEnum["RecurringContract"] = "RECURRING_CONTRACT";
++        EventCodeEnum["Refund"] = "REFUND";
++        EventCodeEnum["RefundFailed"] = "REFUND_FAILED";
++        EventCodeEnum["RefundedReversed"] = "REFUNDED_REVERSED";
++        EventCodeEnum["RefundWithData"] = "REFUND_WITH_DATA";
++        EventCodeEnum["ReportAvailable"] = "REPORT_AVAILABLE";
++        EventCodeEnum["RequestForInformation"] = "REQUEST_FOR_INFORMATION";
++        EventCodeEnum["SecondChargeback"] = "SECOND_CHARGEBACK";
++        EventCodeEnum["TechnicalCancel"] = "TECHNICAL_CANCEL";
++        EventCodeEnum["VoidPendingRefund"] = "VOID_PENDING_REFUND";
+     })(EventCodeEnum = NotificationRequestItem.EventCodeEnum || (NotificationRequestItem.EventCodeEnum = {}));
+     let OperationsEnum;
+     (function (OperationsEnum) {
+-        OperationsEnum[OperationsEnum["Cancel"] = 'CANCEL'] = "Cancel";
+-        OperationsEnum[OperationsEnum["Capture"] = 'CAPTURE'] = "Capture";
+-        OperationsEnum[OperationsEnum["Refund"] = 'REFUND'] = "Refund";
++        OperationsEnum["Cancel"] = "CANCEL";
++        OperationsEnum["Capture"] = "CAPTURE";
++        OperationsEnum["Refund"] = "REFUND";
+     })(OperationsEnum = NotificationRequestItem.OperationsEnum || (NotificationRequestItem.OperationsEnum = {}));
+     let SuccessEnum;
+     (function (SuccessEnum) {
+-        SuccessEnum[SuccessEnum["True"] = 'true'] = "True";
+-        SuccessEnum[SuccessEnum["False"] = 'false'] = "False";
++        SuccessEnum["True"] = "true";
++        SuccessEnum["False"] = "false";
+     })(SuccessEnum = NotificationRequestItem.SuccessEnum || (NotificationRequestItem.SuccessEnum = {}));
+ })(NotificationRequestItem = exports.NotificationRequestItem || (exports.NotificationRequestItem = {}));
+ //# sourceMappingURL=notificationRequestItem.js.map

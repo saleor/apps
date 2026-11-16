@@ -1,5 +1,24 @@
 # saleor-app-search
 
+## 1.34.5
+
+### Patch Changes
+
+- 783412b: Product webhooks no longer fail when Saleor rate limits the app during a burst of product changes (e.g. a bulk edit). Before, the app answered with an error and Saleor kept retrying, which made the burst worse. Now the event is acknowledged, a warning is logged, and the product is reindexed the next time it changes.
+
+## 1.34.4
+
+### Patch Changes
+
+- Updated dependencies [ef64608]
+  - @saleor/stale-installations-cleanup@0.4.0
+
+## 1.34.3
+
+### Patch Changes
+
+- d34f4d9: Upgraded Next.js to v16.4.5
+
 ## 1.34.2
 
 ### Patch Changes

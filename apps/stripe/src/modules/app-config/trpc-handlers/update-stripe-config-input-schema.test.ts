@@ -15,12 +15,14 @@ describe("updateStripeConfigInputSchema", () => {
   it("Accepts a full key pair from the same environment", () => {
     expect(
       updateStripeConfigInputSchema.parse({
+        customerCreationEnabled: false,
         configId: mockedConfigurationId,
         name: "Renamed",
         publishableKey: mockedStripePublishableKey,
         restrictedKey: mockedStripeRestrictedKey,
       }),
     ).toStrictEqual({
+      customerCreationEnabled: false,
       configId: mockedConfigurationId,
       name: "Renamed",
       publishableKey: mockedStripePublishableKey,
@@ -31,6 +33,7 @@ describe("updateStripeConfigInputSchema", () => {
   it("Accepts a full test key pair", () => {
     expect(
       updateStripeConfigInputSchema.parse({
+        customerCreationEnabled: false,
         configId: mockedConfigurationId,
         name: "Sandbox",
         publishableKey: mockedStripePublishableKeyTest,
@@ -45,6 +48,7 @@ describe("updateStripeConfigInputSchema", () => {
   it("Accepts null restrictedKey so the stored key is kept", () => {
     expect(
       updateStripeConfigInputSchema.parse({
+        customerCreationEnabled: false,
         configId: mockedConfigurationId,
         name: "Renamed",
         publishableKey: mockedStripePublishableKey,
@@ -58,6 +62,7 @@ describe("updateStripeConfigInputSchema", () => {
   it("Rejects an empty name", () => {
     expect(() =>
       updateStripeConfigInputSchema.parse({
+        customerCreationEnabled: false,
         configId: mockedConfigurationId,
         name: "",
         publishableKey: mockedStripePublishableKey,
@@ -83,6 +88,7 @@ describe("updateStripeConfigInputSchema", () => {
   it("Rejects mixing live and test keys when a new restricted key is provided", () => {
     expect(() =>
       updateStripeConfigInputSchema.parse({
+        customerCreationEnabled: false,
         configId: mockedConfigurationId,
         name: "Renamed",
         publishableKey: mockedStripePublishableKeyTest,
@@ -106,6 +112,7 @@ describe("updateStripeConfigInputSchema", () => {
      */
     expect(
       updateStripeConfigInputSchema.parse({
+        customerCreationEnabled: false,
         configId: mockedConfigurationId,
         name: "Renamed",
         publishableKey: mockedStripePublishableKeyTest,

@@ -1,20 +1,6 @@
-import { type Client, gql } from "urql";
+import { type Client } from "urql";
 
 import { FetchChannelsDocument } from "../../../../generated/graphql";
-
-gql`
-  fragment Channel on Channel {
-    name
-    id
-    slug
-  }
-
-  query FetchChannels {
-    channels {
-      ...Channel
-    }
-  }
-`;
 
 export class ChannelsFetcher {
   constructor(private client: Client) {}

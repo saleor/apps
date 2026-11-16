@@ -34,7 +34,7 @@ export class BuilderIoBulkSyncProcessor implements BulkSyncProcessor {
                 slug: product.slug,
               },
             })
-            .then((r) => {
+            .then(() => {
               if (hooks.onUploadSuccess) {
                 hooks.onUploadSuccess({ variantId: variant.id });
               }

@@ -28,7 +28,7 @@ const segmentEventTrackerFactory = new SegmentEventTrackerFactory();
 const useCase = new TrackEventUseCase({ segmentEventTrackerFactory });
 
 const handler: NextJsWebhookHandler<OrderConfirmedSubscriptionPayloadFragment> = async (
-  req,
+  _req,
   res,
   context,
 ) => {

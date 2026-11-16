@@ -38,16 +38,12 @@ cat > "${PACKAGE_PATH}/package.json" << ENDJSON
   },
   "scripts": {
     "check-types": "tsc",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
     "test": "vitest",
     "test:ci": "vitest run --coverage"
   },
   "devDependencies": {
-    "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@vitest/coverage-v8": "catalog:",
-    "eslint": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
@@ -63,14 +59,6 @@ cat > "${PACKAGE_PATH}/tsconfig.json" << 'ENDJSON'
   "exclude": ["node_modules"]
 }
 ENDJSON
-
-# --- eslint.config.js ---
-cat > "${PACKAGE_PATH}/eslint.config.js" << 'ENDJS'
-import { config } from "@saleor/eslint-config-apps/index.js";
-
-/** @type {import("eslint").Linter.Config} */
-export default [...config];
-ENDJS
 
 # --- vitest.config.ts ---
 cat > "${PACKAGE_PATH}/vitest.config.ts" << 'ENDTS'
@@ -96,16 +84,6 @@ cat > "${PACKAGE_PATH}/turbo.json" << 'ENDJSON'
   "tasks": {}
 }
 ENDJSON
-
-# --- lint-staged.config.js ---
-cat > "${PACKAGE_PATH}/lint-staged.config.js" << 'ENDJS'
-import baseConfig from "../../lint-staged.config.js";
-
-export default {
-  ...baseConfig,
-  "*.{jsx,tsx,ts,js}": ["eslint --cache --fix", "prettier --write"],
-};
-ENDJS
 
 # --- CHANGELOG.md ---
 cat > "${PACKAGE_PATH}/CHANGELOG.md" << ENDMD

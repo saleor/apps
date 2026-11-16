@@ -113,6 +113,8 @@ export type RelatedProductsFragment = { __typename?: 'Product', id: string, name
 
 export type WeightFragment = { __typename?: 'Weight', unit: WeightUnitsEnum, value: number };
 
+export type ChannelFragment = { __typename?: 'Channel', name: string, id: string, slug: string };
+
 export type DeleteAppMetadataMutationVariables = Exact<{
   id: Scalars['ID']['input'];
   keys: Array<Scalars['String']['input']> | Scalars['String']['input'];
@@ -186,8 +188,6 @@ export type ShopDetailsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ShopDetailsQuery = { __typename?: 'Query', shop: { __typename?: 'Shop', name: string, description?: string | null } };
-
-export type ChannelFragment = { __typename?: 'Channel', name: string, id: string, slug: string };
 
 export type FetchChannelsQueryVariables = Exact<{ [key: string]: never; }>;
 

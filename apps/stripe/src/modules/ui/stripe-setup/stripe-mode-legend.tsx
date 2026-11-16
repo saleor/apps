@@ -84,6 +84,11 @@ export const StripeModeLegend = () => (
                   Payment Methods — Read
                 </Text>
               </Box>
+              <Box as="li" className={styles.scope}>
+                <Text size={1} color="default2">
+                  Customers — Write (optional, needed to create Stripe customers)
+                </Text>
+              </Box>
             </Box>
           </Box>
 

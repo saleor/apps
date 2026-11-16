@@ -3,11 +3,10 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { captureException } from "@sentry/nextjs";
-import { gql } from "urql";
 
 import {
+  OrderConfirmedDocument,
   type OrderConfirmedWebhookPayloadFragment,
-  OrderDetailsFragmentDoc,
 } from "../../../../generated/graphql";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
@@ -15,32 +14,12 @@ import { handleUseCaseErrors } from "../../../modules/event-handlers/send-event-
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { saleorApp } from "../../../saleor-app";
 
-const OrderConfirmedWebhookPayload = gql`
-  ${OrderDetailsFragmentDoc}
-
-  fragment OrderConfirmedWebhookPayload on OrderConfirmed {
-    version
-    order {
-      ...OrderDetails
-    }
-  }
-`;
-
-const OrderConfirmedGraphqlSubscription = gql`
-  ${OrderConfirmedWebhookPayload}
-  subscription OrderConfirmed {
-    event {
-      ...OrderConfirmedWebhookPayload
-    }
-  }
-`;
-
 export const orderConfirmedWebhook = new SaleorAsyncWebhook<OrderConfirmedWebhookPayloadFragment>({
   name: "Order Confirmed in Saleor",
   webhookPath: "api/webhooks/order-confirmed",
   event: "ORDER_CONFIRMED",
   apl: saleorApp.apl,
-  query: OrderConfirmedGraphqlSubscription,
+  query: OrderConfirmedDocument,
 });
 
 const logger = createLogger(orderConfirmedWebhook.webhookPath);

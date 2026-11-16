@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { GenericRootConfig } from "./generic-root-config";
-import { BaseConfig } from "./types";
+import { type BaseConfig } from "./types";
 
 const configs = {
   config1: { id: "config1", name: "Config 1" },

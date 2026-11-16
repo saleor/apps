@@ -14,6 +14,9 @@
         "SENTRY_AUTH_TOKEN",
         "SENTRY_PROJECT"
       ]
+    },
+    "generate": {
+      "inputs": ["**/*.graphql", "graphql.config.ts", "package.json"]
     }
   }
 }

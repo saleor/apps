@@ -46,7 +46,7 @@ export const CategoryMappingForm = ({
     <Box
       as={"form"}
       {...props}
-      onSubmit={handleSubmit((data, event) => {
+      onSubmit={handleSubmit((data) => {
         mutate(data);
       })}
     >

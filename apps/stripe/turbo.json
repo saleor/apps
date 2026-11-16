@@ -2,6 +2,9 @@
   "$schema": "https://turbo.build/schema.v2.json",
   "extends": ["//"],
   "tasks": {
+    "generate": {
+      "outputs": ["generated/**", "public/.well-known/**"]
+    },
     "deploy": {
       "env": [
         "ALLOWED_DOMAIN_PATTERN",

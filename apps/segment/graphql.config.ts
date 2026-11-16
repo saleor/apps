@@ -4,12 +4,7 @@ const config: IGraphQLConfig = {
   projects: {
     default: {
       schema: "graphql/schema.graphql",
-      documents: [
-        "graphql/**/*.graphql",
-        "src/**/*.ts",
-        "src/**/*.tsx",
-        "scripts/migrations/**/*.ts",
-      ],
+      documents: ["graphql/**/*.graphql"],
       extensions: {
         codegen: {
           generates: {

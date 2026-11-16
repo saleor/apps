@@ -1,186 +1,117 @@
 import { useAppBridge, useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
-import { Breadcrumbs, ButtonsBox, Layout, SkeletonLayout, TextLink } from "@saleor/apps-ui";
-import { Box, Button, Input, Text } from "@saleor/macaw-ui";
-import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
+import { TextLink } from "@saleor/apps-ui";
+import { Callout, type ConfirmButtonTransitionState } from "@saleor/apps-ui-next";
+import { Box, Text } from "@saleor/macaw-ui";
+import { useEffect, useState } from "react";
 
 import { useAppApi } from "../hooks/use-app-api";
+import {
+  type ConfigurationKey,
+  type ConfigurationValues,
+  ConfigurationView,
+} from "../modules/configuration/configuration-view";
 
-interface ConfigurationField {
-  key: string;
-  value: string;
-}
+type ConfigurationField = { key: ConfigurationKey; value: string | undefined };
 
-function Instructions() {
-  return (
-    <Box>
-      <Text as={"h3"} fontWeight="bold" size={5} marginY={4}>
-        How to set up
-      </Text>
-      <Text as="p" marginBottom={2}>
-        App will send events as Klaviyo metrics each time Saleor Event occurs.
-      </Text>
-      <Text as="p" marginBottom={2}>
-        When first metric is sent, it should be available in Klaviyo to build on top of.
-      </Text>
-      <Text as="p" marginBottom={4}>
-        Metric name can be customized, PUBLIC_TOKEN must be provided to enable the app.
-      </Text>
-      <Text as={"h3"} fontWeight="bold" size={5}>
-        Useful links
-      </Text>
-      <ul>
-        <li>
-          <TextLink href="https://github.com/saleor/saleor-app-klaviyo" newTab>
-            Visit repository & readme
-          </TextLink>
-        </li>
-      </ul>
-      <Text as={"h3"} fontWeight="bold" size={5}>
-        How to configure
-      </Text>
-      <ul>
-        <li>
+const toValues = (fields: ConfigurationField[]) =>
+  Object.fromEntries(fields.map(({ key, value }) => [key, value ?? ""])) as ConfigurationValues;
+
+const toFields = (values: ConfigurationValues) =>
+  Object.entries(values).map(([key, value]) => ({ key, value }));
+
+const ApiUnreachable = () => (
+  <Callout type="error" title="Can't connect with the app API">
+    <Box as="ul" margin={0} paddingLeft={4}>
+      <li>
+        <Text size={2}>The internet connection has been lost.</Text>
+      </li>
+      <li>
+        <Text size={2}>
+          The installation is still in progress. If you deploy on Vercel, wait for the redeployment
+          and try again in a minute.
+        </Text>
+      </li>
+      <li>
+        <Text size={2}>
+          The app is misconfigured. See how auth data is stored in the{" "}
           <TextLink
-            href="https://help.klaviyo.com/hc/en-us/articles/115005062267-How-to-Manage-Your-Account-s-API-Keys"
+            href="https://docs.saleor.io/developer/extending/apps/developing-apps/app-sdk/apl"
             newTab
           >
-            Read about public tokens
+            APL documentation
           </TextLink>
-        </li>
-        <li>
-          <TextLink href="https://www.klaviyo.com/account#api-keys-tab" newTab>
-            Get public token here
-          </TextLink>
-        </li>
-        <li>
-          <TextLink
-            href="https://help.klaviyo.com/hc/en-us/articles/115005076787-Guide-to-Managing-Your-Metrics"
-            newTab
-          >
-            Read about metrics
-          </TextLink>
-        </li>
-      </ul>
+          .
+        </Text>
+      </li>
     </Box>
-  );
-}
+  </Callout>
+);
 
 function Configuration() {
   const { appBridgeState } = useAppBridge();
   const { notifySuccess, notifyError } = useDashboardNotification();
-  const [configuration, setConfiguration] = useState<ConfigurationField[]>();
   const authenticatedFetch = useAuthenticatedFetch() as typeof window.fetch;
+  const [values, setValues] = useState<ConfigurationValues>();
+  const [saveState, setSaveState] = useState<ConfirmButtonTransitionState>("default");
 
-  const { data: configurationData, error } = useAppApi({
-    url: "/api/configuration",
-  });
+  const { data, error } = useAppApi({ url: "/api/configuration" });
 
   useEffect(() => {
-    if (configurationData && !configuration) {
-      setConfiguration(configurationData.data);
+    if (data && !values) {
+      setValues(toValues(data.data));
     }
-  }, [configurationData, configuration]);
-
-  /**
-   * TODO Rewrite to tRPC
-   */
-  const handleSubmit = (event: SyntheticEvent) => {
-    event.preventDefault();
-
-    authenticatedFetch("/api/configuration", {
-      method: "POST",
-      body: JSON.stringify({ data: configuration }),
-    })
-      .then(async (response) => {
-        if (response.status !== 200) {
-          throw new Error("Error saving configuration data");
-        }
-
-        notifySuccess("Success", "Configuration updated successfully");
-      })
-      .catch(async () => {
-        await notifyError(
-          "Configuration update failed. Ensure fields are filled correctly and you have MANAGE_APPS permission",
-        );
-      });
-  };
-
-  const onChange = (event: ChangeEvent) => {
-    const { name, value } = event.target as HTMLInputElement;
-
-    setConfiguration((prev) =>
-      prev!.map((prevField) => (prevField.key === name ? { ...prevField, value } : prevField)),
-    );
-  };
+  }, [data, values]);
 
   if (!appBridgeState) {
     return null;
   }
 
-  if (appBridgeState.user?.permissions.includes("MANAGE_APPS") === false) {
-    return <Text>You do not have permission to access this page.</Text>;
-  }
+  const save = async (next: ConfigurationValues) => {
+    setSaveState("loading");
 
-  if (error) {
-    return (
-      <div>
-        <h1>⚠️ Can&apos;t connect with the App API</h1>
-        You may see this error because:
-        <ul>
-          <li>Internet connection has been lost</li>
-          <li>
-            Application installation process is still in progress. If you use Vercel, you may need
-            to wait for redeployment of the app - try again in a minute.
-          </li>
-          <li>
-            Application is misconfigured. If you would like to know more how auth configuration is
-            kept,{" "}
-            <a
-              href="https://docs.saleor.io/developer/extending/apps/developing-apps/app-sdk/apl"
-              target="_blank"
-              rel="noreferrer"
-            >
-              go to APL documentation
-            </a>
-            .
-          </li>
-        </ul>
-      </div>
-    );
-  }
+    try {
+      const response = await authenticatedFetch("/api/configuration", {
+        method: "POST",
+        body: JSON.stringify({ data: toFields(next) }),
+      });
+      const json = response.ok ? await response.json() : undefined;
 
-  if (configuration === undefined) {
-    return <SkeletonLayout.Section />;
-  }
+      /* The handler answers 200 with `success: false` when writing the metadata fails. */
+      if (!json?.success) {
+        throw new Error("Error saving configuration data");
+      }
+
+      setValues(toValues(json.data));
+      setSaveState("success");
+      notifySuccess("Configuration saved");
+    } catch {
+      setSaveState("error");
+      await notifyError(
+        "Configuration update failed",
+        "Ensure fields are filled correctly and you have the MANAGE_APPS permission.",
+      );
+    }
+  };
+
+  const fallback =
+    appBridgeState.user?.permissions.includes("MANAGE_APPS") === false ? (
+      <Callout type="error" title="You do not have permission to access this page">
+        <Text size={2}>
+          Ask a staff member with the MANAGE_APPS permission to configure Klaviyo.
+        </Text>
+      </Callout>
+    ) : error ? (
+      <ApiUnreachable />
+    ) : undefined;
 
   return (
-    <Box>
-      <Breadcrumbs marginBottom={10}>
-        <Breadcrumbs.Item>Configuration</Breadcrumbs.Item>
-      </Breadcrumbs>
-      <Layout.AppSection heading="Set up integration" sideContent={<Instructions />}>
-        <Layout.AppSectionCard
-          as={"form"}
-          onSubmit={handleSubmit}
-          footer={
-            <ButtonsBox>
-              <Button type="submit" variant="primary">
-                Save
-              </Button>
-            </ButtonsBox>
-          }
-        >
-          <Box display={"grid"} gap={4} gridAutoFlow={"row"}>
-            {configuration!.map(({ key, value }) => (
-              <div key={key}>
-                <Input label={key} name={key} onChange={onChange} value={value} />
-              </div>
-            ))}
-          </Box>
-        </Layout.AppSectionCard>
-      </Layout.AppSection>
-    </Box>
+    <ConfigurationView
+      values={values}
+      fallback={fallback}
+      saveState={saveState}
+      onSave={(next) => void save(next)}
+    />
   );
 }
 

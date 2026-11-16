@@ -1,6 +1,6 @@
 {
   "name": "@saleor/stale-installations-cleanup",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "type": "module",
   "exports": {
     ".": {
@@ -15,8 +15,6 @@
   "main": "./src/index.ts",
   "scripts": {
     "check-types": "tsc",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
     "test": "vitest",
     "test:ci": "vitest run --coverage"
   },
@@ -30,10 +28,8 @@
   },
   "devDependencies": {
     "@saleor/app-sdk": "catalog:",
-    "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@vitest/coverage-v8": "catalog:",
-    "eslint": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"

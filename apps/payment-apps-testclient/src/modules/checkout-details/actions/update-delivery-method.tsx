@@ -84,6 +84,7 @@ export const updateDeliveryMethod = actionClient
       onSuccess: async ({ parsedInput }) => {
         await redirectToPaymentGatewaySelect({
           checkoutId: parsedInput.checkoutId,
+          envUrl: parsedInput.envUrl,
         });
       },
     },

@@ -4,6 +4,7 @@ import {
   GetCommand,
   PutCommand,
   QueryCommand,
+  UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { mockClient } from "aws-sdk-client-mock";
 import { beforeEach, describe, expect, it } from "vitest";
@@ -126,6 +127,7 @@ describe("DynamodbAppConfigRepo", () => {
           },
           "stripeConfigsById": {
             "81f323bd-91e2-4838-ab6e-5affd81ffc3b": StripeConfig {
+              "customerCreationEnabled": false,
               "id": "81f323bd-91e2-4838-ab6e-5affd81ffc3b",
               "name": "tasdafsdf",
               "publishableKey": "pk_test_51Ng2yKKFxIUko8m0IUBO8GvarTlXcNIpAATM9cE7S2GaoFLsTAsn5avHHjfLFVKewqTFwMb2wqOP87CEbgwljzf200aXXm38oM",
@@ -134,6 +136,7 @@ describe("DynamodbAppConfigRepo", () => {
               "webhookSecret": "whsec_ZOsiN376Ahfo0N8lWg7PYXNGpnDXShS5",
             },
             "another-config-id": StripeConfig {
+              "customerCreationEnabled": false,
               "id": "another-config-id",
               "name": "tasdafsdf",
               "publishableKey": "pk_test_51Ng2yKKFxIUko8m0IUBO8GvarTlXcNIpAATM9cE7S2GaoFLsTAsn5avHHjfLFVKewqTFwMb2wqOP87CEbgwljzf200aXXm38oM",
@@ -187,6 +190,7 @@ describe("DynamodbAppConfigRepo", () => {
       expect(result._unsafeUnwrap()).toBeInstanceOf(StripeConfig);
       expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
         StripeConfig {
+          "customerCreationEnabled": false,
           "id": "81f323bd-91e2-4838-ab6e-5affd81ffc3b",
           "name": "tasdafsdf",
           "publishableKey": "pk_test_51Ng2yKKFxIUko8m0IUBO8GvarTlXcNIpAATM9cE7S2GaoFLsTAsn5avHHjfLFVKewqTFwMb2wqOP87CEbgwljzf200aXXm38oM",
@@ -229,6 +233,7 @@ describe("DynamodbAppConfigRepo", () => {
       expect(result._unsafeUnwrap()).toBeInstanceOf(StripeConfig);
       expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
         StripeConfig {
+          "customerCreationEnabled": false,
           "id": "81f323bd-91e2-4838-ab6e-5affd81ffc3b",
           "name": "tasdafsdf",
           "publishableKey": "pk_test_51Ng2yKKFxIUko8m0IUBO8GvarTlXcNIpAATM9cE7S2GaoFLsTAsn5avHHjfLFVKewqTFwMb2wqOP87CEbgwljzf200aXXm38oM",
@@ -327,8 +332,9 @@ describe("DynamodbAppConfigRepo", () => {
        *
        * Warning: stripeRk and stripeWhSecret are encrypted and random
        */
-      // @ts-expect-error - Item is not defined on mock
-      expect(mockDocumentClient.calls()[0].args[0].input.Item).toMatchInlineSnapshot(
+      expect(
+        mockDocumentClient.commandCalls(PutCommand)[0].args[0].input.Item,
+      ).toMatchInlineSnapshot(
         {
           createdAt: expect.any(String),
           modifiedAt: expect.any(String),
@@ -343,6 +349,7 @@ describe("DynamodbAppConfigRepo", () => {
           "configId": "81f323bd-91e2-4838-ab6e-5affd81ffc3b",
           "configName": "config-name",
           "createdAt": Any<String>,
+          "customerCreationEnabled": false,
           "modifiedAt": Any<String>,
           "stripePk": "pk_live_1",
           "stripeRk": Any<String>,
@@ -392,8 +399,9 @@ describe("DynamodbAppConfigRepo", () => {
       /**
        * Assert args that are sent to DynamoDB
        */
-      // @ts-expect-error - Item is not defined on mock
-      expect(mockDocumentClient.calls()[0].args[0].input.Item).toMatchInlineSnapshot(
+      expect(
+        mockDocumentClient.commandCalls(PutCommand)[0].args[0].input.Item,
+      ).toMatchInlineSnapshot(
         {
           createdAt: expect.any(String),
           modifiedAt: expect.any(String),
@@ -498,6 +506,42 @@ describe("DynamodbAppConfigRepo", () => {
       expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
         `[FailureRemovingConfigError: Failed to remove config from DynamoDB]`,
       );
+    });
+  });
+
+  describe("disableCustomerCreation", () => {
+    const access = {
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      configId: mockedConfigurationId,
+    };
+
+    it("Updates only the flag, and only on an existing config", async () => {
+      mockDocumentClient.on(UpdateCommand).resolvesOnce({});
+
+      const result = await repo.disableCustomerCreation(access);
+
+      expect(result._unsafeUnwrap()).toBeNull();
+
+      const input = mockDocumentClient.commandCalls(UpdateCommand)[0].args[0].input;
+
+      expect(input.Key).toStrictEqual({
+        PK: `${mockedSaleorApiUrl}#${mockedSaleorAppId}`,
+        SK: `CONFIG_ID#${mockedConfigurationId}`,
+      });
+      const updatedAttributes = Object.values(input.ExpressionAttributeNames ?? {});
+
+      expect(updatedAttributes).toContain("customerCreationEnabled");
+      expect(updatedAttributes).not.toContain("stripeRk");
+      expect(input.ConditionExpression).toContain("attribute_exists");
+    });
+
+    it("Returns FailureSavingConfig when DynamoDB fails", async () => {
+      mockDocumentClient.on(UpdateCommand).rejectsOnce(new Error("dynamo down"));
+
+      const result = await repo.disableCustomerCreation(access);
+
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(AppConfigRepoError.FailureSavingConfig);
     });
   });
 });

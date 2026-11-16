@@ -9,12 +9,16 @@ export const env = createEnv({
     PORT: z.coerce.number().optional().default(3001),
   },
   client: {
+    NEXT_PUBLIC_INITIAL_DEVICE_ID: z.string().optional(),
+    NEXT_PUBLIC_INITIAL_LOCATION_ID: z.string().optional(),
     NEXT_PUBLIC_INITIAL_ENV_URL: envUrlSchema.optional(),
     NEXT_PUBLIC_INITIAL_CHANNEL_SLUG: z.string(),
     NEXT_PUBLIC_INITIAL_CHECKOUT_COUNTRY_CODE: z.enum(["PL", "SE", "US"]).optional().default("US"),
     NEXT_PUBLIC_LOG_LEVEL: z.enum(["info", "warn", "error"]).optional().default("info"),
   },
   runtimeEnv: {
+    NEXT_PUBLIC_INITIAL_DEVICE_ID: process.env.NEXT_PUBLIC_INITIAL_DEVICE_ID,
+    NEXT_PUBLIC_INITIAL_LOCATION_ID: process.env.NEXT_PUBLIC_INITIAL_LOCATION_ID,
     NEXT_PUBLIC_INITIAL_CHANNEL_SLUG: process.env.NEXT_PUBLIC_INITIAL_CHANNEL_SLUG,
     NEXT_PUBLIC_INITIAL_ENV_URL: process.env.NEXT_PUBLIC_INITIAL_ENV_URL,
     NEXT_PUBLIC_LOG_LEVEL: process.env.NEXT_PUBLIC_LOG_LEVEL,
@@ -24,4 +28,15 @@ export const env = createEnv({
   },
   extends: [vercel()],
   isServer: typeof window === "undefined",
+});
+
+/*
+ * Read only on the server. Missing Terminal configuration must not prevent
+ * the public Adyen, Stripe, or Square Online client from starting.
+ */
+export const readTerminalEnvironment = () => ({
+  appUrl: process.env.TERMINAL_APP_URL,
+  appId: process.env.SALEOR_APP_ID,
+  issuer: process.env.INTEGRATION_JWT_ISSUER,
+  secret: process.env.INTEGRATION_JWT_SHARED_SECRET,
 });

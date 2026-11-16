@@ -1,0 +1,14 @@
+fragment StripeCustomerAddress on Address {
+  firstName
+  lastName
+  companyName
+  streetAddress1
+  streetAddress2
+  city
+  postalCode
+  country {
+    code
+  }
+  countryArea
+  phone
+}

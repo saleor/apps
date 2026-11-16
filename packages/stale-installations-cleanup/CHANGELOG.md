@@ -1,5 +1,11 @@
 # @saleor/stale-installations-cleanup
 
+## 0.4.0
+
+### Minor Changes
+
+- ef64608: The cleanup now reads the table in parallel when it looks for a deleted installation's data. This helps apps whose table also holds transactions finish the cleanup within the time limit. It still finds data left by an earlier install of the same environment under another app ID. The cleanup now also logs when it starts and how many installations it checks, so you can tell a timed-out run from one that never ran.
+
 ## 0.3.1
 
 ### Patch Changes

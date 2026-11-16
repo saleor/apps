@@ -62,7 +62,7 @@ describe("getAppConfig", () => {
     const { providerConnections, channels } = getAppConfig([]);
 
     expect(providerConnections).toStrictEqual([]);
-    expect(channels).toStrictEqual({});
+    expect(channels).toStrictEqual([]);
   });
 
   it("returns decrypted providerConnections and channels config when metadata provided", () => {

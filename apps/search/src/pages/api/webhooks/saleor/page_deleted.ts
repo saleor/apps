@@ -21,7 +21,7 @@ export const config = {
 
 const logger = createLogger("webhookPageDeletedHandler");
 
-export const handler: NextJsWebhookHandler<PageDeleted> = async (req, res, context) => {
+export const handler: NextJsWebhookHandler<PageDeleted> = async (_req, res, context) => {
   loggerContext.setSaleorVersion(context.schemaVersion);
 
   const { event, authData } = context;

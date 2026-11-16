@@ -29,7 +29,7 @@ type AvataxConfigurationFormProps = {
     isLoading: boolean;
   };
   validateCredentials: {
-    handleFn: (config: BaseAvataxConfig) => Promise<{}>;
+    handleFn: (config: BaseAvataxConfig) => Promise<unknown>;
     isLoading: boolean;
   };
   defaultValues: AvataxConfig;

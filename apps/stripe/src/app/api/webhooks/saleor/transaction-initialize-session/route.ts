@@ -16,7 +16,10 @@ import { setObservabilitySourceObjectId } from "@/lib/observability-source-objec
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { createStripeProblemReporter } from "@/modules/app-problems";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { StripeCustomersApiFactory } from "@/modules/stripe/stripe-customers-api-factory";
 import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
+import { stripeCustomerLinkRepo } from "@/modules/stripe-customers/repositories/stripe-customer-link-repo-impl";
+import { StripeCustomerResolver } from "@/modules/stripe-customers/stripe-customer-resolver";
 import { transactionRecorder } from "@/modules/transactions-recording/repositories/transaction-recorder-impl";
 
 import { withRecipientVerification } from "../with-recipient-verification";
@@ -27,6 +30,8 @@ const useCase = new TransactionInitializeSessionUseCase({
   appConfigRepo: appConfigRepoImpl,
   stripePaymentIntentsApiFactory: new StripePaymentIntentsApiFactory(),
   transactionRecorder: transactionRecorder,
+  stripeCustomersApiFactory: new StripeCustomersApiFactory(),
+  stripeCustomerResolver: new StripeCustomerResolver({ linkRepo: stripeCustomerLinkRepo }),
 });
 
 const logger = createLogger("TRANSACTION_INITIALIZE_SESSION route");

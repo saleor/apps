@@ -1,18 +1,20 @@
 {
   "name": "saleor-payment-apps-testclient",
-  "version": "0.1.5",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "next build",
+    "build:ci": "pnpm run build",
     "check-types": "next typegen && tsc --noEmit",
     "dev": "next dev --port 3001",
     "generate": "gql.tada generate output && gql.tada turbo",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
     "start": "next start",
     "test": "vitest",
-    "test:ci": "vitest run --coverage"
+    "test:ci": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:adyen": "playwright test --config playwright.adyen.config.ts",
+    "test:e2e:install": "playwright install --with-deps chromium"
   },
   "dependencies": {
     "@adyen/adyen-web": "5.66.1",
@@ -28,7 +30,7 @@
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-query-devtools": "4.29.19",
     "class-variance-authority": "0.7.0",
-    "clsx": "1.2.1",
+    "clsx": "catalog:",
     "currency-codes": "2.2.0",
     "currency.js": "2.0.4",
     "date-fns": "3.6.0",
@@ -36,6 +38,7 @@
     "gql.tada": "1.8.10",
     "graphql": "catalog:",
     "graphql-request": "7.4.0",
+    "jose": "6.2.10",
     "lucide-react": "catalog:",
     "modern-errors": "catalog:",
     "modern-errors-serialize": "catalog:",
@@ -50,15 +53,13 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@saleor/eslint-config-apps": "workspace:*",
+    "@playwright/test": "catalog:",
     "@saleor/typescript-config-apps": "workspace:*",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "@vitest/coverage-v8": "catalog:",
-    "eslint": "catalog:",
-    "eslint-plugin-n": "catalog:",
     "jsdom": "catalog:",
     "tailwindcss": "3.4.4",
     "typescript": "catalog:",

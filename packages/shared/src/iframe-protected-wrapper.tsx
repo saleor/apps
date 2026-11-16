@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { isInIframe } from "./is-in-iframe";
 

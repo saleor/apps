@@ -9,6 +9,8 @@ import {
   mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
 } from "@/__tests__/mocks/constants";
 import { mockStripeProblemReporter } from "@/__tests__/mocks/mock-stripe-problem-reporter";
+import { mockedStripeCustomerLinkRepo } from "@/__tests__/mocks/mocked-stripe-customer-link-repo";
+import { mockedStripeCustomersApi } from "@/__tests__/mocks/mocked-stripe-customers-api";
 import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
@@ -18,7 +20,11 @@ import {
   StripeAuthenticationError,
   StripePermissionError,
 } from "@/modules/stripe/stripe-api-error";
-import { type IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+import {
+  type IStripeCustomersApiFactory,
+  type IStripePaymentIntentsApiFactory,
+} from "@/modules/stripe/types";
+import { StripeCustomerResolver } from "@/modules/stripe-customers/stripe-customer-resolver";
 
 import { TransactionInitializeSessionUseCase } from "./use-case";
 
@@ -47,6 +53,10 @@ describe("TransactionInitializeSessionUseCase - problem reporting", () => {
     create: () => mockedStripePaymentIntentsApi,
   } satisfies IStripePaymentIntentsApiFactory;
 
+  const stripeCustomersApiFactory = {
+    create: () => mockedStripeCustomersApi,
+  } satisfies IStripeCustomersApiFactory;
+
   it("Reports authentication problem when Stripe returns StripeAuthenticationError", async () => {
     vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementationOnce(
       async () =>
@@ -64,6 +74,10 @@ describe("TransactionInitializeSessionUseCase - problem reporting", () => {
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
       transactionRecorder: new MockedTransactionRecorder(),
+      stripeCustomersApiFactory,
+      stripeCustomerResolver: new StripeCustomerResolver({
+        linkRepo: mockedStripeCustomerLinkRepo,
+      }),
     });
 
     await uc.execute({
@@ -97,6 +111,10 @@ describe("TransactionInitializeSessionUseCase - problem reporting", () => {
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
       transactionRecorder: new MockedTransactionRecorder(),
+      stripeCustomersApiFactory,
+      stripeCustomerResolver: new StripeCustomerResolver({
+        linkRepo: mockedStripeCustomerLinkRepo,
+      }),
     });
 
     await uc.execute({
@@ -130,6 +148,10 @@ describe("TransactionInitializeSessionUseCase - problem reporting", () => {
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
       transactionRecorder: new MockedTransactionRecorder(),
+      stripeCustomersApiFactory,
+      stripeCustomerResolver: new StripeCustomerResolver({
+        linkRepo: mockedStripeCustomerLinkRepo,
+      }),
     });
 
     await uc.execute({
@@ -162,6 +184,10 @@ describe("TransactionInitializeSessionUseCase - problem reporting", () => {
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
       transactionRecorder: new MockedTransactionRecorder(),
+      stripeCustomersApiFactory,
+      stripeCustomerResolver: new StripeCustomerResolver({
+        linkRepo: mockedStripeCustomerLinkRepo,
+      }),
     });
 
     await uc.execute({
@@ -192,6 +218,10 @@ describe("TransactionInitializeSessionUseCase - problem reporting", () => {
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
       transactionRecorder: new MockedTransactionRecorder(),
+      stripeCustomersApiFactory,
+      stripeCustomerResolver: new StripeCustomerResolver({
+        linkRepo: mockedStripeCustomerLinkRepo,
+      }),
     });
 
     await uc.execute({

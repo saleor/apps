@@ -21,8 +21,8 @@ export const useAppApi = ({ url, options, skip }: UseFetchProps) => {
   const fetchOptions: RequestInit = {
     ...options,
     headers: [
-      [SALEOR_API_URL_HEADER, appBridgeState?.saleorApiUrl!],
-      [SALEOR_AUTHORIZATION_BEARER_HEADER, appBridgeState?.token!],
+      [SALEOR_API_URL_HEADER, appBridgeState?.saleorApiUrl ?? ""],
+      [SALEOR_AUTHORIZATION_BEARER_HEADER, appBridgeState?.token ?? ""],
     ],
   };
 

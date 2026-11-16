@@ -3,10 +3,9 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { captureException } from "@sentry/nextjs";
-import { gql } from "urql";
 
 import {
-  OrderDetailsFragmentDoc,
+  OrderRefundedDocument,
   type OrderRefundedWebhookPayloadFragment,
 } from "../../../../generated/graphql";
 import { createLogger } from "../../../logger";
@@ -15,31 +14,12 @@ import { handleUseCaseErrors } from "../../../modules/event-handlers/send-event-
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { saleorApp } from "../../../saleor-app";
 
-const OrderRefundedWebhookPayload = gql`
-  ${OrderDetailsFragmentDoc}
-  fragment OrderRefundedWebhookPayload on OrderRefunded {
-    version
-    order {
-      ...OrderDetails
-    }
-  }
-`;
-
-const OrderRefundedGraphqlSubscription = gql`
-  ${OrderRefundedWebhookPayload}
-  subscription OrderRefunded {
-    event {
-      ...OrderRefundedWebhookPayload
-    }
-  }
-`;
-
 export const orderRefundedWebhook = new SaleorAsyncWebhook<OrderRefundedWebhookPayloadFragment>({
   name: "Order Refunded in Saleor",
   webhookPath: "api/webhooks/order-refunded",
   event: "ORDER_REFUNDED",
   apl: saleorApp.apl,
-  query: OrderRefundedGraphqlSubscription,
+  query: OrderRefundedDocument,
 });
 
 const logger = createLogger(orderRefundedWebhook.webhookPath);

@@ -71,6 +71,7 @@ describe("GetStripeConfigsChannelsMappingTrpcHandler", () => {
     return expect(caller.testProcedure()).resolves.toMatchInlineSnapshot(`
       {
         "c-id1": StripeFrontendConfig {
+          "customerCreationEnabled": false,
           "id": "81f323bd-91e2-4838-ab6e-5affd81ffc3b",
           "name": "config-name",
           "publishableKey": "pk_live_1",

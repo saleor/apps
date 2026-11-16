@@ -1,6 +1,7 @@
 import { type NextApiResponse } from "next";
 
 import { AlgoliaErrorParser } from "../lib/algolia/algolia-error-parser";
+import { SaleorRateLimitError } from "../lib/algolia/variants-availability";
 
 type Logger = {
   warn: (message: string, params?: Record<string, unknown>) => void;
@@ -15,6 +16,10 @@ type Logger = {
  * Algolia status code is passed back to Saleor: 4xx means the request will never succeed,
  * so Saleor should not retry it. 5xx is transient and worth retrying.
  * Errors that don't come from Algolia are unexpected - they stay errors and return 500.
+ *
+ * Saleor rate limiting the app's callback query is caused by the merchant's burst of changes
+ * (e.g. bulk product edits). The event is acknowledged with 201 and dropped with a warning,
+ * so the burst doesn't page us; the product is reindexed on its next change.
  */
 export const handleAlgoliaWebhookError = ({
   error: e,
@@ -27,6 +32,14 @@ export const handleAlgoliaWebhookError = ({
   message: string;
   res: NextApiResponse;
 }) => {
+  if (e instanceof SaleorRateLimitError) {
+    logger.warn("Saleor API rate limited the app, skipping indexing of this event", { error: e });
+
+    res.status(201).send("Skipped: Saleor API rate limited the app");
+
+    return;
+  }
+
   const algoliaStatusCode = AlgoliaErrorParser.getStatusCode(e);
 
   if (algoliaStatusCode === null) {

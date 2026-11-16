@@ -1,0 +1,12 @@
+subscription ProductUpdated {
+  event {
+    ...ProductUpdatedWebhookPayload
+  }
+}
+
+fragment ProductUpdatedWebhookPayload on ProductUpdated {
+  version
+  product {
+    ...WebhookProduct
+  }
+}

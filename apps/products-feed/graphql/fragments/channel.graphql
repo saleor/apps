@@ -1,0 +1,5 @@
+fragment Channel on Channel {
+  name
+  id
+  slug
+}

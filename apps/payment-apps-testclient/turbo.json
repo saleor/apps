@@ -3,7 +3,13 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "env": ["NEXT_OUTPUT"]
+      "env": [
+        "NEXT_OUTPUT",
+        "TERMINAL_APP_URL",
+        "SALEOR_APP_ID",
+        "INTEGRATION_JWT_ISSUER",
+        "INTEGRATION_JWT_SHARED_SECRET"
+      ]
     }
   }
 }

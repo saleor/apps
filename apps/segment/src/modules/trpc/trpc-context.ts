@@ -3,7 +3,7 @@ import { getAppBaseUrl } from "@saleor/apps-shared/get-app-base-url";
 import { type inferAsyncReturnType } from "@trpc/server";
 import type * as trpcNext from "@trpc/server/adapters/next";
 
-export const createTrpcContext = async ({ res, req }: trpcNext.CreateNextContextOptions) => {
+export const createTrpcContext = async ({ req }: trpcNext.CreateNextContextOptions) => {
   const baseUrl = getAppBaseUrl(req.headers);
 
   return {

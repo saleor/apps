@@ -1,0 +1,47 @@
+subscription GiftCardSent {
+  event {
+    ...GiftCardSentWebhookPayload
+  }
+}
+
+fragment GiftCardSentWebhookPayload on GiftCardSent {
+  version
+  giftCard {
+    id
+    code
+    displayCode
+    last4CodeChars
+    created
+    usedByEmail
+    isActive
+    metadata {
+      key
+      value
+    }
+    privateMetadata {
+      key
+      value
+    }
+    initialBalance {
+      currency
+      amount
+    }
+    currentBalance {
+      currency
+      amount
+    }
+    tags {
+      id
+      name
+    }
+    expiryDate
+    lastUsedOn
+    usedBy {
+      firstName
+      lastName
+      email
+    }
+  }
+  sentToEmail
+  channel
+}

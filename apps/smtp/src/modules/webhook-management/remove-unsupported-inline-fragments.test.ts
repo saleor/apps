@@ -31,13 +31,6 @@ describe("removeUnsupportedInlineFragments", () => {
         }
       }
 
-      fragment OrderCreatedWebhookPayload on OrderCreated {
-        version
-        order {
-          ...OrderDetails
-        }
-      }
-
       fragment OrderDetails on Order {
         id
         number
@@ -291,6 +284,13 @@ describe("removeUnsupportedInlineFragments", () => {
               name
             }
           }
+        }
+      }
+
+      fragment OrderCreatedWebhookPayload on OrderCreated {
+        version
+        order {
+          ...OrderDetails
         }
       }"
     `);

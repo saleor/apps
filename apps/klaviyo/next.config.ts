@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   transpilePackages: [
     "@saleor/apps-shared",
     "@saleor/apps-ui",
+    "@saleor/apps-ui-next",
     "@saleor/react-hook-form-macaw",
     "@saleor/apps-logger",
     "@saleor/apps-otel",

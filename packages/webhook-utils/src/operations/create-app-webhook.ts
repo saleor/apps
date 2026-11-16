@@ -1,13 +1,13 @@
-import { Client } from "urql";
+import { type Client } from "urql";
 
-import { CreateAppWebhookDocument, WebhookCreateInput } from "../../generated/graphql";
+import { CreateAppWebhookDocument, type WebhookCreateInput } from "../../generated/graphql";
 import {
   doesErrorCodeExistsInErrors,
   WebhookMigrationAppPermissionDeniedError,
   WebhookMigrationNetworkError,
   WebhookMigrationUnknownError,
 } from "../errors";
-import { WebhookData } from "../types";
+import { type WebhookData } from "../types";
 
 interface CreateAppWebhookArgs {
   client: Client;

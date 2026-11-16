@@ -6,6 +6,7 @@ import { BaseError } from "@/lib/errors";
 import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
 import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
 import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { assertCanCreateStripeCustomersOrThrow } from "@/modules/app-config/trpc-handlers/assert-can-create-stripe-customers";
 import { stripeKeyEnv } from "@/modules/app-config/trpc-handlers/stripe-key-input-schemas";
 import { updateStripeConfigInputSchema } from "@/modules/app-config/trpc-handlers/update-stripe-config-input-schema";
 import { StripeProblemReporter } from "@/modules/app-problems/stripe-problem-reporter";
@@ -15,15 +16,43 @@ import { StripeClient } from "@/modules/stripe/stripe-client";
 import { type StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { type StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { createStripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
+import { type IStripeCustomersApiFactory } from "@/modules/stripe/types";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
 export class UpdateStripeConfigTrpcHandler {
   baseProcedure = protectedClientProcedure;
 
   private readonly webhookManager: StripeWebhookManager;
+  private readonly customersApiFactory: IStripeCustomersApiFactory;
 
-  constructor(deps: { webhookManager: StripeWebhookManager }) {
+  constructor(deps: {
+    webhookManager: StripeWebhookManager;
+    customersApiFactory: IStripeCustomersApiFactory;
+  }) {
     this.webhookManager = deps.webhookManager;
+    this.customersApiFactory = deps.customersApiFactory;
+  }
+
+  /**
+   * Checks the key's Customers permission when customer creation gets turned on, or when the key
+   * changes while it's on. Returns whether this save turns it on.
+   */
+  private async checkCustomerCreation(args: {
+    enabled: boolean;
+    wasEnabled: boolean;
+    keysChanged: boolean;
+    restrictedKey: StripeRestrictedKey;
+  }) {
+    const turnedOn = args.enabled && !args.wasEnabled;
+
+    if (args.enabled && (turnedOn || args.keysChanged)) {
+      await assertCanCreateStripeCustomersOrThrow({
+        customersApiFactory: this.customersApiFactory,
+        restrictedKey: args.restrictedKey,
+      });
+    }
+
+    return turnedOn;
   }
 
   private validateRk(rk: StripeRestrictedKey) {
@@ -32,6 +61,38 @@ export class UpdateStripeConfigTrpcHandler {
     );
 
     return validator.validateStripeAuth();
+  }
+
+  private clearResolvedProblems(args: {
+    configId: string;
+    saleorApiUrl: string;
+    appToken: string;
+    keysChanged: boolean;
+    customerCreationTurnedOn: boolean;
+  }) {
+    if (!args.keysChanged && !args.customerCreationTurnedOn) {
+      return;
+    }
+
+    const reporter = new StripeProblemReporter(
+      createInstrumentedGraphqlClient({
+        saleorApiUrl: args.saleorApiUrl,
+        token: args.appToken,
+      }),
+    );
+
+    /**
+     * New credentials supersede whatever auth or signature problem was reported for this
+     * configuration - the Dashboard should stop showing it.
+     */
+    if (args.keysChanged) {
+      after(() => reporter.clearProblemsForConfig(args.configId));
+    }
+
+    /** The key passed the permission check, so the "turned off" problem no longer applies. */
+    if (args.customerCreationTurnedOn) {
+      after(() => reporter.clearCustomerCreationDisabled(args.configId));
+    }
   }
 
   private async getRootConfigOrThrow({
@@ -122,7 +183,17 @@ export class UpdateStripeConfigTrpcHandler {
               message: "Failed to update Stripe configuration. Restricted key is invalid",
             });
           }
+        }
 
+        /** Checked before any webhook changes, so a rejected save leaves nothing behind in Stripe. */
+        const customerCreationTurnedOn = await this.checkCustomerCreation({
+          enabled: input.customerCreationEnabled,
+          wasEnabled: existingConfig.customerCreationEnabled,
+          keysChanged,
+          restrictedKey,
+        });
+
+        if (keysChanged) {
           const webhookReachable = await this.webhookManager.isWebhookReachableWithKey({
             webhookId: existingConfig.webhookId,
             restrictedKey,
@@ -200,6 +271,7 @@ export class UpdateStripeConfigTrpcHandler {
           restrictedKey,
           webhookId,
           webhookSecret,
+          customerCreationEnabled: input.customerCreationEnabled,
         });
 
         if (configToSave.isErr()) {
@@ -235,20 +307,13 @@ export class UpdateStripeConfigTrpcHandler {
           );
         }
 
-        /**
-         * New credentials supersede whatever auth or signature problem was reported for this
-         * configuration - the Dashboard should stop showing it.
-         */
-        if (keysChanged) {
-          const reporter = new StripeProblemReporter(
-            createInstrumentedGraphqlClient({
-              saleorApiUrl: ctx.saleorApiUrl,
-              token: ctx.appToken,
-            }),
-          );
-
-          after(() => reporter.clearProblemsForConfig(input.configId));
-        }
+        this.clearResolvedProblems({
+          configId: input.configId,
+          saleorApiUrl: ctx.saleorApiUrl,
+          appToken: ctx.appToken,
+          keysChanged,
+          customerCreationTurnedOn,
+        });
       });
   }
 }

@@ -9,6 +9,7 @@ import { BaseError, UnknownError } from "@/lib/errors";
 import { actionClient } from "@/lib/safe-action";
 import { saleorRequestHeaders } from "@/lib/saleor-request-headers";
 
+import { checkoutLinesSchema } from "../cart-lines";
 import { redirectToCheckoutDetails } from "./redirect-to-checkout-details";
 
 const CreateCheckoutSchema = z.object({
@@ -49,25 +50,20 @@ export const createCheckout = actionClient
     z.object({
       envUrl: envUrlSchema,
       channelSlug: z.string(),
-      variantId: z.string(),
+      lines: checkoutLinesSchema,
     }),
   )
   .metadata({ actionName: "createCheckout" })
   .action(
-    async ({ parsedInput: { channelSlug, envUrl, variantId } }) => {
+    async ({ parsedInput: { channelSlug, envUrl, lines } }) => {
       const response = await request(
         envUrl,
         CreateCheckoutMutation,
         {
           input: {
             channel: channelSlug,
-            email: "adyen-testclient@saleor.io",
-            lines: [
-              {
-                variantId,
-                quantity: 1,
-              },
-            ],
+            email: "payment-testclient@saleor.io",
+            lines,
           },
         },
         saleorRequestHeaders,

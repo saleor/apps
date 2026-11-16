@@ -1,0 +1,78 @@
+{
+  "type": "object",
+  "properties": {
+    "paymentIntent": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": { "paymentMethod": { "type": "string", "const": "card" } },
+          "required": ["paymentMethod"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": { "paymentMethod": { "type": "string", "const": "klarna" } },
+          "required": ["paymentMethod"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": { "paymentMethod": { "type": "string", "const": "google_pay" } },
+          "required": ["paymentMethod"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": { "paymentMethod": { "type": "string", "const": "apple_pay" } },
+          "required": ["paymentMethod"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": { "paymentMethod": { "type": "string", "const": "paypal" } },
+          "required": ["paymentMethod"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": { "paymentMethod": { "type": "string", "const": "us_bank_account" } },
+          "required": ["paymentMethod"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": { "paymentMethod": { "type": "string", "const": "sepa_debit" } },
+          "required": ["paymentMethod"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": { "paymentMethod": { "type": "string", "const": "link" } },
+          "required": ["paymentMethod"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": { "paymentMethod": { "type": "string", "const": "pay_by_bank" } },
+          "required": ["paymentMethod"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": { "paymentMethod": { "type": "string", "const": "mobilepay" } },
+          "required": ["paymentMethod"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": { "paymentMethod": { "type": "string", "const": "revolut_pay" } },
+          "required": ["paymentMethod"],
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "required": ["paymentIntent"],
+  "additionalProperties": false,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

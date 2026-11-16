@@ -3,7 +3,39 @@
 > [!TIP]
 > Questions or issues? Check our [discord](https://discord.gg/H52JTZAtSH) channel for help.
 
-Example storefront for testing Saleor payment apps. It allows to create & complete checkout while paying with [Adyen app](https://github.com/saleor/saleor-app-payment-adyen) drop-in or [Stripe app](../stripe) Payment Element.
+Example storefront for testing Saleor payment apps. Create or open a checkout,
+configure its addresses and delivery method, then select Adyen, Stripe, Square
+Online, or Square Terminal. All providers use the same checkout setup; their
+payment workflows branch at gateway selection.
+
+## Preparing a checkout
+
+Fetch products from a Saleor environment and channel. The cart selects two distinct
+products by default, with quantities two and one when stock allows. Channels with
+one suitable product still work. The selection uses priced, available variants,
+including products without a default variant. Set a variant quantity to zero to
+remove it, edit quantities to exercise different totals, and use product search
+or **Load more products** to find other items. Saleor validates current stock and
+prices when the checkout is created.
+
+For a prepared checkout, enter its ID and choose **Open checkout**. This works
+without fetching products and is useful for discounts, pickup, or other scenarios
+set up outside the test client.
+
+## Provider workflows
+
+- **Adyen:** the existing drop-in and transaction processing flow.
+- **Stripe:** the existing Payment Element and payment status flow.
+- **Square Online:** Web Payments SDK methods, gift cards and partial payments,
+  and optional customer login for saving, listing, deleting, and paying with saved
+  cards. Login happens after selecting Square.
+- **Square Terminal:** staff attribution, device/location selection, status polling,
+  cancellation, and recovery after refresh. This choice appears only when the
+  server has Terminal configuration; it is not advertised by Saleor as an online
+  gateway.
+
+The unified test client is public. It calls the Square apps through their public
+protocols and has no source dependency on their private implementations.
 
 ## How to get started
 
@@ -73,3 +105,21 @@ Variables used in table:
 - `ENV_URL` is encoded url to your environment (must end with `/graphql/`)
 - `CHECKOUT_ID` is id of checkout you want to use
 - `GATEWAY_ID` is id of payment app e.g. `app.saleor.adyen` or `saleor.app.payment.stripe`
+
+## Validation
+
+From the monorepo root:
+
+```shell
+pnpm --filter saleor-payment-apps-testclient check-types && pnpm --filter saleor-payment-apps-testclient test:ci
+pnpm lint apps/payment-apps-testclient
+pnpm --filter saleor-payment-apps-testclient generate
+pnpm --filter saleor-payment-apps-testclient test:e2e:install
+pnpm --filter saleor-payment-apps-testclient test:e2e
+```
+
+Browser tests run a production build against simulated Saleor/Terminal services.
+They cover cart setup, gateway selection, Terminal signing, cancellation, and
+recovery. They do not exercise live provider accounts or physical Terminal hardware.
+Square payment summaries wait for Saleor payment coverage before enabling checkout
+completion; the existing Adyen and Stripe summaries retain their behavior.

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">
+  <channel>
+    <title>Aboard Google Merchant Sample</title>
+    <link>https://example.com</link>
+    <description>Small Google Merchant RSS sample with reachable image URLs.</description>
+    <item>
+      <g:id>OXFORD-BLUE-S</g:id>
+      <g:item_group_id>OXFORD-BLUE</g:item_group_id>
+      <g:title>Oxford Shirt Blue</g:title>
+      <g:description>Classic cotton button-down shirt in blue.</g:description>
+      <g:link>https://example.com/</g:link>
+      <g:image_link>https://placehold.co/800x600/2563eb/ffffff.jpg?text=Oxford+Shirt+Blue</g:image_link>
+      <g:additional_image_link>https://placehold.co/800x600/1f2937/ffffff.jpg?text=Oxford+Shirt</g:additional_image_link>
+      <g:condition>new</g:condition>
+      <g:availability>in_stock</g:availability>
+      <g:price>49.00 USD</g:price>
+      <g:brand>Aboard Sample</g:brand>
+      <g:google_product_category>Apparel &amp; Accessories &gt; Clothing &gt; Shirts &amp; Tops</g:google_product_category>
+      <g:product_type>Apparel &gt; Shirts</g:product_type>
+      <g:color>Blue</g:color>
+      <g:size>S</g:size>
+    </item>
+    <item>
+      <g:id>OXFORD-BLUE-M</g:id>
+      <g:item_group_id>OXFORD-BLUE</g:item_group_id>
+      <g:title>Oxford Shirt Blue</g:title>
+      <g:description>Classic cotton button-down shirt in blue.</g:description>
+      <g:link>https://example.com/</g:link>
+      <g:image_link>https://placehold.co/800x600/2563eb/ffffff.jpg?text=Oxford+Shirt+Blue</g:image_link>
+      <g:condition>new</g:condition>
+      <g:availability>in_stock</g:availability>
+      <g:price>49.00 USD</g:price>
+      <g:brand>Aboard Sample</g:brand>
+      <g:google_product_category>Apparel &amp; Accessories &gt; Clothing &gt; Shirts &amp; Tops</g:google_product_category>
+      <g:product_type>Apparel &gt; Shirts</g:product_type>
+      <g:color>Blue</g:color>
+      <g:size>M</g:size>
+    </item>
+    <item>
+      <g:id>CANVAS-TOTE-NATURAL</g:id>
+      <g:title>Canvas Tote Natural</g:title>
+      <g:description>Reusable canvas tote bag in natural cotton.</g:description>
+      <g:link>https://example.com/</g:link>
+      <g:image_link>https://placehold.co/800x600/16a34a/ffffff.jpg?text=Canvas+Tote</g:image_link>
+      <g:condition>new</g:condition>
+      <g:availability>in_stock</g:availability>
+      <g:price>24.00 USD</g:price>
+      <g:brand>Aboard Sample</g:brand>
+      <g:google_product_category>Apparel &amp; Accessories &gt; Handbags, Wallets &amp; Cases</g:google_product_category>
+      <g:product_type>Accessories &gt; Bags</g:product_type>
+      <g:color>Natural</g:color>
+    </item>
+  </channel>
+</rss>

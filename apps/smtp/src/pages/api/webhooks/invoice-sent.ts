@@ -3,11 +3,10 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { captureException } from "@sentry/nextjs";
-import { gql } from "urql";
 
 import {
+  InvoiceSentDocument,
   type InvoiceSentWebhookPayloadFragment,
-  OrderDetailsFragmentDoc,
 } from "../../../../generated/graphql";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
@@ -15,48 +14,12 @@ import { handleUseCaseErrors } from "../../../modules/event-handlers/send-event-
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { saleorApp } from "../../../saleor-app";
 
-const InvoiceSentWebhookPayload = gql`
-  ${OrderDetailsFragmentDoc}
-  fragment InvoiceSentWebhookPayload on InvoiceSent {
-    version
-    invoice {
-      id
-      metadata {
-        key
-        value
-      }
-      privateMetadata {
-        key
-        value
-      }
-      message
-      externalUrl
-      url
-      order {
-        id
-      }
-    }
-    order {
-      ...OrderDetails
-    }
-  }
-`;
-
-const InvoiceSentGraphqlSubscription = gql`
-  ${InvoiceSentWebhookPayload}
-  subscription InvoiceSent {
-    event {
-      ...InvoiceSentWebhookPayload
-    }
-  }
-`;
-
 export const invoiceSentWebhook = new SaleorAsyncWebhook<InvoiceSentWebhookPayloadFragment>({
   name: "Invoice sent in Saleor",
   webhookPath: "api/webhooks/invoice-sent",
   event: "INVOICE_SENT",
   apl: saleorApp.apl,
-  query: InvoiceSentGraphqlSubscription,
+  query: InvoiceSentDocument,
 });
 
 const logger = createLogger(invoiceSentWebhook.name);

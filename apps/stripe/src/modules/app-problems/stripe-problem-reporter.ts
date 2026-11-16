@@ -19,6 +19,7 @@ export const PROBLEM_KEYS = {
   invalidPaymentMethod: (channelSlug: string) => `stripe-invalid-payment-method:${channelSlug}`,
   objectFromDifferentInstallation: (configId: string) =>
     `stripe-object-from-different-installation:${configId}`,
+  customerCreationDisabled: (configId: string) => `stripe-customer-creation-disabled:${configId}`,
 } as const;
 
 export class StripeProblemReporter {
@@ -108,6 +109,31 @@ export class StripeProblemReporter {
     if (result.isErr()) {
       logger.warn("Failed to report object from different installation problem", {
         error: result.error,
+      });
+    }
+  }
+
+  async reportCustomerCreationDisabled(configId: string, configName: string): Promise<void> {
+    const result = await this.reporter.reportProblem({
+      key: PROBLEM_KEYS.customerCreationDisabled(configId),
+      criticalThreshold: 1,
+      message: `Customer creation was turned off for configuration "${configName}": the Stripe restricted key is missing the "Customers - Write" permission. Payments still work, but without customer details in Stripe. Add the permission to the key in Stripe Dashboard and turn customer creation on again in the app settings.`,
+    });
+
+    if (result.isErr()) {
+      logger.warn("Failed to report customer creation disabled problem", { error: result.error });
+    }
+  }
+
+  async clearCustomerCreationDisabled(configId: string): Promise<void> {
+    const result = await this.reporter.clearProblems([
+      PROBLEM_KEYS.customerCreationDisabled(configId),
+    ]);
+
+    if (result.isErr()) {
+      logger.warn("Failed to clear customer creation disabled problem", {
+        error: result.error,
+        configId,
       });
     }
   }

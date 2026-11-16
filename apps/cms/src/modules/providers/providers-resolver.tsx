@@ -181,7 +181,7 @@ export const ProvidersResolver = {
       }
     }
   },
-  getAddNewProviderFormComponent: (type: CMSType): ComponentType<{}> => {
+  getAddNewProviderFormComponent: (type: CMSType): ComponentType => {
     switch (type) {
       case "contentful": {
         return dynamic(() =>

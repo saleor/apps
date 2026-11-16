@@ -1,5 +1,5 @@
 import { Toggle as $Toggle } from "@saleor/macaw-ui";
-import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
+import { type Control, Controller, type FieldPath, type FieldValues } from "react-hook-form";
 
 // ! ToggleProps is not exported from macaw-ui
 type $ToggleProps = React.ComponentProps<typeof $Toggle>;

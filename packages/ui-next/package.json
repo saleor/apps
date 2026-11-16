@@ -1,6 +1,6 @@
 {
   "name": "@saleor/apps-ui-next",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "type": "module",
   "exports": {
     ".": {
@@ -12,13 +12,10 @@
   "main": "./src/index.ts",
   "scripts": {
     "check-types": "tsc",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
     "test": "vitest",
     "test:ci": "vitest run --coverage"
   },
   "devDependencies": {
-    "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "@saleor/typescript-config-apps": "workspace:*",
     "@testing-library/jest-dom": "6.8.0",
@@ -28,8 +25,7 @@
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "@vitest/coverage-v8": "catalog:",
-    "clsx": "1.2.1",
-    "eslint": "catalog:",
+    "clsx": "catalog:",
     "jsdom": "catalog:",
     "lucide-react": "catalog:",
     "next": "catalog:",
@@ -41,7 +37,7 @@
   },
   "peerDependencies": {
     "@saleor/macaw-ui": "catalog:",
-    "clsx": "1.2.1",
+    "clsx": "catalog:",
     "lucide-react": "catalog:",
     "next": "catalog:",
     "react": "catalog:",

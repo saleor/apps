@@ -1,0 +1,29 @@
+subscription InvoiceSent {
+  event {
+    ...InvoiceSentWebhookPayload
+  }
+}
+
+fragment InvoiceSentWebhookPayload on InvoiceSent {
+  version
+  invoice {
+    id
+    metadata {
+      key
+      value
+    }
+    privateMetadata {
+      key
+      value
+    }
+    message
+    externalUrl
+    url
+    order {
+      id
+    }
+  }
+  order {
+    ...OrderDetails
+  }
+}

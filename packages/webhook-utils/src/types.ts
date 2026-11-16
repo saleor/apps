@@ -1,4 +1,7 @@
-import { WebhookEventTypeAsyncEnum, WebhookEventTypeSyncEnum } from "../generated/graphql";
+import {
+  type WebhookEventTypeAsyncEnum,
+  type WebhookEventTypeSyncEnum,
+} from "../generated/graphql";
 
 export type WebhookData = {
   id: string;

@@ -7,6 +7,7 @@ import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
   MalformedRequestResponse,
+  StripeApiFailureResponse,
 } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { type TransactionProcessSessionEventFragment } from "@/generated/graphql";
 import { appContextContainer } from "@/lib/app-context";
@@ -15,7 +16,6 @@ import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { type StripeProblemReporter } from "@/modules/app-problems";
-import { type ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorPaymentMethodDetails } from "@/modules/saleor/saleor-payment-method-details";
@@ -24,10 +24,6 @@ import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-int
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 import { createTimestampFromPaymentIntent } from "@/modules/stripe/stripe-timestamps";
 import { type IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
-import {
-  AuthorizationFailureResult,
-  ChargeFailureResult,
-} from "@/modules/transaction-result/failure-result";
 import { mapPaymentIntentStatusToTransactionResult } from "@/modules/transaction-result/map-payment-intent-status-to-transaction-result";
 import { type TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
@@ -38,7 +34,10 @@ import {
 
 type UseCaseExecuteResult = Result<
   TransactionProcessSessionUseCaseResponsesType,
-  AppIsNotConfiguredResponse | BrokenAppResponse | MalformedRequestResponse
+  | AppIsNotConfiguredResponse
+  | BrokenAppResponse
+  | MalformedRequestResponse
+  | StripeApiFailureResponse
 >;
 
 export class TransactionProcessSessionUseCase {
@@ -55,14 +54,6 @@ export class TransactionProcessSessionUseCase {
     this.appConfigRepo = deps.appConfigRepo;
     this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;
     this.transactionRecorder = deps.transactionRecorder;
-  }
-
-  private getFailureAppResult(resolvedTransactionFlow: ResolvedTransactionFlow) {
-    if (resolvedTransactionFlow === "CHARGE") {
-      return new ChargeFailureResult();
-    }
-
-    return new AuthorizationFailureResult();
   }
 
   async execute(args: {
@@ -159,16 +150,12 @@ export class TransactionProcessSessionUseCase {
         error,
       });
 
-      return ok(
-        new TransactionProcessSessionUseCaseResponses.Failure({
-          error,
-          transactionResult: this.getFailureAppResult(
-            recordedTransactionResult.value.resolvedTransactionFlow,
-          ),
-          stripePaymentIntentId: paymentIntentIdResult,
-          appContext: appContextContainer.getContextValue(),
-        }),
-      );
+      /*
+       * Failing to read the PaymentIntent says nothing about the payment. A 200 failure with pspReference
+       * would mask the later payment_intent.succeeded in Saleor; non-2xx is recorded as a failure that is
+       * not counted, and transactionProcess can be called again.
+       */
+      return err(new StripeApiFailureResponse(appContextContainer.getContextValue(), error));
     }
 
     const saleorMoneyResult = resolveSaleorMoneyFromStripePaymentIntent(

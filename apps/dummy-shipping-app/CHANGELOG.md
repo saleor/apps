@@ -1,5 +1,11 @@
 # saleor-app-shipping-dummy
 
+## 1.1.15
+
+### Patch Changes
+
+- d34f4d9: Upgraded Next.js to v16.4.5
+
 ## 1.1.14
 
 ### Patch Changes

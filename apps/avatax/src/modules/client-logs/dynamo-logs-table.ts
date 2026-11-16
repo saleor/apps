@@ -12,9 +12,7 @@ export class LogsTable extends Table<
   {
     name: "SK";
     type: "string";
-  },
-  {},
-  "_et"
+  }
 > {
   private constructor(
     params: ConstructorParameters<
@@ -26,9 +24,7 @@ export class LogsTable extends Table<
         {
           name: "SK";
           type: "string";
-        },
-        {},
-        "_et"
+        }
       >
     >[0],
   ) {

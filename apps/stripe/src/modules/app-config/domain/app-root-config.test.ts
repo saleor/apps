@@ -28,6 +28,7 @@ describe("AppRootConfig", () => {
       expect(appRootConfig.getAllConfigsAsList()).toMatchInlineSnapshot(`
         [
           StripeConfig {
+            "customerCreationEnabled": false,
             "id": "81f323bd-91e2-4838-ab6e-5affd81ffc3b",
             "name": "config-name",
             "publishableKey": "pk_live_1",
@@ -36,6 +37,7 @@ describe("AppRootConfig", () => {
             "webhookSecret": "whsec_XYZ",
           },
           StripeConfig {
+            "customerCreationEnabled": false,
             "id": "config-2",
             "name": "c2",
             "publishableKey": "pk_live_1",

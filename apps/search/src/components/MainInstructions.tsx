@@ -3,7 +3,7 @@ import { Box, type PropsWithBox, Text } from "@saleor/macaw-ui";
 const SALEOR_EVENTS_DOCS_URL =
   "https://docs.saleor.io/developer/extending/webhooks/asynchronous-events#available-webhook-events";
 
-export const MainInstructions = ({ children, ...props }: PropsWithBox<{}>) => {
+export const MainInstructions = ({ children, ...props }: PropsWithBox<object>) => {
   return (
     <Box {...props}>
       <Text as="p" marginBottom={1.5}>

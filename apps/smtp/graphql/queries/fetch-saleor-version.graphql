@@ -1,0 +1,5 @@
+query FetchSaleorVersion {
+  shop {
+    version
+  }
+}

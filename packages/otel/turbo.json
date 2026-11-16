@@ -1,9 +1,0 @@
-{
-  "$schema": "https://turbo.build/schema.v2.json",
-  "extends": ["//"],
-  "tasks": {
-    "lint": {
-      "env": ["OTEL_ACCESS_TOKEN", "ENABLE_OTEL_RUNTIME_LOGS", "OTEL_LOG_LEVEL"]
-    }
-  }
-}

@@ -14,7 +14,10 @@ const createTable = (events: string[] = []) => {
   const deleted: unknown[] = [];
   const send = vi.fn(async (command: unknown) => {
     if (command instanceof ScanCommand) {
-      return { Items: [...GONE, ALIVE].map((PK) => ({ PK, SK: "APL" })) };
+      // The whole table in one segment, the others empty.
+      return command.input.Segment === 0
+        ? { Items: [...GONE, ALIVE].map((PK) => ({ PK, SK: "APL" })) }
+        : { Items: [] };
     }
 
     if (command instanceof BatchWriteCommand) {
@@ -91,15 +94,18 @@ describe("cleanupStaleInstallations", () => {
     const messages = logger.info.mock.calls.map(([message]) => message);
 
     expect(messages).toStrictEqual([
+      "Stale installations cleanup started",
+      "Fetched installations",
       "Found stale installations",
       "Would delete stale installations data",
       "Would delete stale installations data",
       "Would delete stale installations data",
       "Stale installations cleanup finished",
     ]);
-    expect(logger.info.mock.calls[0][1]).toStrictEqual(summary);
+    expect(logger.info.mock.calls[1][1]).toStrictEqual({ count: 301 });
+    expect(logger.info.mock.calls[2][1]).toStrictEqual(summary);
     expect(
-      logger.info.mock.calls.slice(1, 4).flatMap(([, { installations }]) => installations),
+      logger.info.mock.calls.slice(3, 6).flatMap(([, { installations }]) => installations),
     ).toStrictEqual(GONE.map((saleorApiUrl) => ({ saleorApiUrl, items: 1 })));
   });
 

@@ -11,5 +11,5 @@ export async function redirectToCheckoutDetails({
   envUrl: string;
   checkoutId: string | undefined;
 }) {
-  redirect(createPath("env", encodeURIComponent(envUrl), "checkout", checkoutId));
+  redirect(createPath("/env", encodeURIComponent(envUrl), "checkout", checkoutId));
 }

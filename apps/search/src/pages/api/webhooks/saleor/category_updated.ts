@@ -24,7 +24,7 @@ export const config = {
 
 const logger = createLogger("webhookCategoryUpdatedHandler");
 
-export const handler: NextJsWebhookHandler<CategoryUpdated> = async (req, res, context) => {
+export const handler: NextJsWebhookHandler<CategoryUpdated> = async (_req, res, context) => {
   loggerContext.setSaleorVersion(context.schemaVersion);
 
   const { event, authData } = context;

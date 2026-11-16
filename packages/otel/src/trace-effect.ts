@@ -1,4 +1,4 @@
-import { Attributes, context, SpanStatusCode, trace } from "@opentelemetry/api";
+import { type Attributes, context, SpanStatusCode, trace } from "@opentelemetry/api";
 
 const tracer = trace.getTracer("trace-effect");
 

@@ -6,7 +6,7 @@ import { router } from "../trpc/trpc-server";
 import { TaxClassesFetcher } from "./tax-classes-fetcher";
 
 export const taxClassesRouter = router({
-  getAll: protectedClientProcedure.query(async ({ ctx, input }) => {
+  getAll: protectedClientProcedure.query(async ({ ctx }) => {
     const logger = createLogger("taxClassesRouter.getAll");
 
     logger.info("Route called");

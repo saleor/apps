@@ -6,6 +6,8 @@ coverage:
     project:
       default:
         target: auto
+      app-aboard:
+        flags: [aboard]
       app-anonymizer:
         flags: [anonymizer]
       app-avatax:
@@ -48,6 +50,8 @@ coverage:
         flags: [logger]
       packages-otel:
         flags: [otel]
+      packages-oxlint:
+        flags: [oxlint]
       packages-shared:
         flags: [shared]
       packages-webhook-utils:
@@ -106,6 +110,9 @@ flags:
   extensions-explorer:
     paths:
       - apps/extensions-explorer/
+  aboard:
+    paths:
+      - apps/aboard/
   payment-apps-testclient:
     paths:
       - apps/payment-apps-testclient/
@@ -130,6 +137,9 @@ flags:
   otel:
     paths:
       - packages/otel/
+  oxlint:
+    paths:
+      - packages/oxlint/
   shared:
     paths:
       - packages/shared/

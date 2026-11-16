@@ -2,7 +2,6 @@ import { type NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/h
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
-import { gql } from "urql";
 
 import {
   type FulfillmentCreatedWebhookPayloadFragment,
@@ -16,53 +15,6 @@ import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 
 const logger = createLogger("fulfillmentCreatedAsyncWebhookHandler");
-
-const FulfillmentCreatedWebhookPayload = gql`
-  fragment FulfillmentCreatedWebhookPayload on FulfillmentCreated {
-    version
-    fulfillment {
-      __typename
-      id
-      warehouse {
-        address {
-          ...AddressFragment
-        }
-      }
-      lines {
-        __typename
-        id
-        quantity
-        orderLine {
-          productName
-          variantName
-          productSku
-          productVariantId
-          unitPrice {
-            ...TaxedMoneyFragment
-          }
-          undiscountedUnitPrice {
-            ...TaxedMoneyFragment
-          }
-          totalPrice {
-            ...TaxedMoneyFragment
-          }
-        }
-      }
-    }
-    order {
-      ...OrderFragment
-    }
-  }
-`;
-
-export const FulfillmentCreatedGraphqlSubscription = gql`
-  ${FulfillmentCreatedWebhookPayload}
-  subscription FulfillmentCreated {
-    event {
-      ...FulfillmentCreatedWebhookPayload
-    }
-  }
-`;
 
 export const fulfillmentCreatedWebhook =
   new SaleorAsyncWebhook<FulfillmentCreatedWebhookPayloadFragment>({

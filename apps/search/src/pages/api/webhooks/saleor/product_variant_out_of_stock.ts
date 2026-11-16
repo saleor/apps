@@ -22,7 +22,7 @@ export const config = {
 const logger = createLogger("webhookProductVariantOutOfStockWebhookHandler");
 
 export const handler: NextJsWebhookHandler<ProductVariantOutOfStock> = async (
-  req,
+  _req,
   res,
   context,
 ) => {

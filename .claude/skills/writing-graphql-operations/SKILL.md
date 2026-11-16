@@ -3,7 +3,8 @@ name: writing-graphql-operations
 description: >
   Use when writing or editing GraphQL operations (queries, mutations, fragments,
   webhook subscriptions) in a Saleor app — adding a .graphql file, adding fields
-  to an existing one, or regenerating types.
+  to an existing one, moving an inline gql document out of TypeScript, or
+  regenerating types.
 ---
 
 # Writing GraphQL operations
@@ -21,6 +22,18 @@ apps/<app>/graphql/
 
 Types are generated into `apps/<app>/generated/graphql.ts` by codegen
 (`graphql.config.ts` or `codegen.ts`). Never hand-edit generated files.
+
+## Documents live only in .graphql files
+
+Every operation and fragment is a `.graphql` file; TypeScript imports the
+generated `*Document`. That keeps documents visible to `pnpm lint:graphql`
+(deprecated fields, filenames) and lets codegen skip TypeScript edits.
+
+The `saleor/no-inline-graphql` oxlint rule enforces this as an error, and
+codegen `documents` read only `graphql/**/*.graphql`.
+
+The gql.tada test clients (`graphql(...)` calls) are the exception: gql.tada
+types documents in TypeScript by design.
 
 ## Never use deprecated fields
 

@@ -17,6 +17,7 @@ export const updateStripeConfigInputSchema = z
      * key, so the field starts empty and is only sent when someone pastes a new key.
      */
     restrictedKey: stripeRestrictedKeyInputSchema.nullable(),
+    customerCreationEnabled: z.boolean(),
   })
   .refine(
     ({ publishableKey, restrictedKey }) =>

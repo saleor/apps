@@ -13,6 +13,8 @@ export class StripeConfig {
   readonly publishableKey: StripePublishableKey;
   readonly webhookSecret: StripeWebhookSecret;
   readonly webhookId: string;
+  /** Attach a Stripe Customer to Payment Intents. Needs Customers - Write on the restricted key. */
+  readonly customerCreationEnabled: boolean;
 
   static ValidationError = BaseError.subclass("ValidationError", {
     props: {
@@ -27,6 +29,7 @@ export class StripeConfig {
     publishableKey: StripePublishableKey;
     webhookSecret: StripeWebhookSecret;
     webhookId: string;
+    customerCreationEnabled: boolean;
   }) {
     this.name = props.name;
     this.id = props.id;
@@ -34,6 +37,7 @@ export class StripeConfig {
     this.publishableKey = props.publishableKey;
     this.webhookSecret = props.webhookSecret;
     this.webhookId = props.webhookId;
+    this.customerCreationEnabled = props.customerCreationEnabled;
   }
 
   getStripeEnvValue(): StripeEnv {
@@ -47,6 +51,7 @@ export class StripeConfig {
     webhookId: string;
     restrictedKey: StripeRestrictedKey;
     publishableKey: StripePublishableKey;
+    customerCreationEnabled?: boolean;
   }): Result<StripeConfig, InstanceType<typeof StripeConfig.ValidationError>> {
     if (args.name.length === 0) {
       return err(new StripeConfig.ValidationError("Config name cannot be empty"));
@@ -82,6 +87,7 @@ export class StripeConfig {
         publishableKey: args.publishableKey,
         webhookSecret: args.webhookSecret,
         webhookId: args.webhookId,
+        customerCreationEnabled: args.customerCreationEnabled ?? false,
       }),
     );
   }
@@ -93,6 +99,7 @@ export type StripeFrontendConfigSerializedFields = {
   readonly restrictedKey: string;
   readonly publishableKey: string;
   readonly webhookStatus?: "missing" | "disabled" | "active";
+  readonly customerCreationEnabled: boolean;
 };
 
 /**
@@ -104,6 +111,7 @@ export class StripeFrontendConfig implements StripeFrontendConfigSerializedField
   readonly id: string;
   readonly restrictedKey: string;
   readonly publishableKey: string;
+  readonly customerCreationEnabled: boolean;
   webhookStatus?: StripeFrontendConfigSerializedFields["webhookStatus"];
 
   private constructor(fields: StripeFrontendConfigSerializedFields) {
@@ -112,6 +120,7 @@ export class StripeFrontendConfig implements StripeFrontendConfigSerializedField
     this.restrictedKey = fields.restrictedKey;
     this.publishableKey = fields.publishableKey;
     this.webhookStatus = fields.webhookStatus;
+    this.customerCreationEnabled = fields.customerCreationEnabled;
   }
 
   private static getMaskedKeyValue(key: StripeRestrictedKey) {
@@ -128,6 +137,7 @@ export class StripeFrontendConfig implements StripeFrontendConfigSerializedField
       id: stripeConfig.id,
       publishableKey: stripeConfig.publishableKey,
       restrictedKey: this.getMaskedKeyValue(stripeConfig.restrictedKey),
+      customerCreationEnabled: stripeConfig.customerCreationEnabled,
     });
   }
 

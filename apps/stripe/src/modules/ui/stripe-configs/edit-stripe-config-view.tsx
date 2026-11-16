@@ -17,6 +17,10 @@ import { useForm, useWatch } from "react-hook-form";
 import { type StripeFrontendConfigSerializedFields } from "@/modules/app-config/domain/stripe-config";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 import { KeyPrefix } from "@/modules/ui/key-prefix";
+import {
+  CustomerCreationSection,
+  isMissingCustomersPermissionError,
+} from "@/modules/ui/stripe-configs/customer-creation-section";
 import { editStripeConfigFormSchema } from "@/modules/ui/stripe-configs/edit-stripe-config-form-schema";
 import {
   inferStripeEnvFromKeys,
@@ -41,9 +45,13 @@ export const EditStripeConfigView = ({
   const { notifyError, notifySuccess } = useDashboardNotification();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+  /** Set when the server rejected customer creation because the key lacks the Customers scope. */
+  const [customerPermissionError, setCustomerPermissionError] = useState<string | null>(null);
+
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors, isDirty },
   } = useForm<StripeConfigFormShape>({
     defaultValues: {
@@ -51,6 +59,7 @@ export const EditStripeConfigView = ({
       publishableKey: config.publishableKey,
       /** Only the last characters of the saved key are known here, so it starts empty. */
       restrictedKey: "",
+      customerCreationEnabled: config.customerCreationEnabled,
     },
     resolver: zodResolver(editStripeConfigFormSchema),
   });
@@ -84,6 +93,11 @@ export const EditStripeConfigView = ({
     },
     onError(error) {
       notifyError("Error updating config", error.message);
+
+      if (isMissingCustomersPermissionError(error)) {
+        setCustomerPermissionError(error.message);
+        setValue("customerCreationEnabled", false, { shouldDirty: true });
+      }
     },
   });
 
@@ -126,12 +140,16 @@ export const EditStripeConfigView = ({
           <Box
             as="form"
             id={FORM_ID}
+            display="flex"
+            flexDirection="column"
+            gap={5}
             onSubmit={handleSubmit((values) =>
               updateConfig({
                 configId: config.id,
                 name: values.name,
                 publishableKey: values.publishableKey,
                 restrictedKey: values.restrictedKey === "" ? null : values.restrictedKey,
+                customerCreationEnabled: values.customerCreationEnabled ?? false,
               }),
             )}
           >
@@ -160,6 +178,13 @@ export const EditStripeConfigView = ({
                 />
               </SettingsFieldStack>
             </SettingsSection>
+
+            <CustomerCreationSection
+              control={control}
+              disabled={isBusy}
+              permissionError={customerPermissionError}
+              onToggle={() => setCustomerPermissionError(null)}
+            />
           </Box>
         </SettingsPageContent>
       </DetailPageLayout.Content>

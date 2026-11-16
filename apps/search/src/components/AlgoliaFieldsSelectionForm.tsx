@@ -41,7 +41,7 @@ export const AlgoliaFieldsSelectionForm = () => {
       as="form"
       onSubmit={handleSubmit((values) => {
         const selectedValues = Object.entries(values)
-          .filter(([key, selected]) => selected)
+          .filter(([_key, selected]) => selected)
           .map(([key]) => key);
 
         mutate({

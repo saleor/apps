@@ -1,0 +1,12 @@
+subscription OrderCancelled {
+  event {
+    ...OrderCancelledWebhookPayload
+  }
+}
+
+fragment OrderCancelledWebhookPayload on OrderCancelled {
+  version
+  order {
+    ...OrderDetails
+  }
+}

@@ -10,18 +10,14 @@
   },
   "scripts": {
     "check-types": "tsc",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
     "test": "vitest",
     "test:ci": "vitest run --coverage"
   },
   "dependencies": {
-    "@saleor/errors": "workspace:*",
-    "eslint": "catalog:"
+    "@saleor/errors": "workspace:*"
   },
   "devDependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
-    "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@vitest/coverage-v8": "catalog:",
     "modern-errors": "catalog:",

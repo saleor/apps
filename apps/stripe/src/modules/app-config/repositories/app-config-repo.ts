@@ -69,6 +69,13 @@ export interface AppConfigRepo {
       configId: string;
     },
   ) => Promise<Result<null, InstanceType<typeof AppConfigRepoError.FailureRemovingConfig>>>;
+  /**
+   * Turns customer creation off without rewriting the rest of the config, so a webhook can't
+   * overwrite keys the merchant is changing at the same time.
+   */
+  disableCustomerCreation: (
+    access: StripeConfigByConfigIdAccessPattern,
+  ) => Promise<Result<null, InstanceType<typeof AppConfigRepoError.FailureSavingConfig>>>;
   updateMapping: (
     access: BaseAccessPattern,
     data: {

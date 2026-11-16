@@ -4,8 +4,6 @@
   "type": "module",
   "scripts": {
     "check-types": "tsc",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
     "test": "vitest",
     "test:ci": "vitest run --coverage"
   },
@@ -25,11 +23,9 @@
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
-    "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
-    "eslint": "catalog:",
     "next": "catalog:",
     "typescript": "catalog:",
     "urql": "catalog:",

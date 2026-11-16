@@ -1,0 +1,28 @@
+fragment StripeCustomerSource on OrderOrCheckout {
+  ... on Checkout {
+    __typename
+    email
+    user {
+      ...StripeCustomerUser
+    }
+    billingAddress {
+      ...StripeCustomerAddress
+    }
+    shippingAddress {
+      ...StripeCustomerAddress
+    }
+  }
+  ... on Order {
+    __typename
+    userEmail
+    user {
+      ...StripeCustomerUser
+    }
+    billingAddress {
+      ...StripeCustomerAddress
+    }
+    shippingAddress {
+      ...StripeCustomerAddress
+    }
+  }
+}

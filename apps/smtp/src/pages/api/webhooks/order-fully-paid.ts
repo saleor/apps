@@ -3,10 +3,9 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { captureException } from "@sentry/nextjs";
-import { gql } from "urql";
 
 import {
-  OrderDetailsFragmentDoc,
+  OrderFullyPaidDocument,
   type OrderFullyPaidWebhookPayloadFragment,
 } from "../../../../generated/graphql";
 import { createLogger } from "../../../logger";
@@ -15,32 +14,12 @@ import { handleUseCaseErrors } from "../../../modules/event-handlers/send-event-
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { saleorApp } from "../../../saleor-app";
 
-const OrderFullyPaidWebhookPayload = gql`
-  ${OrderDetailsFragmentDoc}
-
-  fragment OrderFullyPaidWebhookPayload on OrderFullyPaid {
-    version
-    order {
-      ...OrderDetails
-    }
-  }
-`;
-
-const OrderFullyPaidGraphqlSubscription = gql`
-  ${OrderFullyPaidWebhookPayload}
-  subscription OrderFullyPaid {
-    event {
-      ...OrderFullyPaidWebhookPayload
-    }
-  }
-`;
-
 export const orderFullyPaidWebhook = new SaleorAsyncWebhook<OrderFullyPaidWebhookPayloadFragment>({
   name: "Order Fully Paid in Saleor",
   webhookPath: "api/webhooks/order-fully-paid",
   event: "ORDER_FULLY_PAID",
   apl: saleorApp.apl,
-  query: OrderFullyPaidGraphqlSubscription,
+  query: OrderFullyPaidDocument,
 });
 
 const logger = createLogger(orderFullyPaidWebhook.webhookPath);

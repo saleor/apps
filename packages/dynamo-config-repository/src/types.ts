@@ -1,8 +1,8 @@
-import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
+import { type SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { BaseError } from "@saleor/errors";
-import { Result } from "neverthrow";
+import { type Result } from "neverthrow";
 
-import { GenericRootConfig } from "./generic-root-config";
+import { type GenericRootConfig } from "./generic-root-config";
 
 export type BaseAccessPattern = {
   saleorApiUrl: SaleorApiUrl;

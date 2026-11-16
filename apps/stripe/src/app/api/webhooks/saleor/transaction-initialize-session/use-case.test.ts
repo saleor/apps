@@ -9,6 +9,8 @@ import {
   mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
 } from "@/__tests__/mocks/constants";
 import { mockStripeProblemReporter } from "@/__tests__/mocks/mock-stripe-problem-reporter";
+import { mockedStripeCustomerLinkRepo } from "@/__tests__/mocks/mocked-stripe-customer-link-repo";
+import { mockedStripeCustomersApi } from "@/__tests__/mocks/mocked-stripe-customers-api";
 import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
@@ -20,7 +22,11 @@ import {
 } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { StripeAPIError } from "@/modules/stripe/stripe-api-error";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
-import { type IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+import {
+  type IStripeCustomersApiFactory,
+  type IStripePaymentIntentsApiFactory,
+} from "@/modules/stripe/types";
+import { StripeCustomerResolver } from "@/modules/stripe-customers/stripe-customer-resolver";
 import {
   AuthorizationActionRequiredResult,
   ChargeActionRequiredResult,
@@ -59,6 +65,10 @@ describe("TransactionInitializeSessionUseCase", () => {
     create: () => mockedStripePaymentIntentsApi,
   } satisfies IStripePaymentIntentsApiFactory;
 
+  const stripeCustomersApiFactory = {
+    create: () => mockedStripeCustomersApi,
+  } satisfies IStripeCustomersApiFactory;
+
   it.each([
     {
       actionType: "CHARGE" as const,
@@ -89,6 +99,10 @@ describe("TransactionInitializeSessionUseCase", () => {
         appConfigRepo: mockedAppConfigRepo,
         stripePaymentIntentsApiFactory,
         transactionRecorder: new MockedTransactionRecorder(),
+        stripeCustomersApiFactory,
+        stripeCustomerResolver: new StripeCustomerResolver({
+          linkRepo: mockedStripeCustomerLinkRepo,
+        }),
       });
 
       await uc.execute({
@@ -158,6 +172,10 @@ describe("TransactionInitializeSessionUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
       transactionRecorder: new MockedTransactionRecorder(),
+      stripeCustomersApiFactory,
+      stripeCustomerResolver: new StripeCustomerResolver({
+        linkRepo: mockedStripeCustomerLinkRepo,
+      }),
     });
 
     await uc.execute({
@@ -212,6 +230,10 @@ describe("TransactionInitializeSessionUseCase", () => {
         appConfigRepo: mockedAppConfigRepo,
         stripePaymentIntentsApiFactory,
         transactionRecorder: new MockedTransactionRecorder(),
+        stripeCustomersApiFactory,
+        stripeCustomerResolver: new StripeCustomerResolver({
+          linkRepo: mockedStripeCustomerLinkRepo,
+        }),
       });
 
       const responsePayload = await uc.execute({
@@ -236,6 +258,10 @@ describe("TransactionInitializeSessionUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
       transactionRecorder: new MockedTransactionRecorder(),
+      stripeCustomersApiFactory,
+      stripeCustomerResolver: new StripeCustomerResolver({
+        linkRepo: mockedStripeCustomerLinkRepo,
+      }),
     });
 
     const responsePayload = await uc.execute({
@@ -275,6 +301,10 @@ describe("TransactionInitializeSessionUseCase", () => {
         appConfigRepo: mockedAppConfigRepo,
         stripePaymentIntentsApiFactory,
         transactionRecorder: new MockedTransactionRecorder(),
+        stripeCustomersApiFactory,
+        stripeCustomerResolver: new StripeCustomerResolver({
+          linkRepo: mockedStripeCustomerLinkRepo,
+        }),
       });
 
       const saleorEvent = getMockedTransactionInitializeSessionEvent({ actionType });
@@ -319,6 +349,10 @@ describe("TransactionInitializeSessionUseCase", () => {
         appConfigRepo: mockedAppConfigRepo,
         stripePaymentIntentsApiFactory,
         transactionRecorder: new MockedTransactionRecorder(),
+        stripeCustomersApiFactory,
+        stripeCustomerResolver: new StripeCustomerResolver({
+          linkRepo: mockedStripeCustomerLinkRepo,
+        }),
       });
 
       const responsePayload = await uc.execute({
@@ -369,6 +403,10 @@ describe("TransactionInitializeSessionUseCase", () => {
         appConfigRepo: mockedAppConfigRepo,
         stripePaymentIntentsApiFactory,
         transactionRecorder: new MockedTransactionRecorder(),
+        stripeCustomersApiFactory,
+        stripeCustomerResolver: new StripeCustomerResolver({
+          linkRepo: mockedStripeCustomerLinkRepo,
+        }),
       });
 
       const responsePayload = await uc.execute({
@@ -398,6 +436,10 @@ describe("TransactionInitializeSessionUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
       transactionRecorder: new MockedTransactionRecorder(),
+      stripeCustomersApiFactory,
+      stripeCustomerResolver: new StripeCustomerResolver({
+        linkRepo: mockedStripeCustomerLinkRepo,
+      }),
     });
 
     const result = await uc.execute({
@@ -427,6 +469,10 @@ describe("TransactionInitializeSessionUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
       transactionRecorder: new MockedTransactionRecorder(),
+      stripeCustomersApiFactory,
+      stripeCustomerResolver: new StripeCustomerResolver({
+        linkRepo: mockedStripeCustomerLinkRepo,
+      }),
     });
 
     const result = await uc.execute({
@@ -461,6 +507,10 @@ describe("TransactionInitializeSessionUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
       transactionRecorder: new MockedTransactionRecorder(),
+      stripeCustomersApiFactory,
+      stripeCustomerResolver: new StripeCustomerResolver({
+        linkRepo: mockedStripeCustomerLinkRepo,
+      }),
     });
 
     const result = await uc.execute({
@@ -491,6 +541,10 @@ describe("TransactionInitializeSessionUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
       transactionRecorder: new MockedTransactionRecorder(),
+      stripeCustomersApiFactory,
+      stripeCustomerResolver: new StripeCustomerResolver({
+        linkRepo: mockedStripeCustomerLinkRepo,
+      }),
     });
 
     const result = await uc.execute({
@@ -526,6 +580,10 @@ describe("TransactionInitializeSessionUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
       transactionRecorder,
+      stripeCustomersApiFactory,
+      stripeCustomerResolver: new StripeCustomerResolver({
+        linkRepo: mockedStripeCustomerLinkRepo,
+      }),
     });
 
     const result = await uc.execute({
@@ -560,6 +618,10 @@ describe("TransactionInitializeSessionUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
       transactionRecorder: new MockedTransactionRecorder(),
+      stripeCustomersApiFactory,
+      stripeCustomerResolver: new StripeCustomerResolver({
+        linkRepo: mockedStripeCustomerLinkRepo,
+      }),
     });
 
     const result = await uc.execute({
@@ -601,6 +663,10 @@ describe("TransactionInitializeSessionUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
       transactionRecorder,
+      stripeCustomersApiFactory,
+      stripeCustomerResolver: new StripeCustomerResolver({
+        linkRepo: mockedStripeCustomerLinkRepo,
+      }),
     });
 
     const result = await uc.execute({
@@ -644,6 +710,10 @@ describe("TransactionInitializeSessionUseCase", () => {
         appConfigRepo: mockedAppConfigRepo,
         stripePaymentIntentsApiFactory,
         transactionRecorder,
+        stripeCustomersApiFactory,
+        stripeCustomerResolver: new StripeCustomerResolver({
+          linkRepo: mockedStripeCustomerLinkRepo,
+        }),
       });
 
       await uc.execute({

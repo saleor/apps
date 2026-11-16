@@ -1,6 +1,6 @@
-import { WebhookManifest } from "@saleor/app-sdk/types";
+import { type WebhookManifest } from "@saleor/app-sdk/types";
 
-import { WebhookData } from "../types";
+import { type WebhookData } from "../types";
 
 interface WebhooksToRemoveArgs<T extends WebhookData> {
   newWebhookManifests: Array<WebhookManifest>;

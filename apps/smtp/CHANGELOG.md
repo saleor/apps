@@ -1,5 +1,18 @@
 # saleor-app-smtp
 
+## 2.11.4
+
+### Patch Changes
+
+- Updated dependencies [ef64608]
+  - @saleor/stale-installations-cleanup@0.4.0
+
+## 2.11.3
+
+### Patch Changes
+
+- d34f4d9: Upgraded Next.js to v16.4.5
+
 ## 2.11.2
 
 ### Patch Changes

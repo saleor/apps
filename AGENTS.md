@@ -39,16 +39,21 @@
 
 **Linting & Formatting**:
 
-- `pnpm lint` - Lint all projects
+- `pnpm lint` - Lint the whole repo with oxlint (run from the root)
 - `pnpm lint:fix` - Auto-fix linting issues
+- `pnpm lint <path>` - Lint specific files or directories (paths relative to the root)
 - `pnpm format` - Format all code with Prettier
-- `eslint .` - Lint specific app (run in app directory)
 
 **Code Generation**:
 
 - `pnpm generate` - Generate GraphQL types for all projects
 - `pnpm run generate:app` - Generate app-specific GraphQL types
 - `pnpm run generate:e2e` - Generate E2E test GraphQL types
+
+## Guidelines
+
+- Use `$writing-github-actions` when creating or editing GitHub Actions workflows or action references.
+- GraphQL documents live in `.graphql` files; TypeScript imports the generated `*Document`. Inline `gql` templates fail `saleor/no-inline-graphql`. Use `writing-graphql-operations`.
 
 ## Architecture Patterns
 
@@ -88,7 +93,7 @@ static ValidationError = BaseError.subclass("ValidationError", {
 
 **Observability**: OpenTelemetry instrumentation, Sentry error tracking, structured logging with contextual loggers
 
-**Tooling**: Turborepo, PNPM workspaces, ESLint with custom configs, Prettier
+**Tooling**: Turborepo, PNPM workspaces, oxlint (`.oxlintrc.json`), Prettier
 
 ## Testing Conventions
 
@@ -113,7 +118,7 @@ static ValidationError = BaseError.subclass("ValidationError", {
 2. **Schema Generation**: Run `pnpm generate` after GraphQL schema changes
 3. **Type Safety**: All apps use strict TypeScript - ensure no `any` types
 4. **Testing**: Write unit tests alongside features, E2E tests for critical workflows
-5. **Linting**: Code must pass ESLint rules including custom app-specific rules like `n/no-process-env`
+5. **Linting**: Code must pass oxlint rules (root `.oxlintrc.json`, some apps add a nested one) including custom app-specific rules like `node/no-process-env`
 6. **Changeset**: Functional changes, like new features or fixes should have changeset attached. Do not attach it if code changes do not have visible impact to the user, like refactor. To run changeset: 
     - Execute `pnpm changeset add` from root directory
     - Select affected app(s) or package(s)
@@ -129,6 +134,7 @@ directory below before searching the whole repo.
 
 | Directory                | Package name                     | Keywords                                                                                                                       |
 | ------------------------ | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `apps/aboard`            | `saleor-app-aboard`              | Aboard, catalog import, product import, Google Merchant feed import, WooCommerce CSV, Product CSV, migrate products into Saleor  |
 | `apps/anonymizer`        | `saleor-app-anonymizer`          | anonymize, GDPR, PII, customer data scrubbing                                                                                    |
 | `apps/avatax`            | `saleor-app-avatax`              | AvaTax, Avalara, tax, tax calculation, tax codes, address validation, `CALCULATE_TAXES`, ORDER_CONFIRMED taxes, entity use code   |
 | `apps/cms`               | `saleor-app-cms`                 | CMS, Contentful, DatoCMS, Strapi, Builder.io, Payload CMS, product sync to CMS, bulk sync, field mapping                          |
@@ -153,10 +159,10 @@ directory below before searching the whole repo.
 | `packages/domain`                  | `@saleor/apps-domain`             | branded types, `SaleorApiUrl`, `AppId`, shared value objects                    |
 | `packages/dynamo-config-repository` | `@saleor/dynamo-config-repository` | DynamoDB, config repository, entity mapping, `dynamodb-toolbox`               |
 | `packages/errors`                  | `@saleor/errors`                  | `BaseError`, `BaseError.subclass`, error classes, modern-errors                 |
-| `packages/eslint-config`           | `@saleor/eslint-config-apps`      | ESLint rules, lint config                                                       |
 | `packages/handlebars`              | `@saleor/handlebars`              | Handlebars, template compilation, template helpers                              |
 | `packages/logger`                  | `@saleor/apps-logger`             | logger, tslog, structured logging, log context                                  |
 | `packages/otel`                    | `@saleor/apps-otel`               | OpenTelemetry, traces, metrics, spans, instrumentation, OTLP exporter           |
+| `packages/oxlint`                  | `@saleor/oxlint`                  | custom oxlint rules, JS plugin, `saleor/no-inline-graphql`                     |
 | `packages/react-hook-form-macaw`   | `@saleor/react-hook-form-macaw`   | form inputs, React Hook Form + Macaw bindings                                   |
 | `packages/sentry-utils`            | `@saleor/sentry-utils`            | Sentry, error reporting, exception capture                                      |
 | `packages/shared`                  | `@saleor/apps-shared`             | urql client, auth exchange, misc shared helpers                                 |

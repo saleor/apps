@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     "@saleor/apps-logger",
     "@saleor/apps-shared",
     "@saleor/apps-ui",
+    "@saleor/apps-ui-next",
     "@saleor/react-hook-form-macaw",
   ],
   experimental: {

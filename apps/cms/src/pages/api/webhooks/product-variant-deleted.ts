@@ -2,7 +2,6 @@ import { type NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/h
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { captureException } from "@sentry/nextjs";
-import { gql } from "urql";
 
 import { createLogger } from "@/logger";
 import { createCmsProblemReporter } from "@/modules/app-problems";
@@ -11,9 +10,8 @@ import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webho
 import { saleorApp } from "@/saleor-app";
 
 import {
+  ProductVariantDeletedDocument,
   type ProductVariantDeletedWebhookPayloadFragment,
-  ProductVariantDeletedWebhookPayloadFragmentDoc,
-  WebhookProductVariantFragmentDoc,
 } from "../../../../generated/graphql";
 import { loggerContext } from "../../../logger-context";
 
@@ -23,32 +21,13 @@ export const config = {
   },
 };
 
-gql`
-  ${WebhookProductVariantFragmentDoc}
-  fragment ProductVariantDeletedWebhookPayload on ProductVariantDeleted {
-    version
-    productVariant {
-      ...WebhookProductVariant
-    }
-  }
-`;
-
-const Subscription = gql`
-  ${ProductVariantDeletedWebhookPayloadFragmentDoc}
-  subscription ProductVariantDeleted {
-    event {
-      ...ProductVariantDeletedWebhookPayload
-    }
-  }
-`;
-
 export const productVariantDeletedWebhook =
   new SaleorAsyncWebhook<ProductVariantDeletedWebhookPayloadFragment>({
     name: "CMS App - Product Variant Deleted",
     webhookPath: "api/webhooks/product-variant-deleted",
     event: "PRODUCT_VARIANT_DELETED",
     apl: saleorApp.apl,
-    query: Subscription,
+    query: ProductVariantDeletedDocument,
   });
 
 /*
@@ -56,7 +35,7 @@ export const productVariantDeletedWebhook =
  * TODO: fetch metadata end decode it with payload, so we spare one call
  */
 const handler: NextJsWebhookHandler<ProductVariantDeletedWebhookPayloadFragment> = async (
-  req,
+  _req,
   res,
   context,
 ) => {

@@ -1,0 +1,12 @@
+mutation CreateImportAttribute($input: AttributeCreateInput!) {
+  attributeCreate(input: $input) {
+    attribute {
+      id
+    }
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

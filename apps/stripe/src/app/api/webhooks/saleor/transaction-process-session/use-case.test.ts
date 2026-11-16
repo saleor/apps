@@ -1,5 +1,5 @@
 import { err, ok } from "neverthrow";
-import type Stripe from "stripe";
+import Stripe from "stripe";
 import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
@@ -16,9 +16,9 @@ import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
   MalformedRequestResponse,
+  StripeApiFailureResponse,
 } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { BaseError } from "@/lib/errors";
-import { StripeAPIError } from "@/modules/stripe/stripe-api-error";
 import { type IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
 import { TransactionProcessSessionUseCase } from "./use-case";
@@ -179,19 +179,38 @@ describe("TransactionProcessSessionUseCase", () => {
   it.each([
     {
       actionType: "CHARGE" as const,
+      stripeError: new Stripe.errors.StripeRateLimitError({ type: "api_error" }),
     },
     {
       actionType: "AUTHORIZATION" as const,
+      stripeError: new Stripe.errors.StripeConnectionError({ type: "api_error" }),
     },
+    {
+      actionType: "CHARGE" as const,
+      stripeError: new Stripe.errors.StripeAPIError({ type: "api_error" }),
+    },
+    {
+      actionType: "CHARGE" as const,
+      stripeError: new Stripe.errors.StripeAuthenticationError({ type: "api_error" }),
+    },
+    {
+      actionType: "CHARGE" as const,
+      stripeError: new Stripe.errors.StripePermissionError({ type: "api_error" }),
+    },
+    {
+      actionType: "CHARGE" as const,
+      stripeError: new Stripe.errors.StripeInvalidRequestError({ type: "api_error" }),
+    },
+    { actionType: "CHARGE" as const, stripeError: new Error("unknown") },
   ])(
-    "Returns 'Error' response if StripePaymentIntentsAPI throws error and actionType is $actionType",
-    async ({ actionType }) => {
+    "Returns 502 'StripeApiFailureResponse' instead of a final failure when getPaymentIntent fails with $stripeError.constructor.name ($actionType)",
+    async ({ actionType, stripeError }) => {
       const mockedTransationRecorder = new MockedTransactionRecorder();
 
       mockedTransationRecorder.recordTransaction(mockAuthData, getMockedRecordedTransaction());
 
       vi.spyOn(mockedStripePaymentIntentsApi, "getPaymentIntent").mockImplementationOnce(async () =>
-        err(new StripeAPIError("Error from Stripe API")),
+        err(stripeError),
       );
 
       const uc = new TransactionProcessSessionUseCase({
@@ -202,16 +221,17 @@ describe("TransactionProcessSessionUseCase", () => {
 
       const saleorEvent = getMockedTransactionProcessSessionEvent({ actionType });
 
-      const responsePayload = await uc.execute({
+      const result = await uc.execute({
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
         problemReporter: mockStripeProblemReporter,
       });
 
-      expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
-        TransactionProcessSessionUseCaseResponses.Failure,
-      );
+      const error = result._unsafeUnwrapErr();
+
+      expect(error).toBeInstanceOf(StripeApiFailureResponse);
+      expect(error.getResponse().status).toBe(502);
     },
   );
 

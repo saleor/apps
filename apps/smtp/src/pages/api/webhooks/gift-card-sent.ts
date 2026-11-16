@@ -3,74 +3,23 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { captureException } from "@sentry/nextjs";
-import { gql } from "urql";
 
-import { type GiftCardSentWebhookPayloadFragment } from "../../../../generated/graphql";
+import {
+  GiftCardSentDocument,
+  type GiftCardSentWebhookPayloadFragment,
+} from "../../../../generated/graphql";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { handleUseCaseErrors } from "../../../modules/event-handlers/send-event-messages-response-handler";
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { saleorApp } from "../../../saleor-app";
 
-const GiftCardSentWebhookPayload = gql`
-  fragment GiftCardSentWebhookPayload on GiftCardSent {
-    version
-    giftCard {
-      id
-      code
-      displayCode
-      last4CodeChars
-      created
-      usedByEmail
-      isActive
-      metadata {
-        key
-        value
-      }
-      privateMetadata {
-        key
-        value
-      }
-      initialBalance {
-        currency
-        amount
-      }
-      currentBalance {
-        currency
-        amount
-      }
-      tags {
-        id
-        name
-      }
-      expiryDate
-      lastUsedOn
-      usedBy {
-        firstName
-        lastName
-        email
-      }
-    }
-    sentToEmail
-    channel
-  }
-`;
-
-const GiftCardSentGraphqlSubscription = gql`
-  ${GiftCardSentWebhookPayload}
-  subscription GiftCardSent {
-    event {
-      ...GiftCardSentWebhookPayload
-    }
-  }
-`;
-
 export const giftCardSentWebhook = new SaleorAsyncWebhook<GiftCardSentWebhookPayloadFragment>({
   name: "Gift card sent in Saleor",
   webhookPath: "api/webhooks/gift-card-sent",
   event: "GIFT_CARD_SENT",
   apl: saleorApp.apl,
-  query: GiftCardSentGraphqlSubscription,
+  query: GiftCardSentDocument,
 });
 
 const logger = createLogger(giftCardSentWebhook.webhookPath);

@@ -18,8 +18,8 @@ import {
  * TODO: Refactor, use DI to inject encrypt/decrypt logic
  */
 export const getAppConfig = (metadata: MetadataItem[]) => {
-  let providerConnections = [] as ProviderConnections;
-  let channelsConfig = {} as ChannelsConfig;
+  let providerConnections: ProviderConnections = [];
+  let channelsConfig: ChannelsConfig = [];
 
   const secretKey = resolveEncryptKey(env);
 

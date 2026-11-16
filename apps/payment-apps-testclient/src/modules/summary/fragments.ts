@@ -3,6 +3,8 @@ import { graphql } from "@/graphql/gql";
 export const CheckoutFragment = graphql(`
   fragment Checkout on Checkout {
     id
+    authorizeStatus
+    chargeStatus
     created
     billingAddress {
       firstName

@@ -1,4 +1,4 @@
-import { type Client, gql } from "urql";
+import { type Client } from "urql";
 
 import {
   AppWebhooksDocument,
@@ -6,50 +6,6 @@ import {
   type CreateAppWebhookMutationVariables,
   DeleteAppWebhookDocument,
 } from "../../../generated/graphql";
-
-const _query = gql`
-  fragment WebhookDetails on Webhook {
-    id
-    name
-    asyncEvents {
-      name
-      eventType
-    }
-    isActive
-  }
-
-  query AppWebhooks {
-    app {
-      webhooks {
-        ...WebhookDetails
-      }
-    }
-  }
-
-  mutation CreateAppWebhook($input: WebhookCreateInput!) {
-    webhookCreate(input: $input) {
-      errors {
-        field
-        message
-      }
-      webhook {
-        ...WebhookDetails
-      }
-    }
-  }
-
-  mutation DeleteAppWebhook($id: ID!) {
-    webhookDelete(id: $id) {
-      errors {
-        field
-        message
-      }
-      webhook {
-        ...WebhookDetails
-      }
-    }
-  }
-`;
 
 export const fetchAppWebhooks = ({ client }: { client: Client }) =>
   client

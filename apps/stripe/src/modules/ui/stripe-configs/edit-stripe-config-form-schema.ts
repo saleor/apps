@@ -24,6 +24,7 @@ export const editStripeConfigFormSchema = z
         (value) => value === "" || hasRestrictedKeyPrefix(value),
         RESTRICTED_KEY_FORMAT_MESSAGE,
       ),
+    customerCreationEnabled: z.boolean(),
   })
   .refine(
     ({ publishableKey, restrictedKey }) =>

@@ -1,5 +1,29 @@
 # saleor-app-segment
 
+## 2.7.2
+
+### Patch Changes
+
+- Updated dependencies [acb92fe]
+  - @saleor/apps-ui-next@0.2.2
+
+## 2.7.1
+
+### Patch Changes
+
+- Updated dependencies [ef64608]
+  - @saleor/stale-installations-cleanup@0.4.0
+
+## 2.7.0
+
+### Minor Changes
+
+- 8dd9756: The configuration page now matches the Saleor Dashboard and guides you through setup: until you save a Segment write key, you see what is missing and where to find the key. You can also see which order events the app sends and the event names they arrive under in Segment. When Saleor has turned off the app's webhooks, the page now says so next to the write key and explains how to fix it.
+
+### Patch Changes
+
+- d34f4d9: Upgraded Next.js to v16.4.5
+
 ## 2.6.2
 
 ### Patch Changes

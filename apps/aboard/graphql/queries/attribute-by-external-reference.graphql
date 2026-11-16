@@ -1,0 +1,5 @@
+query AttributeByExternalReference($externalReference: String!) {
+  attribute(externalReference: $externalReference) {
+    id
+  }
+}

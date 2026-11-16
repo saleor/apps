@@ -1,5 +1,33 @@
 # saleor-app-klaviyo
 
+## 1.21.3
+
+### Patch Changes
+
+- Updated dependencies [acb92fe]
+  - @saleor/apps-ui-next@0.2.2
+
+## 1.21.2
+
+### Patch Changes
+
+- Updated dependencies [ef64608]
+  - @saleor/stale-installations-cleanup@0.4.0
+
+## 1.21.1
+
+### Patch Changes
+
+- d34f4d9: Upgraded Next.js to v16.4.5
+
+## 1.21.0
+
+### Minor Changes
+
+- 3b3f8f5: The configuration page now matches the Saleor Dashboard and guides you through setup: until you save a Klaviyo public API key, you see what is missing and where to find the key, and each event says when Saleor sends it. Before, the page listed raw setting names with no guidance.
+
+  You now get an error when your settings could not be saved. Before, a failed save could still show a success message.
+
 ## 1.20.2
 
 ### Patch Changes

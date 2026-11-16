@@ -1,5 +1,5 @@
-import { WebhookManifest } from "@saleor/app-sdk/types";
-import { Client } from "urql";
+import { type WebhookManifest } from "@saleor/app-sdk/types";
+import { type Client } from "urql";
 
 import { createAppWebhookFromManifest } from "./create-app-webhook-from-manifest";
 import { createAppWebhookFromWebhookDetailsFragment } from "./create-app-webhook-from-webhook-details-fragment";
@@ -9,7 +9,7 @@ import { webhooksToRemove } from "./filters/webhooks-to-remove";
 import { modifyAppWebhookFromManifest } from "./modify-app-webhook-from-manifest";
 import { modifyAppWebhookFromWebhookDetails } from "./modify-app-webhook-from-webhook-details";
 import { removeAppWebhook } from "./operations/remove-app-webhook";
-import { Logger, WebhookData } from "./types";
+import { type Logger, type WebhookData } from "./types";
 
 export class WebhookUpdater {
   private readonly addedWebhooks: Array<WebhookData>;

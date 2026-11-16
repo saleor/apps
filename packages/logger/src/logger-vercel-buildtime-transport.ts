@@ -1,4 +1,4 @@
-import { ILogObj, Logger } from "tslog";
+import { type ILogObj, type Logger } from "tslog";
 
 export const attachLoggerVercelBuildtimeTransport = (logger: Logger<ILogObj>) => {
   logger.attachTransport((log) => {

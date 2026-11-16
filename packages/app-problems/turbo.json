@@ -1,5 +1,9 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "extends": ["//"],
-  "tasks": {}
+  "tasks": {
+    "generate": {
+      "inputs": ["**/*.graphql", "graphql.config.ts", "package.json"]
+    }
+  }
 }

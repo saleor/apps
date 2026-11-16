@@ -21,7 +21,7 @@ export const config = {
 
 const logger = createLogger("webhookProductVariantDeletedWebhookHandler");
 
-export const handler: NextJsWebhookHandler<ProductVariantDeleted> = async (req, res, context) => {
+export const handler: NextJsWebhookHandler<ProductVariantDeleted> = async (_req, res, context) => {
   loggerContext.setSaleorVersion(context.schemaVersion);
 
   const { event, authData } = context;

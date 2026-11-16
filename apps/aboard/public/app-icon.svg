@@ -1,0 +1,24 @@
+<svg
+  width="1024"
+  height="1024"
+  viewBox="0 0 1024 1024"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <title>Aboard</title>
+  <rect width="1024" height="1024" rx="224" fill="#181714" />
+  <path
+    d="M286 724 512 304l226 420"
+    stroke="#F5F1E8"
+    stroke-width="72"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M390 560h294m-58-58 58 58-58 58"
+    stroke="#FF6B5E"
+    stroke-width="60"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

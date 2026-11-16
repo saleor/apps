@@ -16,7 +16,7 @@ export type Products = NonNullable<
 
 export const useQueryAllProducts = (paused: boolean) => {
   const { appBridgeState } = useAppBridge();
-  const saleorApiUrl = appBridgeState?.saleorApiUrl!;
+  const saleorApiUrl = appBridgeState?.saleorApiUrl;
 
   const [products, setProducts] = useState<Products>([]);
 
@@ -25,7 +25,7 @@ export const useQueryAllProducts = (paused: boolean) => {
       return;
     }
 
-    if (!appBridgeState?.token) {
+    if (!appBridgeState?.token || !saleorApiUrl) {
       return;
     }
 

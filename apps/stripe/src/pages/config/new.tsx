@@ -18,6 +18,10 @@ import { useForm, useWatch } from "react-hook-form";
 import { newStripeConfigInputSchema } from "@/modules/app-config/trpc-handlers/new-stripe-config-input-schema";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 import { MissingAppAccess } from "@/modules/ui/missing-app-access";
+import {
+  CustomerCreationSection,
+  isMissingCustomersPermissionError,
+} from "@/modules/ui/stripe-configs/customer-creation-section";
 import { inferStripeEnvFromKeys } from "@/modules/ui/stripe-configs/infer-stripe-env-from-keys";
 import {
   StripeConfigFields,
@@ -34,15 +38,20 @@ const NewConfiguration: NextPage = () => {
   const { haveAccessToApp, isReady } = useHasAppAccess();
   const { notifyError, notifySuccess } = useDashboardNotification();
 
+  /** Set when the server rejected customer creation because the key lacks the Customers scope. */
+  const [customerPermissionError, setCustomerPermissionError] = useState<string | null>(null);
+
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors, isDirty },
   } = useForm<StripeConfigFormShape>({
     defaultValues: {
       name: "",
       publishableKey: "",
       restrictedKey: "",
+      customerCreationEnabled: false,
     },
     resolver: zodResolver(newStripeConfigInputSchema),
   });
@@ -76,6 +85,11 @@ const NewConfiguration: NextPage = () => {
     },
     onError(error) {
       notifyError("Error saving config", error.message);
+
+      if (isMissingCustomersPermissionError(error)) {
+        setCustomerPermissionError(error.message);
+        setValue("customerCreationEnabled", false, { shouldDirty: true });
+      }
     },
   });
 
@@ -104,7 +118,14 @@ const NewConfiguration: NextPage = () => {
           }
           aside={<StripeModeLegend />}
         >
-          <Box as="form" id={FORM_ID} onSubmit={handleSubmit((values) => saveConfig(values))}>
+          <Box
+            as="form"
+            id={FORM_ID}
+            display="flex"
+            flexDirection="column"
+            gap={5}
+            onSubmit={handleSubmit((values) => saveConfig(values))}
+          >
             <SettingsSection
               title="Stripe keys"
               ownership="channel"
@@ -116,6 +137,13 @@ const NewConfiguration: NextPage = () => {
                 <StripeConfigFields control={control} errors={errors} disabled={isSaving} />
               </SettingsFieldStack>
             </SettingsSection>
+
+            <CustomerCreationSection
+              control={control}
+              disabled={isSaving}
+              permissionError={customerPermissionError}
+              onToggle={() => setCustomerPermissionError(null)}
+            />
           </Box>
         </SettingsPageContent>
       </DetailPageLayout.Content>

@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -20,6 +21,7 @@ import { toast } from "@/components/ui/use-toast";
 import { type FragmentOf } from "@/graphql/gql";
 import { envUrlSchema } from "@/lib/env-url";
 import { clearIdempotencyKey } from "@/lib/idempotency-key";
+import { createPath } from "@/lib/utils";
 
 import { fetchProduct } from "../actions/fetch-product";
 import { type ProductFragment } from "../fragments";
@@ -34,11 +36,23 @@ import {
 const EnvironmentConfigSchema = z.object({
   url: envUrlSchema,
   channelSlug: z.string().min(1),
+  search: z.string().optional(),
 });
 
 type EnvironmentConfigSchemaType = z.infer<typeof EnvironmentConfigSchema>;
 
 export const Environment = () => {
+  const router = useRouter();
+  const [existingCheckout, setExistingCheckout] = useState("");
+  const [catalog, setCatalog] = useState<{
+    url: string;
+    channelSlug: string;
+    search?: string;
+    cursor?: string | null;
+    hasNext: boolean;
+    revision: number;
+  } | null>(null);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [products, setProducts] = useState<FragmentOf<typeof ProductFragment>[]>([]);
 
   const form = useForm<EnvironmentConfigSchemaType>({
@@ -46,6 +60,7 @@ export const Environment = () => {
     defaultValues: {
       url: resolveEnvUrl(),
       channelSlug: resolveChannelSlug(),
+      search: "",
     },
   });
 
@@ -55,10 +70,17 @@ export const Environment = () => {
     const response = await fetchProduct({
       channelSlug: data.channelSlug,
       envUrl: data.url,
+      search: data.search,
     });
 
     if (response?.data) {
-      setProducts(response?.data?.products?.edges.map((e) => e.node) ?? []);
+      setProducts(response.data.products?.edges.map((e) => e.node) ?? []);
+      setCatalog({
+        ...data,
+        cursor: response.data.products?.pageInfo.endCursor,
+        hasNext: response.data.products?.pageInfo.hasNextPage ?? false,
+        revision: (catalog?.revision ?? 0) + 1,
+      });
       toast({
         title: "Successfully fetched products",
       });
@@ -101,6 +123,18 @@ export const Environment = () => {
                 )}
               />
             </div>
+            <FormField
+              control={form.control}
+              name="search"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Product search (optional)</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="Name or SKU" />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
             <div className="flex w-full items-center justify-between">
               <Button
                 variant="outline"
@@ -128,13 +162,78 @@ export const Environment = () => {
         </Form>
       </div>
 
-      {products.length > 0 && (
-        <Cart
-          data={products}
-          envUrl={form.getValues().url}
-          channelSlug={form.getValues().channelSlug}
-        />
-      )}
+      <section aria-labelledby="checkout-heading" className="grid content-start gap-4">
+        <h2 id="checkout-heading" className="mb-2 text-2xl font-bold">
+          Checkout
+        </h2>
+        <div className="flex items-end gap-3">
+          <label className="grid flex-1 gap-2">
+            Existing checkout ID
+            <Input
+              value={existingCheckout}
+              onChange={(event) => setExistingCheckout(event.target.value)}
+            />
+          </label>
+          <Button
+            variant="secondary"
+            disabled={!existingCheckout.trim()}
+            onClick={form.handleSubmit((data) =>
+              router.push(
+                createPath(
+                  "/env",
+                  encodeURIComponent(data.url),
+                  "checkout",
+                  encodeURIComponent(existingCheckout.trim()),
+                ),
+              ),
+            )}
+          >
+            Open checkout
+          </Button>
+        </div>
+        {products.length > 0 && catalog && (
+          <Cart
+            key={catalog.revision}
+            data={products}
+            envUrl={catalog.url}
+            channelSlug={catalog.channelSlug}
+          />
+        )}
+        {catalog?.hasNext ? (
+          <FormButton
+            loading={loadingMore}
+            variant="outline"
+            className="mt-4"
+            onClick={async () => {
+              setLoadingMore(true);
+              try {
+                const response = await fetchProduct({
+                  envUrl: catalog.url,
+                  channelSlug: catalog.channelSlug,
+                  search: catalog.search,
+                  after: catalog.cursor ?? undefined,
+                });
+
+                if (response?.data?.products) {
+                  setProducts((current) => [
+                    ...current,
+                    ...response.data!.products!.edges.map((edge) => edge.node),
+                  ]);
+                  setCatalog({
+                    ...catalog,
+                    cursor: response.data.products.pageInfo.endCursor,
+                    hasNext: response.data.products.pageInfo.hasNextPage,
+                  });
+                }
+              } finally {
+                setLoadingMore(false);
+              }
+            }}
+          >
+            Load more products
+          </FormButton>
+        ) : null}
+      </section>
     </>
   );
 };

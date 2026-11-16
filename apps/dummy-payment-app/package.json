@@ -1,28 +1,21 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "saleor-app-payment-dummy",
-  "version": "1.3.2",
+  "version": "1.3.4",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "next build",
+    "build:ci": "pnpm run build",
     "check-types": "next typegen && tsc",
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "generate": "pnpm run /generate:.*/",
     "generate:app-graphql-types": "graphql-codegen",
-    "generate:app-webhooks-types": "tsx ./scripts/generate-app-webhooks-types.ts --json-schema-version=${npm_package_config_saleor_schemaVersion}",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
+    "generate:app-webhooks-types": "tsx ./scripts/generate-app-webhooks-types.ts",
     "start": "next start",
     "test": "pnpm run test:unit",
     "test:ci": "pnpm run test:unit --coverage",
     "test:unit": "vitest --project=unit"
-  },
-  "config": {
-    "saleor": {
-      "//": "Preserved to make json-schema working. TODO Move it to monorepo root.",
-      "schemaVersion": "3.22"
-    }
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "catalog:",
@@ -74,7 +67,6 @@
     "@graphql-codegen/typescript-operations": "catalog:",
     "@graphql-codegen/typescript-urql": "catalog:",
     "@graphql-typed-document-node/core": "catalog:",
-    "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@total-typescript/ts-reset": "0.6.1",
     "@types/node": "catalog:",
@@ -82,8 +74,6 @@
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "@vitest/coverage-v8": "catalog:",
-    "eslint": "catalog:",
-    "eslint-plugin-n": "catalog:",
     "graphql-config": "5.0.3",
     "jsdom": "catalog:",
     "json-schema-to-typescript": "catalog:",

@@ -1,16 +1,8 @@
 // @vitest-environment node
-import { gql } from "urql";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import { FetchAppDetailsDocument } from "../generated/graphql";
 import { createGraphQLClient } from "./create-graphql-client";
-
-const TestQuery = gql`
-  query TestQuery {
-    shop {
-      name
-    }
-  }
-`;
 
 const mockFetch = () =>
   vi.fn().mockImplementation(
@@ -38,7 +30,7 @@ describe("createGraphQLClient", () => {
       token: "token",
       userAgent: "saleor-app-example/1.2.3",
     })
-      .query(TestQuery, {})
+      .query(FetchAppDetailsDocument, {})
       .toPromise();
 
     // urql lowercases header names before handing them to fetch
@@ -54,7 +46,7 @@ describe("createGraphQLClient", () => {
     vi.stubGlobal("fetch", fetchSpy);
 
     await createGraphQLClient({ saleorApiUrl: "https://example.saleor.cloud/graphql/" })
-      .query(TestQuery, {})
+      .query(FetchAppDetailsDocument, {})
       .toPromise();
 
     expect(getSentHeaders(fetchSpy)).not.toHaveProperty("user-agent");
@@ -70,7 +62,7 @@ describe("createGraphQLClient", () => {
       saleorApiUrl: "https://example.saleor.cloud/graphql/",
       userAgent: "saleor-app-example/1.2.3",
     })
-      .query(TestQuery, {})
+      .query(FetchAppDetailsDocument, {})
       .toPromise();
 
     expect(getSentHeaders(fetchSpy)).not.toHaveProperty("user-agent");
@@ -87,9 +79,9 @@ describe("createGraphQLClient", () => {
       token: () => token,
     });
 
-    await client.query(TestQuery, {}, { requestPolicy: "network-only" }).toPromise();
+    await client.query(FetchAppDetailsDocument, {}, { requestPolicy: "network-only" }).toPromise();
     token = "second";
-    await client.query(TestQuery, {}, { requestPolicy: "network-only" }).toPromise();
+    await client.query(FetchAppDetailsDocument, {}, { requestPolicy: "network-only" }).toPromise();
 
     expect(fetchSpy.mock.calls.map(([, init]) => (init as RequestInit).headers)).toMatchObject([
       { "authorization-bearer": "first" },

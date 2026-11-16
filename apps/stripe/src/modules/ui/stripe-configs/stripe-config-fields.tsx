@@ -9,6 +9,8 @@ export type StripeConfigFormShape = {
   name: string;
   publishableKey: string;
   restrictedKey: string;
+  /** Only editable on an existing configuration. */
+  customerCreationEnabled?: boolean;
 };
 
 /**

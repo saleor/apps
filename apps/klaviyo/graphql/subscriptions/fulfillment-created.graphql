@@ -1,0 +1,41 @@
+subscription FulfillmentCreated {
+  event {
+    ...FulfillmentCreatedWebhookPayload
+  }
+}
+
+fragment FulfillmentCreatedWebhookPayload on FulfillmentCreated {
+  version
+  fulfillment {
+    __typename
+    id
+    warehouse {
+      address {
+        ...AddressFragment
+      }
+    }
+    lines {
+      __typename
+      id
+      quantity
+      orderLine {
+        productName
+        variantName
+        productSku
+        productVariantId
+        unitPrice {
+          ...TaxedMoneyFragment
+        }
+        undiscountedUnitPrice {
+          ...TaxedMoneyFragment
+        }
+        totalPrice {
+          ...TaxedMoneyFragment
+        }
+      }
+    }
+  }
+  order {
+    ...OrderFragment
+  }
+}

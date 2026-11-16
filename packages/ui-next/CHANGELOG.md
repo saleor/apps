@@ -1,5 +1,11 @@
 # @saleor/apps-ui-next
 
+## 0.2.2
+
+### Patch Changes
+
+- acb92fe: Loading placeholders (`Skeleton`) stay visible on tinted surfaces. Before, a bar inside an empty-state callout or a grey card footer was lighter than the surface around it and almost disappeared. Now the bar shades whatever surface it sits on. On white pages it looks the same as before.
+
 ## 0.2.1
 
 ### Patch Changes

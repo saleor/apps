@@ -1,0 +1,4 @@
+product_id,product_name,product_slug,product_description,product_type,category_path,is_published,variant_id,variant_name,sku,currency,price,product_attribute:Brand,variant_attribute:Color,variant_attribute:Size,image_url,image_alt
+t-shirt-001,Core T-Shirt,core-t-shirt,Soft cotton crew neck,Apparel,Apparel > Shirts,true,t-shirt-001-red-m,Red / M,TS-RED-M,USD,19.99,Acme,Red,M,https://placehold.co/800x800.jpg?text=Core+T-Shirt,Core T-Shirt
+t-shirt-001,Core T-Shirt,core-t-shirt,Soft cotton crew neck,Apparel,Apparel > Shirts,true,t-shirt-001-black-l,Black / L,TS-BLK-L,USD,21.50,Acme,Black,L,,
+gift-card-010,Gift Card 10,gift-card-10,Digital gift card,Gift Cards,,true,,Gift Card 10,GC-10,USD,10.00,Acme,,,,

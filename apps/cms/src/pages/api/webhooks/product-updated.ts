@@ -2,7 +2,6 @@ import { type NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/h
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { captureException } from "@sentry/nextjs";
-import { gql } from "urql";
 
 import { createLogger } from "@/logger";
 import { createCmsProblemReporter } from "@/modules/app-problems";
@@ -11,9 +10,8 @@ import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webho
 import { saleorApp } from "@/saleor-app";
 
 import {
+  ProductUpdatedDocument,
   type ProductUpdatedWebhookPayloadFragment,
-  ProductUpdatedWebhookPayloadFragmentDoc,
-  WebhookProductFragmentDoc,
 } from "../../../../generated/graphql";
 import { loggerContext } from "../../../logger-context";
 
@@ -23,35 +21,16 @@ export const config = {
   },
 };
 
-gql`
-  ${WebhookProductFragmentDoc}
-  fragment ProductUpdatedWebhookPayload on ProductUpdated {
-    version
-    product {
-      ...WebhookProduct
-    }
-  }
-`;
-
-const Subscription = gql`
-  ${ProductUpdatedWebhookPayloadFragmentDoc}
-  subscription ProductUpdated {
-    event {
-      ...ProductUpdatedWebhookPayload
-    }
-  }
-`;
-
 export const productUpdatedWebhook = new SaleorAsyncWebhook<ProductUpdatedWebhookPayloadFragment>({
   name: "CMS App - Product Updated",
   webhookPath: "api/webhooks/product-updated",
   event: "PRODUCT_UPDATED",
   apl: saleorApp.apl,
-  query: Subscription,
+  query: ProductUpdatedDocument,
 });
 
 const handler: NextJsWebhookHandler<ProductUpdatedWebhookPayloadFragment> = async (
-  req,
+  _req,
   res,
   context,
 ) => {

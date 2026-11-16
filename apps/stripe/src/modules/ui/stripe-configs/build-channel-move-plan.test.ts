@@ -22,6 +22,7 @@ const config = (
   name: `Config ${id}`,
   restrictedKey: `rk_${env}_...`,
   publishableKey: `pk_${env}_...`,
+  customerCreationEnabled: false,
 });
 
 const channels = [channel("channel-1"), channel("channel-2")];

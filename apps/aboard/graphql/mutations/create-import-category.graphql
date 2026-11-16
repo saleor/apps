@@ -1,0 +1,12 @@
+mutation CreateImportCategory($input: CategoryInput!, $parent: ID) {
+  categoryCreate(input: $input, parent: $parent) {
+    category {
+      id
+    }
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

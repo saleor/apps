@@ -1,0 +1,12 @@
+subscription OrderFulfilled {
+  event {
+    ...OrderFulfilledWebhookPayload
+  }
+}
+
+fragment OrderFulfilledWebhookPayload on OrderFulfilled {
+  version
+  order {
+    ...OrderDetails
+  }
+}

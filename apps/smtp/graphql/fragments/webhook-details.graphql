@@ -1,0 +1,9 @@
+fragment WebhookDetails on Webhook {
+  id
+  name
+  asyncEvents {
+    name
+    eventType
+  }
+  isActive
+}

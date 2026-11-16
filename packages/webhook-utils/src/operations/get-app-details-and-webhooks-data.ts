@@ -1,4 +1,4 @@
-import { Client } from "urql";
+import { type Client } from "urql";
 
 import { GetAppDetailsAndWebhooksDataDocument } from "../../generated/graphql";
 import {
@@ -7,7 +7,7 @@ import {
   WebhookMigrationNetworkError,
   WebhookMigrationUnknownError,
 } from "../errors";
-import { WebhookData } from "../types";
+import { type WebhookData } from "../types";
 
 interface GetAppWebhooksArgs {
   client: Client;

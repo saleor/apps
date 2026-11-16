@@ -1,6 +1,7 @@
 import { type NextApiResponse } from "next";
 import { describe, expect, it, vi } from "vitest";
 
+import { SaleorRateLimitError } from "../lib/algolia/variants-availability";
 import { handleAlgoliaWebhookError } from "./handle-algolia-webhook-error";
 
 const createLoggerMock = () => ({ warn: vi.fn(), error: vi.fn() });
@@ -54,5 +55,20 @@ describe("handleAlgoliaWebhookError", () => {
     expect(logger.warn).not.toHaveBeenCalled();
     expect(status).toHaveBeenCalledWith(500);
     expect(send).toHaveBeenCalledWith("Operation failed due to error");
+  });
+
+  it("Warns and acknowledges with 201 when Saleor rate limits the app, so the burst doesn't raise errors", () => {
+    const logger = createLoggerMock();
+    const { res, status } = createResponseMock();
+    const error = new SaleorRateLimitError("rate limited");
+
+    handleAlgoliaWebhookError({ error, logger, message: "Failed to execute webhook", res });
+
+    expect(logger.warn).toHaveBeenCalledWith(
+      "Saleor API rate limited the app, skipping indexing of this event",
+      { error },
+    );
+    expect(logger.error).not.toHaveBeenCalled();
+    expect(status).toHaveBeenCalledWith(201);
   });
 });

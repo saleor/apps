@@ -1,6 +1,6 @@
 import { Box, type PropsWithBox } from "@saleor/macaw-ui";
 
-export const AppCard = ({ children, ...p }: PropsWithBox<{}>) => {
+export const AppCard = ({ children, ...p }: PropsWithBox<object>) => {
   return (
     <Box
       borderRadius={4}

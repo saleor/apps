@@ -6,6 +6,7 @@ const validValues = {
   name: "Live",
   publishableKey: "pk_live_123",
   restrictedKey: "",
+  customerCreationEnabled: false,
 };
 
 const parseIssues = (values: typeof validValues) => {

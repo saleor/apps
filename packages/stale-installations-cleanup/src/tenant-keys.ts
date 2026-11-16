@@ -10,11 +10,18 @@ const DELETE_BATCH_SIZE = 25;
 const DELETE_MAX_ATTEMPTS = 5;
 
 /**
+ * Parallel scan, so a table that also holds transactions is read within the cron's max duration.
+ * ponytail: fixed segment count, raise it if the scan outgrows the max duration again.
+ */
+const SCAN_SEGMENTS = 16;
+
+/**
  * Keys of every item of the given tenants. A tenant's items live under `PK = saleorApiUrl` (APL)
- * or `PK = saleorApiUrl#...` (installation scoped data), so tenant = PK up to the first `#`.
+ * or `PK = saleorApiUrl#...` (installation scoped data, under any `appId`, so items left by an
+ * earlier install of the same environment too), so tenant = PK up to the first `#`.
  *
  * ponytail: full-table key scan held in memory, scan per page if tables outgrow the function's
- * memory / max duration.
+ * memory.
  */
 export const scanTenantKeys = async (
   table: TenantTable,
@@ -22,35 +29,42 @@ export const scanTenantKeys = async (
 ): Promise<Map<string, TenantKey[]>> => {
   const tenants = new Set(saleorApiUrls);
   const keysByTenant = new Map<string, TenantKey[]>();
-  let exclusiveStartKey: Record<string, unknown> | undefined;
 
   if (tenants.size === 0) {
     return keysByTenant;
   }
 
-  do {
-    const page = await table.getDocumentClient().send(
-      new ScanCommand({
-        TableName: table.getName(),
-        ProjectionExpression: "#pk, #sk",
-        ExpressionAttributeNames: { "#pk": "PK", "#sk": "SK" },
-        ExclusiveStartKey: exclusiveStartKey,
-      }),
-    );
+  const scanSegment = async (segment: number) => {
+    let exclusiveStartKey: Record<string, unknown> | undefined;
 
-    for (const item of (page.Items ?? []) as TenantKey[]) {
-      const tenant = item.PK.split("#")[0];
+    do {
+      const page = await table.getDocumentClient().send(
+        new ScanCommand({
+          TableName: table.getName(),
+          ProjectionExpression: "#pk, #sk",
+          ExpressionAttributeNames: { "#pk": "PK", "#sk": "SK" },
+          Segment: segment,
+          TotalSegments: SCAN_SEGMENTS,
+          ExclusiveStartKey: exclusiveStartKey,
+        }),
+      );
 
-      if (tenants.has(tenant)) {
-        const keys = keysByTenant.get(tenant) ?? [];
+      for (const item of (page.Items ?? []) as TenantKey[]) {
+        const tenant = item.PK.split("#")[0];
 
-        keys.push(item);
-        keysByTenant.set(tenant, keys);
+        if (tenants.has(tenant)) {
+          const keys = keysByTenant.get(tenant) ?? [];
+
+          keys.push(item);
+          keysByTenant.set(tenant, keys);
+        }
       }
-    }
 
-    exclusiveStartKey = page.LastEvaluatedKey;
-  } while (exclusiveStartKey);
+      exclusiveStartKey = page.LastEvaluatedKey;
+    } while (exclusiveStartKey);
+  };
+
+  await Promise.all(Array.from({ length: SCAN_SEGMENTS }, (_, segment) => scanSegment(segment)));
 
   return keysByTenant;
 };

@@ -1,0 +1,8 @@
+query ExistingImportChannel {
+  channels {
+    id
+    slug
+    currencyCode
+    privateMetafield(key: "aboard.channel")
+  }
+}

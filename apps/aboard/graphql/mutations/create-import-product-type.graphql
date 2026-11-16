@@ -1,0 +1,12 @@
+mutation CreateImportProductType($input: ProductTypeInput!) {
+  productTypeCreate(input: $input) {
+    productType {
+      id
+    }
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

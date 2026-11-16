@@ -15,6 +15,7 @@ import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
+import { type StripeConfig } from "@/modules/app-config/domain/stripe-config";
 import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { type StripeProblemReporter } from "@/modules/app-problems";
 import { type ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
@@ -48,8 +49,15 @@ import {
 } from "@/modules/stripe/stripe-payment-intent-status";
 import {
   type CreatePaymentIntentArgs,
+  type IStripeCustomersApiFactory,
   type IStripePaymentIntentsApiFactory,
 } from "@/modules/stripe/types";
+import {
+  isMissingStripeCustomerError,
+  type ResolvedStripeCustomer,
+  type StripeCustomerResolver,
+  StripeCustomerResolverError,
+} from "@/modules/stripe-customers/stripe-customer-resolver";
 import {
   AuthorizationActionRequiredResult,
   ChargeActionRequiredResult,
@@ -82,15 +90,78 @@ export class TransactionInitializeSessionUseCase {
   private appConfigRepo: AppConfigRepo;
   private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
   private transactionRecorder: TransactionRecorderRepo;
+  private stripeCustomersApiFactory: IStripeCustomersApiFactory;
+  private stripeCustomerResolver: StripeCustomerResolver;
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
     stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
     transactionRecorder: TransactionRecorderRepo;
+    stripeCustomersApiFactory: IStripeCustomersApiFactory;
+    stripeCustomerResolver: StripeCustomerResolver;
   }) {
     this.appConfigRepo = deps.appConfigRepo;
     this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;
     this.transactionRecorder = deps.transactionRecorder;
+    this.stripeCustomersApiFactory = deps.stripeCustomersApiFactory;
+    this.stripeCustomerResolver = deps.stripeCustomerResolver;
+  }
+
+  /**
+   * Customer data is a nice-to-have: any failure leaves the payment as it was before customer
+   * creation existed - without a Customer.
+   */
+  private async resolveStripeCustomer(args: {
+    config: StripeConfig;
+    event: TransactionInitializeSessionEventFragment;
+    saleorApiUrl: SaleorApiUrl;
+    appId: string;
+    problemReporter: StripeProblemReporter;
+  }): Promise<ResolvedStripeCustomer | null> {
+    const { config } = args;
+
+    if (!config.customerCreationEnabled) {
+      return null;
+    }
+
+    const result = await this.stripeCustomerResolver.resolve({
+      source: args.event.sourceObject,
+      customersApi: this.stripeCustomersApiFactory.create({ key: config.restrictedKey }),
+      saleorApiUrl: args.saleorApiUrl,
+      appId: args.appId,
+      configId: config.id,
+      idempotencyKey: args.event.idempotencyKey,
+    });
+
+    if (result.isOk()) {
+      return result.value;
+    }
+
+    if (result.error instanceof StripeCustomerResolverError.PermissionDenied) {
+      this.logger.warn("Restricted key lacks Customers permission, turning customer creation off");
+
+      after(async () => {
+        const disableResult = await this.appConfigRepo.disableCustomerCreation({
+          saleorApiUrl: args.saleorApiUrl,
+          appId: args.appId,
+          configId: config.id,
+        });
+
+        if (disableResult.isErr()) {
+          this.logger.error("Failed to turn customer creation off", { error: disableResult.error });
+        }
+
+        await args.problemReporter.reportCustomerCreationDisabled(config.id, config.name);
+      });
+
+      return null;
+    }
+
+    this.logger.warn("Failed to resolve Stripe Customer, creating payment intent without it", {
+      error: result.error,
+    });
+
+    return null;
   }
 
   private prepareStripeCreatePaymentIntentParams(args: {
@@ -100,6 +171,7 @@ export class TransactionInitializeSessionUseCase {
     idempotencyKey: string;
     saleorApiUrl: SaleorApiUrl;
     appId: string;
+    stripeCustomer: ResolvedStripeCustomer | null;
   }): Result<CreatePaymentIntentArgs, InstanceType<typeof StripeMoney.ValdationError>> {
     return StripeMoney.createFromSaleorAmount({
       amount: args.event.action.amount,
@@ -135,6 +207,10 @@ export class TransactionInitializeSessionUseCase {
             ...args.selectedPaymentMethodOptions,
           },
           ...(description && { description }),
+          ...(args.stripeCustomer && {
+            customer: args.stripeCustomer.customerId,
+            shipping: args.stripeCustomer.paymentShipping,
+          }),
         },
       };
     });
@@ -264,6 +340,14 @@ export class TransactionInitializeSessionUseCase {
     const resolvedTransactionFlow =
       selectedPaymentMethod.getResolvedTransactionFlow(saleorTransactionFlow);
 
+    const stripeCustomer = await this.resolveStripeCustomer({
+      config: stripeConfigForThisChannel.value,
+      event,
+      saleorApiUrl,
+      appId,
+      problemReporter: args.problemReporter,
+    });
+
     const stripePaymentIntentParamsResult = this.prepareStripeCreatePaymentIntentParams({
       eventData: eventDataResult.value,
       event: event,
@@ -272,6 +356,7 @@ export class TransactionInitializeSessionUseCase {
       idempotencyKey: event.idempotencyKey,
       saleorApiUrl,
       appId,
+      stripeCustomer,
     });
 
     if (stripePaymentIntentParamsResult.isErr()) {
@@ -285,9 +370,38 @@ export class TransactionInitializeSessionUseCase {
       );
     }
 
-    const createPaymentIntentResult = await stripePaymentIntentsApi.createPaymentIntent(
+    let createPaymentIntentResult = await stripePaymentIntentsApi.createPaymentIntent(
       stripePaymentIntentParamsResult.value,
     );
+
+    if (
+      createPaymentIntentResult.isErr() &&
+      stripeCustomer &&
+      isMissingStripeCustomerError(createPaymentIntentResult.error)
+    ) {
+      this.logger.warn("Linked Stripe Customer was deleted, creating payment intent without it");
+
+      const deleteResult = await this.stripeCustomerResolver.forgetCustomer(stripeCustomer.link);
+
+      if (deleteResult.isErr()) {
+        this.logger.warn("Failed to remove stale Stripe Customer link", {
+          error: deleteResult.error,
+        });
+      }
+
+      const {
+        customer: _customer,
+        shipping: _shipping,
+        ...intentParams
+      } = stripePaymentIntentParamsResult.value.intentParams;
+
+      createPaymentIntentResult = await stripePaymentIntentsApi.createPaymentIntent({
+        ...stripePaymentIntentParamsResult.value,
+        intentParams,
+        // The first attempt is stored under the original key with different params
+        idempotencyKey: `${event.idempotencyKey}:without-customer`,
+      });
+    }
 
     if (createPaymentIntentResult.isErr()) {
       const mappedError = mapStripeErrorToApiError(createPaymentIntentResult.error);

@@ -171,7 +171,7 @@ export class StripeWebhookManager {
   }
 
   async createWebhook(
-    config: NewStripeConfigInput & {
+    config: Omit<NewStripeConfigInput, "customerCreationEnabled"> & {
       configurationId: string;
     },
     { appUrl, saleorApiUrl, appId }: { appUrl: string; saleorApiUrl: SaleorApiUrl; appId: string },

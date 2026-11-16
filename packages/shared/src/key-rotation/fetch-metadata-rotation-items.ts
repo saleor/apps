@@ -1,23 +1,11 @@
 import { type APL } from "@saleor/app-sdk/APL";
 import { type Logger } from "@saleor/apps-logger";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
-import { gql } from "urql";
 
+import { FetchAppDetailsDocument } from "../../generated/graphql";
 import { type createGraphQLClient } from "../create-graphql-client";
 import { matchesAnyEncryptedMetadataKey } from "./metadata-key-matcher";
 import type { RotationItem } from "./secret-key-rotation-runner";
-
-const FetchAppDetailsQuery = gql`
-  query FetchAppDetails {
-    app {
-      id
-      privateMetadata {
-        key
-        value
-      }
-    }
-  }
-`;
 
 type GraphQLClient = ReturnType<typeof createGraphQLClient>;
 
@@ -46,7 +34,7 @@ export async function* fetchMetadataRotationItems({
     const client = createClient({ saleorApiUrl, token });
 
     const { data, error } = await client
-      .query(FetchAppDetailsQuery, {}, { requestPolicy: "network-only" })
+      .query(FetchAppDetailsDocument, {}, { requestPolicy: "network-only" })
       .toPromise();
 
     if (error || !data?.app) {
@@ -56,8 +44,8 @@ export async function* fetchMetadataRotationItems({
       continue;
     }
 
-    const appId = data.app.id as string;
-    const metadata = data.app.privateMetadata as Array<{ key: string; value: string }>;
+    const appId = data.app.id;
+    const metadata = data.app.privateMetadata;
 
     yield {
       id: saleorApiUrl,

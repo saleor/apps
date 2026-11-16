@@ -1,0 +1,12 @@
+mutation CreateImportChannel($input: ChannelCreateInput!) {
+  channelCreate(input: $input) {
+    channel {
+      id
+    }
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

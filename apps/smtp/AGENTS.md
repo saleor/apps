@@ -15,8 +15,8 @@ This is a Saleor SMTP Application that handles email notifications for e-commerc
 
 ### Code Quality
 
-- `pnpm lint` - Run ESLint
-- `pnpm lint:fix` - Auto-fix linting issues
+- `pnpm -w lint apps/smtp` - Run oxlint
+- `pnpm -w lint:fix apps/smtp` - Auto-fix linting issues
 - `pnpm check-types` - Type checking with TypeScript
 
 ### Testing
@@ -27,7 +27,7 @@ This is a Saleor SMTP Application that handles email notifications for e-commerc
 
 ### GraphQL
 
-- `pnpm fetch-schema` - Update GraphQL schema from Saleor
+- `pnpm fetch-schema` (repo root only) - Update GraphQL schema from Saleor
 - `pnpm generate` - Generate TypeScript for GraphQL, after changing queries, mutations, schema
 
 ## Architecture

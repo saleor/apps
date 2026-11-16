@@ -1,0 +1,12 @@
+subscription OrderRefunded {
+  event {
+    ...OrderRefundedWebhookPayload
+  }
+}
+
+fragment OrderRefundedWebhookPayload on OrderRefunded {
+  version
+  order {
+    ...OrderDetails
+  }
+}

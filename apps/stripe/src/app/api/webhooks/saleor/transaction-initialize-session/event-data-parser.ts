@@ -14,7 +14,7 @@ import { RevolutPayPaymentMethod } from "@/modules/stripe/payment-methods/revolu
 import { SepaDebitPaymentMethod } from "@/modules/stripe/payment-methods/sepa-debit";
 import { USBankAccountPaymentMethod } from "@/modules/stripe/payment-methods/us-bank-account";
 
-const TransactionInitializeEventDataSchema = z
+export const TransactionInitializeEventDataSchema = z
   .object({
     paymentIntent: z.discriminatedUnion("paymentMethod", [
       CardPaymentMethod.TransactionInitializeSchema,

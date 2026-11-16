@@ -1,6 +1,6 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { isInIframe } from "@saleor/apps-shared/is-in-iframe";
-import { NextPage } from "next";
+import { type NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";
@@ -23,7 +23,10 @@ const IndexPage: NextPage = () => {
   return (
     <div>
       <h1>Saleor Klaviyo</h1>
-      <p>This is Saleor App that allows to use external service to handle taxes.</p>
+      <p>
+        Sends Saleor store events to Klaviyo as metrics, so you can build flows and segments on
+        them.
+      </p>
       <p>Install the app in your Saleor instance and open it in Dashboard.</p>
     </div>
   );

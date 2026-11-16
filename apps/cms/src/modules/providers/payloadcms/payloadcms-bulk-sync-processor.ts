@@ -43,7 +43,7 @@ export class PayloadCmsBulkSyncProcessor implements BulkSyncProcessor {
                 },
               },
             })
-            .then((r) => {
+            .then(() => {
               if (hooks.onUploadSuccess) {
                 hooks.onUploadSuccess({ variantId: variant.id });
               }

@@ -1,0 +1,17 @@
+query ProductTypeBySlug($slug: String!) {
+  productTypes(first: 1, filter: { slugs: [$slug] }) {
+    edges {
+      node {
+        id
+        productAttributes {
+          id
+        }
+        assignedVariantAttributes {
+          attribute {
+            id
+          }
+        }
+      }
+    }
+  }
+}

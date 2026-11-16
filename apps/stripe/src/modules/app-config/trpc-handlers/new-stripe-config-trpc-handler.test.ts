@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedAppToken, mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
+import { mockedStripeCustomersApi } from "@/__tests__/mocks/mocked-stripe-customers-api";
 import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
 import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
@@ -24,6 +25,7 @@ const webhookCreator = new StripeWebhookManager();
 const getTestCaller = () => {
   const instance = new NewStripeConfigTrpcHandler({
     webhookManager: webhookCreator,
+    customersApiFactory: { create: () => mockedStripeCustomersApi },
   });
 
   // @ts-expect-error - context doesnt match but its applied in test
@@ -141,6 +143,7 @@ describe("NewStripeConfigTrpcHandler", () => {
       {
         "appId": "saleor-app-id",
         "config": {
+          "customerCreationEnabled": false,
           "id": Any<String>,
           "name": "Test config",
           "publishableKey": "pk_live_1",
@@ -174,6 +177,59 @@ describe("NewStripeConfigTrpcHandler", () => {
       );
 
       expect(stripe.paymentIntents.list).toHaveBeenCalledOnce();
+    });
+  });
+
+  describe("customer creation", () => {
+    const input = {
+      name: "Test config",
+      publishableKey: mockedStripePublishableKey,
+      restrictedKey: mockedStripeRestrictedKey,
+      customerCreationEnabled: true,
+    };
+
+    it("Saves it turned on when the key can write Customers", async () => {
+      const { caller, mockedAppConfigRepo } = getTestCaller();
+
+      vi.mocked(mockedStripeCustomersApi.hasCustomersWritePermission).mockResolvedValue(ok(true));
+      vi.spyOn(mockedAppConfigRepo, "saveStripeConfig").mockImplementationOnce(async () =>
+        ok(null),
+      );
+
+      await caller.testProcedure(input);
+
+      const savedConfig = vi.mocked(mockedAppConfigRepo.saveStripeConfig).mock.calls[0][0].config;
+
+      expect(savedConfig.customerCreationEnabled).toBe(true);
+    });
+
+    it("Rejects it before creating the webhook when the key lacks Customers - Write", async () => {
+      const { caller, mockedAppConfigRepo } = getTestCaller();
+
+      vi.mocked(mockedStripeCustomersApi.hasCustomersWritePermission).mockResolvedValue(ok(false));
+
+      await expect(caller.testProcedure(input)).rejects.toMatchObject({
+        code: "PRECONDITION_FAILED",
+        message: expect.stringContaining("Customers - Write"),
+      });
+      expect(webhookCreator.createWebhook).not.toHaveBeenCalled();
+      expect(mockedAppConfigRepo.saveStripeConfig).not.toHaveBeenCalled();
+    });
+
+    it("Doesn't check the permission when it stays off", async () => {
+      const { caller, mockedAppConfigRepo } = getTestCaller();
+
+      vi.spyOn(mockedAppConfigRepo, "saveStripeConfig").mockImplementationOnce(async () =>
+        ok(null),
+      );
+
+      await caller.testProcedure({ ...input, customerCreationEnabled: false });
+
+      expect(mockedStripeCustomersApi.hasCustomersWritePermission).not.toHaveBeenCalled();
+      expect(
+        vi.mocked(mockedAppConfigRepo.saveStripeConfig).mock.calls[0][0].config
+          .customerCreationEnabled,
+      ).toBe(false);
     });
   });
 });

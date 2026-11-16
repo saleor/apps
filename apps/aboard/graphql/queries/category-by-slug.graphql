@@ -1,0 +1,14 @@
+query CategoryBySlug($slug: String!) {
+  categories(first: 100, filter: { slugs: [$slug] }) {
+    edges {
+      node {
+        id
+        slug
+        privateMetafield(key: "aboard.category")
+        parent {
+          id
+        }
+      }
+    }
+  }
+}

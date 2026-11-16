@@ -1,8 +1,8 @@
 {
-  // Mirrors the ESLint configs, which stay the linter of record. This file is published to the public
-  // repo, so private apps keep their overrides in their own .oxlintrc.json (extending this one), as do
-  // the two eslint-config-next test clients. Nested configs replace this file rather than merge with it,
-  // and ignorePatterns are not inherited through extends, so each nested config repeats them.
+  // The repo's lint config; `pnpm lint` runs oxlint against it. This file is published to the public
+  // repo, so private apps keep their overrides in their own .oxlintrc.json (extending this one), and the
+  // payment test client uses the shared configuration. Nested configs replace this file rather than merge
+  // with it, and ignorePatterns are not inherited through extends, so each nested config repeats them.
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript", "import", "nextjs", "react", "vitest", "node", "unicorn"],
   "categories": { "correctness": "off" },
@@ -13,7 +13,8 @@
     "eslint-plugin-turbo",
     { "name": "vitest-js", "specifier": "@vitest/eslint-plugin" },
     { "name": "react-js", "specifier": "eslint-plugin-react" },
-    { "name": "next-js", "specifier": "@next/eslint-plugin-next" }
+    { "name": "next-js", "specifier": "@next/eslint-plugin-next" },
+    "./packages/oxlint/src/index.ts"
   ],
   "settings": { "react": { "version": "18.2.0" } },
   "ignorePatterns": [
@@ -22,7 +23,6 @@
     "/oss/**",
     "/scripts/**",
     "/templates/**",
-    "/packages/eslint-config/**",
     "/packages/typescript-config/**",
     "**/.next/**",
     "**/.tmp/**",
@@ -180,6 +180,8 @@
         ],
         "@stylistic/multiline-comment-style": ["error", "starred-block"],
         "no-console": "error",
+        // Apps that still inline documents downgrade this to "warn" (here or in their nested config).
+        "saleor/no-inline-graphql": "error",
         "no-restricted-imports": [
           "error",
           {
@@ -464,6 +466,9 @@
     {
       "files": [
         "apps/payment-apps-testclient/next.config.ts",
+        "apps/payment-apps-testclient/playwright.config.ts",
+        "apps/payment-apps-testclient/playwright.adyen.config.ts",
+        "apps/payment-apps-testclient/e2e-adyen/env.ts",
         "apps/payment-apps-testclient/src/env.ts"
       ],
       "rules": { "node/no-process-env": "off" }
@@ -601,6 +606,11 @@
         "typescript/no-require-imports": "warn",
         "no-extra-boolean-cast": "warn"
       }
+    },
+    { "files": ["apps/aboard/**/*.{ts,tsx}"], "rules": { "node/no-process-env": "error" } },
+    {
+      "files": ["apps/aboard/src/lib/env.ts", "apps/aboard/src/instrumentation-client.ts"],
+      "rules": { "node/no-process-env": "off" }
     },
     { "files": ["apps/stripe/**/*.{ts,tsx}"], "rules": { "node/no-process-env": "error" } },
     {

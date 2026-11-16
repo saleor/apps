@@ -53,7 +53,13 @@ export const cleanupStaleInstallations = async ({
     return { status: 201, body: { error: "Not configured" } };
   }
 
+  // Logged before the slowest step, so a timed out run can be told apart from one that never ran.
+  logger.info("Stale installations cleanup started");
+
   const installations = await getInstallations();
+
+  logger.info("Fetched installations", { count: installations.length });
+
   const staleResult = await findStaleInstallations({
     installations,
     cloudApiUrl,
@@ -76,12 +82,15 @@ export const cleanupStaleInstallations = async ({
     return { status: 500, body: { error: "Refused to delete every installation" } };
   }
 
-  const keysByTenant = await scanTenantKeys(table, stale);
   const appIdByUrl = new Map(installations.map(({ saleorApiUrl, appId }) => [saleorApiUrl, appId]));
-  const tenants = stale.map((saleorApiUrl) => ({
+  const staleInstallations = stale.map((saleorApiUrl) => ({
     saleorApiUrl,
     appId: appIdByUrl.get(saleorApiUrl)!,
-    keys: keysByTenant.get(saleorApiUrl) ?? [],
+  }));
+  const keysByTenant = await scanTenantKeys(table, stale);
+  const tenants = staleInstallations.map((installation) => ({
+    ...installation,
+    keys: keysByTenant.get(installation.saleorApiUrl) ?? [],
   }));
   const summary = {
     dryRun,

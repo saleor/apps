@@ -1,0 +1,23 @@
+mutation BulkCreateImportedProducts($products: [ProductBulkCreateInput!]!) {
+  productBulkCreate(products: $products, errorPolicy: REJECT_FAILED_ROWS) {
+    count
+    errors {
+      path
+      message
+      code
+    }
+    results {
+      product {
+        id
+        productVariants(first: 1) {
+          totalCount
+        }
+      }
+      errors {
+        path
+        message
+        code
+      }
+    }
+  }
+}

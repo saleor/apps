@@ -16,6 +16,8 @@ describe("newStripeConfigInputSchema", () => {
       name: "test",
       restrictedKey: mockedStripeRestrictedKey,
       publishableKey: mockedStripePublishableKey,
+      // Off unless the merchant turns it on
+      customerCreationEnabled: false,
     });
   });
 

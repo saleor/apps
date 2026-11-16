@@ -1,5 +1,24 @@
 # saleor-app-avatax
 
+## 1.27.6
+
+### Patch Changes
+
+- Updated dependencies [ef64608]
+  - @saleor/stale-installations-cleanup@0.4.0
+
+## 1.27.5
+
+### Patch Changes
+
+- d34f4d9: Upgraded Next.js to v16.4.5
+
+## 1.27.4
+
+### Patch Changes
+
+- 8834a7a: Checkout tax calculation no longer crashes when you have an AvaTax connection saved but no channel configured yet. Now you get an app problem in the Dashboard saying the channel is not configured, so you can fix it by assigning a configuration to the channel.
+
 ## 1.27.3
 
 ### Patch Changes

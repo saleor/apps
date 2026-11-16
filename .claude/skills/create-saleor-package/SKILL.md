@@ -1,6 +1,6 @@
 ---
 name: create-saleor-package
-description: Scaffold a new shared package in the saleor-apps monorepo under ./packages/. Use when asked to "create a package", "add a new package", "scaffold a package", "new shared library", or any task that involves creating a new reusable package in the saleor-apps monorepo. Handles all boilerplate - package.json, tsconfig, eslint, vitest, turbo, lint-staged configs, and src/index.ts.
+description: Scaffold a new shared package in the saleor-apps monorepo under ./packages/. Use when asked to "create a package", "add a new package", "scaffold a package", "new shared library", or any task that involves creating a new reusable package in the saleor-apps monorepo. Handles all boilerplate - package.json, tsconfig, vitest, turbo config, and src/index.ts.
 ---
 
 # Create Saleor Package
@@ -37,14 +37,14 @@ Scaffold a new package in `packages/` with all standard monorepo boilerplate.
 
 | File | Purpose |
 |------|---------|
-| `package.json` | `type: module`, scripts (check-types, lint, test), devDeps for eslint/ts/vitest |
+| `package.json` | `type: module`, scripts (check-types, test), devDeps for ts/vitest |
 | `tsconfig.json` | Extends `@saleor/typescript-config-apps/base.json` |
-| `eslint.config.js` | Flat config extending `@saleor/eslint-config-apps` |
 | `vitest.config.ts` | jsdom environment, css disabled, shuffle enabled |
 | `turbo.json` | Extends root turbo config |
-| `lint-staged.config.js` | Extends root + eslint/prettier for JS/TS |
 | `CHANGELOG.md` | Empty changelog for changesets |
 | `src/index.ts` | Entry point with `export {}` placeholder |
+
+Linting needs no per-package files. The root `pnpm lint` (oxlint) and the root `lint-staged.config.js` cover every package. A package that needs its own rule overrides adds a nested `.oxlintrc.json` that `extends` the root one.
 
 ## Naming Conventions
 

@@ -2,7 +2,7 @@ import { type IGraphQLConfig } from "graphql-config";
 
 const config: IGraphQLConfig = {
   schema: "graphql/schema.graphql",
-  documents: ["graphql/**/*.graphql", "src/**/*.ts", "src/**/*.tsx"],
+  documents: ["graphql/**/*.graphql"],
   extensions: {
     codegen: {
       overwrite: true,

@@ -19,21 +19,13 @@ export const InitalizeTransactionSchema = z.object({
               .optional(),
           })
           .optional(),
+        // Passed to the drop-in as is, and each action type (e.g. threeDS2) has its own fields.
         action: z
-          .object({
-            paymentMethodType: z.string(),
-            paymentData: z.string(),
-            url: z.string().optional(),
-            type: z.string(),
-            qrCodeData: z.string().optional(),
-            sdkData: z
-              .object({
-                token: z.string(),
-              })
-              .optional(),
-          })
+          .object({ type: z.string(), paymentMethodType: z.string() })
+          .passthrough()
           .optional(),
-        resultCode: z.enum(["Authorised", "Pending", "Refused", "Received", "Cancelled", "Error"]),
+        // Adyen returns more codes than the client checks, e.g. IdentifyShopper during 3DS2.
+        resultCode: z.string(),
       }),
     }),
     errors: z.array(

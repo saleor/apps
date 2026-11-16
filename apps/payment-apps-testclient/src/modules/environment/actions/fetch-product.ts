@@ -13,13 +13,18 @@ import { ProductFragment } from "../fragments";
 
 const FetchProductQuery = graphql(
   `
-    query FetchProduct($channelSlug: String!) {
+    query FetchProduct($channelSlug: String!, $search: String, $after: String) {
       products(
-        first: 1
+        first: 20
+        after: $after
         channel: $channelSlug
-        filter: { isPublished: true, stockAvailability: IN_STOCK, giftCard: false }
-        sortBy: { field: PRICE, direction: DESC }
+        filter: { isPublished: true, stockAvailability: IN_STOCK, giftCard: false, search: $search }
+        sortBy: { field: NAME, direction: ASC }
       ) {
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
         edges {
           node {
             ...Product
@@ -32,22 +37,25 @@ const FetchProductQuery = graphql(
 );
 
 const NoProductsFoundError = BaseError.subclass("NoProductsFoundError");
-const DefaultVariantNotAvailableError = BaseError.subclass("DefaultVariantNotAvailableError");
 
 export const fetchProduct = actionClient
   .schema(
     z.object({
       envUrl: envUrlSchema,
       channelSlug: z.string(),
+      search: z.string().optional(),
+      after: z.string().optional(),
     }),
   )
   .metadata({ actionName: "fetchProduct" })
-  .action(async ({ parsedInput: { channelSlug, envUrl } }) => {
+  .action(async ({ parsedInput: { channelSlug, envUrl, search, after } }) => {
     const response = await request(
       envUrl,
       FetchProductQuery,
       {
         channelSlug,
+        search,
+        after,
       },
       saleorRequestHeaders,
     ).catch((error) => {
@@ -58,13 +66,9 @@ export const fetchProduct = actionClient
       readFragment(ProductFragment, edge.node),
     );
 
-    if (products?.length === 0) {
-      throw new NoProductsFoundError("No products found for selected channel.");
-    }
-
-    if (products?.some((product) => product.defaultVariant?.pricing === null)) {
-      throw new DefaultVariantNotAvailableError(
-        "Default variant not available for selected channel.",
+    if (!products?.length && !after) {
+      throw new NoProductsFoundError(
+        "No matching products found for this channel. Try another search.",
       );
     }
 

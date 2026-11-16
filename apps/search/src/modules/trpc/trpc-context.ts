@@ -15,7 +15,7 @@ const getBaseUrl = (headers: { [name: string]: string | string[] | undefined }):
   return `${protocol}://${host}`;
 };
 
-export const createTrpcContext = async ({ res, req }: trpcNext.CreateNextContextOptions) => {
+export const createTrpcContext = async ({ req }: trpcNext.CreateNextContextOptions) => {
   const baseUrl = getBaseUrl(req.headers);
 
   return {

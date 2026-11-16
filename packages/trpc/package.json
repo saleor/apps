@@ -8,14 +8,11 @@
     "./http-batch-link": "./src/http-batch-link.ts"
   },
   "scripts": {
-    "check-types": "tsc",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "check-types": "tsc"
   },
   "devDependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-shared": "workspace:*",
-    "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@trpc/client": "catalog:",
     "@trpc/next": "catalog:",
@@ -31,7 +28,6 @@
     "@trpc/next": "catalog:",
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
-    "eslint": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"

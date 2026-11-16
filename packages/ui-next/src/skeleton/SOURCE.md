@@ -13,3 +13,5 @@
 - `clsx` for the class merge instead of the inline `filter(Boolean).join(" ")`.
 - The fill also ships in `@saleor/apps-ui-next/style`, so macaw's own `Skeleton` in an app that
   already imports the kit stylesheet picks up the same colors without a component swap.
+- The border is mixed into `transparent` instead of `background-default1`, so bars stay visible on
+  tinted surfaces. On `background-default1` the result is the same color.

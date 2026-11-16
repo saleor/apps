@@ -1,4 +1,4 @@
-import { Entity, string } from "dynamodb-toolbox";
+import { boolean, Entity, string } from "dynamodb-toolbox";
 import { item } from "dynamodb-toolbox/schema/item";
 
 import { DynamoMainTable, dynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
@@ -27,6 +27,8 @@ const DynamoDbStripeConfigSchema = item({
   stripeRk: string(),
   stripeWhSecret: string(),
   stripeWhId: string(),
+  /** Missing on configs saved before customer creation existed - reads as disabled. */
+  customerCreationEnabled: boolean().optional(),
 });
 
 const createStripeConfigEntity = (table: DynamoMainTable) => {

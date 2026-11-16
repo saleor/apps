@@ -1,4 +1,4 @@
-import { Client } from "urql";
+import { type Client } from "urql";
 
 import { RemoveAppWebhookDocument } from "../../generated/graphql";
 import {

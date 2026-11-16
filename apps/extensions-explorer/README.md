@@ -30,5 +30,5 @@ Saleor must be able to reach the app, so use a tunnel or set `APP_IFRAME_BASE_UR
 pnpm --filter saleor-app-extensions-explorer dev
 pnpm --filter saleor-app-extensions-explorer test    # domain rules
 pnpm --filter saleor-app-extensions-explorer check-types
-pnpm --filter saleor-app-extensions-explorer lint
+pnpm lint apps/extensions-explorer
 ```

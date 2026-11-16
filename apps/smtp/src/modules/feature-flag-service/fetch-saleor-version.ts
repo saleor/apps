@@ -1,17 +1,9 @@
-import { type Client, gql } from "urql";
+import { type Client } from "urql";
 
 import {
   FetchSaleorVersionDocument,
   type FetchSaleorVersionQuery,
 } from "../../../generated/graphql";
-
-const _query = gql`
-  query FetchSaleorVersion {
-    shop {
-      version
-    }
-  }
-`;
 
 export async function fetchSaleorVersion(client: Client): Promise<string> {
   const { error, data } = await client

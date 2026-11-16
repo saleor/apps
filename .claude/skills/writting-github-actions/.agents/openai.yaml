@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write GitHub Actions workflows"
+  short_description: "Safely change and validate GitHub Actions workflows."
+  default_prompt: "Use $writing-github-actions to update a GitHub Actions workflow."

@@ -79,7 +79,7 @@ The number of records processed concurrently is controlled by the
 ## Development
 
 This app lives in the [saleor/apps](https://github.com/saleor/apps) monorepo and follows the
-shared tooling (ESLint, TypeScript and dependency catalog) used across all apps.
+shared tooling (oxlint, TypeScript and dependency catalog) used across all apps.
 
 ```bash
 # from the repository root
@@ -93,7 +93,7 @@ pnpm --filter saleor-app-anonymizer generate
 
 # type-check / lint / test
 pnpm --filter saleor-app-anonymizer check-types
-pnpm --filter saleor-app-anonymizer lint
+pnpm lint apps/anonymizer
 pnpm --filter saleor-app-anonymizer test
 ```
 

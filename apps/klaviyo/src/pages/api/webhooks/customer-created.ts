@@ -2,7 +2,6 @@ import { type NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/h
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
-import { gql } from "urql";
 
 import {
   type CustomerCreatedWebhookPayloadFragment,
@@ -16,46 +15,6 @@ import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 
 const logger = createLogger("customerCreatedAsyncWebhookHandler");
-
-const CustomerCreatedWebhookPayload = gql`
-  fragment CustomerCreatedWebhookPayload on CustomerCreated {
-    version
-    user {
-      __typename
-      id
-      defaultShippingAddress {
-        ...AddressFragment
-      }
-      defaultBillingAddress {
-        ...AddressFragment
-      }
-      addresses {
-        ...AddressFragment
-      }
-      privateMetadata {
-        ...MetadataFragment
-      }
-      metadata {
-        ...MetadataFragment
-      }
-      email
-      firstName
-      lastName
-      isActive
-      dateJoined
-      languageCode
-    }
-  }
-`;
-
-export const CustomerCreatedGraphqlSubscription = gql`
-  ${CustomerCreatedWebhookPayload}
-  subscription CustomerCreated {
-    event {
-      ...CustomerCreatedWebhookPayload
-    }
-  }
-`;
 
 export const customerCreatedWebhook = new SaleorAsyncWebhook<CustomerCreatedWebhookPayloadFragment>(
   {

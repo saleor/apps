@@ -1,5 +1,5 @@
-import { WebhookManifest } from "@saleor/app-sdk/types";
-import { Client } from "urql";
+import { type WebhookManifest } from "@saleor/app-sdk/types";
+import { type Client } from "urql";
 
 import {
   WebhookMigrationAppPermissionDeniedError,
@@ -7,14 +7,14 @@ import {
   WebhookMigrationUnknownError,
 } from "./errors";
 import {
-  AppDetails,
+  type AppDetails,
   getAppDetailsAndWebhooksData,
 } from "./operations/get-app-details-and-webhooks-data";
 import {
   getSaleorInstanceDetails,
-  SaleorInstanceDetails,
+  type SaleorInstanceDetails,
 } from "./operations/get-saleor-instance-details";
-import { Logger } from "./types";
+import { type Logger } from "./types";
 import { WebhookUpdater } from "./webhook-updater";
 
 type GetManifestFunction = ({

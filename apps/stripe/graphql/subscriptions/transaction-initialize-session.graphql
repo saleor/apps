@@ -11,6 +11,7 @@ fragment TransactionInitializeSessionEvent on TransactionInitializeSession {
   }
   sourceObject {
     ...SourceObject
+    ...StripeCustomerSource
   }
   idempotencyKey
 }

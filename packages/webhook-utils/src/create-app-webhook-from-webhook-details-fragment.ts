@@ -1,7 +1,7 @@
-import { Client } from "urql";
+import { type Client } from "urql";
 
 import { createAppWebhook } from "./operations/create-app-webhook";
-import { WebhookData } from "./types";
+import { type WebhookData } from "./types";
 
 interface CreateAppWebhookFromWebhookDetailsFragmentArgs {
   client: Client;

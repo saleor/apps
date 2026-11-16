@@ -1,5 +1,11 @@
 # saleor-app-onboarding
 
+## 0.1.16
+
+### Patch Changes
+
+- d34f4d9: Upgraded Next.js to v16.4.5
+
 ## 0.1.15
 
 ### Patch Changes

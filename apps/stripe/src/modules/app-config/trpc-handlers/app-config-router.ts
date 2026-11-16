@@ -6,10 +6,12 @@ import { RemoveStripeConfigTrpcHandler } from "@/modules/app-config/trpc-handler
 import { UpdateMappingTrpcHandler } from "@/modules/app-config/trpc-handlers/update-mapping-trpc-handler";
 import { UpdateStripeConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/update-stripe-config-trpc-handler";
 import { ChannelsFetcher } from "@/modules/saleor/channel-fetcher";
+import { StripeCustomersApiFactory } from "@/modules/stripe/stripe-customers-api-factory";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { router } from "@/modules/trpc/trpc-server";
 
 const webhookManager = new StripeWebhookManager();
+const customersApiFactory = new StripeCustomersApiFactory();
 
 /**
  * TODO Figure out end-to-end router testing (must somehow check valid jwt token)
@@ -17,6 +19,7 @@ const webhookManager = new StripeWebhookManager();
 export const appConfigRouter = router({
   saveNewStripeConfig: new NewStripeConfigTrpcHandler({
     webhookManager,
+    customersApiFactory,
   }).getTrpcProcedure(),
   getStripeConfigsList: new GetStripeConfigsListTrpcHandler().getTrpcProcedure(),
   fetchChannels: new GetSaleorChannelsTrpcHandler({
@@ -24,6 +27,9 @@ export const appConfigRouter = router({
   }).getTrpcProcedure(),
   channelsConfigsMapping: new GetStripeConfigsChannelsMappingTrpcHandler().getTrpcProcedure(),
   updateMapping: new UpdateMappingTrpcHandler().getTrpcProcedure(),
-  updateStripeConfig: new UpdateStripeConfigTrpcHandler({ webhookManager }).getTrpcProcedure(),
+  updateStripeConfig: new UpdateStripeConfigTrpcHandler({
+    webhookManager,
+    customersApiFactory,
+  }).getTrpcProcedure(),
   removeStripeConfig: new RemoveStripeConfigTrpcHandler({ webhookManager }).getTrpcProcedure(),
 });

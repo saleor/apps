@@ -1,7 +1,7 @@
 import { type Client } from "urql";
 import { describe, expect, it, type Mock, vi } from "vitest";
 
-import { createVariantsAvailabilityFetcher } from "./variants-availability";
+import { createVariantsAvailabilityFetcher, SaleorRateLimitError } from "./variants-availability";
 
 vi.mock("../logger", () => ({
   createLogger: () => ({ info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn() }),
@@ -10,7 +10,7 @@ vi.mock("../logger", () => ({
 const createApiClient = (
   respond: (variables: { channel: string; ids: string[] }) => {
     data?: unknown;
-    error?: { message: string };
+    error?: { message: string; response?: { status: number } };
   },
 ) =>
   ({
@@ -56,6 +56,18 @@ describe("createVariantsAvailabilityFetcher", () => {
     await expect(fetch({ variantIds: ["variant-1"], channelSlugs: ["usd"] })).rejects.toThrowError(
       /boom/,
     );
+  });
+
+  it("Throws SaleorRateLimitError when Saleor responds with 429", async () => {
+    const fetch = createVariantsAvailabilityFetcher(
+      createApiClient(() => ({
+        error: { message: "[Network] Too Many Requests", response: { status: 429 } },
+      })),
+    );
+
+    await expect(
+      fetch({ variantIds: ["variant-1"], channelSlugs: ["usd"] }),
+    ).rejects.toBeInstanceOf(SaleorRateLimitError);
   });
 
   it("Does not call Saleor when there is nothing to resolve", async () => {

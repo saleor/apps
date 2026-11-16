@@ -23,6 +23,9 @@
         "DYNAMODB_CONNECTION_TIMEOUT_MS",
         "CRON_SECRET"
       ]
+    },
+    "generate": {
+      "inputs": ["**/*.graphql", "graphql.config.ts", "package.json"]
     }
   }
 }

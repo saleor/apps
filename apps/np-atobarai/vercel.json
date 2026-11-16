@@ -9,9 +9,8 @@
   "regions": ["dub1", "iad1"],
   "git": {
     "deploymentEnabled": {
-      "oss-sync-staging": false,
-      "public-mirror": false,
-      "changeset-release/main": false
+      "main": true,
+      "**": false
     }
   }
 }

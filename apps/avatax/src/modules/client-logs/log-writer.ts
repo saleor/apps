@@ -38,7 +38,7 @@ export class DynamoDbLogWriter implements ILogWriter {
  * Just no-op. For testing or if feature is disabled
  */
 export class NoopLogWriter implements ILogWriter {
-  async writeLog(log: ClientLogStoreRequest): Promise<void> {
+  async writeLog(): Promise<void> {
     return;
   }
 }

@@ -1,5 +1,11 @@
 # saleor-app-anonymizer
 
+## 1.2.17
+
+### Patch Changes
+
+- d34f4d9: Upgraded Next.js to v16.4.5
+
 ## 1.2.16
 
 ### Patch Changes

@@ -1,5 +1,6 @@
 import { getPaymentGateways } from "@/modules/payment-gateway/actions/get-payment-gateways";
 import { PaymentGatewaySelect } from "@/modules/payment-gateway/components/payment-gateway-select";
+import { isTerminalConfigured } from "@/modules/square/terminal/server-config";
 
 export default async function PaymentGatewaysPage(props: {
   params: Promise<{ envUrl: string; checkoutId: string }>;
@@ -16,6 +17,9 @@ export default async function PaymentGatewaysPage(props: {
   return (
     <main className="mx-auto grid max-w-6xl items-start gap-6 px-4 py-6 md:grid-cols-2 lg:gap-12">
       <PaymentGatewaySelect
+        envUrl={decodedEnvUrl}
+        checkoutId={checkoutId}
+        terminalEnabled={isTerminalConfigured()}
         data={paymentGatewaysResponse?.data?.checkout?.availablePaymentGateways}
       />
     </main>

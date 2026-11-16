@@ -1,5 +1,18 @@
 # saleor-app-payment-dummy
 
+## 1.3.4
+
+### Patch Changes
+
+- Updated dependencies [ef64608]
+  - @saleor/stale-installations-cleanup@0.4.0
+
+## 1.3.3
+
+### Patch Changes
+
+- d34f4d9: Upgraded Next.js to v16.4.5
+
 ## 1.3.2
 
 ### Patch Changes

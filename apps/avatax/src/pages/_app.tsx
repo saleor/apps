@@ -1,4 +1,3 @@
-/* eslint-disable react-naming-convention/filename */
 import "@saleor/macaw-ui/style";
 import "../styles/globals.css";
 

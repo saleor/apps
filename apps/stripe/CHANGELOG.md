@@ -1,5 +1,40 @@
 # saleor-app-payment-stripe
 
+## 2.16.3
+
+### Patch Changes
+
+- 4a74d0b: You can now validate the `data` your storefront sends to `transactionInitialize` against a published JSON Schema at `/.well-known/TransactionInitializeSessionRequestData.schema.json`. Before, the only way to find out a payload was wrong was a `ParseError` response from the app. The schema lists the supported payment methods and is generated from the app's own validation, so it always matches what the app accepts. The app's behavior is unchanged.
+- Updated dependencies [acb92fe]
+  - @saleor/apps-ui-next@0.2.2
+
+## 2.16.2
+
+### Patch Changes
+
+- Updated dependencies [ef64608]
+  - @saleor/stale-installations-cleanup@0.4.0
+
+## 2.16.1
+
+### Patch Changes
+
+- d34f4d9: Upgraded Next.js to v16.4.5
+
+## 2.16.0
+
+### Minor Changes
+
+- 4babe9c: You can now have the app create Stripe customers for signed-in buyers, so their name, email, phone and addresses show on their payments in Stripe Dashboard. Before, card payments usually had no buyer name, because only wallets like Apple Pay or Google Pay send it to Stripe.
+
+  Customer creation is off by default and is turned on per Stripe configuration. It needs the "Customers - Write" permission on the restricted key; the app checks the key when you turn it on. Signed-in buyers keep one Stripe customer across their orders. Guest payments are unchanged: Stripe groups them as guest customers, and the buyer's name comes from the billing details your storefront sends with the payment. If the key loses the permission later, payments keep working without customer details, the app turns customer creation off and reports it as an app problem.
+
+## 2.15.1
+
+### Patch Changes
+
+- bea485a: A temporary Stripe problem (rate limit, network error, Stripe outage) during `transactionProcess` no longer leaves a paid checkout showing nothing charged. Before, the app reported a final charge or authorization failure, and Saleor then ignored the successful payment Stripe confirmed moments later. Now the app responds with an error, so Saleor doesn't count the failure: your storefront can call `transactionProcess` again, and the payment confirmed by Stripe is counted. On this error the response no longer includes the `data` object with Stripe error details.
+
 ## 2.15.0
 
 ### Minor Changes

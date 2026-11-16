@@ -4,18 +4,14 @@
   "type": "module",
   "main": "index.ts",
   "scripts": {
-    "check-types": "tsc",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "check-types": "tsc"
   },
   "devDependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
-    "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "@saleor/typescript-config-apps": "workspace:*",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "eslint": "catalog:",
     "lucide-react": "catalog:",
     "next": "catalog:",
     "react": "catalog:",

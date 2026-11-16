@@ -1,20 +1,6 @@
-import { gql } from "urql";
-
+import { UpdateAppMetadataDocument } from "../../generated/graphql";
 import type { MetadataItemContext } from "./fetch-metadata-rotation-items";
 import type { RotatedItem } from "./secret-key-rotation-runner";
-
-const UpdateAppMetadataMutation = gql`
-  mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
-    updatePrivateMetadata(id: $id, input: $input) {
-      item {
-        privateMetadata {
-          key
-          value
-        }
-      }
-    }
-  }
-`;
 
 export async function saveMetadataRotationItem(
   item: RotatedItem<MetadataItemContext>,
@@ -23,7 +9,7 @@ export async function saveMetadataRotationItem(
   const input = Object.entries(item.reEncryptedFields).map(([key, value]) => ({ key, value }));
 
   const { error } = await client
-    .mutation(UpdateAppMetadataMutation, { id: appId, input })
+    .mutation(UpdateAppMetadataDocument, { id: appId, input })
     .toPromise();
 
   if (error) {

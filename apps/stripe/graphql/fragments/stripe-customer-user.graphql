@@ -1,0 +1,6 @@
+fragment StripeCustomerUser on User {
+  id
+  email
+  firstName
+  lastName
+}

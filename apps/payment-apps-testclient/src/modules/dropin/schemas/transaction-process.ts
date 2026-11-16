@@ -3,10 +3,13 @@ import { z } from "zod";
 export const TransactionProcessSchema = z.object({
   transactionProcess: z.object({
     data: z.object({
-      paymentDetailsResponse: z.object({
-        resultCode: z.enum(["Authorised", "Pending", "Refused", "Received"]),
-        refusalReason: z.string().optional(),
-      }),
+      // Passed to the drop-in as is, e.g. a ChallengeShopper response carries the 3DS2 action.
+      paymentDetailsResponse: z
+        .object({
+          resultCode: z.string(),
+          refusalReason: z.string().optional(),
+        })
+        .passthrough(),
     }),
     errors: z.array(
       z.object({

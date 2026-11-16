@@ -9,6 +9,7 @@ import {
 } from "@/__tests__/mocks/constants";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
 import { mockedStripeConfig } from "@/__tests__/mocks/mock-stripe-config";
+import { mockedStripeCustomersApi } from "@/__tests__/mocks/mocked-stripe-customers-api";
 import {
   mockedStripePublishableKey,
   mockedStripePublishableKeyTest,
@@ -22,6 +23,7 @@ import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
 import { BaseError } from "@/lib/errors";
 import { AppRootConfig } from "@/modules/app-config/domain/app-root-config";
+import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
 import { UpdateStripeConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/update-stripe-config-trpc-handler";
 import { StripeAuthValidator } from "@/modules/stripe/stripe-auth-validator";
 import {
@@ -39,16 +41,21 @@ vi.mock("@/lib/graphql-client", () => ({
 }));
 
 const clearProblemsForConfig = vi.hoisted(() => vi.fn());
+const clearCustomerCreationDisabled = vi.hoisted(() => vi.fn());
 
 vi.mock("@/modules/app-problems/stripe-problem-reporter", () => ({
   StripeProblemReporter: class {
     clearProblemsForConfig = clearProblemsForConfig;
+    clearCustomerCreationDisabled = clearCustomerCreationDisabled;
   },
 }));
 
 const getTestCaller = () => {
   const webhookManager = new StripeWebhookManager();
-  const instance = new UpdateStripeConfigTrpcHandler({ webhookManager });
+  const instance = new UpdateStripeConfigTrpcHandler({
+    webhookManager,
+    customersApiFactory: { create: () => mockedStripeCustomersApi },
+  });
 
   // @ts-expect-error - context doesnt match but its applied in test
   instance.baseProcedure = TEST_Procedure;
@@ -76,6 +83,7 @@ const validInput = {
   name: "Renamed config",
   publishableKey: mockedStripePublishableKey,
   restrictedKey: null,
+  customerCreationEnabled: false,
 };
 
 const mockExistingConfig = () => {
@@ -285,6 +293,97 @@ describe("UpdateStripeConfigTrpcHandler", () => {
 
       expect(savedConfig.getStripeEnvValue()).toBe("TEST");
       expect(savedConfig.webhookId).toBe("wh_test_new");
+    });
+  });
+
+  describe("customer creation", () => {
+    const enabledConfig = () =>
+      StripeConfig.create({
+        id: mockedStripeConfig.id,
+        name: mockedStripeConfig.name,
+        publishableKey: mockedStripeConfig.publishableKey,
+        restrictedKey: mockedStripeConfig.restrictedKey,
+        webhookSecret: mockedStripeConfig.webhookSecret,
+        webhookId: mockedStripeConfig.webhookId,
+        customerCreationEnabled: true,
+      })._unsafeUnwrap();
+
+    it("Saves it turned on when the key can write Customers, and clears the turned-off problem", async () => {
+      const { caller } = getTestCaller();
+
+      vi.mocked(mockedStripeCustomersApi.hasCustomersWritePermission).mockResolvedValue(ok(true));
+
+      await caller.testProcedure({ ...validInput, customerCreationEnabled: true });
+
+      const savedConfig = vi.mocked(mockedAppConfigRepo.saveStripeConfig).mock.calls[0][0].config;
+
+      expect(savedConfig.customerCreationEnabled).toBe(true);
+      expect(clearCustomerCreationDisabled).toHaveBeenCalledWith(mockedConfigurationId);
+    });
+
+    it("Rejects turning it on when the key lacks Customers - Write, without saving", async () => {
+      const { caller } = getTestCaller();
+
+      vi.mocked(mockedStripeCustomersApi.hasCustomersWritePermission).mockResolvedValue(ok(false));
+
+      await expect(
+        caller.testProcedure({ ...validInput, customerCreationEnabled: true }),
+      ).rejects.toMatchObject({
+        code: "PRECONDITION_FAILED",
+        message: expect.stringContaining("Customers - Write"),
+      });
+      expect(mockedAppConfigRepo.saveStripeConfig).not.toHaveBeenCalled();
+    });
+
+    it("Returns an error when the permission can't be checked", async () => {
+      const { caller } = getTestCaller();
+
+      vi.mocked(mockedStripeCustomersApi.hasCustomersWritePermission).mockResolvedValue(
+        err(new Error("offline")),
+      );
+
+      await expect(
+        caller.testProcedure({ ...validInput, customerCreationEnabled: true }),
+      ).rejects.toMatchObject({ code: "INTERNAL_SERVER_ERROR" });
+      expect(mockedAppConfigRepo.saveStripeConfig).not.toHaveBeenCalled();
+    });
+
+    it("Doesn't check again when it stays on and the keys don't change", async () => {
+      const { caller } = getTestCaller();
+
+      vi.mocked(mockedAppConfigRepo.getRootConfig).mockResolvedValue(
+        ok(new AppRootConfig({}, { [mockedConfigurationId]: enabledConfig() })),
+      );
+      vi.spyOn(StripeWebhookManager.prototype, "updateWebhookDescription").mockResolvedValue(
+        ok(null),
+      );
+
+      await caller.testProcedure({ ...validInput, customerCreationEnabled: true });
+
+      expect(mockedStripeCustomersApi.hasCustomersWritePermission).not.toHaveBeenCalled();
+      expect(clearCustomerCreationDisabled).not.toHaveBeenCalled();
+    });
+
+    it("Checks the new key when the key changes while it is on", async () => {
+      const { caller, webhookManager } = getTestCaller();
+
+      vi.mocked(mockedAppConfigRepo.getRootConfig).mockResolvedValue(
+        ok(new AppRootConfig({}, { [mockedConfigurationId]: enabledConfig() })),
+      );
+      vi.spyOn(StripeAuthValidator.prototype, "validateStripeAuth").mockResolvedValue(ok(null));
+      const isWebhookReachable = vi.spyOn(webhookManager, "isWebhookReachableWithKey");
+
+      vi.mocked(mockedStripeCustomersApi.hasCustomersWritePermission).mockResolvedValue(ok(false));
+
+      await expect(
+        caller.testProcedure({
+          ...validInput,
+          restrictedKey: "rk_live_rotated",
+          customerCreationEnabled: true,
+        }),
+      ).rejects.toMatchObject({ code: "PRECONDITION_FAILED" });
+      // The webhook is left alone when the save is rejected
+      expect(isWebhookReachable).not.toHaveBeenCalled();
     });
   });
 });

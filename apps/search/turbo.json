@@ -24,6 +24,9 @@
         "MANIFEST_APP_ID",
         "CRON_SECRET"
       ]
+    },
+    "generate": {
+      "inputs": ["**/*.graphql", "graphql.config.ts", "package.json"]
     }
   }
 }

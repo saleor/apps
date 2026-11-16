@@ -1,6 +1,6 @@
-import { context, Span, SpanKind, SpanStatusCode, Tracer } from "@opentelemetry/api";
+import { context, type Span, SpanKind, SpanStatusCode, type Tracer } from "@opentelemetry/api";
 import { ATTR_URL_FULL } from "@opentelemetry/semantic-conventions/incubating";
-import { type CombinedError, makeOperation, mapExchange, Operation } from "urql";
+import { type CombinedError, makeOperation, mapExchange, type Operation } from "urql";
 
 import { ObservabilityAttributes } from "./observability-attributes";
 

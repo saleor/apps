@@ -183,7 +183,7 @@ export function productAndVariantToAlgolia({
   const product = variant.product;
   const loggingContext = { productId: product.id, variantId: variant.id };
   const attributes = {
-    ...product.attributes.reduce((acc, attr, idx) => {
+    ...product.attributes.reduce((acc, attr) => {
       const preparedAttr = mapSelectedAttributesToRecord(attr, loggingContext);
 
       if (!preparedAttr) {
@@ -195,7 +195,7 @@ export function productAndVariantToAlgolia({
         ...preparedAttr,
       };
     }, {}),
-    ...variant.attributes.reduce((acc, attr, idx) => {
+    ...variant.attributes.reduce((acc, attr) => {
       const preparedAttr = mapSelectedAttributesToRecord(attr, loggingContext);
 
       if (!preparedAttr) {

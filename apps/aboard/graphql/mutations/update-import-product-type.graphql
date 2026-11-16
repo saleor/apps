@@ -1,0 +1,12 @@
+mutation UpdateImportProductType($id: ID!, $input: ProductTypeInput!) {
+  productTypeUpdate(id: $id, input: $input) {
+    productType {
+      id
+    }
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

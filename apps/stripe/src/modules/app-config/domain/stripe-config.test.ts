@@ -112,7 +112,7 @@ describe("StripeFrontendConfig", () => {
      * Ensure serialized data doesn't have secrets!
      */
     expect(serialized).toMatchInlineSnapshot(
-      `"{"name":"config-name","id":"81f323bd-91e2-4838-ab6e-5affd81ffc3b","restrictedKey":"...GGGG","publishableKey":"pk_live_1"}"`,
+      `"{"name":"config-name","id":"81f323bd-91e2-4838-ab6e-5affd81ffc3b","restrictedKey":"...GGGG","publishableKey":"pk_live_1","customerCreationEnabled":false}"`,
     );
 
     //@ts-expect-error - JSON is arbitrary
@@ -132,6 +132,7 @@ describe("StripeFrontendConfig", () => {
       id: mockedConfigurationId,
       publishableKey: mockedStripePublishableKeyTest,
       restrictedKey: mockedStripeRestrictedKeyTest,
+      customerCreationEnabled: false,
     });
 
     const liveConfig = StripeFrontendConfig.createFromSerializedFields({
@@ -139,6 +140,7 @@ describe("StripeFrontendConfig", () => {
       id: mockedConfigurationId,
       publishableKey: mockedStripePublishableKey,
       restrictedKey: mockedStripeRestrictedKey,
+      customerCreationEnabled: false,
     });
 
     expect(testConfig.getStripeEnvValue()).toBe("TEST");

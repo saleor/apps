@@ -12,6 +12,7 @@ export const newStripeConfigInputSchema = z
     name: z.string().min(1),
     publishableKey: stripePublishableKeyInputSchema,
     restrictedKey: stripeRestrictedKeyInputSchema,
+    customerCreationEnabled: z.boolean().default(false),
   })
   .refine(keysShareEnvironment, {
     message: MIXED_KEY_ENVIRONMENTS_MESSAGE,

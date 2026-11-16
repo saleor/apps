@@ -8,7 +8,7 @@ import { useGetFeedApiUrl } from "./use-get-feed-api-url";
 describe("useGetFeedApiUrl", function () {
   const appBridge = new AppBridge({ saleorApiUrl: "https://example.com/graphql/" });
 
-  const HookWrapper = ({ children }: PropsWithChildren<{}>) => {
+  const HookWrapper = ({ children }: PropsWithChildren) => {
     return <AppBridgeProvider appBridgeInstance={appBridge}>{children}</AppBridgeProvider>;
   };
 

@@ -1,2 +1,4 @@
 src/graphql-env.d.ts
 src/graphql-cache.d.ts
+playwright-report/
+test-results/

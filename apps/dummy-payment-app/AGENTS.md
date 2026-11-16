@@ -25,16 +25,17 @@ pnpm start    # Start production server
 ### Code Quality
 
 ```bash
-pnpm lint     # Run ESLint
-pnpm test     # Run tests with Vitest
+pnpm -w lint apps/dummy-payment-app  # Run oxlint
+pnpm test                            # Run tests with Vitest
 ```
 
 ### GraphQL
 
 ```bash
 pnpm generate      # Generate TypeScript types from GraphQL schema and operations
-pnpm fetch-schema  # Fetch latest Saleor GraphQL schema (version in package.json)
 ```
+
+The Saleor schema and webhook JSON schemas are fetched only from the repo root (`pnpm fetch-schema`).
 
 GraphQL operations are defined in `graphql/` directory (mutations, queries, fragments, subscriptions). The codegen generates types in `generated/graphql.ts` using urql and typed-document-node.
 

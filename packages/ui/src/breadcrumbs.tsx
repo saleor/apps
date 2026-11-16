@@ -25,7 +25,7 @@ const BreadcrumbsItem = ({ children, href, isLast = false, ...p }: BreadcrumbsIt
   );
 };
 
-export type BreadcrumbsProps = PropsWithBox<{}>;
+export type BreadcrumbsProps = PropsWithBox<object>;
 
 export const Breadcrumbs = ({ children, ...p }: BreadcrumbsProps) => {
   return (

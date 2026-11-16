@@ -50,6 +50,8 @@ export interface CreatePaymentIntentArgs {
     | "payment_method"
     | "return_url"
     | "description"
+    | "customer"
+    | "shipping"
   >;
   idempotencyKey: string;
   metadata?: AllowedStripeObjectMetadata;
@@ -76,6 +78,29 @@ export interface IStripePaymentIntentsApi {
     metadata: AllowedStripeObjectMetadata;
     description?: string;
   }): Promise<Result<Stripe.PaymentIntent, unknown>>;
+}
+
+export interface IStripeCustomersApiFactory {
+  create(args: { key: StripeRestrictedKey }): IStripeCustomersApi;
+}
+
+/**
+ * Fixed metadata keys allowed on Customers. IDs only - Stripe asks not to put PII in metadata.
+ */
+export type AllowedStripeCustomerMetadata = {
+  saleor_api_url: string;
+  saleor_user_id: string;
+};
+
+export interface CreateCustomerArgs {
+  params: Pick<Stripe.CustomerCreateParams, "email" | "name" | "phone" | "address" | "shipping">;
+  metadata: AllowedStripeCustomerMetadata;
+  idempotencyKey: string;
+}
+
+export interface IStripeCustomersApi {
+  createCustomer(args: CreateCustomerArgs): Promise<Result<Stripe.Customer, unknown>>;
+  hasCustomersWritePermission(): Promise<Result<boolean, unknown>>;
 }
 
 export interface IStripeEventVerify {

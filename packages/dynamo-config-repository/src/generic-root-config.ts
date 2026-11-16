@@ -1,4 +1,4 @@
-import { BaseConfig } from "./types";
+import { type BaseConfig } from "./types";
 
 export class GenericRootConfig<ChannelConfig extends BaseConfig> {
   readonly chanelConfigMapping: Record<string, string>;

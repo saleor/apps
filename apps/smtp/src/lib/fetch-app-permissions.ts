@@ -1,4 +1,4 @@
-import { type Client, gql } from "urql";
+import { type Client } from "urql";
 
 import {
   FetchAppPermissionsDocument,
@@ -6,16 +6,6 @@ import {
   type PermissionEnum,
 } from "../../generated/graphql";
 import { createLogger } from "../logger";
-
-const _query = gql`
-  query FetchAppPermissions {
-    app {
-      permissions {
-        code
-      }
-    }
-  }
-`;
 
 const logger = createLogger("fetchAppPermissions");
 

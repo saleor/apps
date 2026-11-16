@@ -4,67 +4,14 @@ import {
   type SettingsManager,
 } from "@saleor/app-sdk/settings-manager";
 import { type Logger } from "@saleor/apps-logger";
-import { type Client, type CombinedError, gql } from "urql";
+import { type Client, type CombinedError } from "urql";
 
+import {
+  FetchAppDetailsDocument,
+  RemovePrivateMetadataDocument,
+  UpdateAppMetadataDocument,
+} from "../generated/graphql";
 import { createRotatingDecryptCallback } from "./key-rotation/rotating-decrypt-callback";
-
-const UpdateAppMetadataMutation = gql`
-  mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
-    updatePrivateMetadata(id: $id, input: $input) {
-      item {
-        privateMetadata {
-          key
-          value
-        }
-      }
-    }
-  }
-`;
-
-const FetchAppDetailsQuery = gql`
-  query FetchAppDetails {
-    app {
-      id
-      privateMetadata {
-        key
-        value
-      }
-    }
-  }
-`;
-
-const DeletePrivateMetadataMutation = gql`
-  mutation RemovePrivateMetadata($id: ID!, $keys: [String!]!) {
-    deletePrivateMetadata(id: $id, keys: $keys) {
-      errors {
-        message
-      }
-    }
-  }
-`;
-
-/**
- * To avoid a graphql-schema build step, manually set types for the queries and mutations.
- */
-type FetchAppPrivateMetadataQuery = {
-  __typename?: "Query";
-  app?: {
-    __typename?: "App";
-    id: string;
-    privateMetadata: Array<{ __typename?: "MetadataItem"; key: string; value: string }>;
-  } | null;
-};
-
-type UpdateAppPrivateMetadataMutation = {
-  __typename?: "Mutation";
-  updatePrivateMetadata?: {
-    __typename?: "UpdatePrivateMetadata";
-    item?: {
-      __typename?: "App";
-      privateMetadata: Array<{ __typename?: "MetadataItem"; key: string; value: string }>;
-    } | null;
-  } | null;
-};
 
 export type MetadataManagerGraphqlClient = Pick<Client, "mutation" | "query">;
 
@@ -92,9 +39,7 @@ async function fetchAllPrivateMetadata({
   logger: Logger;
   throwOnAppTokenRejected: boolean;
 }): Promise<MetadataEntry[]> {
-  const { error, data } = await client
-    .query<FetchAppPrivateMetadataQuery>(FetchAppDetailsQuery, {})
-    .toPromise();
+  const { error, data } = await client.query(FetchAppDetailsDocument, {}).toPromise();
 
   if (error && isAppTokenRejected(error)) {
     logger.warn("Saleor rejected the app token, can't fetch app metadata", {
@@ -139,7 +84,7 @@ async function updatePrivateMetadata({
   logger: Logger;
 }) {
   const { error, data } = await client
-    .mutation<UpdateAppPrivateMetadataMutation>(UpdateAppMetadataMutation, {
+    .mutation(UpdateAppMetadataDocument, {
       id: appId,
       input: metadata,
     })
@@ -202,7 +147,7 @@ export class EncryptedMetadataManagerFactory {
           logger: this.logger,
         }),
       async deleteMetadata(keys) {
-        await client.mutation(DeletePrivateMetadataMutation, {
+        await client.mutation(RemovePrivateMetadataDocument, {
           id: appId,
           keys: keys,
         });

@@ -7,16 +7,11 @@ import {
   mockedStripeOtherPaymentMethod,
 } from "@/__tests__/mocks/mocked-stripe-payment-method";
 import { SaleorPaymentMethodDetails } from "@/modules/saleor/saleor-payment-method-details";
-import { StripeInvalidRequestError } from "@/modules/stripe/stripe-api-error";
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 import {
   AuthorizationActionRequiredResult,
   ChargeActionRequiredResult,
 } from "@/modules/transaction-result/action-required-result";
-import {
-  AuthorizationFailureResult,
-  ChargeFailureResult,
-} from "@/modules/transaction-result/failure-result";
 import {
   AuthorizationRequestResult,
   ChargeRequestResult,
@@ -481,82 +476,6 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
           "result": "CHARGE_SUCCESS",
         }
       `);
-    });
-
-    describe("Failure", () => {
-      it("getResponse() returns valid Response with status 200 and message with error reason and additional information inside data object if transactionResult is ChargeFailure", async () => {
-        const transactionResult = new ChargeFailureResult();
-
-        const successResponse = new TransactionProcessSessionUseCaseResponses.Failure({
-          stripePaymentIntentId: mockedStripePaymentIntentId,
-          error: new StripeInvalidRequestError("Invalid request"),
-          transactionResult,
-          appContext: {
-            stripeEnv: "LIVE",
-          },
-        });
-        const fetchReponse = successResponse.getResponse();
-
-        expect(fetchReponse.status).toBe(200);
-        expect(await fetchReponse.json()).toMatchInlineSnapshot(`
-          {
-            "actions": [
-              "CHARGE",
-            ],
-            "data": {
-              "paymentIntent": {
-                "errors": [
-                  {
-                    "code": "StripeApiError",
-                    "message": "There is a problem with the request to Stripe API",
-                  },
-                ],
-              },
-            },
-            "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
-            "message": "There is a problem with the request to Stripe API",
-            "pspReference": "pi_TEST_TEST_TEST",
-            "result": "CHARGE_FAILURE",
-          }
-        `);
-      });
-
-      it("getResponse() returns valid Response with status 200 and message with error reason and additional information inside data object if transactionResult is AuthorizationFailure", async () => {
-        const transactionResult = new AuthorizationFailureResult();
-
-        const successResponse = new TransactionProcessSessionUseCaseResponses.Failure({
-          appContext: {
-            stripeEnv: "LIVE",
-          },
-          stripePaymentIntentId: mockedStripePaymentIntentId,
-          error: new StripeInvalidRequestError("Invalid request"),
-          transactionResult,
-        });
-        const fetchReponse = successResponse.getResponse();
-
-        expect(fetchReponse.status).toBe(200);
-        expect(await fetchReponse.json()).toMatchInlineSnapshot(`
-          {
-            "actions": [
-              "CANCEL",
-            ],
-            "data": {
-              "paymentIntent": {
-                "errors": [
-                  {
-                    "code": "StripeApiError",
-                    "message": "There is a problem with the request to Stripe API",
-                  },
-                ],
-              },
-            },
-            "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
-            "message": "There is a problem with the request to Stripe API",
-            "pspReference": "pi_TEST_TEST_TEST",
-            "result": "AUTHORIZATION_FAILURE",
-          }
-        `);
-      });
     });
   });
 });

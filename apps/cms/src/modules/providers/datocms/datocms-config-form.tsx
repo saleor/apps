@@ -34,7 +34,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
 
   const { mutate: fetchContentTypes, data: contentTypesData } =
     trpcClient.datocms.fetchContentTypes.useMutation({
-      onSuccess(data) {
+      onSuccess() {
         clearErrors("authToken");
       },
       onError() {
@@ -52,7 +52,7 @@ const PureForm = ({ defaultValues, onSubmit, onDelete }: PureFormProps) => {
 
   const { mutate: fetchContentTypeFields, data: fieldsData } =
     trpcClient.datocms.fetchContentTypeFields.useMutation({
-      onSuccess(data) {
+      onSuccess() {
         clearErrors("authToken");
       },
       onError() {

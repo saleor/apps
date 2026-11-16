@@ -1,0 +1,11 @@
+subscription OrderFilterShippingMethods {
+  event {
+    ...OrderFilterShippingMethodsPayload
+  }
+}
+
+fragment OrderFilterShippingMethodsPayload on OrderFilterShippingMethods {
+  order {
+    id
+  }
+}

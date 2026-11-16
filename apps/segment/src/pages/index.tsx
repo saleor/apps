@@ -23,8 +23,8 @@ const IndexPage: NextPage = () => {
   return (
     <div>
       <h1>Saleor App - Twilio Segment integration</h1>
-      <p>This is Saleor App that synchronized order events to Segment</p>
-      <p>Install app in your Saleor instance and open in with Dashboard</p>
+      <p>Sends Saleor order events to Twilio Segment.</p>
+      <p>Install the app in your Saleor instance and open it in the Dashboard.</p>
     </div>
   );
 };

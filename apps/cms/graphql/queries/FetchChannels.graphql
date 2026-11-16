@@ -1,7 +1,0 @@
-query FetchChannels {
-  channels {
-    id
-    slug
-    name
-  }
-}

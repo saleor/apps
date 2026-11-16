@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { BaseError } from "@/lib/errors";
 import { RandomId } from "@/lib/random-id";
 import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
+import { assertCanCreateStripeCustomersOrThrow } from "@/modules/app-config/trpc-handlers/assert-can-create-stripe-customers";
 import { newStripeConfigInputSchema } from "@/modules/app-config/trpc-handlers/new-stripe-config-input-schema";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripeAuthValidator } from "@/modules/stripe/stripe-auth-validator";
@@ -11,14 +12,20 @@ import { StripeClient } from "@/modules/stripe/stripe-client";
 import { type StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { createStripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
+import { type IStripeCustomersApiFactory } from "@/modules/stripe/types";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
 export class NewStripeConfigTrpcHandler {
   baseProcedure = protectedClientProcedure;
   private readonly webhookManager = new StripeWebhookManager();
+  private readonly customersApiFactory: IStripeCustomersApiFactory;
 
-  constructor(deps: { webhookManager: StripeWebhookManager }) {
+  constructor(deps: {
+    webhookManager: StripeWebhookManager;
+    customersApiFactory: IStripeCustomersApiFactory;
+  }) {
     this.webhookManager = deps.webhookManager;
+    this.customersApiFactory = deps.customersApiFactory;
   }
 
   private validateRk(rk: StripeRestrictedKey) {
@@ -93,6 +100,14 @@ export class NewStripeConfigTrpcHandler {
         });
       }
 
+      /** Checked before the webhook is created, so a rejected save leaves nothing behind in Stripe. */
+      if (input.customerCreationEnabled) {
+        await assertCanCreateStripeCustomersOrThrow({
+          customersApiFactory: this.customersApiFactory,
+          restrictedKey: input.restrictedKey,
+        });
+      }
+
       const webhookCreationResult = await this.webhookManager.createWebhook(
         {
           name: configValidation.value.name,
@@ -140,6 +155,7 @@ export class NewStripeConfigTrpcHandler {
         id: configId,
         webhookSecret: stripeWebhookSecretVo.value,
         webhookId: stripeWebhookId,
+        customerCreationEnabled: input.customerCreationEnabled,
       });
 
       if (configToSave.isErr()) {

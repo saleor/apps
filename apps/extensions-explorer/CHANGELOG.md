@@ -1,5 +1,11 @@
 # saleor-app-extensions-explorer
 
+## 0.1.14
+
+### Patch Changes
+
+- d34f4d9: Upgraded Next.js to v16.4.5
+
 ## 0.1.13
 
 ### Patch Changes

@@ -3,11 +3,10 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { captureException } from "@sentry/nextjs";
-import { gql } from "urql";
 
 import {
+  OrderCancelledDocument,
   type OrderCancelledWebhookPayloadFragment,
-  OrderDetailsFragmentDoc,
 } from "../../../../generated/graphql";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
@@ -15,31 +14,12 @@ import { handleUseCaseErrors } from "../../../modules/event-handlers/send-event-
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { saleorApp } from "../../../saleor-app";
 
-const OrderCancelledWebhookPayload = gql`
-  ${OrderDetailsFragmentDoc}
-  fragment OrderCancelledWebhookPayload on OrderCancelled {
-    version
-    order {
-      ...OrderDetails
-    }
-  }
-`;
-
-const OrderCancelledGraphqlSubscription = gql`
-  ${OrderCancelledWebhookPayload}
-  subscription OrderCancelled {
-    event {
-      ...OrderCancelledWebhookPayload
-    }
-  }
-`;
-
 export const orderCancelledWebhook = new SaleorAsyncWebhook<OrderCancelledWebhookPayloadFragment>({
   name: "Order Cancelled in Saleor",
   webhookPath: "api/webhooks/order-cancelled",
   event: "ORDER_CANCELLED",
   apl: saleorApp.apl,
-  query: OrderCancelledGraphqlSubscription,
+  query: OrderCancelledDocument,
 });
 
 const logger = createLogger(orderCancelledWebhook.webhookPath);

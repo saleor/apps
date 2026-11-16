@@ -26,8 +26,7 @@ export type Pages = NonNullable<PagesDataForImportQuery["pages"]>["edges"][numbe
 
 export const useGraphQLClient = () => {
   const { appBridgeState } = useAppBridge();
-  const saleorApiUrl = appBridgeState?.saleorApiUrl!;
-  const token = appBridgeState!.token;
+  const { saleorApiUrl, token } = appBridgeState!;
   const client = createGraphQLClient({ saleorApiUrl, token });
 
   const getChannels = () => client.query(ChannelsDocument, {}).toPromise();

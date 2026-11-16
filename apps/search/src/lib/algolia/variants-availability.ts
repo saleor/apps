@@ -1,3 +1,4 @@
+import { BaseError } from "@saleor/errors";
 import { type Client } from "urql";
 
 import { VariantsAvailabilityDocument } from "../../../generated/graphql";
@@ -12,6 +13,10 @@ const traceFetchAvailability = createTraceEffect({ name: "Saleor fetchVariantsAv
  * Saleor allows fetching max 100 nodes in a single connection query.
  */
 const PAGE_SIZE = 100;
+
+export const SaleorRateLimitError = BaseError.subclass("SaleorRateLimitError", {
+  props: { _brand: "SaleorRateLimitError" as const },
+});
 
 /**
  * quantityAvailable per channel slug, per variant ID.
@@ -62,6 +67,13 @@ export const createVariantsAvailabilityFetcher =
                 .toPromise(),
             { channel, variantsCount: ids.length },
           );
+
+          if (response.error?.response?.status === 429) {
+            throw new SaleorRateLimitError(
+              `Saleor rate limited variants availability query for channel "${channel}"`,
+              { cause: response.error },
+            );
+          }
 
           if (response.error) {
             /**

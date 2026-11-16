@@ -1,4 +1,4 @@
-import { Client } from "urql";
+import { type Client } from "urql";
 
 import { GetSaleorInstanceDataDocument } from "../../generated/graphql";
 import {

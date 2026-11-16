@@ -21,6 +21,7 @@ const config = (id: string): StripeFrontendConfigSerializedFields => ({
   name: `Config ${id}`,
   restrictedKey: "rk_test_...",
   publishableKey: "pk_test_...",
+  customerCreationEnabled: false,
 });
 
 const channels = [channel("channel-1"), channel("channel-2"), channel("channel-3")];

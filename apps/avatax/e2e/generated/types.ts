@@ -25504,6 +25504,12 @@ export type ProductVariantWhereInput = {
    * Added in Saleor 3.22.
    */
   attributes?: InputMaybe<Array<AssignedAttributeWhereInput>>;
+  /**
+   * Filter by external reference.
+   *
+   * Added in Saleor 3.23.
+   */
+  externalReference?: InputMaybe<StringFilterInput>;
   ids?: InputMaybe<Array<Scalars['ID']['input']>>;
   metadata?: InputMaybe<Array<MetadataFilter>>;
   /** Filter by product SKU. */

@@ -12,7 +12,7 @@ import {
  */
 export const useFetchAllProducts = (started: boolean, channelSlug: string) => {
   const { appBridgeState } = useAppBridge();
-  const saleorApiUrl = appBridgeState?.saleorApiUrl!;
+  const saleorApiUrl = appBridgeState?.saleorApiUrl;
 
   const [products, setProducts] = useState<BulkImportProductFragment[]>([]);
   const [finished, setFinished] = useState(false);
@@ -22,7 +22,7 @@ export const useFetchAllProducts = (started: boolean, channelSlug: string) => {
       return;
     }
 
-    if (!appBridgeState?.token) {
+    if (!appBridgeState?.token || !saleorApiUrl) {
       return;
     }
 

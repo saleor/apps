@@ -65,3 +65,14 @@ export class MalformedRequestResponse extends ErrorWebhookResponse {
     });
   }
 }
+
+export class StripeApiFailureResponse extends ErrorWebhookResponse {
+  readonly message = "Stripe API request failed";
+  readonly statusCode = 502;
+
+  getResponse() {
+    return new Response(this.messageFormatter.formatMessage(this.message, this.error), {
+      status: this.statusCode,
+    });
+  }
+}

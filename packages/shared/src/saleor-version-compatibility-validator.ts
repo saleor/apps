@@ -1,4 +1,4 @@
-import { SaleorSchemaVersion } from "@saleor/app-sdk/types";
+import { type SaleorSchemaVersion } from "@saleor/app-sdk/types";
 import semver from "semver";
 
 export class SaleorVersionCompatibilityValidator {

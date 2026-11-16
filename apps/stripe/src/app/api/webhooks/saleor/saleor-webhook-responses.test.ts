@@ -4,6 +4,7 @@ import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
   MalformedRequestResponse,
+  StripeApiFailureResponse,
   UnhandledErrorResponse,
 } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { BaseError } from "@/lib/errors";
@@ -60,12 +61,26 @@ describe("MalformedRequestResponse", () => {
   });
 });
 
+describe("StripeApiFailureResponse", () => {
+  it("getResponse() returns valid Response with status 502 and message with error reason", async () => {
+    const stripeApiFailureResponse = new StripeApiFailureResponse(
+      { stripeEnv: "LIVE" },
+      new Error("Inner error"),
+    );
+    const fetchResponse = stripeApiFailureResponse.getResponse();
+
+    expect(fetchResponse.status).toBe(502);
+    expect(await fetchResponse.text()).toBe("Stripe API request failed");
+  });
+});
+
 describe("Passing error details to the response when Stripe env is TEST", () => {
   it.each([
     BrokenAppResponse,
     MalformedRequestResponse,
     UnhandledErrorResponse,
     AppIsNotConfiguredResponse,
+    StripeApiFailureResponse,
   ])(`Response %s attaches error details to the message`, async (ErrorResponse) => {
     const ErrorInner = BaseError.subclass("RootError");
     const ErrorInner2 = BaseError.subclass("InnerError");

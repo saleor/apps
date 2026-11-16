@@ -40,7 +40,7 @@ export class DatocmsBulkSyncProcessor implements BulkSyncProcessor {
                 },
               },
             })
-            .then((r) => {
+            .then(() => {
               if (hooks.onUploadSuccess) {
                 hooks.onUploadSuccess({ variantId: variant.id });
               }

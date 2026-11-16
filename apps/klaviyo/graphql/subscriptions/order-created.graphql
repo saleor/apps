@@ -1,0 +1,12 @@
+subscription OrderCreated {
+  event {
+    ...OrderCreatedWebhookPayload
+  }
+}
+
+fragment OrderCreatedWebhookPayload on OrderCreated {
+  version
+  order {
+    ...OrderFragment
+  }
+}

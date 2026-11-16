@@ -1,43 +1,14 @@
 import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
-import { gql } from "urql";
 
 import {
   FetchDeliveryMethodForCheckoutDocument,
+  ShippingListMethodsForCheckoutDocument,
   type ShippingListMethodsPayloadFragment,
 } from "@/generated/graphql";
 import { DummyExternalShippingAPI } from "@/lib/dummy-shipping";
 import packageJson from "@/package.json";
 import { saleorApp } from "@/saleor-app";
-
-const ShippingListMethodsPayload = gql`
-  fragment ShippingListMethodsPayload on ShippingListMethodsForCheckout {
-    checkout {
-      id
-      shippingAddress {
-        firstName
-        lastName
-        streetAddress1
-        streetAddress2
-        city
-        postalCode
-        country {
-          code
-        }
-        phone
-      }
-    }
-  }
-`;
-
-const ShippingListMethodsForCheckoutSubscription = gql`
-  ${ShippingListMethodsPayload}
-  subscription ShippingListMethodsForCheckout {
-    event {
-      ...ShippingListMethodsPayload
-    }
-  }
-`;
 
 export const shippingListMethodsForCheckoutWebhook =
   new SaleorSyncWebhook<ShippingListMethodsPayloadFragment>({
@@ -45,7 +16,7 @@ export const shippingListMethodsForCheckoutWebhook =
     webhookPath: "api/webhooks/shipping-list-methods-for-checkout",
     event: "SHIPPING_LIST_METHODS_FOR_CHECKOUT",
     apl: saleorApp.apl,
-    query: ShippingListMethodsForCheckoutSubscription,
+    query: ShippingListMethodsForCheckoutDocument,
   });
 
 export default shippingListMethodsForCheckoutWebhook.createHandler(async (_req, res, ctx) => {

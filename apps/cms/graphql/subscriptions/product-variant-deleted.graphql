@@ -1,0 +1,12 @@
+subscription ProductVariantDeleted {
+  event {
+    ...ProductVariantDeletedWebhookPayload
+  }
+}
+
+fragment ProductVariantDeletedWebhookPayload on ProductVariantDeleted {
+  version
+  productVariant {
+    ...WebhookProductVariant
+  }
+}

@@ -1,5 +1,18 @@
 # saleor-app-products-feed
 
+## 3.5.4
+
+### Patch Changes
+
+- Updated dependencies [ef64608]
+  - @saleor/stale-installations-cleanup@0.4.0
+
+## 3.5.3
+
+### Patch Changes
+
+- d34f4d9: Upgraded Next.js to v16.4.5
+
 ## 3.5.2
 
 ### Patch Changes

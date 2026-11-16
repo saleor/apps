@@ -1,5 +1,5 @@
 import { cleanup, render } from "@testing-library/react";
-import { NextRouter, useRouter } from "next/router";
+import { type NextRouter, useRouter } from "next/router";
 import React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -22,10 +23,9 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
 import { type FragmentOf, readFragment } from "@/graphql/gql";
-import { redirectToStripeDropin } from "@/modules/payment-gateway/actions/redirect-to-stripe-dropin";
 
-import { redirectToAdyenDropin } from "../actions/redirect-to-adyen-dropin";
 import { PaymentGatewayFragment } from "../fragments";
+import { getPaymentGatewayPath, TERMINAL_GATEWAY_ID } from "../gateway-routing";
 
 const PaymentGatewaySchema = z.object({
   paymentGatewayId: z.string(),
@@ -34,14 +34,18 @@ const PaymentGatewaySchema = z.object({
 type PaymentGatewaySchemaType = z.infer<typeof PaymentGatewaySchema>;
 
 export const PaymentGatewaySelect = (props: {
+  envUrl: string;
+  checkoutId: string;
+  terminalEnabled?: boolean;
   data: FragmentOf<typeof PaymentGatewayFragment>[] | null | undefined;
 }) => {
-  const { data } = props;
+  const { data, envUrl, checkoutId, terminalEnabled } = props;
+  const router = useRouter();
 
-  const availablePaymentGateways = readFragment(
-    PaymentGatewayFragment,
-    data?.map((method) => method) ?? [],
-  );
+  const availablePaymentGateways = [
+    ...readFragment(PaymentGatewayFragment, data?.map((method) => method) ?? []),
+    ...(terminalEnabled ? [{ id: TERMINAL_GATEWAY_ID, name: "Square Terminal (staff)" }] : []),
+  ];
 
   const getDefaultPaymentGatewayId = () => {
     // if there is only one available payment gateway, return its id
@@ -61,42 +65,18 @@ export const PaymentGatewaySelect = (props: {
   });
 
   async function onSubmit(data: PaymentGatewaySchemaType) {
-    switch (data.paymentGatewayId) {
-      case "app.saleor.stripe":
-      case "saleor.app.payment.stripe": {
-        toast({
-          title: "Payment gateway selected",
-          description: "Redirecting to Stripe",
-        });
+    const path = getPaymentGatewayPath({
+      envUrl,
+      checkoutId,
+      paymentGatewayId: data.paymentGatewayId,
+    });
 
-        return await redirectToStripeDropin({
-          paymentGatewayId: data.paymentGatewayId,
-        });
-      }
-      case "app.saleor.adyen_staging":
-      case "app.saleor.adyen_preview":
-      case "app.saleor.adyen": {
-        toast({
-          title: "Payment gateway selected",
-          description: "Redirecting to Adyen",
-        });
+    if (!path) {
+      toast({ title: "Payment gateway is not supported", variant: "destructive" });
 
-        return await redirectToAdyenDropin({
-          paymentGatewayId: data.paymentGatewayId,
-        });
-      }
-      default: {
-        toast({
-          title: "Not supported payment gateway",
-          description: `The payment gateway ${data.paymentGatewayId} is not supported.`,
-          variant: "destructive",
-        });
-
-        throw new Error(
-          "Payment gateway is not supported. Check either app.saleor.stripe or app.saleor.adyen",
-        );
-      }
+      return;
     }
+    router.push(path);
   }
 
   return (

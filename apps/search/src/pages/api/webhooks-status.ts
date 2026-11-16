@@ -32,7 +32,7 @@ export const webhooksStatusHandlerFactory =
   ({
     graphqlClientFactory,
   }: FactoryProps): NextJsProtectedApiHandler<WebhooksStatusResponse | string> =>
-  async (req, res, { authData }) => {
+  async (_req, res, { authData }) => {
     /**
      * Initialize services
      */

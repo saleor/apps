@@ -4,14 +4,16 @@ export const ProductFragment = graphql(`
   fragment Product on Product {
     id
     name
-    thumbnail(size: 2048) {
+    thumbnail(size: 256) {
       url
     }
     category {
       name
     }
-    defaultVariant {
+    variants {
       id
+      name
+      quantityAvailable
       pricing {
         price {
           gross {

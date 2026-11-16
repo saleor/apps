@@ -1,16 +1,15 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "saleor-app-shipping-dummy",
-  "version": "1.1.14",
+  "version": "1.1.15",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "next build",
+    "build:ci": "pnpm run build",
     "check-types": "next typegen && tsc",
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "generate": "graphql-codegen",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
     "start": "next start"
   },
   "dependencies": {
@@ -32,13 +31,10 @@
     "@graphql-codegen/typescript": "catalog:",
     "@graphql-codegen/typescript-operations": "catalog:",
     "@graphql-typed-document-node/core": "catalog:",
-    "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "eslint": "catalog:",
-    "eslint-plugin-n": "catalog:",
     "graphql-config": "5.0.3",
     "typescript": "catalog:"
   }

@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { Fragment, PropsWithChildren } from "react";
+import { Fragment, type PropsWithChildren } from "react";
 
 const Wrapper = (props: PropsWithChildren<unknown>) => <Fragment>{props.children}</Fragment>;
 

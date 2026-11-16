@@ -1,0 +1,11 @@
+mutation CreateAppWebhook($input: WebhookCreateInput!) {
+  webhookCreate(input: $input) {
+    errors {
+      field
+      message
+    }
+    webhook {
+      ...WebhookDetails
+    }
+  }
+}
